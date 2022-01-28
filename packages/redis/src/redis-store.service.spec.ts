@@ -12,7 +12,7 @@ describe('RedisStore', () => {
   const COLLECTION_NAME =  'sessions';
 
   let store: RedisStore;
-  let redisClient: any;
+  let redisClient: ReturnType<typeof createClient>;
 
   before(() => Config.set('settings.redis.uri', REDIS_URI));
 
@@ -25,13 +25,15 @@ describe('RedisStore', () => {
     afterEach(() => Promise.all([
       store.close(),
       redisClient.quit()
-    ]))
+    ]).catch((err: any) => strictEqual(err.message, 'The client is closed')))
 
     context('when setRedisClient has been previously called', () => {
 
       it('should NOT create a new redis instance but use the one provided.', () => {
         return new Promise<void>(async resolve => {
-          redisClient = createClient(REDIS_URI)
+          redisClient = createClient({ url: REDIS_URI });
+          await redisClient.connect();
+
           redisClient.on('end', resolve);
 
           store.setRedisClient(redisClient);
@@ -70,15 +72,17 @@ describe('RedisStore', () => {
     }
 
     before(async () => {
-      redisClient = createClient(REDIS_URI);
+      redisClient = createClient({ url: REDIS_URI });
+      await redisClient.connect();
+
       store = createService(RedisStore);
       await store.boot();
     });
 
-    beforeEach(done => {
+    beforeEach(async () => {
       state = createState();
       maxInactivity = 1000;
-      redisClient.flushdb(done);
+      await redisClient.flushDb();
     });
 
     after(() => {
@@ -88,55 +92,11 @@ describe('RedisStore', () => {
       ]);
     });
 
-    function asyncSet(key: string, value: string) {
-      return new Promise((resolve, reject) => {
-        redisClient.set(key, value, (err: any, success: any) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve(success);
-        });
-      });
-    }
-
-    function asyncGet(key: string): Promise<string> {
-      return new Promise<string>((resolve, reject) => {
-        redisClient.get(key, (err: any, val: string) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve(val);
-        });
-      });
-    }
-
-    function asyncTTL(key: string): Promise<number> {
-      return new Promise<number>((resolve, reject) => {
-        redisClient.ttl(key, (err: any, val: number) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve(val);
-        });
-      });
-    }
-
-    function asyncExists(key: string): Promise<number> {
-      return new Promise<number>((resolve, reject) => {
-        redisClient.exists(key, (err: any, val: number) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve(val);
-        });
-      });
-    }
-
     it('should support sessions IDs of length 44.', async () => {
       const session = await createSession({} as any);
       const key = getKey(session.getToken());
-      await asyncSet(key, 'bar');
-      strictEqual(await asyncExists(key), 1);
+      await redisClient.set(key, 'bar');
+      strictEqual(await redisClient.exists(key), 1);
     });
 
     describe('has a "save" method that', () => {
@@ -146,14 +106,14 @@ describe('RedisStore', () => {
         it('should save the session state in the database.', async () => {
           await store.save(state, maxInactivity);
 
-          const actual = JSON.parse(await asyncGet(getKey(state.id)));
+          const actual = JSON.parse(await redisClient.get(getKey(state.id)) as string);
           deepStrictEqual(actual, state);
         });
 
         it('should set the proper key lifetime in the database.', async () => {
           await store.save(state, maxInactivity);
 
-          const actual = await asyncTTL(getKey(state.id));
+          const actual = await redisClient.ttl(getKey(state.id));
           deepStrictEqual(actual, maxInactivity);
         });
 
@@ -162,7 +122,7 @@ describe('RedisStore', () => {
       context('given a session already exists in the database with the given ID', () => {
 
         beforeEach(async () => {
-          await asyncSet(getKey(state.id), JSON.stringify(state));
+          await redisClient.set(getKey(state.id), JSON.stringify(state));
         });
 
         it('should throw a SessionAlreadyExists error.', async () => {
@@ -189,7 +149,7 @@ describe('RedisStore', () => {
       context('given a session exists in the database with the given ID', () => {
 
         beforeEach(async () => {
-          await asyncSet(getKey(state.id), JSON.stringify(state));
+          await redisClient.set(getKey(state.id), JSON.stringify(state));
         });
 
         it('should return the session state.', async () => {
@@ -210,14 +170,14 @@ describe('RedisStore', () => {
         it('should save the session state in the database.', async () => {
           await store.update(state, maxInactivity);
 
-          const actual = JSON.parse(await asyncGet(getKey(state.id)));
+          const actual = JSON.parse(await redisClient.get(getKey(state.id)) as string);
           deepStrictEqual(actual, state);
         });
 
         it('should set the proper key lifetime in the database.', async () => {
           await store.update(state, maxInactivity);
 
-          const actual = await asyncTTL(getKey(state.id));
+          const actual = await redisClient.ttl(getKey(state.id));
           deepStrictEqual(actual, maxInactivity);
         });
 
@@ -226,7 +186,7 @@ describe('RedisStore', () => {
       context('given a session already exists in the database with the given ID', () => {
 
         beforeEach(async () => {
-          await asyncSet(getKey(state.id), JSON.stringify(state));
+          await redisClient.set(getKey(state.id), JSON.stringify(state));
         });
 
         it('should update the session state in the database.', async () => {
@@ -236,16 +196,16 @@ describe('RedisStore', () => {
           };
           await store.update(updatedState, maxInactivity);
 
-          const actual = JSON.parse(await asyncGet(getKey(state.id)));
+          const actual = JSON.parse(await redisClient.get(getKey(state.id)) as string);
           deepStrictEqual(actual, updatedState);
         });
 
         it('should set the proper key lifetime in the database.', async () => {
-          strictEqual(await asyncTTL(getKey(state.id)), -1);
+          strictEqual(await redisClient.ttl(getKey(state.id)), -1);
 
           await store.update(state, maxInactivity);
 
-          const actual = await asyncTTL(getKey(state.id));
+          const actual = await redisClient.ttl(getKey(state.id));
           deepStrictEqual(actual, maxInactivity);
         });
 
@@ -266,13 +226,13 @@ describe('RedisStore', () => {
       context('given a session already exists in the database with the given ID', () => {
 
         beforeEach(async () => {
-          await asyncSet(getKey(state.id), JSON.stringify(state));
+          await redisClient.set(getKey(state.id), JSON.stringify(state));
         });
 
         it('should delete the session in the database.', async () => {
           await store.destroy(state.id);
 
-          strictEqual(await asyncGet(getKey(state.id)), null);
+          strictEqual(await redisClient.get(getKey(state.id)), null);
         });
 
       });
@@ -282,13 +242,13 @@ describe('RedisStore', () => {
     describe('has a "clear" method that', () => {
 
       beforeEach(async () => {
-        await asyncSet(getKey(state.id), JSON.stringify(state));
+        await redisClient.set(getKey(state.id), JSON.stringify(state));
       });
 
       it('should remove all sessions.', async () => {
         await store.clear();
 
-        strictEqual(await asyncGet(getKey(state.id)), null);
+        strictEqual(await redisClient.get(getKey(state.id)), null);
       });
 
     });

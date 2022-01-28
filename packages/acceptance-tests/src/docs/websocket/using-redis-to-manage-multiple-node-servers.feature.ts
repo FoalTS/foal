@@ -66,13 +66,20 @@ describe('Feature: Using redis to manage multiple node servers', () => {
 
         class AppController {}
 
+        /* ======================= DOCUMENTATION BEGIN ======================= */
+
         async function main() {
           const serviceManager = new ServiceManager();
 
           const app = await createApp(AppController, { serviceManager });
           const httpServer = http.createServer(app);
 
+          // Connect the redis clients to the database.
+          await Promise.all([pubClient.connect(), subClient.connect()]);
+
           await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
+
+          /* ======================= DOCUMENTATION END ========================= */
 
           httpServer.listen(() => {
             const port = (httpServer.address() as AddressInfo).port;
