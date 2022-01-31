@@ -107,7 +107,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
           await session.commit();
         } catch (error: any) {
           // Should throw because the connection has already been closed.
-          if (error.name === 'AbortError') {
+          if (error.message === 'The client is closed') {
             return new HttpResponseOK();
           }
           throw error;
@@ -119,7 +119,8 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main() {
-      redisClient = createClient('redis://localhost:6380');
+      redisClient = createClient({ url: 'redis://localhost:6380' });
+      await redisClient.connect();
 
       const serviceManager = new ServiceManager();
       serviceManager.get(RedisStore).setRedisClient(redisClient);
@@ -133,7 +134,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
 
     const app = await main();
 
-    await new Promise(resolve => redisClient!.quit(resolve));
+    await redisClient!.quit();
 
     return request(app)
       .get('/')

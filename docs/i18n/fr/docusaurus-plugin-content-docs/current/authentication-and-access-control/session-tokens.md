@@ -1101,7 +1101,9 @@ import { RedisStore } from '@foal/redis';
 import { createClient } from 'redis';
 
 async function main() {
-  const redisClient = createClient('redis://localhost:6379');
+  const redisClient = createClient({ url: 'redis://localhost:6379' });
+  await redisClient.connect();
+
 
   const serviceManager = new ServiceManager();
   serviceManager.get(RedisStore).setRedisClient(redisClient);
