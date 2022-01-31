@@ -119,7 +119,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main() {
-      redisClient = createClient('redis://localhost:6379');
+      redisClient = createClient('redis://localhost:6380');
 
       const serviceManager = new ServiceManager();
       serviceManager.get(RedisStore).setRedisClient(redisClient);
