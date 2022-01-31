@@ -147,10 +147,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
       type: 'mongodb',
     });
 
-    console.log('debug CI 1');
     mongoClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
-    console.log('debug CI 2');
 
     await mongoClient.db().collection('foalSessions').deleteMany({});
 
@@ -160,10 +157,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     user.isAdmin = false;
     await getMongoRepository(User).save(user);
 
-    console.log('debug CI 3');
     app = await createApp(AppController);
-
-    console.log('debug CI 4');
   });
 
   after(async () => {
