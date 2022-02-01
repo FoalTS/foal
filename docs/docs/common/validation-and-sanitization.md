@@ -170,7 +170,7 @@ export class AppController {
 {
   "body": [
     {
-      "dataPath": ".price",
+      "instancePath": "/price",
       "keyword": "type",
       "message": "should be integer",
       "params": {
@@ -287,7 +287,7 @@ export class AppController {
 {
   "cookies": [
     {
-      "dataPath": "['a-number']",
+      "instancePath": "a-number",
       "keyword": "type",
       "message": "should be integer",
       "params": {
@@ -342,7 +342,7 @@ export class AppController {
 {
   "pathParams": [
     {
-      "dataPath": ".productId",
+      "instancePath": "/productId",
       "keyword": "type",
       "message": "should be integer",
       "params": {
@@ -400,7 +400,7 @@ export class AppController {
 {
   "query": [
     {
-      "dataPath": "['a-number']",
+      "instancePath": "['a-number']",
       "keyword": "type",
       "message": "should be integer",
       "params": {

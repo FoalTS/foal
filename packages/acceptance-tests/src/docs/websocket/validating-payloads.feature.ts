@@ -65,7 +65,7 @@ describe('Feature: Validating payloads', () => {
           payload: [
             {
               'keyword': 'required',
-              'dataPath': '',
+              'instancePath': '',
               'schemaPath': '#/required',
               'params': {
                 'missingProperty': 'name'
