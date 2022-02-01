@@ -229,7 +229,7 @@ export class AppController {
 {
   "headers": [
     {
-      "dataPath:" "['a-number']",
+      "instancePath:" "['a-number']",
       "keyword": "type",
       "message": "should be integer",
       "params": {

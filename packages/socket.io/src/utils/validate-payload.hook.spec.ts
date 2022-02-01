@@ -61,9 +61,9 @@ describe('ValidatePayload', () => {
           code: 'VALIDATION_PAYLOAD_ERROR',
           payload: [
             {
-              dataPath: '',
+              instancePath: '',
               keyword: 'type',
-              message: 'should be object',
+              message: 'must be object',
               params: { type: 'object' },
               schemaPath: '#/type',
             }
@@ -115,9 +115,9 @@ describe('ValidatePayload', () => {
           code: 'VALIDATION_PAYLOAD_ERROR',
           payload: [
             {
-              dataPath: '',
+              instancePath: '',
               keyword: 'type',
-              message: 'should be object',
+              message: 'must be object',
               params: { type: 'object' },
               schemaPath: '#/type',
             }

@@ -56,15 +56,15 @@ describe('Feature: Returning custom validation error messages', () => {
       .expect({
         body: [
           {
-            dataPath: '',
+            instancePath: '',
             keyword: 'errorMessage',
             message: 'The submitted product is incorrect.',
             params: {
               errors: [
                 {
-                  dataPath: '',
+                  instancePath: '',
                   keyword: 'required',
-                  message: 'should have required property \'name\'',
+                  message: 'must have required property \'name\'',
                   params: {
                     missingProperty: 'name'
                   },

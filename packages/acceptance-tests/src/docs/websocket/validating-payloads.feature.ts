@@ -70,7 +70,7 @@ describe('Feature: Validating payloads', () => {
               'params': {
                 'missingProperty': 'name'
               },
-              'message': 'should have required property \'name\''
+              'message': 'must have required property \'name\''
             }
           ]
         }
