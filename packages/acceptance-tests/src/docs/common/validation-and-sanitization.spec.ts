@@ -129,7 +129,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
         const errors = {
           headers: [
             {
-              instancePath: '[\'a-number\']',
+              instancePath: '/a-number',
               keyword: 'type',
               message: 'must be integer',
               params: {
@@ -189,7 +189,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
         const errors = {
           cookies: [
             {
-              instancePath: '[\'A-Number\']',
+              instancePath: '/A-Number',
               keyword: 'type',
               message: 'must be integer',
               params: {
@@ -301,7 +301,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
         const errors = {
           query: [
             {
-              instancePath: '[\'a-number\']',
+              instancePath: '/a-number',
               keyword: 'type',
               message: 'must be integer',
               params: {

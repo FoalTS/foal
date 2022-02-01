@@ -34,9 +34,9 @@ describe('ValidateCookie', () => {
           {
             instancePath: '',
             keyword: 'required',
-            message: 'must have required property \'.foo\'',
+            message: 'must have required property \'foo\'',
             params: {
-              missingProperty: '.foo'
+              missingProperty: 'foo'
             },
             schemaPath: '#/required'
           }
@@ -59,9 +59,9 @@ describe('ValidateCookie', () => {
           {
             instancePath: '',
             keyword: 'required',
-            message: 'must have required property \'.foo\'',
+            message: 'must have required property \'foo\'',
             params: {
-              missingProperty: '.foo'
+              missingProperty: 'foo'
             },
             schemaPath: '#/required'
           }
