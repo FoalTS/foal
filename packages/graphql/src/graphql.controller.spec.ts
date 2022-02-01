@@ -836,7 +836,7 @@ describe('GraphQLController', () => {
             keyword: 'type',
             message: 'must be object,null',
             params: {
-              type: 'object,null'
+              type: ['object', 'null']
             },
             schemaPath: '#/properties/variables/type'
           }]);
