@@ -26,7 +26,7 @@ describe('The server', () => {
             params: {
               missingProperty: 'authorization'
             },
-            message: 'must have required property \'authorization\''
+            message: 'should have required property \'authorization\''
           }
         ]
       });
@@ -70,7 +70,7 @@ describe('The server', () => {
             params: {
               missingProperty: 'authorization'
             },
-            message: 'must have required property \'authorization\''
+            message: 'should have required property \'authorization\''
           }
         ]
       });
@@ -138,7 +138,7 @@ describe('The server', () => {
             params: {
               missingProperty: 'Authorization'
             },
-            message: 'must have required property \'Authorization\''
+            message: 'should have required property \'Authorization\''
           }
         ]
       });
