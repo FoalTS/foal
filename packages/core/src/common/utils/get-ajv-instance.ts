@@ -1,6 +1,7 @@
 // 3p
 import Ajv from 'ajv';
 import { Config } from '../../core';
+import addFormats from 'ajv-formats';
 
 // This is a little hack to test the customized configuration of `getAjvInstance`.
 // tslint:disable-next-line:variable-name
@@ -29,6 +30,8 @@ export function getAjvInstance(): Ajv {
       removeAdditional: Config.get('settings.ajv.removeAdditional', 'boolean|string', true) as boolean|'all'|'failing',
       useDefaults: Config.get('settings.ajv.useDefaults', 'boolean|string', true) as boolean|'empty',
     });
+    _instanceWrapper.instance.addKeyword({ keyword: 'components' });
+    addFormats(_instanceWrapper.instance);
   }
   return _instanceWrapper.instance;
 }

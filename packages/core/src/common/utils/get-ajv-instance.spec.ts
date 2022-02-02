@@ -1,4 +1,4 @@
-import { deepStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotThrow, strictEqual } from 'assert';
 import { Config, ConfigTypeError } from '../../core';
 import { _instanceWrapper, getAjvInstance } from './get-ajv-instance';
 
@@ -79,6 +79,28 @@ describe('getAjvInstance', () => {
         message: 'must be equal to constant',
       }
     ], 'AJV should have error data explaining "confirmPassword" didn\'t match the expected value in "password"');
+  });
+
+  it('should support the custom keyword "components" (for Foal\'s OpenAPI validation).', () => {
+    const schema = {
+      components: {},
+      properties: {},
+      type: 'object',
+    };
+    const data = { hello: 'world' };
+
+    doesNotThrow(() => getAjvInstance().validate(schema, data));
+  });
+
+  it('should support JSON schema formats for AJV (email, date, etc).', () => {
+    const schema = {
+      properties: {
+        email: { type: 'string', format: 'email' }
+      },
+      type: 'object',
+    };
+    const data = { email: 'foo@foalts.org' };
+    strictEqual(getAjvInstance().validate(schema, data), true);
   });
 
   describe('', () => {
