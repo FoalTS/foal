@@ -64,13 +64,13 @@ describe('Feature: Validating payloads', () => {
           code: 'VALIDATION_PAYLOAD_ERROR',
           payload: [
             {
-              'keyword': 'required',
-              'instancePath': '',
-              'schemaPath': '#/required',
-              'params': {
-                'missingProperty': 'name'
+              keyword: 'required',
+              instancePath: '',
+              schemaPath: '#/required',
+              params: {
+                missingProperty: 'name'
               },
-              'message': 'must have required property \'name\''
+              message: 'must have required property \'name\''
             }
           ]
         }
