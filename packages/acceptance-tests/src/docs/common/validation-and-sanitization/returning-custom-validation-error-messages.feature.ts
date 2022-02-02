@@ -1,5 +1,5 @@
 // 3p
-import * as ajvErrors from 'ajv-errors';
+import ajvErrors from 'ajv-errors';
 import * as request from 'supertest';
 
 // FoalTS

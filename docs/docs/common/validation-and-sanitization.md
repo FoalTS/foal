@@ -453,10 +453,10 @@ Assuming that you did not change Foal's default configuration of Ajv (see above)
 ### Custom Error Messages
 
 ```
-npm install ajv-errors@1
+npm install ajv-errors@3 ajv@8
 ```
 
-You can customize the errors returned by the validation hooks by using the [ajv-errors](https://github.com/ajv-validator/ajv-errors/tree/v1) plugin (version 1).
+You can customize the errors returned by the validation hooks by using the [ajv-errors](https://ajv.js.org/packages/ajv-errors.html) plugin.
 
 *Configuration*
 
@@ -508,7 +508,7 @@ module.exports = {
 *Example*
 ```typescript
 import { Context, getAjvInstance, HttpResponseOK, Post, ValidateBody } from '@foal/core';
-import * as ajvErrors from 'ajv-errors';
+import ajvErrors from 'ajv-errors';
 
 export class AppController {
 
