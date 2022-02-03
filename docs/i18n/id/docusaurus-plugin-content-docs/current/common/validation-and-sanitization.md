@@ -171,7 +171,7 @@ export class AppController {
     {
       "instancePath": "/price",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
@@ -228,9 +228,9 @@ export class AppController {
 {
   "headers": [
     {
-      "instancePath:" "['a-number']",
+      "instancePath": "/a-number",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
@@ -286,13 +286,13 @@ export class AppController {
 {
   "cookies": [
     {
-      "instancePath": "a-number",
+      "instancePath": "/A-Number",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
-      "schemaPath": "#/properties/a-number/type"
+      "schemaPath": "#/properties/A-Number/type"
     }
   ]
 }
@@ -343,7 +343,7 @@ export class AppController {
     {
       "instancePath": "/productId",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
@@ -399,9 +399,9 @@ export class AppController {
 {
   "query": [
     {
-      "instancePath": "['a-number']",
+      "instancePath": "/a-number",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
