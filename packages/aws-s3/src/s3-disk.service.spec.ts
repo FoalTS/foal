@@ -1,9 +1,9 @@
 // std
-import { strictEqual } from 'assert';
+import { rejects, strictEqual } from 'assert';
 import { Readable } from 'stream';
 
 // 3p
-import { Config, ConfigNotFoundError, createService, streamToBuffer } from '@foal/core';
+import { Config, ConfigNotFoundError, ConfigTypeError, createService, streamToBuffer } from '@foal/core';
 import { FileDoesNotExist } from '@foal/storage';
 import * as S3 from 'aws-sdk/clients/s3';
 
@@ -65,6 +65,7 @@ describe('S3Disk', () => {
 
   afterEach(async () => {
     Config.remove('settings.disk.s3.bucket');
+    Config.remove('settings.disk.s3.serverSideEncryption');
     Config.remove('settings.aws.endpoint');
     await rmObjectsIfExist(s3);
   });
@@ -145,6 +146,25 @@ describe('S3Disk', () => {
       });
       strictEqual(path.startsWith('foo/'), true);
       strictEqual(path.endsWith('.txt'), true);
+    });
+
+    it('should throw an Error if a serverSideEncryption option is specified in the config but is not a string.', async () => {
+      Config.set('settings.disk.s3.serverSideEncryption', 0);
+
+      await rejects(
+        () => disk.write('foo', Buffer.from('hello', 'utf8')),
+        new ConfigTypeError('settings.disk.s3.serverSideEncryption', 'string', 'number')
+      )
+    });
+
+    it('should use the serverSideEncryption option if it is provided.', async () => {
+      Config.set('settings.disk.s3.serverSideEncryption', 'AES256');
+
+      await disk.write('foo', Buffer.from('hello', 'utf8'), { name: 'test.txt' });
+
+      const { ServerSideEncryption } = await s3.getObject({ Bucket: bucketName, Key: 'foo/test.txt' }).promise();
+
+      strictEqual(ServerSideEncryption, 'AES256');
     });
 
   });

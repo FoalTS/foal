@@ -34,6 +34,7 @@ export class S3Disk extends Disk {
       Body: content,
       Bucket: this.getBucket(),
       Key: path,
+      ServerSideEncryption: Config.get('settings.disk.s3.serverSideEncryption', 'string'),
     }).promise();
 
     return { path };
