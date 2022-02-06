@@ -64,7 +64,7 @@ export abstract class Disk {
    * @abstract
    * @param {string} dirname - Name or path of the directory where the file must
    * be saved.
-   * @param {(Buffer|NodeJS.ReadableStream)} content - Content of the file (buffer or readable
+   * @param {(Buffer|Readable)} content - Content of the file (buffer or readable
    * stream).
    * @param {({ name?: string } | { extension?: string })} [options] - Optional name
    * or extension of the file. If no name is provided, the method generates one.
@@ -74,7 +74,7 @@ export abstract class Disk {
    */
   abstract write(
     dirname: string,
-    content: Buffer|NodeJS.ReadableStream,
+    content: Buffer|Readable,
     options?: { name?: string } | { extension?: string },
   ): Promise<{ path: string }>;
 
