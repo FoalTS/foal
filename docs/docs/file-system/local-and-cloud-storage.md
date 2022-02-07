@@ -120,6 +120,7 @@ AWS credentials are specified with the configuration keys `settings.aws.accessKe
 ```yaml
 settings:
   aws:
+    region: zzz
     accessKeyId: xxx
     secretAccessKey: yyy
   disk:
@@ -135,6 +136,7 @@ settings:
 {
   "settings": {
     "aws": {
+      "region": "zzz",
       "accessKeyId": "xxx",
       "secretAccessKey": "yyy"
     },
@@ -155,6 +157,7 @@ settings:
 module.exports = {
   settings: {
     aws: {
+      region: "zzz",
       accessKeyId: "xxx",
       secretAccessKey: "yyy"
     },
