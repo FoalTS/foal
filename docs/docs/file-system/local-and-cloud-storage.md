@@ -103,7 +103,9 @@ npm install @foal/aws-s3
 
 The bucket name is specified with the `settings.disk.s3.bucket` configuration key.
 
-AWS credentials are specified with the configuration keys `settings.aws.accessKeyId` and `settings.aws.secretAccessKey`  or using [AWS traditional techniques](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-shared.html).
+The region is specified with the `settings.aws.region` configuration key or using [AWS traditional technique](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-region.html).
+
+AWS credentials are specified with the configuration keys `settings.aws.accessKeyId` and `settings.aws.secretAccessKey`  or using [AWS traditional techniques](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/loading-node-credentials-shared.html).
 
 <Tabs
   defaultValue="yaml"
