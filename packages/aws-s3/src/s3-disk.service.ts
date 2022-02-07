@@ -34,6 +34,7 @@ export class S3Disk extends Disk {
       Body: content,
       Bucket: this.getBucket(),
       Key: path,
+      ServerSideEncryption: Config.get('settings.disk.s3.serverSideEncryption', 'string'),
     }).promise();
 
     return { path };
@@ -75,7 +76,7 @@ export class S3Disk extends Disk {
         file: stream as any,
         size: ContentLength as number
       };
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'NoSuchKey' || error.code === 'NotFound') {
         throw new FileDoesNotExist(path);
       }
@@ -91,7 +92,7 @@ export class S3Disk extends Disk {
         Key: path,
       }).promise();
       return ContentLength as number;
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'NotFound') {
         throw new FileDoesNotExist(path);
       }
