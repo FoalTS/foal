@@ -576,3 +576,75 @@ async function main() {
   // ...
 }
 ```
+
+# Support for AWS S3 Server-Side Encryption
+
+A new configuration option can be provided to the `S3Disk` to support server-side encryption.
+
+*Example*
+<Tabs
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
+```yaml
+settings:
+  aws:
+    accessKeyId: xxx
+    secretAccessKey: yyy
+  disk:
+    driver: '@foal/aws-s3'
+    s3:
+      bucket: 'uploaded'
+      serverSideEncryption: 'AES256'
+```
+
+</TabItem>
+<TabItem value="json">
+
+```json
+{
+  "settings": {
+    "aws": {
+      "accessKeyId": "xxx",
+      "secretAccessKey": "yyy"
+    },
+    "disk": {
+      "driver": "@foal/aws-s3",
+      "s3": {
+        "bucket": "uploaded",
+        "serverSideEncryption": "AES256"
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="js">
+
+```javascript
+module.exports = {
+  settings: {
+    aws: {
+      accessKeyId: "xxx",
+      secretAccessKey: "yyy"
+    },
+    disk: {
+      driver: "@foal/aws-s3",
+      s3: {
+        bucket: "uploaded",
+        serverSideEncryption: "AES256"
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
