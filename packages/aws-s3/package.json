@@ -45,7 +45,7 @@
   "dependencies": {
     "@foal/core": "^2.7.2",
     "@foal/storage": "^2.7.2",
-    "aws-sdk": "~2.834.0"
+    "aws-sdk": "~2.1069.0"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
