@@ -52,7 +52,7 @@
     "@foal/storage": "^2.7.2",
     "@foal/swagger": "^2.7.2",
     "@foal/typeorm": "^2.7.2",
-    "better-sqlite3": "~7.1.2",
+    "better-sqlite3": "~7.5.0",
     "graphql": "^15.5.0",
     "source-map-support": "~0.5.19",
     "typeorm": "~0.2.26",

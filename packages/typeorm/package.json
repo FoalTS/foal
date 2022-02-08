@@ -56,7 +56,7 @@
   "devDependencies": {
     "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
-    "better-sqlite3": "~7.1.2",
+    "better-sqlite3": "~7.5.0",
     "mocha": "~8.3.0",
     "mongodb": "~3.6.0",
     "mysql": "~2.16.0",
