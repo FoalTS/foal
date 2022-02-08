@@ -29,6 +29,7 @@ A collection of official and unofficial libraries and resources about Foal.
 - [Read file metadata during upload](https://www.youtube.com/watch?v=8wiyS5_Usoc)
 - [Beginner tutorial - How to create a simple to-do list](https://www.youtube.com/watch?v=kPDlHtgKk68)
 - [How to manage configuration with FoalTS](https://www.youtube.com/watch?v=e_W8QnImazo)
+- [How to create a Binance Smart Chain payments processor using Foal.TS (Spanish)](https://www.youtube.com/playlist?list=PLN55oDjIbZw_4oHbur71oorN_mJf5I2Of)
 
 ## Articles
 
