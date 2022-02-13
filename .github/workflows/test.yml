@@ -86,6 +86,8 @@ jobs:
       run: cd packages/cli && npm run test
     - name: Run unit tests of @foal/examples
       run: cd packages/examples && npm run test
+    - name: Run unit tests of @foal/graphiql
+      run: cd packages/graphiql && npm run test
     - name: Run unit tests of @foal/graphql
       run: cd packages/graphql && npm run test
     - name: Run unit tests of @foal/jwks-rsa
@@ -100,6 +102,8 @@ jobs:
       run: cd packages/redis && npm run test
     - name: Run unit tests of @foal/social
       run: cd packages/social && npm run test
+    - name: Run unit tests of @foal/socket.io
+      run: cd packages/socket.io && npm run test
     - name: Run unit tests of @foal/storage
       run: cd packages/storage && npm run test
     - name: Run unit tests of @foal/swagger

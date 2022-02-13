@@ -2,7 +2,7 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
-import { Context } from './contexts';
+import { Context } from './context';
 
 describe('Context', () => {
 

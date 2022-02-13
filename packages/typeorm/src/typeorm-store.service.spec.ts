@@ -2,7 +2,7 @@
 import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // 3p
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { Connection, createConnection, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
 import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
@@ -10,11 +10,11 @@ import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3';
 
-async function createTestConnection(type: DBType) {
+async function createTestConnection(type: DBType, name?: string): Promise<Connection> {
   switch (type) {
     case 'mysql':
     case 'mariadb':
-      await createConnection({
+      return createConnection({
         database: 'test',
         dropSchema: true,
         entities: [ DatabaseSession ],
@@ -23,10 +23,10 @@ async function createTestConnection(type: DBType) {
         synchronize: true,
         type,
         username: 'test',
+        name,
       });
-      break;
     case 'postgres':
-      await createConnection({
+      return createConnection({
         database: 'test',
         dropSchema: true,
         entities: [ DatabaseSession ],
@@ -34,20 +34,20 @@ async function createTestConnection(type: DBType) {
         synchronize: true,
         type,
         username: 'test',
+        name,
       });
-      break;
     case 'sqlite':
     case 'better-sqlite3':
-      await createConnection({
+      return createConnection({
         database: 'test_db.sqlite',
         dropSchema: true,
         entities: [ DatabaseSession ],
         synchronize: true,
         type,
+        name,
       });
-      break;
     default:
-      break;
+      throw new Error('Invalid database type.');
   }
 }
 
@@ -186,6 +186,7 @@ function storeTestSuite(type: DBType) {
 
   describe(`with ${type}`, () => {
 
+    let connection2: Connection|undefined;
     let store: TypeORMStore;
     let state: SessionState;
     let state2: SessionState;
@@ -207,7 +208,7 @@ function storeTestSuite(type: DBType) {
       };
     }
 
-    before(async () => {
+    beforeEach(async () => {
       store = createService(TypeORMStore);
       await createTestConnection(type);
     });
@@ -222,7 +223,10 @@ function storeTestSuite(type: DBType) {
       await getRepository(DatabaseSession).clear();
     });
 
-    after(() => getConnection().close());
+    afterEach(() => Promise.all([
+      connection2 && connection2.isConnected ? connection2.close() : null,
+      getConnection().isConnected ? getConnection().close() : null,
+    ]));
 
     function convertDbSessionToState(dbSession: DatabaseSession): SessionState {
       return {
@@ -250,6 +254,20 @@ function storeTestSuite(type: DBType) {
         user_id: state.userId ?? undefined,
       });
     }
+
+    describe('has a "setConnection" method that', () => {
+
+      it('should override the default connection used by other methods.', async () => {
+        connection2 = await createTestConnection(type, 'connection2');
+
+        store.setConnection(connection2);
+
+        strictEqual(connection2.isConnected, true);
+        await store.close();
+        strictEqual(connection2.isConnected, false);
+      });
+
+    })
 
     describe('has a "save" method that', () => {
 

@@ -7,8 +7,8 @@
   "scripts": {
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "lint:fix": "tslint -c tslint.json --project tsconfig.json --fix",
-    "start-docker": "docker stack deploy -c docker-compose.yml dev",
-    "stop-docker": "docker stack rm dev"
+    "start-docker": "docker-compose build && docker-compose up -d",
+    "stop-docker": "docker-compose down"
   },
   "repository": {
     "type": "git",

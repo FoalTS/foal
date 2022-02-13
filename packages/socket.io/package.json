@@ -1,0 +1,62 @@
+{
+  "name": "@foal/socket.io",
+  "version": "2.8.0",
+  "description": "Websocket integration for FoalTS",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "scripts": {
+    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
+    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "prepublish": "npm run build"
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "FoalTS",
+    "foal",
+    "socket.io",
+    "realtime",
+    "websocket",
+    "ws",
+    "nodejs"
+  ],
+  "bugs": {
+    "url": "https://github.com/FoalTS/foal/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FoalTS/foal"
+  },
+  "homepage": "https://github.com/FoalTS",
+  "contributors": [
+    "Loïc Poullain <loic.poullain@centraliens.net>"
+  ],
+  "license": "MIT",
+  "files": [
+    "lib/"
+  ],
+  "devDependencies": {
+    "@socket.io/redis-adapter": "~7.1.0",
+    "@types/mocha": "7.0.2",
+    "@types/node": "10.17.24",
+    "mocha": "~8.3.0",
+    "redis": "~3.1.2",
+    "rimraf": "~2.6.2",
+    "socket.io-client": "~4.4.1",
+    "ts-node": "~9.0.0",
+    "typescript": "~4.0.2"
+  },
+  "dependencies": {
+    "@foal/core": "^2.8.0",
+    "reflect-metadata": "~0.1.13",
+    "socket.io": "~4.4.1"
+  }
+}

@@ -1,4 +1,4 @@
-import { Context } from './contexts';
+import { Context } from './context';
 
 /**
  * Cookie options of the HttpResponse.setCookie method.
