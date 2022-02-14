@@ -16,7 +16,7 @@ import {
   ServiceManager,
   streamToBuffer
 } from '@foal/core';
-import * as Busboy from 'busboy';
+import * as createBusboy from 'busboy';
 
 // FoalTS
 import { Disk } from './disk.service';
@@ -59,14 +59,14 @@ export function ValidateMultipartFormDataBody(
       const fileNumberLimit = Config.get('settings.multipartRequests.fileNumberLimit', 'number');
       let busboy: any;
       try {
-        busboy = new Busboy({
-          headers: ctx.request.headers,
-          limits: {
-            fileSize: fileSizeLimit,
-            files: fileNumberLimit
-          }
-        });
-      } catch (error: any) {
+      busboy = createBusboy({
+        headers: ctx.request.headers,
+        limits: {
+          fileSize: fileSizeLimit,
+          files: fileNumberLimit
+        }
+      });
+    } catch (error: any) {
         return resolve(new HttpResponseBadRequest({
           headers: {
             error: 'INVALID_MULTIPART_FORM_DATA_REQUEST',
@@ -81,9 +81,10 @@ export function ValidateMultipartFormDataBody(
 
       busboy.on('field', (name: string, value: string) => fields[name] = value);
       // tslint:disable-next-line: max-line-length
-      busboy.on('file', (name: string, stream: Readable, filename: string, encoding: string, mimeType: string) => {
-        latestFileHasBeenUploaded = convertRejectedPromise(async () => {
-          stream.on('limit', () => sizeLimitReached = name);
+    busboy.on('file', (name: string, stream: Readable, info: { filename: string, encoding: string, mimeType: string }) => {
+      const { filename, encoding, mimeType } = info;
+      latestFileHasBeenUploaded = convertRejectedPromise(async () => {
+        stream.on('limit', () => sizeLimitReached = name);
 
           if (!(schema.files.hasOwnProperty(name))) {
             // Ignore unexpected files
