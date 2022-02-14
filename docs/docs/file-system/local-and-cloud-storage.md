@@ -174,6 +174,12 @@ module.exports = {
 </TabItem>
 </Tabs>
 
+**Additional options**
+
+|Key name|Type|Description|
+|---|---|---|
+|`settings.disk.s3.serverSideEncryption`|`'AES256'\|'aws:kms'`|Enables server-side encryption with SSE-S3 or SSE-KMS.|
+
 ### DigitalOcean
 
 DigitalOcean Spaces are compatible with AWS S3 API, so you can use the `@foal/aws-s3` package to connect to this storage.

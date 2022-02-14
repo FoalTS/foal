@@ -31,10 +31,6 @@ module.exports = {
   ],
   themeConfig: {
     image: 'img/meta-image.png',
-    googleAnalytics: {
-      trackingID: 'UA-112613053-1',
-      anonymizeIP: true,
-    },
     algolia: {
       apiKey: '888cc664f8cdf532950f93fdd481eac1',
       indexName: 'foalts',
@@ -120,6 +116,10 @@ module.exports = {
           showReadingTime: true,
           editUrl:
             'https://github.com/FoalTS/foal/edit/master/docs',
+        },
+        googleAnalytics: {
+          trackingID: 'UA-112613053-1',
+          anonymizeIP: true,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.scss'),
