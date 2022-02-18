@@ -226,6 +226,43 @@ describe('SocketIOController', () => {
         deepStrictEqual(payload, { status: 'error', error });
       });
 
+      it('and should not throw an error if no callback is given in the client "emit" method', async () => {
+        // This line is required because Mocha silently hides unhandled rejected promises.
+        process.removeAllListeners('unhandledRejection');
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser() {
+            return new WebsocketResponse();
+          }
+        }
+
+        await createConnection(WebsocketController);
+
+        clientSocket.emit('create user', {});
+      });
+
+      it('and should not throw an error if no payload is given in the client "emit" method', async () => {
+        // This line is required because Mocha silently hide unrejected promises.
+        process.removeAllListeners('unhandledRejection');
+
+        let actualPayload: any;
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext) {
+            actualPayload = ctx.payload;
+            return new WebsocketResponse();
+          }
+        }
+
+        await createConnection(WebsocketController);
+
+        await new Promise(resolve => clientSocket.emit('create user', resolve));
+
+        strictEqual(actualPayload, undefined);
+      });
+
       it('and should use SocketIOController.handleError if it exists.', async () => {
         Config.set('settings.logErrors', false);
 
