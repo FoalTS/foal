@@ -25,6 +25,10 @@ import { File } from './file';
 
 export interface MultipartFormDataSchema {
   fields?: {
+    type: 'object',
+    properties: {
+      [key: string]: any;
+    }
     [key: string]: any;
   };
   files: {
@@ -43,14 +47,16 @@ async function convertRejectedPromise(fn: () => Promise<void>, errCallback: () =
 }
 
 export function ValidateMultipartFormDataBody(
-  schema: MultipartFormDataSchema, options: { openapi?: boolean } = {}
+  filesSchema: MultipartFormDataSchema['files'],
+  fieldsSchema: MultipartFormDataSchema['fields'] = { type: 'object', properties: {} },
+  options: { openapi?: boolean } = {}
 ): HookDecorator {
 
   async function hook(ctx: Context, services: ServiceManager) {
     const fields: any = {};
     const files: any = {};
-    for (const name in schema.files) {
-      files[name] = schema.files[name].multiple ? [] : null;
+    for (const name in filesSchema) {
+      files[name] = filesSchema[name].multiple ? [] : null;
     }
 
     const disk = services.get(Disk);
@@ -86,7 +92,7 @@ export function ValidateMultipartFormDataBody(
       latestFileHasBeenUploaded = convertRejectedPromise(async () => {
         stream.on('limit', () => sizeLimitReached = name);
 
-        if (!(schema.files.hasOwnProperty(name))) {
+        if (!(filesSchema.hasOwnProperty(name))) {
           // Ignore unexpected files
           stream.on('data', () => { });
           // TODO: Test the line below.
@@ -94,7 +100,7 @@ export function ValidateMultipartFormDataBody(
           stream.on('error', () => { });
           return;
         }
-        const options = schema.files[name];
+        const options = filesSchema[name];
 
         const extension = extname(filename).replace('.', '');
 
@@ -129,7 +135,7 @@ export function ValidateMultipartFormDataBody(
 
     async function deleteUploadedFiles() {
       for (const name in files) {
-        if (!schema.files[name].saveTo) {
+        if (!filesSchema[name].saveTo) {
           continue;
         }
         if (Array.isArray(files[name])) {
@@ -180,20 +186,14 @@ export function ValidateMultipartFormDataBody(
 
     // Validate the fields
     const ajv = getAjvInstance();
-    const ajvSchema = {
-      additionalProperties: false,
-      properties: schema.fields,
-      required: Object.keys(schema.fields || {}),
-      type: 'object',
-    };
-    if (schema.fields && !ajv.validate(ajvSchema, fields)) {
+    if (!ajv.validate(fieldsSchema, fields)) {
       await deleteUploadedFiles();
       return new HttpResponseBadRequest({ body: ajv.errors });
     }
 
     // Validate the files
-    for (const name in schema.files) {
-      if ((files[name] === null || files[name].length === 0) && schema.files[name].required) {
+    for (const name in filesSchema) {
+      if ((files[name] === null || files[name].length === 0) && filesSchema[name].required) {
         await deleteUploadedFiles();
         return new HttpResponseBadRequest({
           body: {
@@ -207,20 +207,19 @@ export function ValidateMultipartFormDataBody(
     ctx.request.body = { fields, files };
   }
 
-  const required = schema.fields ? Object.keys(schema.fields) : [];
-  const properties: {
-    [key: string]: IApiSchema;
-  } = {
-    ...schema.fields
-  };
+  const openApiSchema: IApiSchema = {
+    ...fieldsSchema,
+    required: fieldsSchema.required ? [ ...fieldsSchema.required ] : [],
+    properties: { ...fieldsSchema.properties }
+  }
 
-  for (const key in schema.files) {
-    const file = schema.files[key];
+  for (const key in filesSchema) {
+    const file = filesSchema[key];
     if (file.required) {
-      required.push(key);
+      openApiSchema.required!.push(key);
     }
     if (file.multiple) {
-      properties[key] = {
+      openApiSchema.properties![key] = {
         items: {
           format: 'binary',
           type: 'string',
@@ -228,7 +227,7 @@ export function ValidateMultipartFormDataBody(
         type: 'array',
       };
     } else {
-      properties[key] = {
+      openApiSchema.properties![key] = {
         format: 'binary',
         type: 'string',
       };
@@ -238,11 +237,7 @@ export function ValidateMultipartFormDataBody(
   const requestBody: IApiRequestBody = {
     content: {
       'multipart/form-data': {
-        schema: {
-          properties,
-          required,
-          type: 'object',
-        }
+        schema: openApiSchema
       }
     }
   };

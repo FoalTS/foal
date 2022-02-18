@@ -29,7 +29,7 @@ describe('ValidateMultipartFormDataBody', () => {
   // Note: Unfortunatly, in order to have a multipart request object,
   // we need to create an Express server to test the hook.
   function createAppWithHook(schema: MultipartFormDataSchema, actual: { body: any }): Promise<any> {
-    @ValidateMultipartFormDataBody(schema)
+    @ValidateMultipartFormDataBody(schema.files, schema.fields)
     class AppController {
       @Post('/')
       index(ctx: Context) {
@@ -63,7 +63,11 @@ describe('ValidateMultipartFormDataBody', () => {
       const actual: { body: any } = { body: null };
       const app = await createAppWithHook({
         fields: {
-          name: { type: 'string' }
+          type: 'object',
+          properties: {
+            name: { type: 'string' }
+          },
+          additionalProperties: false,
         },
         files: {}
       }, actual);
@@ -120,7 +124,10 @@ describe('ValidateMultipartFormDataBody', () => {
     it('should return an HttpResponseBadRequest (invalid values).', async () => {
       const app = await createAppWithHook({
         fields: {
-          name: { type: 'boolean' }
+          type: 'object',
+          properties: {
+            name: { type: 'boolean' }
+          }
         },
         files: {}
       }, { body: null });
@@ -147,8 +154,12 @@ describe('ValidateMultipartFormDataBody', () => {
     it('should return an HttpResponseBadRequest (missing values).', async () => {
       const app = await createAppWithHook({
         fields: {
-          name: { type: 'string' },
-          name2: { type: 'string' }
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            name2: { type: 'string' }
+          },
+          required: ['name', 'name2']
         },
         files: {}
       }, { body: null });
@@ -175,7 +186,10 @@ describe('ValidateMultipartFormDataBody', () => {
     it('should not have uploaded the files.', async () => {
       const app = await createAppWithHook({
         fields: {
-          name: { type: 'boolean' }
+          type: 'object',
+          properties: {
+            name: { type: 'boolean' }
+          }
         },
         files: {
           foobar: { required: false, multiple: true, saveTo: 'images' },
@@ -798,8 +812,12 @@ describe('ValidateMultipartFormDataBody', () => {
 
     const schema: MultipartFormDataSchema = {
       fields: {
-        bar: { type: 'integer' },
-        foo: { type: 'integer' },
+        type: 'object',
+        properties: {
+          bar: { type: 'integer' },
+          foo: { type: 'integer' },
+        },
+        required: ['bar', 'foo']
       },
       files: {
         album: { required: false, multiple: true },
@@ -837,14 +855,14 @@ describe('ValidateMultipartFormDataBody', () => {
     };
 
     it('unless options.openapi is false.', () => {
-      @ValidateMultipartFormDataBody(schema, { openapi: false })
+      @ValidateMultipartFormDataBody(schema.files, schema.fields, { openapi: false })
       class Foobar {}
 
       deepStrictEqual(getApiRequestBody(Foobar), undefined);
     });
 
     it('with the proper request body.', () => {
-      @ValidateMultipartFormDataBody(schema)
+      @ValidateMultipartFormDataBody(schema.files, schema.fields)
       class Foobar {}
 
       const actualRequestBody = getApiRequestBody(Foobar);
