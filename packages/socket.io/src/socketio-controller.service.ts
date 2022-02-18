@@ -72,7 +72,6 @@ export abstract class SocketIOController implements ISocketIOController {
             data: response.payload,
           });
         });
-        socket.on('error', (err: any) => console.log(err));
       }
     });
 
