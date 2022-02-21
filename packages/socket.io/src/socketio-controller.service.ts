@@ -38,7 +38,7 @@ export abstract class SocketIOController implements ISocketIOController {
 
       try {
         await this.onConnection(connectionCtx);
-      } catch (error) {
+      } catch (error: any) {
         return next(error);
       }
 
@@ -48,8 +48,17 @@ export abstract class SocketIOController implements ISocketIOController {
     this.wsServer.io.on('connection', socket => {
       for (const route of routes) {
         socket.on(route.eventName, async (payload, cb) => {
+          if (typeof payload === 'function') {
+            cb = payload;
+            payload = undefined;
+          }
+
           const ctx = new WebsocketContext(route.eventName, payload, socket);
           const response = await getWebsocketResponse(route, ctx, this.services, this);
+
+          if (typeof cb !== 'function') {
+            return;
+          }
 
           if (response instanceof WebsocketErrorResponse) {
             return cb({

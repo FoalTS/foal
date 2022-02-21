@@ -92,13 +92,16 @@ socket.on('refresh products', () => {
 });
 ```
 
-> When using socket.io with FoalTS, the client function `emit` can only take one, two or three arguments.
-> ```typescript
-> socket.emit('event name');
-> socket.emit('event name', { /* payload */ });
-> // The acknowledgement callback must always be passed in third position.
-> socket.emit('event name', { /* payload */ }, response => { /* do something */ });
-> ```
+:::info
+
+When using socket.io with FoalTS, the client function `emit` can only take one, two or three arguments.
+```typescript
+socket.emit('event name');
+socket.emit('event name', { /* payload */ });
+socket.emit('event name', { /* payload */ }, response => { /* do something */ });
+```
+
+:::
 
 ## Architecture
 
