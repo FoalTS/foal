@@ -16,6 +16,7 @@ export {
   LocalDisk,
 } from './local-disk.service';
 export {
-  MultipartFormDataSchema,
+  FilesSchema,
+  FieldsSchema,
   ValidateMultipartFormDataBody,
 } from './validate-multipart-form-data-body.hook';

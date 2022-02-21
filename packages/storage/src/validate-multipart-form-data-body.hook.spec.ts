@@ -12,7 +12,7 @@ import * as request from 'supertest';
 // FoalTS
 import { Disk } from './disk.service';
 import { File } from './file';
-import { MultipartFormDataSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
+import { FilesSchema, FieldsSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
 
 describe('ValidateMultipartFormDataBody', () => {
 
@@ -28,7 +28,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
   // Note: Unfortunatly, in order to have a multipart request object,
   // we need to create an Express server to test the hook.
-  function createAppWithHook(schema: MultipartFormDataSchema, actual: { body: any }): Promise<any> {
+  function createAppWithHook(schema: { files: FilesSchema, fields?: FieldsSchema }, actual: { body: any }): Promise<any> {
     @ValidateMultipartFormDataBody(schema.files, schema.fields)
     class AppController {
       @Post('/')
@@ -810,20 +810,19 @@ describe('ValidateMultipartFormDataBody', () => {
 
   describe('should define an API specification', () => {
 
-    const schema: MultipartFormDataSchema = {
-      fields: {
-        type: 'object',
-        properties: {
-          bar: { type: 'integer' },
-          foo: { type: 'integer' },
-        },
-        required: ['bar', 'foo']
+    const fieldsSchema: FieldsSchema = {
+      type: 'object',
+      properties: {
+        bar: { type: 'integer' },
+        foo: { type: 'integer' },
       },
-      files: {
-        album: { required: false, multiple: true },
-        profile: { required: true }
-      }
+      required: ['bar', 'foo']
     };
+    const filesSchema: FilesSchema = {
+      album: { required: false, multiple: true },
+      profile: { required: true }
+    }
+
     const expectedRequestBody: IApiRequestBody = {
       content: {
         'multipart/form-data': {
@@ -855,14 +854,14 @@ describe('ValidateMultipartFormDataBody', () => {
     };
 
     it('unless options.openapi is false.', () => {
-      @ValidateMultipartFormDataBody(schema.files, schema.fields, { openapi: false })
+      @ValidateMultipartFormDataBody(filesSchema, fieldsSchema, { openapi: false })
       class Foobar {}
 
       deepStrictEqual(getApiRequestBody(Foobar), undefined);
     });
 
     it('with the proper request body.', () => {
-      @ValidateMultipartFormDataBody(schema.files, schema.fields)
+      @ValidateMultipartFormDataBody(filesSchema, fieldsSchema)
       class Foobar {}
 
       const actualRequestBody = getApiRequestBody(Foobar);

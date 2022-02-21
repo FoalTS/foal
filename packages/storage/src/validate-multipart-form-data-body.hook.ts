@@ -23,17 +23,16 @@ import * as createBusboy from 'busboy';
 import { Disk } from './disk.service';
 import { File } from './file';
 
-export interface MultipartFormDataSchema {
-  fields?: {
-    type: 'object',
-    properties: {
-      [key: string]: any;
-    }
+export interface FilesSchema {
+  [key: string]: { required: boolean, multiple?: boolean, saveTo?: string }
+}
+
+export interface FieldsSchema {
+  type: 'object',
+  properties: {
     [key: string]: any;
-  };
-  files: {
-    [key: string]: { required: boolean, multiple?: boolean, saveTo?: string }
-  };
+  }
+  [key: string]: any;
 }
 
 async function convertRejectedPromise(fn: () => Promise<void>, errCallback: () => void): Promise<{ error?: any }> {
@@ -47,8 +46,8 @@ async function convertRejectedPromise(fn: () => Promise<void>, errCallback: () =
 }
 
 export function ValidateMultipartFormDataBody(
-  filesSchema: MultipartFormDataSchema['files'],
-  fieldsSchema: MultipartFormDataSchema['fields'] = { type: 'object', properties: {} },
+  filesSchema: FilesSchema,
+  fieldsSchema: FieldsSchema = { type: 'object', properties: {} },
   options: { openapi?: boolean } = {}
 ): HookDecorator {
 
