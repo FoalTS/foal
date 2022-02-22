@@ -1,3 +1,4 @@
+import { FileList } from '../../common/file';
 import { Session } from '../../sessions';
 
 interface Readable {
@@ -113,6 +114,7 @@ export class Context<User = any, ContextSession = Session | undefined, ContextSt
   user: User;
   session: ContextSession;
   request: Request;
+  files: FileList;
 
   /**
    * Creates an instance of Context.
@@ -121,5 +123,6 @@ export class Context<User = any, ContextSession = Session | undefined, ContextSt
    */
   constructor(request: any) {
     this.request = request;
+    this.files = new FileList();
   }
 }
