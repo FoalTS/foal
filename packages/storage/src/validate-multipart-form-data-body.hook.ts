@@ -35,16 +35,6 @@ export interface FieldsSchema {
   [key: string]: any;
 }
 
-async function convertRejectedPromise(fn: () => Promise<void>, errCallback: () => void): Promise<{ error?: any }> {
-  try {
-    await fn();
-  } catch (error: any) {
-    errCallback();
-    return { error };
-  }
-  return {};
-}
-
 export function ValidateMultipartFormDataBody(
   filesSchema: FilesSchema,
   fieldsSchema: FieldsSchema = { type: 'object', properties: {} },
@@ -76,36 +66,40 @@ export function ValidateMultipartFormDataBody(
 
     let sizeLimitReached: boolean | string = false;
     let numberLimitReached = false;
-    let latestFileHasBeenUploaded: Promise<{ error?: any }> = Promise.resolve({});
+    const uploads: Promise<{ error?: any }>[] = [];
 
     busboy.on('field', (name: string, value: string) => ctx.request.body[name] = value);
     busboy.on('file', (name: string, stream: Readable, info: { filename: string, encoding: string, mimeType: string }) => {
       const { filename, encoding, mimeType } = info;
-      latestFileHasBeenUploaded = convertRejectedPromise(async () => {
-        stream.on('limit', () => sizeLimitReached = name);
 
-        if (!(filesSchema.hasOwnProperty(name))) {
-          // Ignore unexpected files
-          stream.on('data', () => { });
-          // TODO: Test the line below.
-          // Ignore errors of unexpected files.
-          stream.on('error', () => { });
-          return;
+      if (!(name in filesSchema)) {
+        stream.resume();
+        return;
+      }
+
+      stream.on('limit', () => sizeLimitReached = name);
+
+      uploads.push(new Promise(async resolve => {
+        try {
+          const { saveTo } = filesSchema[name];
+
+          const extension = extname(filename).replace('.', '');
+
+          const file = new File({
+            buffer: saveTo === undefined ? await streamToBuffer(stream) : undefined,
+            encoding,
+            filename,
+            mimeType,
+            path: saveTo !== undefined ? (await disk.write(saveTo, stream, { extension })).path : undefined,
+          });
+
+          ctx.files.push(name, file);
+          resolve({});
+        } catch (error) {
+          stream.resume();
+          resolve({ error });
         }
-        const { saveTo } = filesSchema[name];
-
-        const extension = extname(filename).replace('.', '');
-
-        const file = new File({
-          buffer: saveTo === undefined ? await streamToBuffer(stream) : undefined,
-          encoding,
-          filename,
-          mimeType,
-          path: saveTo !== undefined ? (await disk.write(saveTo, stream, { extension })).path : undefined,
-        });
-
-        ctx.files.push(name, file);
-      }, () => stream.resume());
+      }));
     });
     busboy.on('filesLimit', () => numberLimitReached = true);
 
@@ -127,7 +121,7 @@ export function ValidateMultipartFormDataBody(
     // Wait for all saves to finish.
     // When busboy "finish" event is emitted, it means all busboy streams have ended.
     // It does not mean that other Disk streams/promises have ended/been resolved.
-    const { error } = await latestFileHasBeenUploaded;
+    const errors = (await Promise.all(uploads)).filter(({ error }) => !!error);
 
     // We can only rely upon resolved promises to detect errors in the "finish" handlers.
     // Otherwise, we would attach a "catch" handler _after_ the promise may have been rejected.
@@ -136,8 +130,8 @@ export function ValidateMultipartFormDataBody(
     //    setTimeout(() => {
     //      promise.catch(() => console.log("The promise is caught"));
     //    }, 1000)
-    if (error) {
-      throw error;
+    if (errors.length > 0) {
+      throw errors[0];
     }
 
     if (sizeLimitReached) {
