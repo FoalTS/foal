@@ -52,12 +52,6 @@ export function ValidateMultipartFormDataBody(
 ): HookDecorator {
 
   async function hook(ctx: Context, services: ServiceManager) {
-    const fields: any = {};
-    const files: any = {};
-    for (const name in filesSchema) {
-      files[name] = filesSchema[name].multiple ? [] : null;
-    }
-
     const disk = services.get(Disk);
 
     const fileSizeLimit = Config.get('settings.multipartRequests.fileSizeLimit', 'number');
@@ -84,8 +78,7 @@ export function ValidateMultipartFormDataBody(
     let numberLimitReached = false;
     let latestFileHasBeenUploaded: Promise<{ error?: any }> = Promise.resolve({});
 
-    busboy.on('field', (name: string, value: string) => fields[name] = value);
-    // tslint:disable-next-line: max-line-length
+    busboy.on('field', (name: string, value: string) => ctx.request.body[name] = value);
     busboy.on('file', (name: string, stream: Readable, info: { filename: string, encoding: string, mimeType: string }) => {
       const { filename, encoding, mimeType } = info;
       latestFileHasBeenUploaded = convertRejectedPromise(async () => {
@@ -99,31 +92,19 @@ export function ValidateMultipartFormDataBody(
           stream.on('error', () => { });
           return;
         }
-        const options = filesSchema[name];
+        const { saveTo } = filesSchema[name];
 
         const extension = extname(filename).replace('.', '');
 
-        let path: string | undefined;
-        let buffer: Buffer | undefined;
-        if (options.saveTo) {
-          path = (await disk.write(options.saveTo, stream, { extension })).path;
-        } else {
-          buffer = await streamToBuffer(stream);
-        }
         const file = new File({
-          buffer,
+          buffer: saveTo === undefined ? await streamToBuffer(stream) : undefined,
           encoding,
           filename,
           mimeType,
-          path,
+          path: saveTo !== undefined ? (await disk.write(saveTo, stream, { extension })).path : undefined,
         });
 
-        if (options.multiple) {
-          files[name].push(file);
-          return;
-        }
-
-        files[name] = file;
+        ctx.files.push(name, file);
       }, () => stream.resume());
     });
     busboy.on('filesLimit', () => numberLimitReached = true);
@@ -133,17 +114,13 @@ export function ValidateMultipartFormDataBody(
     await promisify(finished)(busboy);
 
     async function deleteUploadedFiles() {
-      for (const name in files) {
+      for (const name in filesSchema) {
         if (!filesSchema[name].saveTo) {
           continue;
         }
-        if (Array.isArray(files[name])) {
-          await Promise.all(files[name].map(({ path }: { path: string }) => disk.delete(path)));
-          continue;
-        }
-        if (files[name] !== null) {
-          await disk.delete(files[name].path);
-        }
+        await Promise.all(
+          ctx.files.get(name).map(({ path }) => disk.delete(path))
+        );
       }
     }
 
@@ -185,14 +162,14 @@ export function ValidateMultipartFormDataBody(
 
     // Validate the fields
     const ajv = getAjvInstance();
-    if (!ajv.validate(fieldsSchema, fields)) {
+    if (!ajv.validate(fieldsSchema, ctx.request.body)) {
       await deleteUploadedFiles();
       return new HttpResponseBadRequest({ body: ajv.errors });
     }
 
     // Validate the files
     for (const name in filesSchema) {
-      if ((files[name] === null || files[name].length === 0) && filesSchema[name].required) {
+      if (ctx.files.get(name).length === 0 && filesSchema[name].required) {
         await deleteUploadedFiles();
         return new HttpResponseBadRequest({
           body: {
@@ -202,8 +179,6 @@ export function ValidateMultipartFormDataBody(
         });
       }
     }
-
-    ctx.request.body = { fields, files };
   }
 
   const openApiSchema: IApiSchema = {
