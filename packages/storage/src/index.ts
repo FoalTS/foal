@@ -10,9 +10,6 @@ export {
   isFileDoesNotExist,
 } from './disk.service';
 export {
-  File,
-} from './file';
-export {
   LocalDisk,
 } from './local-disk.service';
 export {

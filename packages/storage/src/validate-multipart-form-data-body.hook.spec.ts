@@ -5,13 +5,12 @@ import { join } from 'path';
 
 // 3p
 import {
-  Config, Context, createApp, createService, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
+  Config, Context, createApp, createService, File, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
 } from '@foal/core';
 import * as request from 'supertest';
 
 // FoalTS
 import { Disk } from './disk.service';
-import { File } from './file';
 import { FilesSchema, FieldsSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
 
 describe('ValidateMultipartFormDataBody', () => {

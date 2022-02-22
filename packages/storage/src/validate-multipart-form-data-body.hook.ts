@@ -8,6 +8,7 @@ import {
   ApiRequestBody,
   Config,
   Context,
+  File,
   getAjvInstance,
   Hook,
   HookDecorator,
@@ -21,7 +22,6 @@ import * as createBusboy from 'busboy';
 
 // FoalTS
 import { Disk } from './disk.service';
-import { File } from './file';
 
 export interface FilesSchema {
   [key: string]: { required: boolean, multiple?: boolean, saveTo?: string }
