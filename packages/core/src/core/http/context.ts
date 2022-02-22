@@ -103,6 +103,7 @@ interface Request extends IncomingMessage {
  * - the express request object,
  * - the user object if available,
  * - the session object if available,
+ * - a file list object,
  * - and a `state` object that can be used to pass data across several hooks.
  *
  * @export
@@ -110,11 +111,11 @@ interface Request extends IncomingMessage {
  * @template User
  */
 export class Context<User = any, ContextSession = Session | undefined, ContextState = any> {
-  state: ContextState = {} as ContextState;
+  readonly state: ContextState = {} as ContextState;
   user: User;
   session: ContextSession;
-  request: Request;
-  files: FileList;
+  readonly request: Request;
+  readonly files: FileList;
 
   /**
    * Creates an instance of Context.
