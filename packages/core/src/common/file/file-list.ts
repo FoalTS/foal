@@ -23,4 +23,8 @@ export class FileList {
 
     return [ ...files ];
   }
+
+  getAll(): File[] {
+    return Array.from(this.files.values()).flat();
+  }
 }

@@ -52,4 +52,20 @@ describe('FileList', () => {
     });
   });
 
+  describe('has a "getAll" method that', () => {
+    it('should return all the files added with the push method.', () => {
+      const fileList = new FileList();
+      fileList.push('doc1', file1);
+      fileList.push('doc2', file2);
+
+      deepStrictEqual(fileList.getAll(), [ file1, file2 ]);
+    });
+
+    it('should return an empty array if no file were added previously with the "push" method', () => {
+      const fileList = new FileList();
+
+      deepStrictEqual(fileList.getAll(), []);
+    });
+  })
+
 })
