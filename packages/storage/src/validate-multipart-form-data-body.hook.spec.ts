@@ -23,11 +23,25 @@ describe('ValidateMultipartFormDataBody', () => {
   beforeEach(() => {
     Config.set('settings.loggerFormat', 'none');
     Config.set('settings.disk.driver', 'local');
+
+    Config.set('settings.disk.local.directory', 'uploaded');
+
+    mkdirSync('uploaded');
+    mkdirSync('uploaded/images');
   });
 
   afterEach(() => {
     Config.remove('settings.loggerFormat');
     Config.remove('settings.disk.driver');
+
+    Config.remove('settings.disk.local.directory');
+
+    const contents = readdirSync('uploaded/images');
+    for (const content of contents) {
+      unlinkSync(join('uploaded/images', content));
+    }
+    rmdirSync('uploaded/images');
+    rmdirSync('uploaded');
   });
 
   // Note: Unfortunatly, in order to have a multipart request object,
@@ -108,55 +122,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
   describe('when the fields are not validated against the given schema', () => {
 
-    beforeEach(() => {
-      Config.set('settings.disk.local.directory', 'uploaded');
-
-      mkdirSync('uploaded');
-      mkdirSync('uploaded/images');
-    });
-
-    afterEach(() => {
-      Config.remove('settings.disk.local.directory');
-
-      const contents = readdirSync('uploaded/images');
-      for (const content of contents) {
-        unlinkSync(join('uploaded/images', content));
-      }
-      rmdirSync('uploaded/images');
-      rmdirSync('uploaded');
-    });
-
-    it('should return an HttpResponseBadRequest (invalid values).', async () => {
-      const app = await createAppWithHook({
-        fields: {
-          type: 'object',
-          properties: {
-            name: { type: 'boolean' }
-          }
-        },
-        files: {}
-      }, {});
-
-      await request(app)
-        .post('/')
-        .field('name', 'hello')
-        .expect(400)
-        .expect({
-          body: [
-            {
-              dataPath: '.name',
-              keyword: 'type',
-              message: 'should be boolean',
-              params: {
-                type: 'boolean'
-              },
-              schemaPath: '#/properties/name/type',
-            }
-          ]
-        });
-    });
-
-    it('should return an HttpResponseBadRequest (missing values).', async () => {
+    it('should return an HttpResponseBadRequest.', async () => {
       const app = await createAppWithHook({
         fields: {
           type: 'object',
@@ -222,22 +188,10 @@ describe('ValidateMultipartFormDataBody', () => {
 
     beforeEach(() => {
       Config.set('settings.multipartRequests.fileSizeLimit', 200000);
-      Config.set('settings.disk.local.directory', 'uploaded');
-
-      mkdirSync('uploaded');
-      mkdirSync('uploaded/images');
     });
 
     afterEach(() => {
       Config.remove('settings.multipartRequests.fileSizeLimit');
-      Config.remove('settings.disk.local.directory');
-
-      const contents = readdirSync('uploaded/images');
-      for (const content of contents) {
-        unlinkSync(join('uploaded/images', content));
-      }
-      rmdirSync('uploaded/images');
-      rmdirSync('uploaded');
     });
 
     it('should return an HttpResponseBadRequest.', async () => {
@@ -284,22 +238,10 @@ describe('ValidateMultipartFormDataBody', () => {
 
     beforeEach(() => {
       Config.set('settings.multipartRequests.fileNumberLimit', 1);
-      Config.set('settings.disk.local.directory', 'uploaded');
-
-      mkdirSync('uploaded');
-      mkdirSync('uploaded/images');
     });
 
     afterEach(() => {
       Config.remove('settings.multipartRequests.fileNumberLimit');
-      Config.remove('settings.disk.local.directory');
-
-      const contents = readdirSync('uploaded/images');
-      for (const content of contents) {
-        unlinkSync(join('uploaded/images', content));
-      }
-      rmdirSync('uploaded/images');
-      rmdirSync('uploaded');
     });
 
     it('should return an HttpResponseBadRequest.', async () => {
@@ -352,11 +294,12 @@ describe('ValidateMultipartFormDataBody', () => {
       .expect(200);
 
     deepStrictEqual(actual.files!.get('foobar'), []);
+    strictEqual(readdirSync('uploaded/images').length, 0);
   });
 
   describe('when a file is not uploaded and it is not required', () => {
 
-    it('should have "ctx.files.get()" return an empty array if the option "multiple" is not defined.', async () => {
+    it('should have "ctx.files.get()" return an empty array.', async () => {
       const actual: Actual = {};
       const app = await createAppWithHook({
         files: {
@@ -372,105 +315,15 @@ describe('ValidateMultipartFormDataBody', () => {
       deepStrictEqual(actual.files!.get('foobar'), []);
     });
 
-    it('should have "ctx.files.get()" return an empty array if the option "multiple" is "false".', async () => {
-      const actual: Actual = {};
-      const app = await createAppWithHook({
-        files: {
-          foobar: { required: false, multiple: false }
-        }
-      }, actual);
-
-      await request(app)
-        .post('/')
-        .field('name', 'hello')
-        .expect(200);
-
-      deepStrictEqual(actual.files!.get('foobar'), []);
-    });
-
-    it('should have "ctx.files.get()" return an empty array if the option "multiple" is "true".', async () => {
-      const actual: Actual = {};
-      const app = await createAppWithHook({
-        files: {
-          foobar: { required: false, multiple: true }
-        }
-      }, actual);
-
-      await request(app)
-        .post('/')
-        .field('name', 'hello')
-        .expect(200);
-
-      deepStrictEqual(actual.files!.get('foobar'), []);
-    });
-
   });
 
   describe('when a file is not uploaded but it is required', () => {
 
-    beforeEach(() => {
-      Config.set('settings.disk.local.directory', 'uploaded');
-
-      mkdirSync('uploaded');
-      mkdirSync('uploaded/images');
-    });
-
-    afterEach(() => {
-      Config.remove('settings.disk.local.directory');
-
-      const contents = readdirSync('uploaded/images');
-      for (const content of contents) {
-        unlinkSync(join('uploaded/images', content));
-      }
-      rmdirSync('uploaded/images');
-      rmdirSync('uploaded');
-    });
-
-    it('should return an HttpResponseBadRequest (multiple === undefined).', async () => {
+    it('should return an HttpResponseBadRequest.', async () => {
       const actual: Actual = {};
       const app = await createAppWithHook({
         files: {
           foobar: { required: true }
-        }
-      }, actual);
-
-      return request(app)
-        .post('/')
-        .field('name', 'hello')
-        .expect(400)
-        .expect({
-          body: {
-            error: 'MISSING_FILE',
-            message: 'The file "foobar" is required.'
-          }
-        });
-    });
-
-    it('should return an HttpResponseBadRequest (multiple === false).', async () => {
-      const actual: Actual = {};
-      const app = await createAppWithHook({
-        files: {
-          foobar: { required: true, multiple: false }
-        }
-      }, actual);
-
-      return request(app)
-        .post('/')
-        .field('name', 'hello')
-        .expect(400)
-        .expect({
-          body: {
-            error: 'MISSING_FILE',
-            message: 'The file "foobar" is required.'
-          }
-        });
-    });
-
-    it('should return an HttpResponseBadRequest (multiple === true).', async () => {
-      const actual: Actual = {};
-      const app = await createAppWithHook({
-        files: {
-          foobar: { required: true, multiple: true }
         }
       }, actual);
 
@@ -513,7 +366,7 @@ describe('ValidateMultipartFormDataBody', () => {
 
   describe('when a file is uploaded and saveTo is undefined', () => {
 
-    it('should create a buffer and add the file to ctx.files if the option "multiple" is not defined.', async () => {
+    it('should create a buffer and add the file to ctx.files.', async () => {
       const actual: Actual = {};
       const app = await createAppWithHook({
         files: {
@@ -534,58 +387,6 @@ describe('ValidateMultipartFormDataBody', () => {
       })]);
     });
 
-    it('should create a buffer and add the file to ctx.files if the option "multiple" is "false".', async () => {
-      const actual: Actual = {};
-      const app = await createAppWithHook({
-        files: {
-          foobar: { required: true, multiple: false }
-        }
-      }, actual);
-
-      await request(app)
-        .post('/')
-        .attach('foobar', createReadStream('src/image.test.png'))
-        .expect(200);
-
-      deepStrictEqual(actual.files!.get('foobar'), [new File({
-        buffer: readFileSync('src/image.test.png'),
-        encoding: '7bit',
-        filename: 'image.test.png',
-        mimeType: 'image/png',
-      })]);
-    });
-
-    it('should create buffers and add the files to ctx.files if the option "multiple" is "true".',
-      async () => {
-        const actual: Actual = {};
-        const app = await createAppWithHook({
-          files: {
-            foobar: { required: true, multiple: true }
-          }
-        }, actual);
-
-        await request(app)
-          .post('/')
-          .attach('foobar', createReadStream('src/image.test.png'))
-          .attach('foobar', createReadStream('src/image.test2.png'))
-          .expect(200);
-
-        deepStrictEqual(actual.files!.get('foobar'), [
-          new File({
-            buffer: readFileSync('src/image.test.png'),
-            encoding: '7bit',
-            filename: 'image.test.png',
-            mimeType: 'image/png',
-          }),
-          new File({
-            buffer: readFileSync('src/image.test2.png'),
-            encoding: '7bit',
-            filename: 'image.test2.png',
-            mimeType: 'image/png',
-          }),
-        ]);
-      });
-
   });
 
   describe('when a file is uploaded and saveTo is defined', () => {
@@ -593,25 +394,13 @@ describe('ValidateMultipartFormDataBody', () => {
     let disk: Disk;
 
     beforeEach(() => {
-      Config.set('settings.disk.local.directory', 'uploaded');
       Config.set('settings.logErrors', false);
-
-      mkdirSync('uploaded');
-      mkdirSync('uploaded/images');
 
       disk = createService(Disk);
     });
 
     afterEach(() => {
-      Config.remove('settings.disk.local.directory');
       Config.remove('settings.logErrors');
-
-      const contents = readdirSync('uploaded/images');
-      for (const content of contents) {
-        unlinkSync(join('uploaded/images', content));
-      }
-      rmdirSync('uploaded/images');
-      rmdirSync('uploaded');
     });
 
     it('should not kill the process if Disk.write throws an error.', async () => {
@@ -648,8 +437,7 @@ describe('ValidateMultipartFormDataBody', () => {
         .expect(500);
     });
 
-    it('should save the file to the disk and set ctx.request.files with its path'
-      + ' if the option "multiple" is not defined.', async () => {
+    it('should save the file to the disk and set ctx.request.files with its path.', async () => {
         const actual: Actual = {};
         const app = await createAppWithHook({
           files: {
@@ -677,71 +465,6 @@ describe('ValidateMultipartFormDataBody', () => {
         strictEqual(foobar.encoding, '7bit');
         strictEqual(foobar.mimeType, 'image/png');
         strictEqual(foobar.filename, 'image.test.png');
-      }
-    );
-
-    it('should save the file to the disk and set ctx.request.files with its path'
-      + ' if the option "multiple" is "false".', async () => {
-        const actual: Actual = {};
-        const app = await createAppWithHook({
-          files: {
-            foobar: { required: false, multiple: false, saveTo: 'images' }
-          }
-        }, actual);
-
-        await request(app)
-          .post('/')
-          .attach('foobar', createReadStream('src/image.test.png'))
-          .expect(200);
-
-        const foobar = actual.files!.get('foobar')[0];
-        strictEqual(typeof foobar, 'object');
-
-        const path = foobar.path;
-        strictEqual(typeof path, 'string');
-
-        deepStrictEqual(
-          readFileSync('src/image.test.png'),
-          (await disk.read(path, 'buffer')).file
-        );
-        strictEqual(foobar.encoding, '7bit');
-        strictEqual(foobar.mimeType, 'image/png');
-        strictEqual(foobar.filename, 'image.test.png');
-      }
-    );
-
-    it('should save the file to the disk and set ctx.request.files with an array'
-      + ' of the pathS  if the option "multiple" is "true".', async () => {
-        const actual: Actual = {};
-        const app = await createAppWithHook({
-          files: {
-            foobar: { required: false, multiple: true, saveTo: 'images' }
-          }
-        }, actual);
-
-        await request(app)
-          .post('/')
-          .attach('foobar', createReadStream('src/image.test.png'))
-          .attach('foobar', createReadStream('src/image.test2.png'))
-          .expect(200);
-
-        const foobar = actual.files!.get('foobar');
-
-        deepStrictEqual(
-          readFileSync('src/image.test.png'),
-          (await disk.read(foobar[0].path, 'buffer')).file
-        );
-        strictEqual(foobar[0].encoding, '7bit');
-        strictEqual(foobar[0].mimeType, 'image/png');
-        strictEqual(foobar[0].filename, 'image.test.png');
-
-        deepStrictEqual(
-          readFileSync('src/image.test2.png'),
-          (await disk.read(foobar[1].path, 'buffer')).file
-        );
-        strictEqual(foobar[1].encoding, '7bit');
-        strictEqual(foobar[1].mimeType, 'image/png');
-        strictEqual(foobar[1].filename, 'image.test2.png');
       }
     );
 

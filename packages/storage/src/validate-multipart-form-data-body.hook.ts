@@ -108,14 +108,7 @@ export function ValidateMultipartFormDataBody(
     await promisify(finished)(busboy);
 
     async function deleteUploadedFiles() {
-      for (const name in filesSchema) {
-        if (!filesSchema[name].saveTo) {
-          continue;
-        }
-        await Promise.all(
-          ctx.files.get(name).map(({ path }) => disk.delete(path))
-        );
-      }
+      await Promise.all(ctx.files.getAll().map(({ path }) => path && disk.delete(path)));
     }
 
     // Wait for all saves to finish.
