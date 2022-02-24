@@ -8,10 +8,10 @@
     "noImplicitAny": false,
     "strictPropertyInitialization": false,
     "module": "commonjs",
-    "target": "es2017",
+    "target": "es2019",
     "rootDir": "src",
     "lib": [
-      "es2017",
+      "es2019",
       "dom"
     ]
   },
