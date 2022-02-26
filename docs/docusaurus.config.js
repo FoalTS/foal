@@ -13,13 +13,13 @@ module.exports = {
     locales: ['en', 'fr', 'es', 'id'],
     localeConfigs: {
       en: {
-        label: 'English',
+        label: 'EN',
       },
       fr: {
-        label: 'Français',
+        label: 'FR',
       },
       es: {
-        label: 'Español',
+        label: 'ES',
       },
       id: {
         label: 'Bahasa Indonesia',
