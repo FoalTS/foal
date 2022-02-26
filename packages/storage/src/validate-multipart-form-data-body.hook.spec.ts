@@ -481,7 +481,6 @@ describe('ValidateMultipartFormDataBody', () => {
         .attach('foobar', createReadStream('src/image.test.png'))
         .expect(200);
 
-
       const foobar = actual.files!.get('foobar')[0];
       strictEqual(typeof foobar, 'object');
 
@@ -511,6 +510,110 @@ describe('ValidateMultipartFormDataBody', () => {
     });
 
   });
+
+  describe('when multiple files are uploaded', () => {
+
+    context('given the "multiple" option is true', () => {
+      it('should NOT return an HttpResponseBadRequest.', async () => {
+        const actual: Actual = {};
+        const app = await createAppWithHook({
+          files: {
+            foobar: { required: false, multiple: true, saveTo: 'images' }
+          }
+        }, actual);
+
+        await request(app)
+          .post('/')
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .attach('foobar', createReadStream('src/image.test2.png'))
+          .expect(200);
+
+        strictEqual(actual.files!.get('foobar').length, 2);
+      });
+    });
+
+    context('given the "multiple" option is false', () => {
+      it('should return an HttpResponseBadRequest.', async () => {
+        const actual: Actual = {};
+        const app = await createAppWithHook({
+          files: {
+            foobar: { required: false, multiple: false, saveTo: 'images' }
+          }
+        }, actual);
+
+        await request(app)
+          .post('/')
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .attach('foobar', createReadStream('src/image.test2.png'))
+          .expect(400)
+          .expect({
+            body: {
+              error: 'MULTIPLE_FILES_NOT_ALLOWED',
+              message: 'Uploading multiple "foobar" files is not allowed.'
+            }
+          });
+      });
+
+      it('should NOT have uploaded the files.', async () => {
+        const app = await createAppWithHook({
+          files: {
+            foobar: { required: false, multiple: false, saveTo: 'images' },
+            singleFoobar: { required: false, saveTo: 'images' },
+          }
+        }, {});
+
+        await request(app)
+          .post('/')
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .attach('foobar', createReadStream('src/image.test2.png'))
+          .attach('singleFoobar', createReadStream('src/image.test2.png'))
+          .expect(400); // Test that no error is rejected in the hook (error 500).
+
+        strictEqual(readdirSync('uploaded/images').length, 0);
+      });
+    });
+
+    context('given the "multiple" option is undefined', () => {
+      it('should return an HttpResponseBadRequest.', async () => {
+        const actual: Actual = {};
+        const app = await createAppWithHook({
+          files: {
+            foobar: { required: false, saveTo: 'images' }
+          }
+        }, actual);
+
+        await request(app)
+          .post('/')
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .attach('foobar', createReadStream('src/image.test2.png'))
+          .expect(400)
+          .expect({
+            body: {
+              error: 'MULTIPLE_FILES_NOT_ALLOWED',
+              message: 'Uploading multiple "foobar" files is not allowed.'
+            }
+          });
+      });
+
+      it('should NOT have uploaded the files.', async () => {
+        const app = await createAppWithHook({
+          files: {
+            foobar: { required: false, saveTo: 'images' },
+            singleFoobar: { required: false, saveTo: 'images' },
+          }
+        }, {});
+
+        await request(app)
+          .post('/')
+          .attach('foobar', createReadStream('src/image.test.png'))
+          .attach('foobar', createReadStream('src/image.test2.png'))
+          .attach('singleFoobar', createReadStream('src/image.test2.png'))
+          .expect(400); // Test that no error is rejected in the hook (error 500).
+
+        strictEqual(readdirSync('uploaded/images').length, 0);
+      });
+    });
+  })
 
   describe('should define an API specification', () => {
 

@@ -156,12 +156,21 @@ export function ValidateMultipartFormDataBody(
 
     // Validate the files
     for (const name in filesSchema) {
-      if (ctx.files.get(name).length === 0 && filesSchema[name].required) {
+      if (filesSchema[name].required && ctx.files.get(name).length === 0) {
         await deleteUploadedFiles();
         return new HttpResponseBadRequest({
           body: {
             error: 'MISSING_FILE',
             message: `The file "${name}" is required.`
+          }
+        });
+      }
+      if (!filesSchema[name].multiple && ctx.files.get(name).length > 1) {
+        await deleteUploadedFiles();
+        return new HttpResponseBadRequest({
+          body: {
+            error: 'MULTIPLE_FILES_NOT_ALLOWED',
+            message: `Uploading multiple "${name}" files is not allowed.`
           }
         });
       }
