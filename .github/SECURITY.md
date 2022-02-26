@@ -8,7 +8,7 @@
 | 1.x          | :x:                |
 | 0.8          | :x:                |
 
-See our [LTS](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#long-term-support-policy-and-schedule).
+See our [LTS policy](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#long-term-support-policy-and-schedule).
 
 ## Reporting a Vulnerability
 
