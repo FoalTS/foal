@@ -10,4 +10,4 @@
 
 ## Reporting a Vulnerability
 
-If you think you have found a security hole, please do NOT submit an issue but send an email directly to security@foalts.org.
+If you think you have found a security vulnerability, please DO NOT submit an issue but email security@foalts.org directly.
