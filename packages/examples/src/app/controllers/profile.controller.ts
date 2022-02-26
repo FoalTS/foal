@@ -20,9 +20,7 @@ export class ProfileController {
   @Post('/image')
   @Hook(async ctx => { ctx.user = await getRepository(User).findOne({ email: 'john@foalts.org' }); })
   @ValidateMultipartFormDataBody({
-    files: {
-      profile: { required: true, saveTo: 'images/profiles' }
-    }
+    profile: { required: true, saveTo: 'images/profiles' }
   })
   async uploadProfilePicture(ctx: Context<User>) {
     const user = ctx.user;
@@ -34,7 +32,7 @@ export class ProfileController {
       }
     }
 
-    user.profile = ctx.request.body.files.profile.path;
+    user.profile = ctx.files.get('profile')[0].path;
     await getRepository(User).save(user);
 
     return new HttpResponseRedirect('/profile');

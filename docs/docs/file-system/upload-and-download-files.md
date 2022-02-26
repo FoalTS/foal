@@ -76,7 +76,11 @@ module.exports = {
 
 Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and save them in streaming to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
 
-> The `enctype` of your requests must be of type `multipart/form-data`. If needed, you can use a [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) object for this.
+:::info
+
+The `enctype` of your requests must be of type `multipart/form-data`. If needed, you can use a [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) object for this.
+
+:::info
 
 ### Using Buffers
 
@@ -88,14 +92,12 @@ export class UserController {
 
   @Post('/profile')
   @ValidateMultipartFormDataBody({
-    files: {
-      profile: { required: true },
-      images: { required: false, multiple: true }
-    }
+    profile: { required: true },
+    images: { required: false, multiple: true }
   })
   uploadProfilePhoto(ctx: Context) {
-    const { buffer } = ctx.request.body.files.profile;
-    const files = ctx.request.body.files.images;
+    const { buffer } = ctx.files.get('profile')[0];
+    const files = ctx.files.get('images');
     for (const file of files) {
       // Do something with file.buffer
     }
@@ -131,12 +133,10 @@ export class UserController {
 
   @Post('/profile')
   @ValidateMultipartFormDataBody({
-    files: {
-      profile: { required: true, saveTo: 'images/profiles' }
-    }
+    profile: { required: true, saveTo: 'images/profiles' }
   })
   uploadProfilePhoto(ctx: Context) {
-    const { path } = ctx.request.body.files.profile;
+    const { path } = ctx.files.get('profile')[0];
     // images/profiles/GxunLNJu3RXI9l7C7cQlBvXFQ+iqdxSRJmsR4TU+0Fo=.png
   }
 
@@ -148,7 +148,7 @@ export class UserController {
 When uploading files, the browser sends additional metadata. This can be accessed in the controller method.
 
 ```typescript
-const file = ctx.request.body.files.profile;
+const file = ctx.files.get('profile')[0];
 // file.mimeType, ...
 ```
 
@@ -171,18 +171,23 @@ import { ValidateMultipartFormDataBody } from '@foal/storage';
 export class UserController {
 
   @Post('/profile')
-  @ValidateMultipartFormDataBody({
-    fields: {
-      description: { type: 'string' }
-    },
-    files: {
+  @ValidateMultipartFormDataBody(
+    {
       profile: { required: true }
+    },
+    {
+      type: 'object',
+      properties: {
+        description: { type: 'string' }
+      },
+      required: ['description'],
+      additionalProperties: false
     }
-  })
+  )
   uploadProfilePhoto(ctx: Context) {
-    const { path } = ctx.request.body.files.profile;
+    const { path } = ctx.files.get('profile')[0];
     // images/profiles/GxunLNJu3RXI9l7C7cQlBvXFQ+iqdxSRJmsR4TU+0Fo=.png
-    const { description } = ctx.request.body.fields;
+    const { description } = ctx.request.body;
   }
 
 }
@@ -320,9 +325,7 @@ export class AppController {
 
   @Post('/profile')
   @ValidateMultipartFormDataBody({
-    files: {
-      profile: { required: true, saveTo: 'images/profiles' }
-    }
+    profile: { required: true, saveTo: 'images/profiles' }
   })
   async uploadProfilePicture(ctx: Context<User>) {
     const user = ctx.user;
@@ -330,7 +333,7 @@ export class AppController {
       await this.disk.delete(user.profile);
     }
 
-    user.profile = ctx.request.body.files.profile.path;
+    user.profile = ctx.files.get('profile')[0].path;
     await user.save();
 
     return new HttpResponseRedirect('/');

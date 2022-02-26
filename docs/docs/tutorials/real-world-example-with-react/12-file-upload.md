@@ -76,19 +76,22 @@ export class ProfileController {
 
   @Post()
   @UserRequired()
-  @ValidateMultipartFormDataBody({
-    files: {
+  @ValidateMultipartFormDataBody(
+    {
       avatar: { required: false, saveTo: 'images/profiles/uploaded' }
     },
-    fields: {
-      name: { type: 'string', maxLength: 255 }
+    {
+      type: 'object':
+      properties {
+        name: { type: 'string', maxLength: 255 }
+      },
+      required: ['name']
     }
-  })
+  )
   async updateProfileImage(ctx: Context<User>) {
-    ctx.user.name = ctx.request.body.fields.name;
+    ctx.user.name = ctx.request.body.name;
 
-    // Warning: use Foal's File interface
-    const file = ctx.request.body.files.avatar as File|undefined;
+    const file: File|undefined = ctx.files.get('avatar')[0];
     if (file) {
       if (ctx.user.avatar) {
         await this.disk.delete(ctx.user.avatar);
