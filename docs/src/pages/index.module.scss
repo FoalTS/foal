@@ -109,10 +109,15 @@ $max-content-width: 1280px;
   background-image: url('../img/background8.png');
 
   .content {
-    padding-top: 100px;
+    padding-top: 90px;
+
+    // Takes into account the line break of the title.
+    @media (max-width: 880px)  {
+      padding-top: 40px;
+    }
 
     @media (max-width: $small-screen)  {
-      padding-top: 70px;
+      padding-top: 40px;
     }
 
     @media (min-width: $large-screen)  {
