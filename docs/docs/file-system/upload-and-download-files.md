@@ -74,7 +74,7 @@ module.exports = {
 
 ## File Uploads
 
-Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and save them in streaming to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
+Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and **save them in streaming** to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
 
 :::info
 
@@ -106,18 +106,14 @@ export class UserController {
 }
 ```
 
-The names of the file fields must be provided in the `files` parameter of the hook. Uploaded files which are not listed here are simply ignored.
+The names of the file fields must be provided as first parameter of the hook. Uploaded files which are not listed here are simply ignored.
 
-The `required` parameter tells the hook if it should return a `400 - BAD REQUEST` error if no file has been uploaded for the given field. In this case, the controller method is not executed.
+For each file, you can provide the validation options below.
 
-When the upload is successful, the request body object is set with the buffer files.
-
-| Value of `multiple` | Files uploaded | Value in the request object |
-|  --- | --- | --- |
-| `false` (default) | None |  `null` |
-| | At least one | A buffer |
-| `true` | None | An empty array |
-|  | At least one | An array of buffers |
+| Validation option | Default value | Description |
+| --- | --- | --- |
+| `required` | `false` | Specifies that at least one file must be uploaded for the given name. If not, the server returns a `400 - BAD REQUEST` error. |
+| `multiple` | `false` | Specifies that multiple files can be uploaded for the given name. If set to `false` and multiple files are uploaded, the server returns a `400 - BAD REQUEST` error. |
 
 ### Using Local or Cloud Storage (streaming)
 
@@ -162,7 +158,7 @@ const file = ctx.files.get('profile')[0];
 
 ### Adding Fields
 
-Multipart requests can also contain non-binary fields such as a string. These fields are validated and parsed by the hook. All specified fields are mandatory in the request.
+Multipart requests can also contain non-binary fields such as a string. These fields are parsed by the hook and can be validated by passing a second parameter.
 
 ```typescript
 import { Context, Post } from '@foal/core';
@@ -466,6 +462,7 @@ module.exports = {
 </Tabs>
 
 *Example*
+
 | Static file | URL path with no prefix | URL path with the prefix `/static `|
 | --- | --- | --- |
 | index.html | `/` and `/index.html` | `/static` and `/static/index.html` |
