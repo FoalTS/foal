@@ -91,6 +91,7 @@ export class ProfileController {
   async updateProfileImage(ctx: Context<User>) {
     ctx.user.name = ctx.request.body.name;
 
+    // Warning: File must be imported from `@foal/core`.
     const file: File|undefined = ctx.files.get('avatar')[0];
     if (file) {
       if (ctx.user.avatar) {
