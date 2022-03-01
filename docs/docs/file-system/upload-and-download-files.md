@@ -122,7 +122,7 @@ Instead of using buffers, you can also choose to save directly the file to your 
 > With the previous configuration, this path is relative to the `uploaded` directory. Note that must create the `uploaded/images` and `uploaded/images/profiles` directories before you can upload a file.
 
 ```typescript
-import { Context, Post } from '@foal/core';
+import { Context, HttpResponseOK, Post } from '@foal/core';
 import { ValidateMultipartFormDataBody } from '@foal/storage';
 
 export class UserController {
@@ -134,6 +134,7 @@ export class UserController {
   uploadProfilePhoto(ctx: Context) {
     const { path } = ctx.files.get('profile')[0];
     // images/profiles/GxunLNJu3RXI9l7C7cQlBvXFQ+iqdxSRJmsR4TU+0Fo=.png
+    return new HttpResponseOK(path);
   }
 
 }
