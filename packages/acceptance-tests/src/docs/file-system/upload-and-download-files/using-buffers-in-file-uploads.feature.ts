@@ -30,6 +30,7 @@ describe('Feature: Using buffers in file uploads', () => {
       uploadProfilePhoto(ctx: Context) {
         const { buffer } = ctx.files.get('profile')[0];
         const files = ctx.files.get('images');
+        // tslint:disable-next-line:no-unused-variable
         for (const file of files) {
           // Do something with file.buffer
         }
