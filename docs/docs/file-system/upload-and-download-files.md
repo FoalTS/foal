@@ -263,14 +263,14 @@ class ApiController {
 
   @Get('/download')
   download() {
-    return this.disk.createHttpResponse('avatars/foo.jpg');
+    return this.disk.createHttpResponse('avatars/foo.png');
   }
 
   @Get('/download2')
-  download() {
-    return this.disk.createHttpResponse('avatars/foo.jpg', {
+  download2() {
+    return this.disk.createHttpResponse('avatars/foo.png', {
       forceDownload: true,
-      filename: 'avatar.jpg'
+      filename: 'avatar.png'
     });
   }
 
