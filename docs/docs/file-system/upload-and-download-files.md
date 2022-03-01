@@ -162,7 +162,7 @@ const file = ctx.files.get('profile')[0];
 Multipart requests can also contain non-binary fields such as a string. These fields are parsed by the hook and can be validated by passing a second parameter.
 
 ```typescript
-import { Context, Post } from '@foal/core';
+import { Context, HttpResponseOK, Post } from '@foal/core';
 import { ValidateMultipartFormDataBody } from '@foal/storage';
 
 export class UserController {
@@ -185,6 +185,7 @@ export class UserController {
     const { path } = ctx.files.get('profile')[0];
     // images/profiles/GxunLNJu3RXI9l7C7cQlBvXFQ+iqdxSRJmsR4TU+0Fo=.png
     const { description } = ctx.request.body;
+    return new HttpResponseOK({ path, description });
   }
 
 }
