@@ -69,7 +69,7 @@ export function ValidateMultipartFormDataBody(
     const uploads: Promise<{ error?: any }>[] = [];
 
     busboy.on('field', (name: string, value: string) => ctx.request.body[name] = value);
-    busboy.on('file', (name: string, stream: Readable, info: { filename: string, encoding: string, mimeType: string }) => {
+    busboy.on('file', (name: string, stream: Readable, info: { filename: string|undefined, encoding: string, mimeType: string }) => {
       const { filename, encoding, mimeType } = info;
 
       if (!(name in filesSchema)) {
@@ -83,7 +83,7 @@ export function ValidateMultipartFormDataBody(
         try {
           const { saveTo } = filesSchema[name];
 
-          const extension = extname(filename).replace('.', '');
+          const extension = extname(filename || '').replace('.', '');
 
           const file = new File({
             buffer: saveTo === undefined ? await streamToBuffer(stream) : undefined,
