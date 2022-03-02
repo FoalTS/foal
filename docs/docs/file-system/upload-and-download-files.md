@@ -291,9 +291,7 @@ Create a new directory `uploaded/images/profiles` at the root of your project.
 
 *user.entity.ts*
 ```typescript
-import {
-  BaseEntity, Column, Entity, PrimaryGeneratedColumn
-} from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
@@ -301,7 +299,7 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   profile: string;
 
 }
@@ -309,7 +307,7 @@ export class User extends BaseEntity {
 
 *app.controller.ts*
 ```typescript
-import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, HttpResponseOK, Post, render } from '@foal/core';
+import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, Post, render } from '@foal/core';
 import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
 
 import { User } from './entities';
