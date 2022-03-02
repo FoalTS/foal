@@ -121,12 +121,14 @@ describe('AbstractDisk', () => {
       });
 
       it('should have a correct Content-Type header based on the file extension.', async () => {
-        let response = await disk.createHttpResponse(path);
+        const response = await disk.createHttpResponse(path);
         strictEqual(response.getHeader('Content-Type'), 'image/png');
-
-        response = await disk.createHttpResponse('test-file');
-        strictEqual(response.getHeader('Content-Type'), undefined);
       });
+
+      it('should have a Content-Type header equal to "application/octet-stream" when the file extension cannot be computed.', async () => {
+        const response = await disk.createHttpResponse('test-file');
+        strictEqual(response.getHeader('Content-Type'), 'application/octet-stream');
+      })
 
       it('should have a correct Content-Length header based on the file size.', async () => {
         const httpResponse = await disk.createHttpResponse(path);

@@ -140,16 +140,14 @@ export abstract class Disk {
     const { file, size } = await this.read(path, 'stream');
     const response = new HttpResponseOK(file, { stream: true });
 
-    const mimeType = getType(path);
-    if (mimeType) {
-      response.setHeader('Content-Type', mimeType);
-    }
-
     if (options.cache) {
       response.setHeader('Cache-Control', options.cache);
     }
 
+    const mimeType = getType(path) || 'application/octet-stream';
+
     return response
+      .setHeader('Content-Type', mimeType)
       .setHeader('Content-Length', size.toString())
       .setHeader(
         'Content-Disposition',
