@@ -8,7 +8,7 @@ import * as request from 'supertest';
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, getConnection } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
-import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, HttpResponseOK, Post, render, Config, createApp, Hook } from '@foal/core';
+import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, Post, render, Config, createApp, Hook } from '@foal/core';
 import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
 import { createTestConnection } from '../../../common';
 
