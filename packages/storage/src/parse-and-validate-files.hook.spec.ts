@@ -5,7 +5,7 @@ import { join } from 'path';
 
 // 3p
 import {
-  Config, ConfigNotFoundError, Context, createApp, createService, File, FileList, getApiRequestBody, HttpResponse, HttpResponseOK, IApiRequestBody, IAppController, Post, renderError
+  Config, ConfigNotFoundError, Context, createApp, createService, File, FileList, getApiRequestBody, HttpResponseOK, IApiRequestBody, IAppController, Post, renderError
 } from '@foal/core';
 import * as request from 'supertest';
 
