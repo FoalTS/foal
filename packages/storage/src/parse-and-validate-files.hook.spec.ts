@@ -5,7 +5,7 @@ import { join } from 'path';
 
 // 3p
 import {
-  Config, Context, createApp, createService, File, FileList, getApiRequestBody, HttpResponseOK, IApiRequestBody, Post
+  Config, ConfigNotFoundError, Context, createApp, createService, File, FileList, getApiRequestBody, HttpResponse, HttpResponseOK, IApiRequestBody, IAppController, Post, renderError
 } from '@foal/core';
 import * as request from 'supertest';
 
@@ -455,6 +455,37 @@ describe('ParseAndValidateFiles', () => {
         .post('/')
         .attach('foobar', createReadStream('src/image.test.png'))
         .expect(500);
+    });
+
+    it('should re-rejects errors rejected or thrown by Disk.write.', async () => {
+      Config.remove('settings.disk.local.directory');
+
+      let actualError: any;
+
+      class AppController implements IAppController {
+        @Post('/')
+        @ParseAndValidateFiles({
+          foobar: { required: false, saveTo: 'images' },
+          foobar2: { required: false }
+        })
+        index(ctx: Context) {
+          return new HttpResponseOK();
+        }
+
+        async handleError(error: Error, ctx: Context) {
+          actualError = error;
+          return renderError(error, ctx);
+        }
+      }
+
+      const app = await createApp(AppController);
+
+      await request(app)
+        .post('/')
+        .attach('foobar', createReadStream('src/image.test.png'))
+        .expect(500);
+
+      strictEqual(actualError.name, new ConfigNotFoundError('foobar').name);
     });
 
     it('should save the file to the disk and set ctx.request.files with its path.', async () => {

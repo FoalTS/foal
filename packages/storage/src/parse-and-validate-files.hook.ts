@@ -66,7 +66,7 @@ export function ParseAndValidateFiles(
 
     let sizeLimitReached: boolean | string = false;
     let numberLimitReached = false;
-    const uploads: Promise<{ error?: any }>[] = [];
+    const uploads: Promise<{ error?: Error }>[] = [];
 
     busboy.on('field', (name: string, value: string) => ctx.request.body[name] = value);
     busboy.on('file', (name: string, stream: Readable, info: { filename: string|undefined, encoding: string, mimeType: string }) => {
@@ -95,7 +95,7 @@ export function ParseAndValidateFiles(
 
           ctx.files.push(name, file);
           resolve({});
-        } catch (error) {
+        } catch (error: any) {
           stream.resume();
           resolve({ error });
         }
@@ -114,7 +114,9 @@ export function ParseAndValidateFiles(
     // Wait for all saves to finish.
     // When busboy "finish" event is emitted, it means all busboy streams have ended.
     // It does not mean that other Disk streams/promises have ended/been resolved.
-    const errors = (await Promise.all(uploads)).filter(({ error }) => !!error);
+    const errors = (await Promise.all(uploads))
+      .filter(({ error }) => !!error)
+      .map(({ error }) => error);
 
     // We can only rely upon resolved promises to detect errors in the "finish" handlers.
     // Otherwise, we would attach a "catch" handler _after_ the promise may have been rejected.
