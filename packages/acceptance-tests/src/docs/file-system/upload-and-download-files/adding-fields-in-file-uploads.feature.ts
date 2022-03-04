@@ -8,7 +8,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import { Context, createApp, HttpResponseOK, Post } from '@foal/core';
-import { ValidateMultipartFormDataBody } from '@foal/storage';
+import { ParseAndValidateFiles } from '@foal/storage';
 
 describe('Feature: Adding fields in file uploads', () => {
 
@@ -19,7 +19,7 @@ describe('Feature: Adding fields in file uploads', () => {
     class UserController {
 
       @Post('/profile')
-      @ValidateMultipartFormDataBody(
+      @ParseAndValidateFiles(
         {
           profile: { required: true }
         },

@@ -15,5 +15,5 @@ export {
 export {
   FilesSchema,
   FieldsSchema,
-  ValidateMultipartFormDataBody,
-} from './validate-multipart-form-data-body.hook';
+  ParseAndValidateFiles,
+} from './parse-and-validate-files.hook';

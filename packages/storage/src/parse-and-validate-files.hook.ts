@@ -35,7 +35,7 @@ export interface FieldsSchema {
   [key: string]: any;
 }
 
-export function ValidateMultipartFormDataBody(
+export function ParseAndValidateFiles(
   filesSchema: FilesSchema,
   fieldsSchema: FieldsSchema = { type: 'object', properties: {} },
   options: { openapi?: boolean } = {}

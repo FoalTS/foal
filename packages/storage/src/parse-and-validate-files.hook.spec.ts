@@ -11,14 +11,14 @@ import * as request from 'supertest';
 
 // FoalTS
 import { Disk } from './disk.service';
-import { FilesSchema, FieldsSchema, ValidateMultipartFormDataBody } from './validate-multipart-form-data-body.hook';
+import { FilesSchema, FieldsSchema, ParseAndValidateFiles } from './parse-and-validate-files.hook';
 
 interface Actual {
   body?: any;
   files?: FileList;
 }
 
-describe('ValidateMultipartFormDataBody', () => {
+describe('ParseAndValidateFiles', () => {
 
   beforeEach(() => {
     Config.set('settings.loggerFormat', 'none');
@@ -47,7 +47,7 @@ describe('ValidateMultipartFormDataBody', () => {
   // Note: Unfortunatly, in order to have a multipart request object,
   // we need to create an Express server to test the hook.
   function createAppWithHook(schema: { files: FilesSchema, fields?: FieldsSchema }, actual: Actual): Promise<any> {
-    @ValidateMultipartFormDataBody(schema.files, schema.fields)
+    @ParseAndValidateFiles(schema.files, schema.fields)
     class AppController {
       @Post('/')
       index(ctx: Context) {
@@ -681,14 +681,14 @@ describe('ValidateMultipartFormDataBody', () => {
     };
 
     it('unless options.openapi is false.', () => {
-      @ValidateMultipartFormDataBody(filesSchema, fieldsSchema, { openapi: false })
+      @ParseAndValidateFiles(filesSchema, fieldsSchema, { openapi: false })
       class Foobar {}
 
       deepStrictEqual(getApiRequestBody(Foobar), undefined);
     });
 
     it('with the proper request body.', () => {
-      @ValidateMultipartFormDataBody(filesSchema, fieldsSchema)
+      @ParseAndValidateFiles(filesSchema, fieldsSchema)
       class Foobar {}
 
       const actualRequestBody = getApiRequestBody(Foobar);

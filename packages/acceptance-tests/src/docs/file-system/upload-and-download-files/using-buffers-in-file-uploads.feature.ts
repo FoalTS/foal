@@ -8,7 +8,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import { Context, Post, File, HttpResponseOK, createApp } from '@foal/core';
-import { ValidateMultipartFormDataBody } from '@foal/storage';
+import { ParseAndValidateFiles } from '@foal/storage';
 
 describe('Feature: Using buffers in file uploads', () => {
 
@@ -23,7 +23,7 @@ describe('Feature: Using buffers in file uploads', () => {
     class UserController {
 
       @Post('/profile')
-      @ValidateMultipartFormDataBody({
+      @ParseAndValidateFiles({
         profile: { required: true },
         images: { required: false, multiple: true }
       })

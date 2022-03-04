@@ -8,7 +8,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import { Config, Context, createApp, HttpResponseOK, Post } from '@foal/core';
-import { ValidateMultipartFormDataBody } from '@foal/storage';
+import { ParseAndValidateFiles } from '@foal/storage';
 
 describe('Feature: Using streaming in file upload', () => {
 
@@ -41,7 +41,7 @@ describe('Feature: Using streaming in file upload', () => {
     class UserController {
 
       @Post('/profile')
-      @ValidateMultipartFormDataBody({
+      @ParseAndValidateFiles({
         profile: { required: true, saveTo: 'images/profiles' }
       })
       uploadProfilePhoto(ctx: Context) {

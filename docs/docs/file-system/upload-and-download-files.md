@@ -74,7 +74,7 @@ module.exports = {
 
 ## File Uploads
 
-Files can be uploaded using `multipart/form-data` requests. The `@ValidateMultipartFormDataBody` hook parses the request body, validates the submitted fields and files and **save them in streaming** to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
+Files can be uploaded using `multipart/form-data` requests. The `@ParseAndValidateFiles` hook parses the request body, validates the submitted fields and files and **save them in streaming** to your local or Cloud storage. It also provides the ability to create file buffers if you wish.
 
 :::info
 
@@ -86,12 +86,12 @@ The `enctype` of your requests must be of type `multipart/form-data`. If needed,
 
 ```typescript
 import { Context, Post } from '@foal/core';
-import { ValidateMultipartFormDataBody } from '@foal/storage';
+import { ParseAndValidateFiles } from '@foal/storage';
 
 export class UserController {
 
   @Post('/profile')
-  @ValidateMultipartFormDataBody({
+  @ParseAndValidateFiles({
     profile: { required: true },
     images: { required: false, multiple: true }
   })
@@ -123,12 +123,12 @@ Instead of using buffers, you can also choose to save directly the file to your 
 
 ```typescript
 import { Context, HttpResponseOK, Post } from '@foal/core';
-import { ValidateMultipartFormDataBody } from '@foal/storage';
+import { ParseAndValidateFiles } from '@foal/storage';
 
 export class UserController {
 
   @Post('/profile')
-  @ValidateMultipartFormDataBody({
+  @ParseAndValidateFiles({
     profile: { required: true, saveTo: 'images/profiles' }
   })
   uploadProfilePhoto(ctx: Context) {
@@ -163,12 +163,12 @@ Multipart requests can also contain non-binary fields such as a string. These fi
 
 ```typescript
 import { Context, HttpResponseOK, Post } from '@foal/core';
-import { ValidateMultipartFormDataBody } from '@foal/storage';
+import { ParseAndValidateFiles } from '@foal/storage';
 
 export class UserController {
 
   @Post('/profile')
-  @ValidateMultipartFormDataBody(
+  @ParseAndValidateFiles(
     {
       profile: { required: true }
     },
@@ -308,7 +308,7 @@ export class User extends BaseEntity {
 *app.controller.ts*
 ```typescript
 import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, Post, render } from '@foal/core';
-import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
+import { Disk, ParseAndValidateFiles } from '@foal/storage';
 
 import { User } from './entities';
 
@@ -320,7 +320,7 @@ export class AppController {
   disk: Disk;
 
   @Post('/profile')
-  @ValidateMultipartFormDataBody({
+  @ParseAndValidateFiles({
     profile: { required: true, saveTo: 'images/profiles' }
   })
   async uploadProfilePicture(ctx: Context<User>) {

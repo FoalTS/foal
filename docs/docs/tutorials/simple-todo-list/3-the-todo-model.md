@@ -10,7 +10,7 @@ Let&#8217;s create your first model. The CLI provides a useful command to genera
 foal generate entity todo
 ```
 
-> FoalTS uses [TypeORM](http://typeorm.io), a complete *Object-Relational Mapper*, to communicate with the database(s). In TypeORM, simple models are called *entities* and are classes decorated with the `Entity` decorator.
+> FoalTS uses [TypeORM](http://typeorm.io) as default ORM to communicate with the database(s). But youIn TypeORM, simple models are called *entities* and are classes decorated with the `Entity` decorator.
 
 
 > Every new project in FoalTS uses an `SQLite` database as it does not require any additional installation. But TypeORM supports many other databases. We will keep this one in this tutorial for simplicity.

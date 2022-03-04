@@ -9,7 +9,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, getConnection } fro
 
 // FoalTS
 import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, Post, render, Config, createApp, Hook } from '@foal/core';
-import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
+import { Disk, ParseAndValidateFiles } from '@foal/storage';
 import { createTestConnection } from '../../../common';
 
 describe('Feature: Uploading and downloading files with a database.', () => {
@@ -64,7 +64,7 @@ describe('Feature: Uploading and downloading files with a database.', () => {
       disk: Disk;
 
       @Post('/profile')
-      @ValidateMultipartFormDataBody({
+      @ParseAndValidateFiles({
         profile: { required: true, saveTo: 'images/profiles' }
       })
       async uploadProfilePicture(ctx: Context<User>) {

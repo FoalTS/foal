@@ -1,7 +1,7 @@
 import {
   ApiInfo, ApiServer, Context, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Post, render
 } from '@foal/core';
-import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
+import { Disk, ParseAndValidateFiles } from '@foal/storage';
 import { getRepository } from '@foal/typeorm/node_modules/typeorm';
 
 import { User } from '../entities';
@@ -19,7 +19,7 @@ export class ProfileController {
 
   @Post('/image')
   @Hook(async ctx => { ctx.user = await getRepository(User).findOne({ email: 'john@foalts.org' }); })
-  @ValidateMultipartFormDataBody({
+  @ParseAndValidateFiles({
     profile: { required: true, saveTo: 'images/profiles' }
   })
   async uploadProfilePicture(ctx: Context<User>) {
