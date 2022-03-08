@@ -136,6 +136,10 @@ module.exports = {
         'deployment-and-environments/checklist',
       ])
     ]),
+    expandedCategory('Comparison with Other Frameworks', [
+      'comparison-with-other-frameworks/express-fastify',
+      // 'comparison-with-other-frameworks/nest',
+    ]),
     expandedCategory('Upgrading', [
       'upgrade-to-v2/README',
       link('To v1', 'https://github.com/FoalTS/foal/releases/tag/v1.0.0'),
