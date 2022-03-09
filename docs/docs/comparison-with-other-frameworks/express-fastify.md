@@ -37,4 +37,8 @@ If you are looking for a more complete framework that provides everything you ne
 
 ### Community
 
+Without a doubt, Express and Fastify have much larger communities than Foal.
+
+Foal's community is smaller but it's growing. If you're looking for help, feel free to join us on our [Discord server](https://discord.gg/QUrJv98).
+
 ## Code Examples
