@@ -3,11 +3,11 @@ title: Foal vs Express or Fastify
 sidebar_label: Express / Fastify
 ---
 
-These pages are definitely the most difficult to write in this guide. If you are here, it is probably because you want to know if you should choose Foal over another framework. There are many in the Node ecosystem and choosing one is not always an easy task. These pages are meant to help you on your way.
+These pages are definitely the most difficult to write. If you are here, it is probably because you want to know if you should choose Foal over another framework. There are many in the Node ecosystem and choosing one is not always an easy task. These pages are meant to help you on your way.
 
 Of course, we prefer FoalTS because we sincerely believe that it solves a number of problems better than other existing frameworks. And so we may have some bias. However, we will try in these pages to be as objective and sincere as possible to show you the differences between FoalTS and other frameworks.
 
-In addition, we would also recommend that you download and test them yourself. You'll be able to make your own opinion about each of them and choose the one that suits you best. FoalTS *get-started* tutorial can be found [here](../tutorials/simple-todo-list/1-installation.md).
+In addition, we would also recommend that you download and test them yourself. You'll be able to make your own opinion about each of them and choose the one that suits you best.
 
 :::info
 
@@ -19,9 +19,13 @@ This page is evolutive. Feel free to suggest changes if you think something is m
 
 ### Express and Fastify are Minimalist
 
-[Express](https://expressjs.com/) and [Fastify](https://www.fastify.io/) are all low-level frameworks that mainly take care of routing requests, handling errors, and parsing cookies, URLs, headers and bodies. They present themselves as *fast*, *minimalist* and *low overhead* and are not intented to be provided with a complete environment (CLI, ORM, auth, access control, test tools, etc). Many high-level frameworks use them as underlay for their core, which is the case of FoalTS.
+[Express](https://expressjs.com/) and [Fastify](https://www.fastify.io/) are both low-level frameworks that mainly take care of routing requests, handling errors, and parsing cookies, URLs, headers and bodies. They present themselves as *fast*, *minimalist* and *low overhead* and are not intented to be provided with a complete environment (CLI, ORM, auth, access control, test tools, etc).
 
-TODO
+Foal, on the other hand, aims to provide in one place all the code and tools needed to build a complete Web application. When you start a new project with Foal, for example, you have a CLI to generate files, utilities to handle authentication and access control, and a dependency injection system to test your application.
+
+If you want to have as much freedom as possible and are ready to start a project completely from scratch, Express or Fastify seems to be the right choice for you. You will then have to search for all the packages you need on npm and the documentation to use and assemble them.
+
+If you are looking for a more complete framework that provides everything you need to build a web application, then Foal is probably the best option. FoalTS is not a closed framework though. If you want to use other libraries than those offered by the framework (password hashing, ORM), you still can. Its architecture is not restrictive either and it will adapt to you as the application grows.
 
 ### TypeScript vs JavaScript
 
