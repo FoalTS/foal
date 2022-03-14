@@ -23,11 +23,19 @@ This page is evolutive. Feel free to suggest changes if you think something is m
 
 Foal, on the other hand, aims to provide in one place all the code and tools needed to build a complete Web application. When you start a new project with Foal, for example, you have a CLI to generate files, utilities to handle authentication and access control, and a dependency injection system to test your application.
 
-If you want to have as much freedom as possible and are ready to start a project completely from scratch, Express or Fastify seems to be the right choice for you. You will then have to search for all the packages you need on npm and the documentation to use and assemble them.
+If you want to have as much freedom as possible and are ready to start a project completely from scratch, Express or Fastify seems to be the right choice for you. You will then have to search for the packages you need on npm and the documentation to use and assemble them.
 
-If you are looking for a more complete framework that provides everything you need to build a web application, then Foal is probably the best option. FoalTS is not a closed framework though. If you want to use other libraries than those offered by the framework (password hashing, ORM), you still can. Its architecture is not restrictive either and it will adapt to you as the application grows.
+If you are looking for a more complete framework that provides everything needed to build a web application, then Foal is probably the best option. FoalTS is not a closed framework though. If you want to use other libraries than those offered by the framework (password hashing, ORM), you still can. Its architecture is not restrictive either and it will adapt to you as the application grows.
 
 ### TypeScript vs JavaScript
+
+Express and Fastify are frameworks written in vanilla JavaScript. Foal is written in TypeScript.
+
+It is possible to use Express and Fastify with TypeScript, but this has some disadvantages compared to Foal:
+- Express does not provide TypeScript types by itself, so you have to import the `@types/express` package which has been unstable between patch versions in the past.
+- Fastify provides TS types but, as they are separate from the code base, some parts of the API will not be typed or may be typed incorrectly as mentioned in the [official documentation](https://www.fastify.io/docs/latest/Reference/TypeScript/#typescript).
+
+Foal, on the other hand, is written entirely in TypeScript, designed to be used with TypeScript, with the API types always up-to-date.
 
 ### Dependency Policy
 
