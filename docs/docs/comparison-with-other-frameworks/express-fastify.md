@@ -37,6 +37,12 @@ It is possible to use Express and Fastify with TypeScript, but this has some dis
 
 Foal, on the other hand, is written entirely in TypeScript, designed to be used with TypeScript, with the API types always up-to-date.
 
+### Activity and Maintenance
+
+Express is in maintenance mode. As of March 2022, the last minor release was 3 years ago.
+
+Fastify and Foal are both actively maintained with regular releases of new versions in recent years.
+
 ### Dependency Policy
 
 ### Seniority and Commit Activity
