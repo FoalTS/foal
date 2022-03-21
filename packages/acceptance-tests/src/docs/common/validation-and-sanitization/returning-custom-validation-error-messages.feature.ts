@@ -1,5 +1,6 @@
 // 3p
-import ajvErrors from 'ajv-errors';
+// The "ajv" and "ajv-errors" dependencies must reside in the same "node_modules/" directory.
+import ajvErrors from '@foal/core/node_modules/ajv-errors';
 import * as request from 'supertest';
 
 // FoalTS
@@ -62,6 +63,7 @@ describe('Feature: Returning custom validation error messages', () => {
             params: {
               errors: [
                 {
+                  emUsed: true,
                   instancePath: '',
                   keyword: 'required',
                   message: 'must have required property \'name\'',
