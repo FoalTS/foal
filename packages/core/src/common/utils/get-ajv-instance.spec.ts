@@ -45,6 +45,33 @@ describe('getAjvInstance', () => {
     strictEqual(data.foo, 3);
   });
 
+  it.only('should support nullable values.', () => {
+    const schema = {
+      properties: {
+        foo: { type: 'number' }
+      },
+      type: 'object',
+    };
+    const data = {
+      foo: null
+    };
+    getAjvInstance().validate(schema, data);
+    // Type coerced
+    strictEqual(data.foo, 0);
+
+    const schema2 = {
+      properties: {
+        foo: { type: 'number', nullable: true }
+      },
+      type: 'object',
+    };
+    const data2 = {
+      foo: null
+    };
+    getAjvInstance().validate(schema2, data2);
+    strictEqual(data2.foo, null);
+  });
+
   it('should not support $data references.', () => {
     const schema6 = {
       properties: {
