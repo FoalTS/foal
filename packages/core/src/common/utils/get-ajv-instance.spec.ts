@@ -45,7 +45,7 @@ describe('getAjvInstance', () => {
     strictEqual(data.foo, 3);
   });
 
-  it.only('should support nullable values.', () => {
+  it('should support nullable values.', () => {
     const schema = {
       properties: {
         foo: { type: 'number' }
