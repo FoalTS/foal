@@ -1,11 +1,12 @@
 // 3p
-import * as Ajv from 'ajv';
+import Ajv from 'ajv';
 import { Config } from '../../core';
+import addFormats from 'ajv-formats';
 
 // This is a little hack to test the customized configuration of `getAjvInstance`.
 // tslint:disable-next-line:variable-name
-export const _instanceWrapper: { instance: null|Ajv.Ajv } = {
-  instance: null
+export const _instanceWrapper: { instance: undefined|Ajv } = {
+  instance: undefined
 };
 
 /**
@@ -18,18 +19,19 @@ export const _instanceWrapper: { instance: null|Ajv.Ajv } = {
  *
  *
  * @export
- * @returns {Ajv.Ajv} The AJV instance
+ * @returns {Ajv} The AJV instance
  */
-export function getAjvInstance(): Ajv.Ajv {
+export function getAjvInstance(): Ajv {
   if (!_instanceWrapper.instance) {
     _instanceWrapper.instance = new Ajv({
       $data: Config.get('settings.ajv.$data', 'boolean'),
       allErrors: Config.get('settings.ajv.allErrors', 'boolean'),
       coerceTypes: Config.get('settings.ajv.coerceTypes', 'boolean|string', true) as boolean|'array'|undefined,
-      nullable: Config.get('settings.ajv.nullable', 'boolean'),
       removeAdditional: Config.get('settings.ajv.removeAdditional', 'boolean|string', true) as boolean|'all'|'failing',
-      useDefaults: Config.get('settings.ajv.useDefaults', 'boolean|string', true) as boolean|'empty'|'shared',
+      useDefaults: Config.get('settings.ajv.useDefaults', 'boolean|string', true) as boolean|'empty',
     });
+    _instanceWrapper.instance.addKeyword({ keyword: 'components' });
+    addFormats(_instanceWrapper.instance);
   }
   return _instanceWrapper.instance;
 }

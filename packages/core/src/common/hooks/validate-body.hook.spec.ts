@@ -69,9 +69,9 @@ describe('ValidateBody', () => {
         deepStrictEqual(actual.body, {
           body: [
             {
-              dataPath: '',
+              instancePath: '',
               keyword: 'type',
-              message: 'should be object',
+              message: 'must be object',
               params: { type: 'object' },
               schemaPath: '#/type',
             }
@@ -116,9 +116,9 @@ describe('ValidateBody', () => {
         deepStrictEqual(actual.body, {
           body: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: { type: 'integer' },
               schemaPath: '#/components/schemas/user/properties/foo/type',
             }
@@ -209,9 +209,9 @@ describe('ValidateBody', () => {
         deepStrictEqual(actual.body, {
           body: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: { type: 'integer' },
               schemaPath: '#/components/schemas/user/properties/foo/type',
             }

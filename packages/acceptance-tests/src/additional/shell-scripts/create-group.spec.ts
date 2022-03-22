@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import * as Ajv from 'ajv';
+import Ajv from 'ajv';
 import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
@@ -36,7 +36,7 @@ describe('[Shell scripts] create-perm', () => {
 
     const ajv = new Ajv({ useDefaults: true });
     if (!ajv.validate(schema, args)) {
-      (ajv.errors as Ajv.ErrorObject[]).forEach(err => {
+      ajv.errors!.forEach(err => {
         throw new Error(`Error: The command line arguments ${err.message}.`);
       });
     }

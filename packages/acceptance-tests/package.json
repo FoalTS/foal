@@ -38,7 +38,7 @@
     "@types/redis": "~2.8.14",
     "@types/supertest": "~2.0.7",
     "@types/yamljs": "~0.2.30",
-    "ajv-errors": "~1.0.1",
+    "ajv": "~8.9.0",
     "better-sqlite3": "~7.5.0",
     "class-transformer": "~0.3.1",
     "class-validator": "~0.9.1",
