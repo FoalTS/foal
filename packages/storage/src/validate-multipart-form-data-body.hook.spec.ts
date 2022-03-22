@@ -132,9 +132,9 @@ describe('ValidateMultipartFormDataBody', () => {
         .expect({
           body: [
             {
-              dataPath: '.name',
+              instancePath: '/name',
               keyword: 'type',
-              message: 'should be boolean',
+              message: 'must be boolean',
               params: {
                 type: 'boolean'
               },
@@ -160,9 +160,9 @@ describe('ValidateMultipartFormDataBody', () => {
         .expect({
           body: [
             {
-              dataPath: '',
+              instancePath: '',
               keyword: 'required',
-              message: 'should have required property \'name2\'',
+              message: 'must have required property \'name2\'',
               params: {
                 missingProperty: 'name2'
               },

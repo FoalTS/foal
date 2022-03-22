@@ -27,7 +27,6 @@ Here is the list of AJV options that can be overridden with FoalTS configuration
 | $data | `settings.ajv.$data` | - |
 | allErrors | `settings.ajv.allErrors` | - |
 | coerceTypes | `settings.ajv.coerceType` | true |
-| nullable | `settings.ajv.nullable` | - |
 | removeAdditional | `settings.ajv.removeAdditional` | true |
 | useDefaults | `settings.ajv.useDefaults` | true |
 
@@ -170,9 +169,9 @@ export class AppController {
 {
   "body": [
     {
-      "dataPath": ".price",
+      "instancePath": "/price",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
@@ -229,9 +228,9 @@ export class AppController {
 {
   "headers": [
     {
-      "dataPath:" "['a-number']",
+      "instancePath": "/a-number",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
@@ -287,13 +286,13 @@ export class AppController {
 {
   "cookies": [
     {
-      "dataPath": "['a-number']",
+      "instancePath": "/A-Number",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
-      "schemaPath": "#/properties/a-number/type"
+      "schemaPath": "#/properties/A-Number/type"
     }
   ]
 }
@@ -342,9 +341,9 @@ export class AppController {
 {
   "pathParams": [
     {
-      "dataPath": ".productId",
+      "instancePath": "/productId",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
@@ -400,9 +399,9 @@ export class AppController {
 {
   "query": [
     {
-      "dataPath": "['a-number']",
+      "instancePath": "/a-number",
       "keyword": "type",
-      "message": "should be integer",
+      "message": "must be integer",
       "params": {
         "type": "integer"
       },
@@ -453,10 +452,10 @@ Assuming that you did not change Foal's default configuration of Ajv (see above)
 ### Custom Error Messages
 
 ```
-npm install ajv-errors@1
+npm install ajv-errors@3 ajv@8
 ```
 
-You can customize the errors returned by the validation hooks by using the [ajv-errors](https://github.com/ajv-validator/ajv-errors/tree/v1) plugin (version 1).
+You can customize the errors returned by the validation hooks by using the [ajv-errors](https://ajv.js.org/packages/ajv-errors.html) plugin.
 
 *Configuration*
 
@@ -508,7 +507,7 @@ module.exports = {
 *Example*
 ```typescript
 import { Context, getAjvInstance, HttpResponseOK, Post, ValidateBody } from '@foal/core';
-import * as ajvErrors from 'ajv-errors';
+import ajvErrors from 'ajv-errors';
 
 export class AppController {
 

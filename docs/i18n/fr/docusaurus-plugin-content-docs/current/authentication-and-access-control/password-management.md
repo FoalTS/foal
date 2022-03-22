@@ -5,6 +5,7 @@ sidebar_label: Mots de Passe
 
 
 Every application must store passwords using a cryptographic technique. FoalTS provides two functions to hash and verify passwords.
+
 ## Hash and Salt Passwords
 
 The `hashPassword` utility uses the [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2) algorithm with a SHA256 hash. It takes as parameters the password in plain text and an optional `options` object. It returns a promise which value is a password hash.

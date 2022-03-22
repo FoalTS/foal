@@ -1,6 +1,6 @@
 {
   "name": "@foal/cli",
-  "version": "2.7.2",
+  "version": "2.8.1",
   "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -57,7 +57,7 @@
     "bin/"
   ],
   "dependencies": {
-    "ajv": "~6.12.0",
+    "ajv": "~8.9.0",
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
     "commander": "~7.2.0"

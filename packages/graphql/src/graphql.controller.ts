@@ -1,6 +1,6 @@
 // 3p
 import { Context, Get, HttpResponse, HttpResponseBadRequest, HttpResponseOK, Post, } from '@foal/core';
-import * as Ajv from 'ajv';
+import Ajv from 'ajv';
 import { graphql } from 'graphql';
 
 const getQuerySchema = {

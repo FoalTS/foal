@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "2.7.2",
+  "version": "2.8.1",
   "description": "Elegant and complete Node.Js web framework based on TypeScript",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -78,17 +78,19 @@
     "all": true
   },
   "dependencies": {
-    "ajv": "~6.12.0",
+    "ajv": "~8.9.0",
+    "ajv-formats": "~2.1.1",
     "cookie-parser": "~1.4.6",
-    "express": "~4.17.1",
+    "express": "~4.17.2",
     "morgan": "~1.10.0",
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {
-    "@foal/internal-test": "^2.7.2",
+    "@foal/internal-test": "^2.8.1",
     "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
     "@types/supertest": "2.0.10",
+    "ajv-errors": "~3.0.0",
     "ejs": "~2.6.2",
     "mocha": "~8.3.0",
     "nyc": "~15.1.0",

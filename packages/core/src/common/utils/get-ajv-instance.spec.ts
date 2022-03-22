@@ -1,9 +1,9 @@
-import { deepStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotThrow, strictEqual } from 'assert';
 import { Config, ConfigTypeError } from '../../core';
 import { _instanceWrapper, getAjvInstance } from './get-ajv-instance';
 
 function clearCache() {
-  delete (_instanceWrapper as any).instance;
+  delete _instanceWrapper.instance;
 }
 
 describe('getAjvInstance', () => {
@@ -45,6 +45,33 @@ describe('getAjvInstance', () => {
     strictEqual(data.foo, 3);
   });
 
+  it('should support nullable values.', () => {
+    const schema = {
+      properties: {
+        foo: { type: 'number' }
+      },
+      type: 'object',
+    };
+    const data = {
+      foo: null
+    };
+    getAjvInstance().validate(schema, data);
+    // Type coerced
+    strictEqual(data.foo, 0);
+
+    const schema2 = {
+      properties: {
+        foo: { type: 'number', nullable: true }
+      },
+      type: 'object',
+    };
+    const data2 = {
+      foo: null
+    };
+    getAjvInstance().validate(schema2, data2);
+    strictEqual(data2.foo, null);
+  });
+
   it('should not support $data references.', () => {
     const schema6 = {
       properties: {
@@ -69,16 +96,38 @@ describe('getAjvInstance', () => {
     deepStrictEqual(ajv.errors, [
       {
         keyword: 'const',
-        dataPath: '.confirmPassword',
+        instancePath: '/confirmPassword',
         schemaPath: '#/properties/confirmPassword/const',
         params: {
           allowedValue: {
             $data: '1/password',
           },
         },
-        message:'should be equal to constant',
+        message: 'must be equal to constant',
       }
     ], 'AJV should have error data explaining "confirmPassword" didn\'t match the expected value in "password"');
+  });
+
+  it('should support the custom keyword "components" (for Foal\'s OpenAPI validation).', () => {
+    const schema = {
+      components: {},
+      properties: {},
+      type: 'object',
+    };
+    const data = { hello: 'world' };
+
+    doesNotThrow(() => getAjvInstance().validate(schema, data));
+  });
+
+  it('should support JSON schema formats for AJV (email, date, etc).', () => {
+    const schema = {
+      properties: {
+        email: { type: 'string', format: 'email' }
+      },
+      type: 'object',
+    };
+    const data = { email: 'foo@foalts.org' };
+    strictEqual(getAjvInstance().validate(schema, data), true);
   });
 
   describe('', () => {
@@ -88,7 +137,6 @@ describe('getAjvInstance', () => {
       Config.set('settings.ajv.$data', true);
       Config.set('settings.ajv.allErrors', true);
       Config.set('settings.ajv.coerceTypes', false);
-      Config.set('settings.ajv.nullable', true);
       Config.set('settings.ajv.removeAdditional', false);
       Config.set('settings.ajv.useDefaults', false);
     });
@@ -97,7 +145,7 @@ describe('getAjvInstance', () => {
       const schema = {
         additionalProperties: false,
         properties: {
-          foo: { type: 'number', default: 4, nullable: true }
+          foo: { type: 'number', default: 4 }
         },
         type: 'object',
       };
@@ -122,12 +170,6 @@ describe('getAjvInstance', () => {
       ajv.validate(schema, data3);
       strictEqual((data3 as any).foo, undefined);
 
-      // nullable
-      const data4 = {
-        foo: null
-      };
-      strictEqual(ajv.validate(schema, data4), true, 'Property "foo" should be nullable.');
-
       // allErrors
       const schema5 = {
         properties: {
@@ -143,16 +185,16 @@ describe('getAjvInstance', () => {
       strictEqual(ajv.validate(schema5, data5), false);
       deepStrictEqual(ajv.errors, [
         {
-          dataPath: '.a',
+          instancePath: '/a',
           keyword: 'type',
-          message: 'should be number',
+          message: 'must be number',
           params: { type: 'number' },
           schemaPath: '#/properties/a/type',
         },
         {
-          dataPath: '.b',
+          instancePath: '/b',
           keyword: 'type',
-          message: 'should be number',
+          message: 'must be number',
           params: { type: 'number' },
           schemaPath: '#/properties/b/type',
         },
@@ -187,9 +229,9 @@ describe('getAjvInstance', () => {
       strictEqual(ajv.validate(schema6, data7), false, 'If $data is true in the configuration, and property "confirmPassword" does not match "password", AJV should validate the data as invalid.');
       deepStrictEqual(ajv.errors, [
         {
-          dataPath: '.confirmPassword',
+          instancePath: '/confirmPassword',
           keyword: 'const',
-          message: 'should be equal to constant',
+          message: 'must be equal to constant',
           params: {
             allowedValue: 'superSecretPassword',
           },
@@ -218,24 +260,6 @@ describe('getAjvInstance', () => {
         strictEqual(error.key, 'settings.ajv.coerceTypes');
         strictEqual(error.expected, 'boolean|string');
         strictEqual(error.actual, 'number');
-        return;
-      }
-
-      throw new Error('An error should have been thrown');
-    });
-
-    it('should throw a ConfigTypeError when the value of `settings.ajv.nullable` has an invalid type.', () => {
-      Config.set('settings.ajv.nullable', 'hello');
-
-      try {
-        getAjvInstance().validate({}, {});
-      } catch (error: any) {
-        if (!(error instanceof ConfigTypeError)) {
-          throw new Error('A ConfigTypeError should have been thrown');
-        }
-        strictEqual(error.key, 'settings.ajv.nullable');
-        strictEqual(error.expected, 'boolean');
-        strictEqual(error.actual, 'string');
         return;
       }
 
@@ -283,7 +307,6 @@ describe('getAjvInstance', () => {
       Config.remove('settings.ajv.$data');
       Config.remove('settings.ajv.allErrors');
       Config.remove('settings.ajv.coerceTypes');
-      Config.remove('settings.ajv.nullable');
       Config.remove('settings.ajv.removeAdditional');
       Config.remove('settings.ajv.useDefaults');
     });

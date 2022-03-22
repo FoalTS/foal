@@ -13,13 +13,13 @@ module.exports = {
     locales: ['en', 'fr', 'es', 'id'],
     localeConfigs: {
       en: {
-        label: 'English',
+        label: 'EN',
       },
       fr: {
-        label: 'Français',
+        label: 'FR',
       },
       es: {
-        label: 'Español',
+        label: 'ES',
       },
       id: {
         label: 'Bahasa Indonesia',
@@ -31,9 +31,9 @@ module.exports = {
   ],
   themeConfig: {
     image: 'img/meta-image.png',
-    googleAnalytics: {
-      trackingID: 'UA-112613053-1',
-      anonymizeIP: true,
+    announcementBar: {
+      id: 'github-twitter',
+      content: '⭐️ If you like FoalTS, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/FoalTS/foal">GitHub</a> and follow us on <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/FoalTs" >Twitter</a>! 🚀'
     },
     algolia: {
       apiKey: '888cc664f8cdf532950f93fdd481eac1',
@@ -92,6 +92,18 @@ module.exports = {
           className: 'header-github-link',
           'aria-label': 'GitHub repository',
         },
+        {
+          href: 'https://twitter.com/FoalTs',
+          position: 'right',
+          className: 'header-twitter-link',
+          'aria-label': 'Twitter profile',
+        },
+        {
+          href: 'https://discord.gg/QUrJv98',
+          position: 'right',
+          className: 'header-discord-link',
+          'aria-label': 'Discord chat',
+        },
       ],
     }
   },
@@ -120,6 +132,10 @@ module.exports = {
           showReadingTime: true,
           editUrl:
             'https://github.com/FoalTS/foal/edit/master/docs',
+        },
+        googleAnalytics: {
+          trackingID: 'UA-112613053-1',
+          anonymizeIP: true,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.scss'),
