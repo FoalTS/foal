@@ -19,7 +19,7 @@ There are several ways to contribute. **Reporting bugs are greatly appreciated**
 
 ## Security Vulnerabilities
 
-If you think you have found a security hole, please do NOT submit an issue but send an email directly to security@foalts.org.
+If you think you have found a security vulnerability, please DO NOT submit an issue but email security@foalts.org directly.
 
 ## Pull Requests
 
@@ -130,8 +130,8 @@ The framework follows the semantic versioning specification.
 
 ## Long-Term Support Policy and Schedule
 
-All of major releases are supported for 18 months.
-- 12 months of *active support* (new features, bug fixes, etc).
+All of major releases are supported for at least 18 months.
+- at least 12 months of *active support* (new features, bug fixes, etc).
 - 6 months of *maintenance (LTS)* (critical fixes and security patches).
 
 | Release | Status | Active Start | Maintenance Start | End-of-life | Node versions | TS min version |
