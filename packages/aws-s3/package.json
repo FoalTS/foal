@@ -1,6 +1,6 @@
 {
   "name": "@foal/aws-s3",
-  "version": "2.7.2",
+  "version": "2.8.1",
   "description": "AWS S3 storage components for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -43,9 +43,10 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^2.7.2",
-    "@foal/storage": "^2.7.2",
-    "aws-sdk": "~2.834.0"
+    "@aws-sdk/client-s3": "~3.49.0",
+    "@aws-sdk/lib-storage": "~3.49.0",
+    "@foal/core": "^2.8.1",
+    "@foal/storage": "^2.8.1"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
