@@ -1,8 +1,9 @@
 // std
 import { URL, URLSearchParams } from 'url';
+import * as crypto from 'crypto';
 
 // 3p
-import { Config, Context, generateToken, HttpResponseRedirect } from '@foal/core';
+import { Config, Context, generateToken, HttpResponseRedirect, convertBase64ToBase64url } from '@foal/core';
 import * as fetch from 'node-fetch';
 
 /**
@@ -40,6 +41,20 @@ export class InvalidStateError extends Error {
   readonly name = 'InvalidStateError';
   constructor() {
     super('Suspicious operation: the state of the callback does not match the state of the authorization request.');
+  }
+}
+
+/**
+ * Error thrown if the state does not match.
+ *
+ * @export
+ * @class InvalidCodeChallengeError
+ * @extends {Error}
+ */
+export class InvalidCodeChallengeError extends Error {
+  readonly name = 'InvalidCodeChallengeError';
+  constructor() {
+    super('Suspicious operation: code challenge sent with authorize cannot be empty.');
   }
 }
 
@@ -85,6 +100,7 @@ export class TokenError extends Error {
 }
 
 const STATE_COOKIE_NAME = 'oauth2-state';
+const CODE_CHALLENGE_NAME = 'oauth2-code-challenge'
 
 export interface ObjectType {
   [name: string]: any;
@@ -110,6 +126,8 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    *     clientId: string;
    *     clientSecret: string;
    *     redirectUri: string;
+   *     useCodeChallenge?: boolean; - default false
+   *     codeChallengeMethodPlain?: boolean; - default false
    *   }}
    * @memberof AbstractProvider
    */
@@ -117,6 +135,8 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     clientId: string;
     clientSecret: string;
     redirectUri: string;
+    useCodeChallenge?: string;
+    codeChallengeMethodPlain?: string;
   };
   /**
    * URL of the authorization endpoint from which we retrieve an authorization code.
@@ -160,6 +180,8 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
       clientId: Config.getOrThrow(this.configPaths.clientId, 'string'),
       clientSecret: Config.getOrThrow(this.configPaths.clientSecret, 'string'),
       redirectUri: Config.getOrThrow(this.configPaths.redirectUri, 'string'),
+      useCodeChallenge: (this.configPaths.useCodeChallenge ? Config.get(this.configPaths.useCodeChallenge, 'boolean', false) : false),
+      codeChallengeMethodPlain: (this.configPaths.codeChallengeMethodPlain ? Config.get(this.configPaths.codeChallengeMethodPlain, 'boolean', false) : false)
     };
   }
 
@@ -208,14 +230,37 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
       }
     }
 
-    // Return a redirection response with the state as cookie.
-    return new HttpResponseRedirect(url.href)
-      .setCookie(STATE_COOKIE_NAME, state, {
+    const codeChallenge = await generateToken();
+
+    // Add PKCE if config.useCodeChallenge is true
+    if (this.config.useCodeChallenge) {
+
+      const hash = crypto.createHash('sha256').update(codeChallenge).digest('base64');
+      url.searchParams.set('code_challenge', this.config.codeChallengeMethodPlain ? codeChallenge : convertBase64ToBase64url(hash));
+      url.searchParams.set('code_challenge_method', this.config.codeChallengeMethodPlain ? 'plain' : 'S256');
+    }
+
+    const redirectResponse = new HttpResponseRedirect(url.href);
+
+    // Add Code Challenge COOKIE for token request
+    // TODO: encrypt this code_challenge cookie for security reasons
+    if (this.config.useCodeChallenge) {
+      redirectResponse.setCookie(CODE_CHALLENGE_NAME, codeChallenge, {
         httpOnly: true,
         maxAge: 300,
         path: '/',
         secure: Config.get('settings.social.cookie.secure', 'boolean', false)
       });
+    }
+
+    // Return a redirection response with the state as cookie.
+    return redirectResponse
+      .setCookie(STATE_COOKIE_NAME, state, {
+        httpOnly: true,
+        maxAge: 300,
+        path: '/',
+        secure: Config.get('settings.social.cookie.secure', 'boolean', false)
+      })
   }
 
   /**
@@ -245,6 +290,15 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     params.set('redirect_uri', this.config.redirectUri);
     params.set('client_id', this.config.clientId);
     params.set('client_secret', this.config.clientSecret);
+
+    // Add code_verifier if config.useCodeChallenge is true
+    if (this.config.useCodeChallenge) {
+      const codeChallenge = ctx.request.cookies[CODE_CHALLENGE_NAME]
+      if (!codeChallenge || codeChallenge === '' ) {
+        throw new InvalidCodeChallengeError();
+      }
+      params.set('code_verifier', codeChallenge);
+    }
 
     const response = await fetch(this.tokenEndpoint, {
       body: params,

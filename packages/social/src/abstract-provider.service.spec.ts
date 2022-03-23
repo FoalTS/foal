@@ -19,12 +19,14 @@ import {
 import {
   AbstractProvider,
   AuthorizationError,
+  InvalidCodeChallengeError,
   InvalidStateError,
   SocialTokens,
   TokenError
 } from './abstract-provider.service';
 
 const STATE_COOKIE_NAME = 'oauth2-state';
+const CODE_CHALLENGE_NAME = 'oauth2-code-challenge';
 
 describe('InvalidStateError', () => {
 
@@ -40,6 +42,24 @@ describe('InvalidStateError', () => {
     const error = new InvalidStateError();
 
     strictEqual(error.name, 'InvalidStateError');
+  });
+
+});
+
+describe('InvalidCodeChallengeError', () => {
+
+  it('should have a "message" property.', () => {
+    const error = new InvalidCodeChallengeError();
+
+    strictEqual(
+      error.message,
+      'Suspicious operation: code challenge sent with authorize cannot be empty.');
+  });
+
+  it('should have a "name" property.', () => {
+    const error = new InvalidCodeChallengeError();
+
+    strictEqual(error.name, 'InvalidCodeChallengeError');
   });
 
 });
@@ -124,7 +144,9 @@ describe('AbstractProvider', () => {
     protected configPaths = {
       clientId: 'settings.social.example.clientId',
       clientSecret: 'settings.social.example.clientSecret',
-      redirectUri: 'settings.social.example.redirectUri'
+      redirectUri: 'settings.social.example.redirectUri',
+      useCodeChallenge: 'settings.social.example.useCodeChallenge',
+      codeChallengeMethodPlain: 'settings.social.example.codeChallengeMethodPlain'
     };
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
@@ -172,6 +194,53 @@ describe('AbstractProvider', () => {
           + 'redirect_uri=https%3A%2F%2Fexample.com%2Fcallback'
         ));
       });
+
+      describe('if code_challenge is configured as active in config', () => {
+
+        beforeEach(() => {
+          Config.set('settings.social.example.useCodeChallenge', true);
+        });
+
+        afterEach(() => {
+          Config.remove('settings.social.example.useCodeChallenge');
+        });
+
+        it('with code_challenge_method (S256) - codeChallengeMethodPlain: false', async () => {
+          const response = await provider.redirect();
+          ok(response.path.startsWith(
+            'https://example2.com/auth?'
+            + 'response_type=code&'
+            + 'client_id=clientIdXXX&'
+            + 'redirect_uri=https%3A%2F%2Fexample.com%2Fcallback'
+          ));
+          // code_challenge is random so we test if field exists and have some data
+          ok(response.path.indexOf('code_challenge=') > 0);
+          const subPath = response.path.substring(response.path.indexOf('code_challenge=')).split('&');
+          const codeChallenge = subPath[0].split('=');
+          ok(codeChallenge[1].length>0);
+          const codeChallengeMethod = subPath[1].split('=');
+          strictEqual(codeChallengeMethod[1], 'S256');
+        });
+
+        it('with code_challenge_method (plain) - codeChallengeMethodPlain: true', async () => {
+          Config.set('settings.social.example.codeChallengeMethodPlain', true);
+          const response = await provider.redirect();
+          ok(response.path.startsWith(
+            'https://example2.com/auth?'
+            + 'response_type=code&'
+            + 'client_id=clientIdXXX&'
+            + 'redirect_uri=https%3A%2F%2Fexample.com%2Fcallback'
+          ));
+          // code_challenge is random so we test if field exists and have some data
+          ok(response.path.indexOf('code_challenge=') > 0);
+          const subPath = response.path.substring(response.path.indexOf('code_challenge=')).split('&');
+          const codeChallenge = subPath[0].split('=');
+          ok(codeChallenge[1].length>0);
+          const codeChallengeMethod = subPath[1].split('=');
+          strictEqual(codeChallengeMethod[1], 'plain');
+          Config.remove('settings.social.example.codeChallengeMethodPlain');
+        });
+      })
 
       it('with a redirect path which does not contain a scope if none was provided.', async () => {
         const response = await provider.redirect();
@@ -375,6 +444,94 @@ describe('AbstractProvider', () => {
         token_type: 'bearer'
       };
       deepStrictEqual(actual, expected);
+    });
+
+    describe('if code_challenge is configured as active in config', () => {
+
+      beforeEach(() => {
+        Config.set('settings.social.example.useCodeChallenge', true);
+      });
+
+      afterEach(() => {
+        Config.remove('settings.social.example.useCodeChallenge');
+      });
+
+      it('should send a request which contains a grant type, a code, a redirect URI,'
+        + 'a client ID, a client secret and code_verifier and return the response body.', async () => {
+
+        const codeChallenge = 'challenge';
+
+        class AppController {
+          @Post('/token')
+          token(ctx: Context) {
+            strictEqual(ctx.request.headers.accept, 'application/json');
+            const { grant_type, code, redirect_uri, client_id, client_secret, code_verifier } = ctx.request.body;
+            strictEqual(grant_type, 'authorization_code');
+            strictEqual(code, 'an_authorization_code');
+            strictEqual(redirect_uri, redirectUri);
+            strictEqual(client_id, clientId);
+            strictEqual(client_secret, clientSecret);
+            strictEqual(code_verifier, codeChallenge)
+            return new HttpResponseOK({
+              access_token: 'an_access_token',
+              token_type: 'bearer'
+            });
+          }
+        }
+
+        server = (await createApp(AppController)).listen(3000);
+
+        const ctx = new Context({
+          cookies: {
+            [STATE_COOKIE_NAME]: 'xxx',
+            [CODE_CHALLENGE_NAME]: codeChallenge
+          },
+          query: {
+            code: 'an_authorization_code',
+            state: 'xxx',
+          },
+        });
+
+        const actual = await provider.getTokens(ctx);
+        const expected: SocialTokens = {
+          access_token: 'an_access_token',
+          token_type: 'bearer'
+        };
+        deepStrictEqual(actual, expected);
+      });
+
+      it('should throw a InvalidCodeChallengeError if Code Verifier not exists or is not valid', async () => {
+        class AppController {
+          @Post('/token')
+          token() {
+            return new HttpResponseBadRequest({
+              error: 'bad request'
+            });
+          }
+        }
+
+        server = (await createApp(AppController)).listen(3000);
+
+        const ctx = new Context({
+          cookies: {
+            [STATE_COOKIE_NAME]: 'xxx'
+          },
+          query: {
+            code: 'an_authorization_code',
+            state: 'xxx',
+          },
+        });
+
+        try {
+          await provider.getTokens(ctx);
+          throw new Error('getTokens should have thrown a InvalidCodeChallengeError.');
+        } catch (error) {
+          if (!(error instanceof InvalidCodeChallengeError)) {
+            throw error;
+          }
+          deepStrictEqual(error.message, 'Suspicious operation: code challenge sent with authorize cannot be empty.');
+        }
+      })
     });
 
     it('should throw a TokenError if the token endpoint returns an error.', async () => {

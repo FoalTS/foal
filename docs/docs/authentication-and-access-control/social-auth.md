@@ -57,6 +57,15 @@ npm install @foal/social
 
 Then, you will need to provide your client ID, client secret and your redirect URIs to Foal. This can be done through the usual [configuration files](../architecture/configuration.md).
 
+#### Enable Code Flow with PKCE
+
+PKCE Flow can be enable through config file too. There're two aditional parameters:
+```
+  useCodeChallenge: boolean
+  codeChallengeMethodPlain: boolean (optional)
+```
+By default it use SHA256 encription as standard Code Challenge Method.
+
 <Tabs
   defaultValue="yaml"
   values={[
@@ -484,6 +493,17 @@ const { userInfo } = await this.linkedin.getUserInfo(ctx, {
 | `fields` | `string[]` | List of fields that the returned user info object should contain. Additional documentation on [field projections](https://developer.linkedin.com/docs/guide/v2/concepts/projections). |
 | `projection` | `string` | LinkedIn projection parameter. |
 
+### Twitter
+
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `TwitterProvider` | `users.read tweet.read` | [API documentation](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me) |
+
+#### Register an OAuth application
+
+Visit [this page](https://developer.twitter.com/en/portal/dashboard) to create an application and obtain a client ID and a client secret.
+
+
 ## Community Providers
 
 There are no community providers available yet! If you want to share one, feel free to [open a PR](https://github.com/FoalTS/foal) on Github.
@@ -493,6 +513,7 @@ There are no community providers available yet! If you want to share one, feel f
 | Error | Description |
 | --- | --- |
 | `InvalidStateError` | The `state` query does not match the value found in the cookie. |
+| `InvalidCodeChallengeError` | The `code_verifier` query does not match the value found in the cookie. |
 | `AuthorizationError` | The authorization server returns an error. This can happen when a user does not give consent on the provider page. |
 | `UserInfoError` | Thrown in `AbstractProvider.getUserFromTokens` if the request to the resource server is unsuccessful. |
 
