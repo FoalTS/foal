@@ -46,11 +46,10 @@
   ],
   "dependencies": {
     "@foal/core": "^2.8.1",
-    "mongodb": "~3.6.6"
+    "mongodb": "~4.3.1"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
-    "@types/node": "10.17.24",
     "copy": "~0.3.2",
     "mocha": "~8.3.0",
     "rimraf": "~2.6.2",

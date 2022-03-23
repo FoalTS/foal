@@ -21,49 +21,10 @@ jobs:
       SETTINGS_AWS_REGION: ${{ secrets.SETTINGS_AWS_REGION }}
       NODE_VERSION: ${{ matrix.node-version }}
 
-    services:
-      mysql:
-        image: mysql:5.7.10
-        ports:
-          # Another version of MySQL is installed on the vm and already uses the port 3306.
-          - 3308:3306
-        env:
-          MYSQL_ROOT_PASSWORD: admin
-          MYSQL_USER: test
-          MYSQL_PASSWORD: test
-          MYSQL_DATABASE: test
-
-      mariadb:
-        image: mariadb:10.3.22
-        ports:
-          - 3307:3306
-        env:
-          MYSQL_ROOT_PASSWORD: admin
-          MYSQL_USER: test
-          MYSQL_PASSWORD: test
-          MYSQL_DATABASE: test
-
-      postgres:
-        image: postgres:9.6.1
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: test
-
-      mongodb:
-        image: mongo:3.4.1
-        ports:
-          - 27017:27017
-
-      redis:
-        image: redis:4.0.14
-        ports:
-          - 6380:6379
-
     steps:
     - uses: actions/checkout@v1
+    - name: Start up databases
+      run: docker-compose up -d
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
