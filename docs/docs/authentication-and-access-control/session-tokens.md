@@ -167,6 +167,8 @@ module.exports = {
 npm install @foal/mongodb
 ```
 
+> This package uses the [mongodb Node.JS driver](https://www.npmjs.com/package/mongodb) which uses the [@types/node](https://www.npmjs.com/package/@types/node) package under the hood. If you get type compilation errors, try to upgrade this dependency.
+
 This store saves your session states in a MongoDB database (using the collection `sessions`). In order to use it, you must provide the MongoDB URI in the configuration.
 
 <Tabs
@@ -1119,6 +1121,18 @@ async function main() {
 ```
 npm install mongodb@4
 ```
+
+> The `MongoDBStore` requires version 4 of the [mongodb](https://www.npmjs.com/package/mongodb) package. If you are using TypeORM with MongoDB, which requires version 3, you can have both versions coexist in your `package.json` as follows:
+> ```json
+> {
+>   "mongodb": "~3.6.6",
+>   "mongodb4": "npm:mongodb@~4.3.1",
+> }
+> ```
+>
+> ```typescript
+> import { MongoClient } from 'mongodb4';
+> ```
 
 *index.ts*
 ```typescript
