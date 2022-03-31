@@ -53,7 +53,7 @@
   ],
   "dependencies": {
     "@foal/core": "^2.8.1",
-    "node-fetch": "~2.6.7"
+    "axios": "0.26.1"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
