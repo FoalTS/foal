@@ -126,8 +126,6 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    *     clientId: string;
    *     clientSecret: string;
    *     redirectUri: string;
-   *     useCodeChallenge?: boolean; - default false
-   *     codeChallengeMethodPlain?: boolean; - default false
    *   }}
    * @memberof AbstractProvider
    */
@@ -135,8 +133,6 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     clientId: string;
     clientSecret: string;
     redirectUri: string;
-    useCodeChallenge?: string;
-    codeChallengeMethodPlain?: string;
   };
   /**
    * URL of the authorization endpoint from which we retrieve an authorization code.
@@ -147,6 +143,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @memberof AbstractProvider
    */
   protected readonly abstract authEndpoint: string;
+
   /**
    * URL of the token endpoint from which we retrieve an access token.
    *
@@ -175,13 +172,47 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    */
   protected readonly scopeSeparator: string = ' ';
 
+  /**
+   * Property used to enable code flow with PCKE.
+   *
+   * @protected
+   * @type {boolean}
+   * @memberof AbstractProvider
+   */
+   protected readonly useCodeChallenge: boolean = false;
+
+  /**
+   * Property use Plain Method within code challenge on PCKE.
+   *
+   * @protected
+   * @type {boolean}
+   * @memberof AbstractProvider
+   */
+   protected readonly codeChallengeMethodPlain: boolean = false;
+
+  /**
+   * Property use Plain Method within code challenge on PCKE.
+   *
+   * @protected
+   * @type {boolean}
+   * @memberof AbstractProvider
+   */
+   protected readonly codeChallengeSecretPath: string = 'settings.social.secret.codeChallengeSecret';
+
+  /**
+   * Algorithm used for encrypt code challenge.
+   *
+   * @protected
+   * @type {string}
+   * @memberof AbstractProvider
+   */
+   protected readonly cryptAlgorithm: string = 'aes-256-ctr' ;
+
   private get config() {
     return {
       clientId: Config.getOrThrow(this.configPaths.clientId, 'string'),
       clientSecret: Config.getOrThrow(this.configPaths.clientSecret, 'string'),
-      redirectUri: Config.getOrThrow(this.configPaths.redirectUri, 'string'),
-      useCodeChallenge: (this.configPaths.useCodeChallenge ? Config.get(this.configPaths.useCodeChallenge, 'boolean', false) : false),
-      codeChallengeMethodPlain: (this.configPaths.codeChallengeMethodPlain ? Config.get(this.configPaths.codeChallengeMethodPlain, 'boolean', false) : false)
+      redirectUri: Config.getOrThrow(this.configPaths.redirectUri, 'string')
     };
   }
 
@@ -230,22 +261,24 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
       }
     }
 
-    const codeChallenge = await generateToken();
+    // We use a base64url-encoded random token making OAuth2 PKCE spec compliant - see https://datatracker.ietf.org/doc/html/rfc7636#appendix-B for more information
+    const codeVerifier = await generateToken();
 
     // Add PKCE if config.useCodeChallenge is true
-    if (this.config.useCodeChallenge) {
+    if (this.useCodeChallenge) {
 
-      const hash = crypto.createHash('sha256').update(codeChallenge).digest('base64');
-      url.searchParams.set('code_challenge', this.config.codeChallengeMethodPlain ? codeChallenge : convertBase64ToBase64url(hash));
-      url.searchParams.set('code_challenge_method', this.config.codeChallengeMethodPlain ? 'plain' : 'S256');
+      const hash = crypto.createHash('sha256').update(codeVerifier).digest('base64');
+      url.searchParams.set('code_challenge', this.codeChallengeMethodPlain ? codeVerifier : convertBase64ToBase64url(hash));
+      url.searchParams.set('code_challenge_method', this.codeChallengeMethodPlain ? 'plain' : 'S256');
     }
 
     const redirectResponse = new HttpResponseRedirect(url.href);
 
     // Add Code Challenge COOKIE for token request
-    // TODO: encrypt this code_challenge cookie for security reasons
-    if (this.config.useCodeChallenge) {
-      redirectResponse.setCookie(CODE_CHALLENGE_NAME, codeChallenge, {
+    if (this.useCodeChallenge) {
+
+      // Encrypt this code_challenge cookie for security reasons
+      redirectResponse.setCookie(CODE_CHALLENGE_NAME, this.encryptString(codeVerifier), {
         httpOnly: true,
         maxAge: 300,
         path: '/',
@@ -292,12 +325,15 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     params.set('client_secret', this.config.clientSecret);
 
     // Add code_verifier if config.useCodeChallenge is true
-    if (this.config.useCodeChallenge) {
+    if (this.useCodeChallenge) {
       const codeChallenge = ctx.request.cookies[CODE_CHALLENGE_NAME]
       if (!codeChallenge || codeChallenge === '' ) {
         throw new InvalidCodeChallengeError();
       }
-      params.set('code_verifier', codeChallenge);
+
+      // Decrypt code verifier
+      const decryptedCodeChallenge = this.decryptString(codeChallenge)
+      params.set('code_verifier', decryptedCodeChallenge);
     }
 
     const response = await fetch(this.tokenEndpoint, {
@@ -336,4 +372,60 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
   private async getState(): Promise<string> {
     return generateToken();
   }
+
+  /**
+   * This function is for encrypt a string using aes-256 and codeChallengeSecret.
+   * Notice that init vector base64-encoded is concatenated at start of encrypted message.
+   * We'll need init vector to decrypt message.
+   * Init vector is 16 bytes length and it base64-encoded is 24 bytes length.
+   *
+   * @param {string} message - String to encrypt
+   */
+  private encryptString(message: string): string {
+
+    const hashedSecret = this.getCodeChallengeSecretBuffer();
+
+    // Initiate iv with random bytes
+    const initVector = crypto.randomBytes(16);
+
+    // Create cipher
+    const cipher = crypto.createCipheriv(this.cryptAlgorithm, hashedSecret, initVector);
+
+    // Encrypt data, concat final
+    const data = cipher.update(Buffer.from(message));
+    const encryptedMessage = Buffer.concat([data, cipher.final()])
+
+    return `${initVector.toString('base64')}${encryptedMessage.toString('base64')}`
+  }
+
+  /**
+   * This function is for decrypt a string using aes-256 and codeChallengeSecret
+   * encryptedMessage is {iv}{encrypted data}
+   *
+   * @param {string} encryptedMessage - String to decrypt
+   */
+    private decryptString(encryptedMessage: string): string {
+
+      const hashedSecret = this.getCodeChallengeSecretBuffer();
+
+      // Get init vector back from encryptedMessage
+      const initVector: Buffer = Buffer.from(encryptedMessage.substring(0,24), 'base64'); // original iv is 16 bytes long, so base64 encoded is 24 bytes long
+      const message: string = encryptedMessage.substring(24);
+
+      // Create decipher
+      const decipher = crypto.createDecipheriv(this.cryptAlgorithm, hashedSecret, initVector);
+
+      // Decrypt data, concat final
+      const data = decipher.update(Buffer.from(message, 'base64'));
+      const decryptedMessage = Buffer.concat([data, decipher.final()])
+
+      return decryptedMessage.toString()
+    }
+
+    private getCodeChallengeSecretBuffer(): Buffer {
+      // Get secret from config file or throw an error if not defined
+      const codeChallengeSecret = Config.getOrThrow(this.codeChallengeSecretPath, 'string');
+      // We create a sha256 hash to ensure that key is 32 bytes long
+      return crypto.createHash('sha256').update(codeChallengeSecret).digest();
+    }
 }

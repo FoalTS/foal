@@ -19,13 +19,14 @@ export class TwitterProvider extends AbstractProvider<TwitterAuthParameter, neve
   protected configPaths = {
     clientId: 'settings.social.twitter.clientId',
     clientSecret: 'settings.social.twitter.clientSecret',
-    redirectUri: 'settings.social.twitter.redirectUri',
-    useCodeChallenge: 'settings.social.twitter.useCodeChallenge',
-    codeChallengeMethod: 'settings.social.twitter.codeChallengeMethod'
+    redirectUri: 'settings.social.twitter.redirectUri'
   };
   protected authEndpoint = 'https://twitter.com/i/oauth2/authorize';
   protected tokenEndpoint = 'https://api.twitter.com/2/oauth2/token';
   protected userInfoEndpoint = 'https://api.twitter.com/2/users/me';
+
+  // Enable code flow with PKCE
+  protected useCodeChallenge = true;
 
   protected defaultScopes: string[] = [ 'users.read', 'tweet.read' ];
 
