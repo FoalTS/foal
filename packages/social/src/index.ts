@@ -9,6 +9,7 @@ export {
   UserInfoAndTokens,
   SocialTokens,
   InvalidStateError,
+  InvalidCodeChallengeError,
   TokenError,
   AuthorizationError,
   ObjectType,
