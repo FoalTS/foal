@@ -887,7 +887,51 @@ describe('makeControllerRoutes', () => {
       } as IApiPaths);
     });
 
-    it('but with not the root servers, security requirements and externalDocs in the paths.', () => {
+    it('with the sub-controllers\' servers, security requirements and externalDocs in the paths.', () => {
+      const server: IApiServer = { url: 'http://example.com' };
+      const externalDocs: IApiExternalDocumentation = { url: 'http://example.com/docs' };
+      const securityRequirement: IApiSecurityRequirement = { a: [ 'b' ] };
+
+      @ApiServer(server)
+      @ApiExternalDoc(externalDocs)
+      @ApiSecurityRequirement(securityRequirement)
+      class UserController {
+        @Get('/foo')
+        foo(){}
+      }
+
+      @ApiInfo(infoMetadata)
+      class ApiController {
+        subControllers = [
+          controller('/users', UserController),
+        ]
+      }
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes(AppController, services));
+      const document = openApi.getDocument(ApiController);
+      strictEqual(document.servers, undefined);
+      strictEqual(document.externalDocs, undefined);
+      strictEqual(document.security, undefined);
+
+      deepStrictEqual(document.paths, {
+        '/users/foo': {
+          get: {
+            externalDocs,
+            responses: {},
+            security: [ securityRequirement ],
+            servers: [ server ],
+          }
+        }
+      });
+    });
+
+    it('but without the root servers, security requirements and externalDocs in the paths.', () => {
       const server: IApiServer = { url: 'http://example.com' };
       const externalDocs: IApiExternalDocumentation = { url: 'http://example.com/docs' };
       const securityRequirement: IApiSecurityRequirement = { a: [ 'b' ] };
