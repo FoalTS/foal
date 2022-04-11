@@ -1,6 +1,6 @@
 {
   "name": "@foal/jwt",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "description": "Authentication with JWT for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -42,7 +42,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^2.8.1",
+    "@foal/core": "^2.8.2",
     "jsonwebtoken": "~8.5.0"
   },
   "devDependencies": {
