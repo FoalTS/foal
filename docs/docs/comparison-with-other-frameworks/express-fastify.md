@@ -32,7 +32,7 @@ If you are looking for a more complete framework that provides everything needed
 Express and Fastify are frameworks written in vanilla JavaScript. Foal is written in TypeScript.
 
 It is possible to use Express and Fastify with TypeScript, but this has some disadvantages compared to Foal:
-- Express does not provide TypeScript types by itself, so you have to import the `@types/express` package which has been unstable between patch versions in the past.
+- Express does not provide TypeScript types by itself, so you have to import the `@types/express` package which has already been unstable between patch versions in the past.
 - Fastify provides TS types but, as they are separate from the code base, some parts of the API will not be typed or may be typed incorrectly as mentioned in the [official documentation](https://www.fastify.io/docs/latest/Reference/TypeScript/#typescript).
 
 Foal, on the other hand, is written entirely in TypeScript, designed to be used with TypeScript, with the API types always up-to-date.
@@ -62,3 +62,43 @@ Without a doubt, Express and Fastify have much larger communities than Foal.
 Foal's community is smaller but it's growing. If you're looking for help, feel free to join us on our [Discord server](https://discord.gg/QUrJv98).
 
 ## Code Examples
+
+> We're looking for small and concrete examples to complete this section. Feel free to suggest one on [Github](https://github.com/FoalTS/foal/tree/master/docs/docs/comparison-with-other-frameworks/express-fastify.md). 👍
+
+### A simple route
+
+#### FoalTS
+
+```typescript
+import { Get, HttpResponseOK } from '@foal/core';
+import { Product } from '../entities';
+
+export class ProdutController {
+  @Get('/products')
+  readProducts() {
+    const products = await Product.find({});
+    return new HttpResponseOK(products);
+  }
+}
+```
+
+#### Express
+
+```typescript
+import { Router } from 'express';
+import { Product } from '../entities';
+
+const productRouter = Router();
+
+// Express router does not support promises, so those that are rejected must be caught.
+productRouter.get('/products', async (req, res, next) => {
+  try {
+    const products = await Product.find({});
+    res.send(products);
+  } catch (err) {
+    next(err);
+  }
+})
+
+export { productRouter }
+```
