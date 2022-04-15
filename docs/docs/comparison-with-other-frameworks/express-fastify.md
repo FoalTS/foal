@@ -39,6 +39,12 @@ Foal, on the other hand, is written entirely in TypeScript, designed to be used 
 
 ### Activity and Maintenance
 
+| Framework | First 0.x release | First 1.x release |
+| --- | --- | --- |
+| Express | 2010 | 2010 |
+| Fastify | 2016 | 2018 |
+| Foal | 2017 | 2019 |
+
 Express is in maintenance mode. As of March 2022, the last minor release was 3 years ago.
 
 Fastify and Foal are both actively maintained with regular releases of new versions in recent years.
