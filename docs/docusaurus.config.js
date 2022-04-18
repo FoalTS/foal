@@ -27,7 +27,8 @@ module.exports = {
     },
   },
   scripts: [
-    'https://m.servedby-buysellads.com/monetization.custom.js'
+    'https://m.servedby-buysellads.com/monetization.custom.js',
+    { src: 'https://plausible.io/js/script.js', defer: true, 'data-domain': 'foalts.org' }
   ],
   themeConfig: {
     image: 'img/meta-image.png',
