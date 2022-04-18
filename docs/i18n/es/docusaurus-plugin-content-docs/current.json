@@ -43,9 +43,9 @@
     "message": "Integración del Frontend",
     "description": "The label for category Frontend Integration in sidebar someSidebar"
   },
-  "sidebar.someSidebar.category.File System": {
-    "message": "Sistema de Archivos",
-    "description": "The label for category File System in sidebar someSidebar"
+  "sidebar.someSidebar.category.File Storage": {
+    "message": "Almacenamiento de Archivos",
+    "description": "The label for category File Storage in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Dev Tools": {
     "message": "Herramientas de Desarrollo",
