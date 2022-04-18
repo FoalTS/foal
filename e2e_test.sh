@@ -9,7 +9,7 @@ foal createapp my-app
 cd my-app
 
 # Check some compilation errors
-if grep -Ril "../../Users/loicp" .; then
+if grep -Rl "../../Users/loicp" .; then
     echo "Compilation error: \"../../Users/loicp\" has been found in one of the builds."
     exit 1
 fi

@@ -76,6 +76,8 @@ jobs:
     - name: Create CLI symlink in the global folder
       run: npm link
       working-directory: packages/cli
+    - name: Check for the absence of "describe.only()" and "it.only()"
+      run: if grep -Rl ".only(" ./packages/*/src ; then echo "Unexpected describe.only() or it.only() found.";  exit 1; else exit 0; fi
     - name: Check package linting
       run: npm run lint
     - name: Run unit tests of @foal/acceptance-tests
