@@ -3,7 +3,7 @@ import { URL, URLSearchParams } from 'url';
 
 // 3p
 import { Config, Context, generateToken, HttpResponseRedirect } from '@foal/core';
-import * as fetch from 'node-fetch';
+import axios from 'axios';
 
 /**
  * Tokens returned by an OAuth2 authorization server.
@@ -246,20 +246,16 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     params.set('client_id', this.config.clientId);
     params.set('client_secret', this.config.clientSecret);
 
-    const response = await fetch(this.tokenEndpoint, {
-      body: params,
-      headers: {
-        Accept: 'application/json'
-      },
-      method: 'POST',
-    });
-    const body = await response.json();
-
-    if (!response.ok) {
-      throw new TokenError(body);
+    try {
+      const response = await axios.post(this.tokenEndpoint, params, {
+        headers: {
+          Accept: 'application/json'
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new TokenError(error.response.data);
     }
-
-    return body;
   }
 
   /**

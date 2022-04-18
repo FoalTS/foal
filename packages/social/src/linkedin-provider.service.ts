@@ -2,7 +2,7 @@
 import { URL } from 'url';
 
 // 3p
-import * as fetch from 'node-fetch';
+import axios from 'axios';
 
 // FoalTS
 import { AbstractProvider, SocialTokens } from './abstract-provider.service';
@@ -43,16 +43,14 @@ export class LinkedInProvider extends AbstractProvider<never, LinkedInUserInfoPa
       url.searchParams.set('fields', params.fields.join(','));
     }
 
-    const response = await fetch(url.href, {
-      headers: { Authorization: `Bearer ${tokens.access_token}` }
-    });
-    const body = await response.json();
-
-    if (!response.ok) {
-      throw new UserInfoError(body);
+    try {
+      const response = await axios.get(url.href, {
+        headers: { Authorization: `Bearer ${tokens.access_token}` }
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new UserInfoError(error.response.data);
     }
-
-    return body;
   }
 
 }
