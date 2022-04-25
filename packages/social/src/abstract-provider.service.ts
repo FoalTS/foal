@@ -327,7 +327,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     // Add code_verifier if config.useCodeChallenge is true
     if (this.useCodeChallenge) {
       const codeChallenge = ctx.request.cookies[CODE_CHALLENGE_NAME]
-      if (!codeChallenge || codeChallenge === '' ) {
+      if (!codeChallenge) {
         throw new InvalidCodeChallengeError();
       }
 
