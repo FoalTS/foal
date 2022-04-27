@@ -28,7 +28,7 @@ import {
 } from './abstract-provider.service';
 
 const STATE_COOKIE_NAME = 'oauth2-state';
-const CODE_CHALLENGE_NAME = 'oauth2-code-challenge';
+const CODE_VERIFIER_NAME = 'oauth2-code-challenge';
 
 describe('InvalidStateError', () => {
 
@@ -578,7 +578,7 @@ describe('Abstract Provider With PKCE', () => {
       clientSecret: 'settings.social.example.clientSecret',
       redirectUri: 'settings.social.example.redirectUri'
     };
-    protected useCodeChallenge = true;
+    protected useCodeVerifier: boolean = true;
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
     getUserInfoFromTokens(tokens: SocialTokens) {
@@ -689,7 +689,7 @@ describe('Abstract Provider With PKCE', () => {
         const ctx = new Context({
           cookies: {
             [STATE_COOKIE_NAME]: 'xxx',
-            [CODE_CHALLENGE_NAME]: encryptHelper(codeChallenge, iv, secret)
+            [CODE_VERIFIER_NAME]: encryptHelper(codeChallenge, iv, secret)
           },
           query: {
             code: 'an_authorization_code',
@@ -748,7 +748,7 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
       clientSecret: 'settings.social.example.clientSecret',
       redirectUri: 'settings.social.example.redirectUri'
     };
-    protected useCodeChallenge = true;
+    protected useCodeVerifier: boolean = true;
     protected codeChallengeMethodPlain = true;
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';

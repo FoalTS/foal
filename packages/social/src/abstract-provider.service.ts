@@ -100,7 +100,7 @@ export class TokenError extends Error {
 }
 
 const STATE_COOKIE_NAME = 'oauth2-state';
-const CODE_CHALLENGE_NAME = 'oauth2-code-challenge'
+const CODE_VERIFIER_NAME = 'oauth2-code-verifier'
 
 export interface ObjectType {
   [name: string]: any;
@@ -179,7 +179,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @type {boolean}
    * @memberof AbstractProvider
    */
-   protected readonly useCodeChallenge: boolean = false;
+   protected readonly useCodeVerifier: boolean = false;
 
   /**
    * Property use Plain Method within code challenge on PCKE.
@@ -264,8 +264,8 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     // We use a base64url-encoded random token making OAuth2 PKCE spec compliant - see https://datatracker.ietf.org/doc/html/rfc7636#appendix-B for more information
     const codeVerifier = await generateToken();
 
-    // Add PKCE if config.useCodeChallenge is true
-    if (this.useCodeChallenge) {
+    // Add PKCE if config.useCodeVerifier is true
+    if (this.useCodeVerifier) {
 
       const hash = crypto.createHash('sha256').update(codeVerifier).digest('base64');
       url.searchParams.set('code_challenge', this.codeChallengeMethodPlain ? codeVerifier : convertBase64ToBase64url(hash));
@@ -275,10 +275,10 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     const redirectResponse = new HttpResponseRedirect(url.href);
 
     // Add Code Challenge COOKIE for token request
-    if (this.useCodeChallenge) {
+    if (this.useCodeVerifier) {
 
       // Encrypt this code_challenge cookie for security reasons
-      redirectResponse.setCookie(CODE_CHALLENGE_NAME, this.encryptString(codeVerifier), {
+      redirectResponse.setCookie(CODE_VERIFIER_NAME, this.encryptString(codeVerifier), {
         httpOnly: true,
         maxAge: 300,
         path: '/',
@@ -324,9 +324,9 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     params.set('client_id', this.config.clientId);
     params.set('client_secret', this.config.clientSecret);
 
-    // Add code_verifier if config.useCodeChallenge is true
-    if (this.useCodeChallenge) {
-      const codeChallenge = ctx.request.cookies[CODE_CHALLENGE_NAME]
+    // Add code_verifier if config.useCodeVerifier is true
+    if (this.useCodeVerifier) {
+      const codeChallenge = ctx.request.cookies[CODE_VERIFIER_NAME]
       if (!codeChallenge) {
         throw new InvalidCodeChallengeError();
       }

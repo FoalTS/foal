@@ -57,15 +57,6 @@ npm install @foal/social
 
 Then, you will need to provide your client ID, client secret and your redirect URIs to Foal. This can be done through the usual [configuration files](../architecture/configuration.md).
 
-#### Enable Code Flow with PKCE
-
-PKCE Flow can be enable through config file too. There're two aditional parameters:
-```
-  useCodeChallenge: boolean
-  codeChallengeMethodPlain: boolean (optional)
-```
-By default it use SHA256 encription as standard Code Challenge Method.
-
 <Tabs
   defaultValue="yaml"
   values={[
@@ -332,6 +323,67 @@ export class AuthController {
 
 }
 ```
+
+## Enable Code Flow with PKCE
+
+PKCE can be enabled extending Abstract Provider class and setting useCodeChallenge property as true. 
+By default it use SHA256 encription as standard Code Challenge Method but there's another property to set Plain method if is needed:
+```typescript
+  useCodeChallenge: boolean;
+  codeChallengeMethodPlain: boolean = false; // Optional: default false
+```
+
+If you use this feature, then you must provide a secret to encrypt the code verifier. Secret can be configured like this:
+<Tabs
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
+```yaml
+settings:
+  social:
+    secret:
+      codeChallengeSecret: 'xxx'
+```
+
+</TabItem>
+<TabItem value="json">
+
+```json
+{
+  "settings": {
+    "social": {
+      "secret": {
+        "codeChallengeSecret": "xxx"
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="js">
+
+```javascript
+module.exports = {
+  settings: {
+    social: {
+      secret: {
+        codeChallengeSecret: 'xxx'
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
 
 ## Custom Provider
 
