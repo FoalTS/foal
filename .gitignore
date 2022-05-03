@@ -16,3 +16,5 @@ e2e_db.sqlite
 
 .env
 fix-cli-permission.sh
+
+.obsidian/

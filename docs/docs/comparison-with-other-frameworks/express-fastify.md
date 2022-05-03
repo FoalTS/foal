@@ -3,6 +3,9 @@ title: Foal vs Express or Fastify
 sidebar_label: Express / Fastify
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 These pages are definitely the most difficult to write. If you are here, it is probably because you want to know if you should choose Foal over another framework. There are many in the Node ecosystem and choosing one is not always an easy task. These pages are meant to help you on your way.
 
 Of course, we prefer FoalTS because we sincerely believe that it solves a number of problems better than other existing frameworks. And so we may have some bias. However, we will try in these pages to be as objective and sincere as possible to show you the differences between FoalTS and other frameworks.
@@ -63,7 +66,14 @@ Foal's community is smaller but it's growing. If you're looking for help, feel f
 
 ### A simple route
 
-#### FoalTS
+<Tabs
+  defaultValue="FoalTS"
+  values={[
+    {label: 'FoalTS', value: 'FoalTS'},
+    {label: 'Express', value: 'Express'}
+  ]}
+>
+<TabItem value="FoalTS">
 
 ```typescript
 import { Get, HttpResponseOK } from '@foal/core';
@@ -78,7 +88,8 @@ export class ProdutController {
 }
 ```
 
-#### Express
+</TabItem>
+<TabItem value="Express">
 
 ```typescript
 import { Router } from 'express';
@@ -87,7 +98,7 @@ import { Product } from '../entities';
 const productRouter = Router();
 
 // Express router does not support promises, so those that are rejected must be caught.
-productRouter.get('/products', async (req, res, next) => {
+productRouter.get('/products', async (req, res) => {
   try {
     const products = await Product.find({});
     res.send(products);
@@ -98,3 +109,107 @@ productRouter.get('/products', async (req, res, next) => {
 
 export { productRouter }
 ```
+
+</TabItem>
+</Tabs>
+
+### Unit testing on a simple route
+
+<Tabs
+  defaultValue="FoalTS"
+  values={[
+    {label: 'FoalTS', value: 'FoalTS'},
+    {label: 'Express', value: 'Express'}
+  ]}
+>
+<TabItem value="FoalTS">
+
+*Code*
+```typescript
+import { Context Get, HttpResponseOK } from '@foal/core';
+
+export class ComputerController {
+  @Get('/fullname')
+  computeFullname({ request }: Context) {
+    const firstName = request.params.firstName;
+    const lastName = request.params.lastName;
+    return new HttpResponseOK(`${firstName} ${lastName}`);
+  }
+}
+```
+
+*Test*
+```typescript
+import { strictEqual } from 'assert';
+import { Context, HttpResponseOK } from '@foal/core';
+
+import { ComputerController } from './computer.controller';
+
+it('computeFullname should return the full name.', () => {
+  const ctx = new Context({
+    params: { firstName: 'Hello', lastName: 'World' }
+  });
+
+  const controller = new ComputerController();
+  const response = controller.computeFullname(ctx);
+
+  if (!(response instanceof HttpResponseOK)) {
+    throw new Error('The returned status shoud be 200.');
+  }
+
+  strictEqual(response.body, 'Hello World');
+});
+```
+
+</TabItem>
+<TabItem value="Express">
+
+*Code*
+```typescript
+import { Router } from 'express';
+
+const computerRouter = Router();
+
+async function computeFullname(req, res) {
+  const firstName = req.params.firstName;
+  const lastName = req.params.lastName;
+  res.status(200).send(`${firstName} ${lastName}`)
+}
+
+computerRouter.get('/fullname', computeFullname);
+
+export { computerRouter, computeFullname }
+```
+
+*Test*
+```typescript
+import { strictEqual } from 'assert';
+
+import { computeFullname } from './computer.controller';
+
+it('computeFullname should return the full name.', () => {
+  let actualStatus;
+  let actualBody;
+
+  const req = {
+    params: { firstName: 'Hello', lastName: 'World' }
+  };
+  const res = {
+    status(status) {
+      actualStatus = status;
+      return status;
+    }
+    send(body) {
+      actualBody = body;
+    }
+  }
+
+  computeFullname(req, res);
+
+  strictEqual(actualStatus, 200);
+  strictEqual(actualBody, 'Hello World');
+});
+```
+
+</TabItem>
+</Tabs>
