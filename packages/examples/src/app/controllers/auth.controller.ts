@@ -11,7 +11,7 @@ import {
 import { FacebookProvider, GithubProvider, GoogleProvider, LinkedInProvider, TwitterProvider } from '@foal/social';
 import { TypeORMStore } from '@foal/typeorm';
 
-@UseSessions({ cookie: true })
+@UseSessions({ cookie: true, store: TypeORMStore })
 export class AuthController {
   @dependency
   google: GoogleProvider;

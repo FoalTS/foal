@@ -324,67 +324,6 @@ export class AuthController {
 }
 ```
 
-## Enable Code Flow with PKCE
-
-PKCE can be enabled extending Abstract Provider class and setting useCodeChallenge property as true. 
-By default it use SHA256 encription as standard Code Challenge Method but there's another property to set Plain method if is needed:
-```typescript
-  useCodeChallenge: boolean;
-  codeChallengeMethodPlain: boolean = false; // Optional: default false
-```
-
-If you use this feature, then you must provide a secret to encrypt the code verifier. Secret can be configured like this:
-<Tabs
-  defaultValue="yaml"
-  values={[
-    {label: 'YAML', value: 'yaml'},
-    {label: 'JSON', value: 'json'},
-    {label: 'JS', value: 'js'},
-  ]}
->
-<TabItem value="yaml">
-
-```yaml
-settings:
-  social:
-    secret:
-      codeChallengeSecret: 'xxx'
-```
-
-</TabItem>
-<TabItem value="json">
-
-```json
-{
-  "settings": {
-    "social": {
-      "secret": {
-        "codeChallengeSecret": "xxx"
-      }
-    }
-  }
-}
-```
-
-</TabItem>
-<TabItem value="js">
-
-```javascript
-module.exports = {
-  settings: {
-    social: {
-      secret: {
-        codeChallengeSecret: 'xxx'
-      }
-    }
-  }
-}
-```
-
-</TabItem>
-</Tabs>
-
-
 ## Custom Provider
 
 If your provider is not officially supported by Foal but supports the OAuth 2.0 protocol, you can still implement your own social service. All you need to do is to make it inherit from the `AbstractProvider` class.
@@ -425,6 +364,68 @@ export class GithubProvider extends AbstractProvider<GithubAuthParameter, Github
 
 } 
 ```
+
+### Enable Code Flow with PKCE
+
+PKCE can be enabled extending Abstract Provider class and setting useCodeVerifier property as true. 
+By default it use SHA256 encryption as standard Code Challenge Method but there's another property to set Plain method if is needed:
+```typescript
+  useCodeVerifier: boolean;
+  codeChallengeMethodPlain: boolean = false; // Optional: default false
+```
+
+If you use this feature, then you must provide a secret to encrypt the code verifier. Secret can be configured like this:
+<Tabs
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
+```yaml
+settings:
+  social:
+    secret:
+      codeVerifierSecret: 'xxx'
+```
+
+</TabItem>
+<TabItem value="json">
+
+```json
+{
+  "settings": {
+    "social": {
+      "secret": {
+        "codeVerifierSecret": "xxx"
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="js">
+
+```javascript
+module.exports = {
+  settings: {
+    social: {
+      secret: {
+        codeVerifierSecret: 'xxx'
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+
 
 ## Official Providers
 
@@ -553,7 +554,7 @@ const { userInfo } = await this.linkedin.getUserInfo(ctx, {
 
 #### Register an OAuth application
 
-Visit [this page](https://developer.twitter.com/en/portal/dashboard) to create an application and obtain a client ID and a client secret.
+Visit [this page](https://developer.twitter.com/en/portal/dashboard) to create an application and obtain a client ID and a client secret. You must configure Oauth2 settings to be used with public client; 
 
 
 ## Community Providers

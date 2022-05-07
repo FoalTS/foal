@@ -28,7 +28,7 @@ import {
 } from './abstract-provider.service';
 
 const STATE_COOKIE_NAME = 'oauth2-state';
-const CODE_VERIFIER_NAME = 'oauth2-code-challenge';
+const CODE_VERIFIER_NAME = 'oauth2-code-verifier';
 
 describe('InvalidStateError', () => {
 
@@ -622,11 +622,11 @@ describe('Abstract Provider With PKCE', () => {
     describe('should return an HttpResponseRedirect object', () => {
 
       beforeEach(() => {
-        Config.set('settings.social.secret.codeChallengeSecret', 'SECRET');
+        Config.set('settings.social.secret.codeVerifierSecret', 'SECRET');
       });
 
       afterEach(() => {
-        Config.remove('settings.social.secret.codeChallengeSecret');
+        Config.remove('settings.social.secret.codeVerifierSecret');
       });
 
       it('with a redirect path which contains a client ID, a response type, a redirect URI, code_challenge and code_challenge_method (S256) if pkce enabled.', async () => {
@@ -652,17 +652,17 @@ describe('Abstract Provider With PKCE', () => {
         if (server) {
           server.close();
         }
-        Config.remove('settings.social.secret.codeChallengeSecret');
+        Config.remove('settings.social.secret.codeVerifierSecret');
       });
 
       beforeEach(() => {
-        Config.set('settings.social.secret.codeChallengeSecret', secret);
+        Config.set('settings.social.secret.codeVerifierSecret', secret);
       });
 
       it('should send a request which contains a grant type, a code, a redirect URI,'
         + 'a client ID, a client secret and code_verifier and return the response body.', async () => {
 
-        const codeChallenge = 'challenge';
+        const codeVerifier = 'challenge';
 
         class AppController {
           @Post('/token')
@@ -674,7 +674,7 @@ describe('Abstract Provider With PKCE', () => {
             strictEqual(redirect_uri, redirectUri);
             strictEqual(client_id, clientId);
             strictEqual(client_secret, clientSecret);
-            strictEqual(code_verifier, codeChallenge)
+            strictEqual(code_verifier, codeVerifier)
             return new HttpResponseOK({
               access_token: 'an_access_token',
               token_type: 'bearer'
@@ -689,7 +689,7 @@ describe('Abstract Provider With PKCE', () => {
         const ctx = new Context({
           cookies: {
             [STATE_COOKIE_NAME]: 'xxx',
-            [CODE_VERIFIER_NAME]: encryptHelper(codeChallenge, iv, secret)
+            [CODE_VERIFIER_NAME]: encryptHelper(codeVerifier, iv, secret)
           },
           query: {
             code: 'an_authorization_code',
@@ -782,11 +782,11 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
     describe('should return an HttpResponseRedirect object', () => {
 
       beforeEach(() => {
-        Config.set('settings.social.secret.codeChallengeSecret', 'SECRET');
+        Config.set('settings.social.secret.codeVerifierSecret', 'SECRET');
       });
 
       afterEach(() => {
-        Config.remove('settings.social.secret.codeChallengeSecret');
+        Config.remove('settings.social.secret.codeVerifierSecret');
       });
 
       it('with a redirect path which contains a client ID, a response type, a redirect URI, code_challenge and code_challenge_method (plain) if pkce enabled.', async () => {

@@ -197,7 +197,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @type {boolean}
    * @memberof AbstractProvider
    */
-   protected readonly codeChallengeSecretPath: string = 'settings.social.secret.codeChallengeSecret';
+   protected readonly codeVerifierSecretPath: string = 'settings.social.secret.codeVerifierSecret';
 
   /**
    * Algorithm used for encrypt code challenge.
@@ -339,7 +339,8 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     const response = await fetch(this.tokenEndpoint, {
       body: params,
       headers: {
-        Accept: 'application/json'
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded'
       },
       method: 'POST',
     });
@@ -374,7 +375,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
   }
 
   /**
-   * This function is for encrypt a string using aes-256 and codeChallengeSecret.
+   * This function is for encrypt a string using aes-256 and codeVerifierSecret.
    * Notice that init vector base64-encoded is concatenated at start of encrypted message.
    * We'll need init vector to decrypt message.
    * Init vector is 16 bytes length and it base64-encoded is 24 bytes length.
@@ -383,7 +384,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    */
   private encryptString(message: string): string {
 
-    const hashedSecret = this.getCodeChallengeSecretBuffer();
+    const hashedSecret = this.getCodeVerifierSecretBuffer();
 
     // Initiate iv with random bytes
     const initVector = crypto.randomBytes(16);
@@ -399,14 +400,14 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
   }
 
   /**
-   * This function is for decrypt a string using aes-256 and codeChallengeSecret
+   * This function is for decrypt a string using aes-256 and codeVerifierSecret
    * encryptedMessage is {iv}{encrypted data}
    *
    * @param {string} encryptedMessage - String to decrypt
    */
     private decryptString(encryptedMessage: string): string {
 
-      const hashedSecret = this.getCodeChallengeSecretBuffer();
+      const hashedSecret = this.getCodeVerifierSecretBuffer();
 
       // Get init vector back from encryptedMessage
       const initVector: Buffer = Buffer.from(encryptedMessage.substring(0,24), 'base64'); // original iv is 16 bytes long, so base64 encoded is 24 bytes long
@@ -422,10 +423,10 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
       return decryptedMessage.toString()
     }
 
-    private getCodeChallengeSecretBuffer(): Buffer {
+    private getCodeVerifierSecretBuffer(): Buffer {
       // Get secret from config file or throw an error if not defined
-      const codeChallengeSecret = Config.getOrThrow(this.codeChallengeSecretPath, 'string');
+      const codeVerifierSecret = Config.getOrThrow(this.codeVerifierSecretPath, 'string');
       // We create a sha256 hash to ensure that key is 32 bytes long
-      return crypto.createHash('sha256').update(codeChallengeSecret).digest();
+      return crypto.createHash('sha256').update(codeVerifierSecret).digest();
     }
 }
