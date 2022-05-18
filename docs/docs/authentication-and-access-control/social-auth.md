@@ -12,6 +12,7 @@ In addition to traditional password authentication, Foal provides services to au
 - Facebook
 - Github
 - Linkedin
+- Twitter
 
 If your provider is not listed here but supports OAuth 2.0, then you can still [extend the `AbstractProvider`](#custom-provider) class to integrate it or use a [community provider](#community-providers) below.
 
