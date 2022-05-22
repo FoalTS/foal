@@ -214,7 +214,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @type {string}
    * @memberof AbstractProvider
    */
-  protected readonly cryptAlgorithm: string = 'aes-256-ctr' ;
+  private readonly cryptAlgorithm: string = 'aes-256-ctr' ;
 
   private get config() {
     return {
