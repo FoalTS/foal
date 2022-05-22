@@ -95,7 +95,7 @@ export function* makeControllerRoutes(
   const controllerComponents = openapi ? getApiComponents(controllerClass, controller) : {};
   const controllerOperation = openapi ? getApiCompleteOperation(controllerClass, controller) : { responses: {} };
   const controllerTags = openapi ? getApiTags(controllerClass) : undefined;
-  if (openapi) {
+  if (openapi && info) {
     delete controllerOperation.servers;
     delete controllerOperation.externalDocs;
     delete controllerOperation.security;

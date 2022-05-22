@@ -13,13 +13,13 @@ module.exports = {
     locales: ['en', 'fr', 'es', 'id'],
     localeConfigs: {
       en: {
-        label: 'English',
+        label: 'EN',
       },
       fr: {
-        label: 'Français',
+        label: 'FR',
       },
       es: {
-        label: 'Español',
+        label: 'ES',
       },
       id: {
         label: 'Bahasa Indonesia',
@@ -27,10 +27,15 @@ module.exports = {
     },
   },
   scripts: [
-    'https://m.servedby-buysellads.com/monetization.custom.js'
+    'https://m.servedby-buysellads.com/monetization.custom.js',
+    { src: 'https://plausible.io/js/script.js', defer: true, 'data-domain': 'foalts.org' }
   ],
   themeConfig: {
     image: 'img/meta-image.png',
+    announcementBar: {
+      id: 'github-twitter',
+      content: '⭐️ If you like FoalTS, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/FoalTS/foal">GitHub</a> and follow us on <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/FoalTs" >Twitter</a>! 🚀'
+    },
     algolia: {
       apiKey: '888cc664f8cdf532950f93fdd481eac1',
       indexName: 'foalts',
@@ -87,6 +92,18 @@ module.exports = {
           position: 'right',
           className: 'header-github-link',
           'aria-label': 'GitHub repository',
+        },
+        {
+          href: 'https://twitter.com/FoalTs',
+          position: 'right',
+          className: 'header-twitter-link',
+          'aria-label': 'Twitter profile',
+        },
+        {
+          href: 'https://discord.gg/QUrJv98',
+          position: 'right',
+          className: 'header-discord-link',
+          'aria-label': 'Discord chat',
         },
       ],
     }

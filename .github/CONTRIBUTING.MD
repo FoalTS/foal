@@ -19,7 +19,7 @@ There are several ways to contribute. **Reporting bugs are greatly appreciated**
 
 ## Security Vulnerabilities
 
-If you think you have found a security hole, please do NOT submit an issue but send an email directly to security@foalts.org.
+If you think you have found a security vulnerability, please DO NOT submit an issue but email security@foalts.org directly.
 
 ## Pull Requests
 
@@ -134,13 +134,13 @@ The framework follows the semantic versioning specification.
 
 ## Long-Term Support Policy and Schedule
 
-All of major releases are supported for 18 months.
-- 12 months of *active support* (new features, bug fixes, etc).
+All of major releases are supported for at least 18 months.
+- at least 12 months of *active support* (new features, bug fixes, etc).
 - 6 months of *maintenance (LTS)* (critical fixes and security patches).
 
 | Release | Status | Active Start | Maintenance Start | End-of-life | Node versions | TS min version |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 2.x | *Active* | 2020-12-03 | 2021-12-01 | 2022-05-31 | 10.x, 12.x, 14.x | 4.0 |
+| 2.x | *Active* | 2020-12-03 |  |  | 10.x, 12.x, 14.x | 4.0 |
 | 1.x | *Maintenance* | 2019-07-11 | 2020-12-03 | 2021-05-31 | 8.x, 10.x | 3.5 |
 | 0.8 | *End-of-Life* | 2019-02-16 | - | 2019-07-11 | 8.x, 10.x | 2.9 |
 

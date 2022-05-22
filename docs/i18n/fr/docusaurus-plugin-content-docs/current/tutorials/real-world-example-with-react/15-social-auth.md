@@ -66,7 +66,7 @@ if (!(await verifyPassword(password, user.password))) {
 Maintenant que le problème du mot de passe est résolu, vous pouvez installer les paquets et fournir vos informations d'identification sociale dans la configuration.
 
 ```bash
-npm install @foal/social node-fetch
+npm install @foal/social node-fetch@2
 ```
 
 *config/default.json*

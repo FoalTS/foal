@@ -3,6 +3,7 @@ import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import GitHubButton from 'react-github-btn';
 import styles from './index.module.scss';
 
 function FeatureCell(props) {
@@ -55,6 +56,23 @@ function Home() {
                 to="https://discord.gg/QUrJv98">
                 Join the chat
               </Link>
+            </div>
+            <div className={styles.githubBtns}>
+              <GitHubButton 
+                href="https://github.com/FoalTS/foal"
+                data-icon="octicon-star" 
+                data-size="large" 
+                data-show-count="true" 
+                aria-label="Star FoalTS/foal on GitHub">
+                  Star
+              </GitHubButton>
+              <GitHubButton
+                href="https://github.com/sponsors/LoicPoullain"
+                data-icon="octicon-heart"
+                data-size="large"
+                aria-label="Sponsor @FoalTS on GitHub">
+                  Sponsor
+              </GitHubButton>
             </div>
           </div>
         </header>

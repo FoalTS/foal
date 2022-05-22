@@ -19,7 +19,8 @@
     "@mdx-js/react": "^1.6.21",
     "docusaurus-plugin-sass": "^0.1.11",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "react-github-btn": "^1.2.1"
   },
   "browserslist": {
     "production": [

@@ -62,8 +62,7 @@ $max-content-width: 1280px;
 
 .btn {
   font-size: 1.2rem;
-  margin-right: 8px;
-  margin-left: 8px;
+  margin: 0 8px;
   font-family: Arial;
   border-radius: 6px;
   padding: 0.8rem 2rem;
@@ -110,10 +109,15 @@ $max-content-width: 1280px;
   background-image: url('../img/background8.png');
 
   .content {
-    padding-top: 100px;
+    padding-top: 90px;
+
+    // Takes into account the line break of the title.
+    @media (max-width: 880px)  {
+      padding-top: 40px;
+    }
 
     @media (max-width: $small-screen)  {
-      padding-top: 70px;
+      padding-top: 40px;
     }
 
     @media (min-width: $large-screen)  {
@@ -144,12 +148,19 @@ $max-content-width: 1280px;
     font-family: Arial;
     color: $text-white;
 
-    margin-bottom: 70px;
+    margin-bottom: 50px;
 
     @media (max-width: $medium-screen) {
       margin-bottom: 40px;
     }
+  }
 
+  .githubBtns {
+    margin-top: 40px;
+
+    > * {
+      margin: 0 4px;
+    }
   }
 }
 

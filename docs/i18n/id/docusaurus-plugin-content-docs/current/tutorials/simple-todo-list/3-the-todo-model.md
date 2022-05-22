@@ -4,16 +4,19 @@ id: tuto-3-the-todo-model
 slug: 3-the-todo-model
 ---
 
-Let&#8217;s create your first model. The CLI provides a useful command to generate a new file with an empty model.
+The next step is to take care of the database. By default, every new project in FoalTS is configured to use an `SQLite` database as it does not require any additional installation.
+
+Let&#8217;s start by creating your first model. The CLI provides a useful command to generate a new file with an empty model.
 
 ```sh
 foal generate entity todo
 ```
 
-> FoalTS uses [TypeORM](http://typeorm.io), a complete *Object-Relational Mapper*, to communicate with the database(s). In TypeORM, simple models are called *entities* and are classes decorated with the `Entity` decorator.
+:::info
 
+FoalTS uses [TypeORM](http://typeorm.io) as the default ORM in any new application. This way, you don't have to configure anything and you can start a project quickly. However, if you wish, you still can choose to [use another one](../../databases/using-another-orm.md) ([Prisma](https://www.prisma.io/), [MikroORM](https://mikro-orm.io/), [Mongoose](https://mongoosejs.com/), etc), as the framework code is ORM independent.
 
-> Every new project in FoalTS uses an `SQLite` database as it does not require any additional installation. But TypeORM supports many other databases. We will keep this one in this tutorial for simplicity.
+:::
 
 Open the file `todo.entity.ts` in the `src/app/entities` directory and add a `text` column.
 

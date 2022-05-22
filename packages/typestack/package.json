@@ -1,6 +1,6 @@
 {
   "name": "@foal/typestack",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "description": "FoalTS for validation and serialization using TypeStack classes",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -48,7 +48,7 @@
     "class-validator": "^0.10.0"
   },
   "dependencies": {
-    "@foal/core": "^2.8.1"
+    "@foal/core": "^2.8.2"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",

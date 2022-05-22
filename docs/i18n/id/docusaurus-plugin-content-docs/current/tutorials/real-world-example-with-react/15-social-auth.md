@@ -66,7 +66,7 @@ if (!(await verifyPassword(password, user.password))) {
 Now that the password problem is solved, you can install the packages and provide your social credentials in the configuration.
 
 ```bash
-npm install @foal/social node-fetch
+npm install @foal/social node-fetch@2
 ```
 
 *config/default.json*
