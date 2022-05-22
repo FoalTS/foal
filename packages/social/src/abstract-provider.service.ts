@@ -179,7 +179,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @type {boolean}
    * @memberof AbstractProvider
    */
-   protected readonly useCodeVerifier: boolean = false;
+  protected readonly useCodeVerifier: boolean = false;
 
   /**
    * Property use Plain Method within code challenge on PCKE.
@@ -188,7 +188,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @type {boolean}
    * @memberof AbstractProvider
    */
-   protected readonly codeChallengeMethodPlain: boolean = false;
+  protected readonly codeChallengeMethodPlain: boolean = false;
 
   /**
    * Property use Plain Method within code challenge on PCKE.
@@ -197,7 +197,15 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @type {boolean}
    * @memberof AbstractProvider
    */
-   protected readonly codeVerifierSecretPath: string = 'settings.social.secret.codeVerifierSecret';
+  protected readonly codeVerifierSecretPath: string = 'settings.social.secret.codeVerifierSecret';
+
+  /**
+   * Specifies if the client ID and client secret must be sent in a Authorization header using Basic scheme.
+   *
+   * @protected
+   * @memberof AbstractProvider
+   */
+  protected useAuthorizationHeaderForTokenEndpoint = false;
 
   /**
    * Algorithm used for encrypt code challenge.
@@ -206,7 +214,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @type {string}
    * @memberof AbstractProvider
    */
-   protected readonly cryptAlgorithm: string = 'aes-256-ctr' ;
+  protected readonly cryptAlgorithm: string = 'aes-256-ctr' ;
 
   private get config() {
     return {
@@ -321,8 +329,11 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     params.set('grant_type', 'authorization_code');
     params.set('code', ctx.request.query.code || '');
     params.set('redirect_uri', this.config.redirectUri);
-    params.set('client_id', this.config.clientId);
-    params.set('client_secret', this.config.clientSecret);
+
+    if (!this.useAuthorizationHeaderForTokenEndpoint) {
+      params.set('client_id', this.config.clientId);
+      params.set('client_secret', this.config.clientSecret);
+    }
 
     // Add code_verifier if config.useCodeVerifier is true
     if (this.useCodeVerifier) {
@@ -336,12 +347,19 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
       params.set('code_verifier', decryptedCodeChallenge);
     }
 
+    const headers: Record<string, string> = {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+
+    if (this.useAuthorizationHeaderForTokenEndpoint) {
+      const auth = Buffer.from(`${this.config.clientId}:${this.config.clientSecret}`).toString('base64');
+      headers['Authorization'] = `Basic ${auth}`;
+    }
+
     const response = await fetch(this.tokenEndpoint, {
       body: params,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
+      headers,
       method: 'POST',
     });
     const body = await response.json();

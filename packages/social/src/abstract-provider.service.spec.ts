@@ -360,43 +360,106 @@ describe('AbstractProvider', () => {
       }
     });
 
-    it('should send a request which contains a grant type, a code, a redirect URI,'
-      + 'a client ID and a client secret and return the response body.', async () => {
-      class AppController {
-        @Post('/token')
-        token(ctx: Context) {
-          strictEqual(ctx.request.headers.accept, 'application/json');
-          const { grant_type, code, redirect_uri, client_id, client_secret } = ctx.request.body;
-          strictEqual(grant_type, 'authorization_code');
-          strictEqual(code, 'an_authorization_code');
-          strictEqual(redirect_uri, redirectUri);
-          strictEqual(client_id, clientId);
-          strictEqual(client_secret, clientSecret);
-          return new HttpResponseOK({
-            access_token: 'an_access_token',
-            token_type: 'bearer'
-          });
+    context('given the useAuthorizationHeaderForTokenEndpoint property is false', () => {
+      it('should send a request which contains a grant type, a code, a redirect URI,'
+          + 'a client ID and a client secret but no auth header and return the response body.', async () => {
+        class AppController {
+          @Post('/token')
+          token(ctx: Context) {
+            strictEqual(ctx.request.get('Accept'), 'application/json');
+            strictEqual(ctx.request.get('Content-Type'), 'application/x-www-form-urlencoded');
+            strictEqual(ctx.request.get('Authorization'), undefined);
+
+            const { grant_type, code, redirect_uri, client_id, client_secret } = ctx.request.body;
+            strictEqual(grant_type, 'authorization_code');
+            strictEqual(code, 'an_authorization_code');
+            strictEqual(redirect_uri, redirectUri);
+            strictEqual(client_id, clientId);
+            strictEqual(client_secret, clientSecret);
+            return new HttpResponseOK({
+              access_token: 'an_access_token',
+              token_type: 'bearer'
+            });
+          }
         }
-      }
 
-      server = (await createApp(AppController)).listen(3000);
+        server = (await createApp(AppController)).listen(3000);
 
-      const ctx = new Context({
-        cookies: {
-          [STATE_COOKIE_NAME]: 'xxx'
-        },
-        query: {
-          code: 'an_authorization_code',
-          state: 'xxx',
-        },
+        const ctx = new Context({
+          cookies: {
+            [STATE_COOKIE_NAME]: 'xxx'
+          },
+          query: {
+            code: 'an_authorization_code',
+            state: 'xxx',
+          },
+        });
+
+        const actual = await provider.getTokens(ctx);
+        const expected: SocialTokens = {
+          access_token: 'an_access_token',
+          token_type: 'bearer'
+        };
+        deepStrictEqual(actual, expected);
       });
+    });
 
-      const actual = await provider.getTokens(ctx);
-      const expected: SocialTokens = {
-        access_token: 'an_access_token',
-        token_type: 'bearer'
-      };
-      deepStrictEqual(actual, expected);
+    context('given the useAuthorizationHeaderForTokenEndpoint property is true', () => {
+      it('should send a request which contains a grant type, a code, a redirect URI,'
+          + 'and an auth header and return the response body.', async () => {
+        // Example taken from https://datatracker.ietf.org/doc/html/rfc2617#section-2
+        const clientId = 'Aladdin';
+        const clientSecret = 'open sesame';
+        const authHeader = 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==';
+
+        Config.set('settings.social.example.clientId', clientId);
+        Config.set('settings.social.example.clientSecret', clientSecret);
+
+        class ConcreteProvider2 extends ConcreteProvider {
+          useAuthorizationHeaderForTokenEndpoint = true;
+        }
+
+        provider = new ConcreteProvider2();
+
+        class AppController {
+          @Post('/token')
+          token(ctx: Context) {
+            strictEqual(ctx.request.headers.accept, 'application/json');
+            strictEqual(ctx.request.get('Content-Type'), 'application/x-www-form-urlencoded');
+            strictEqual(ctx.request.get('Authorization'), authHeader);
+
+            const { grant_type, code, redirect_uri, client_id, client_secret } = ctx.request.body;
+            strictEqual(grant_type, 'authorization_code');
+            strictEqual(code, 'an_authorization_code');
+            strictEqual(redirect_uri, redirectUri);
+            strictEqual(client_id, undefined);
+            strictEqual(client_secret, undefined);
+            return new HttpResponseOK({
+              access_token: 'an_access_token',
+              token_type: 'bearer'
+            });
+          }
+        }
+
+        server = (await createApp(AppController)).listen(3000);
+
+        const ctx = new Context({
+          cookies: {
+            [STATE_COOKIE_NAME]: 'xxx'
+          },
+          query: {
+            code: 'an_authorization_code',
+            state: 'xxx',
+          },
+        });
+
+        const actual = await provider.getTokens(ctx);
+        const expected: SocialTokens = {
+          access_token: 'an_access_token',
+          token_type: 'bearer'
+        };
+        deepStrictEqual(actual, expected);
+      });
     });
 
     it('should throw a TokenError if the token endpoint returns an error.', async () => {
@@ -668,6 +731,7 @@ describe('Abstract Provider With PKCE', () => {
           @Post('/token')
           token(ctx: Context) {
             strictEqual(ctx.request.headers.accept, 'application/json');
+            strictEqual(ctx.request.get('Content-Type'), 'application/x-www-form-urlencoded');
             const { grant_type, code, redirect_uri, client_id, client_secret, code_verifier } = ctx.request.body;
             strictEqual(grant_type, 'authorization_code');
             strictEqual(code, 'an_authorization_code');
