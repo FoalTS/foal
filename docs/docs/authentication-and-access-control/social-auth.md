@@ -366,16 +366,18 @@ export class GithubProvider extends AbstractProvider<GithubAuthParameter, Github
 } 
 ```
 
-### Enable Code Flow with PKCE
+### Sending the Client Credentials in an Authorization Header
 
-PKCE can be enabled extending Abstract Provider class and setting useCodeVerifier property as true. 
-By default it use SHA256 encryption as standard Code Challenge Method but there's another property to set Plain method if is needed:
-```typescript
-  useCodeVerifier: boolean;
-  codeChallengeMethodPlain: boolean = false; // Optional: default false
-```
+When requesting the token endpoint, the provider sends the client ID and secret as a query parameter by default. If you want to send them in an `Authorization` header using the *basic* scheme, you can do so by setting the `useAuthorizationHeaderForTokenEndpoint` property to `true`.
 
-If you use this feature, then you must provide a secret to encrypt the code verifier. Secret can be configured like this:
+### Enabling Code Flow with PKCE
+
+If you want to enable code flow with PKCE, you can do so by setting the `usePKCE` property to `true`.
+
+> By default, the provider will perform a SHA256 hash to generate the code challenge. If you wish to use the plaintext code verifier string as code challenge, you can do so by setting the `useCodeVerifierAsCodeChallenge` property to `true`.
+
+When using this feature, the provider encrypts the code verifier and stores it in a cookie on the client. In order to do this, you need to provide a secret using the configuration key `settings.social.secret.codeVerifierSecret`.
+
 <Tabs
   defaultValue="yaml"
   values={[
@@ -425,7 +427,6 @@ module.exports = {
 
 </TabItem>
 </Tabs>
-
 
 
 ## Official Providers
@@ -567,7 +568,7 @@ There are no community providers available yet! If you want to share one, feel f
 | Error | Description |
 | --- | --- |
 | `InvalidStateError` | The `state` query does not match the value found in the cookie. |
-| `InvalidCodeChallengeError` | The `code_verifier` query does not match the value found in the cookie. |
+| `CodeVerifierNotFound` | The encrypted code verifier was not found in the cookie (only when using PKCE). |
 | `AuthorizationError` | The authorization server returns an error. This can happen when a user does not give consent on the provider page. |
 | `UserInfoError` | Thrown in `AbstractProvider.getUserFromTokens` if the request to the resource server is unsuccessful. |
 

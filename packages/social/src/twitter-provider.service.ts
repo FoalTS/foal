@@ -25,8 +25,7 @@ export class TwitterProvider extends AbstractProvider<TwitterAuthParameter, neve
   protected tokenEndpoint = 'https://api.twitter.com/2/oauth2/token';
   protected userInfoEndpoint = 'https://api.twitter.com/2/users/me';
 
-  // Enable code flow with PKCE
-  protected useCodeVerifier: boolean = true;
+  protected usePKCE: boolean = true;
   protected useAuthorizationHeaderForTokenEndpoint = true;
 
   protected defaultScopes: string[] = [ 'users.read', 'tweet.read' ];

@@ -21,7 +21,7 @@ import {
 import {
   AbstractProvider,
   AuthorizationError,
-  InvalidCodeChallengeError,
+  CodeVerifierNotFound,
   InvalidStateError,
   SocialTokens,
   TokenError
@@ -48,20 +48,20 @@ describe('InvalidStateError', () => {
 
 });
 
-describe('InvalidCodeChallengeError', () => {
+describe('CodeVerifierNotFound', () => {
 
   it('should have a "message" property.', () => {
-    const error = new InvalidCodeChallengeError();
+    const error = new CodeVerifierNotFound();
 
     strictEqual(
       error.message,
-      'Suspicious operation: code challenge sent with authorize cannot be empty.');
+      'Suspicious operation: encrypted code verifier not found in cookie.');
   });
 
   it('should have a "name" property.', () => {
-    const error = new InvalidCodeChallengeError();
+    const error = new CodeVerifierNotFound();
 
-    strictEqual(error.name, 'InvalidCodeChallengeError');
+    strictEqual(error.name, 'CodeVerifierNotFound');
   });
 
 });
@@ -641,7 +641,7 @@ describe('Abstract Provider With PKCE', () => {
       clientSecret: 'settings.social.example.clientSecret',
       redirectUri: 'settings.social.example.redirectUri'
     };
-    protected useCodeVerifier: boolean = true;
+    protected usePKCE: boolean = true;
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
     getUserInfoFromTokens(tokens: SocialTokens) {
@@ -769,7 +769,7 @@ describe('Abstract Provider With PKCE', () => {
         deepStrictEqual(actual, expected);
       });
 
-      it('should throw a InvalidCodeChallengeError if Code Verifier not exists or is not valid', async () => {
+      it('should throw a CodeVerifierNotFound if Code Verifier not exists or is not valid', async () => {
         class AppController {
           @Post('/token')
           token() {
@@ -793,9 +793,9 @@ describe('Abstract Provider With PKCE', () => {
 
         try {
           await provider.getTokens(ctx);
-          throw new Error('getTokens should have thrown a InvalidCodeChallengeError.');
+          throw new Error('getTokens should have thrown a CodeVerifierNotFound.');
         } catch (error) {
-          if (!(error instanceof InvalidCodeChallengeError)) {
+          if (!(error instanceof CodeVerifierNotFound)) {
             throw error;
           }
         }
@@ -812,8 +812,8 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
       clientSecret: 'settings.social.example.clientSecret',
       redirectUri: 'settings.social.example.redirectUri'
     };
-    protected useCodeVerifier: boolean = true;
-    protected codeChallengeMethodPlain = true;
+    protected usePKCE: boolean = true;
+    protected useCodeVerifierAsCodeChallenge = true;
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
     getUserInfoFromTokens(tokens: SocialTokens) {

@@ -9,7 +9,7 @@ export {
   UserInfoAndTokens,
   SocialTokens,
   InvalidStateError,
-  InvalidCodeChallengeError,
+  CodeVerifierNotFound,
   TokenError,
   AuthorizationError,
   ObjectType,

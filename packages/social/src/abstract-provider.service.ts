@@ -45,16 +45,16 @@ export class InvalidStateError extends Error {
 }
 
 /**
- * Error thrown if the state does not match.
+ * Error thrown if the (encrypted) code verifier is not found in cookie.
  *
  * @export
- * @class InvalidCodeChallengeError
+ * @class CodeVerifierNotFound
  * @extends {Error}
  */
-export class InvalidCodeChallengeError extends Error {
-  readonly name = 'InvalidCodeChallengeError';
+export class CodeVerifierNotFound extends Error {
+  readonly name = 'CodeVerifierNotFound';
   constructor() {
-    super('Suspicious operation: code challenge sent with authorize cannot be empty.');
+    super('Suspicious operation: encrypted code verifier not found in cookie.');
   }
 }
 
@@ -173,25 +173,25 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
   protected readonly scopeSeparator: string = ' ';
 
   /**
-   * Property used to enable code flow with PCKE.
+   * Enables code flow with PKCE.
    *
    * @protected
    * @type {boolean}
    * @memberof AbstractProvider
    */
-  protected readonly useCodeVerifier: boolean = false;
+  protected readonly usePKCE: boolean = false;
 
   /**
-   * Property use Plain Method within code challenge on PCKE.
+   * Specifies whether to use the plain code verifier string as PKCE code challenge.
    *
    * @protected
    * @type {boolean}
    * @memberof AbstractProvider
    */
-  protected readonly codeChallengeMethodPlain: boolean = false;
+  protected readonly useCodeVerifierAsCodeChallenge: boolean = false;
 
   /**
-   * Property use Plain Method within code challenge on PCKE.
+   * Configuration path from which the code verifier secret must be retrieved.
    *
    * @protected
    * @type {boolean}
@@ -200,15 +200,15 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
   protected readonly codeVerifierSecretPath: string = 'settings.social.secret.codeVerifierSecret';
 
   /**
-   * Specifies if the client ID and client secret must be sent in a Authorization header using Basic scheme.
+   * Specifies whether the client ID and client secret must be sent in a Authorization header using Basic scheme.
    *
    * @protected
    * @memberof AbstractProvider
    */
-  protected useAuthorizationHeaderForTokenEndpoint = false;
+  protected readonly useAuthorizationHeaderForTokenEndpoint: boolean = false;
 
   /**
-   * Algorithm used for encrypt code challenge.
+   * Algorithm used for the code verifier encryption.
    *
    * @protected
    * @type {string}
@@ -272,19 +272,16 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     // We use a base64url-encoded random token making OAuth2 PKCE spec compliant - see https://datatracker.ietf.org/doc/html/rfc7636#appendix-B for more information
     const codeVerifier = await generateToken();
 
-    // Add PKCE if config.useCodeVerifier is true
-    if (this.useCodeVerifier) {
-
+    if (this.usePKCE) {
       const hash = crypto.createHash('sha256').update(codeVerifier).digest('base64');
-      url.searchParams.set('code_challenge', this.codeChallengeMethodPlain ? codeVerifier : convertBase64ToBase64url(hash));
-      url.searchParams.set('code_challenge_method', this.codeChallengeMethodPlain ? 'plain' : 'S256');
+      url.searchParams.set('code_challenge', this.useCodeVerifierAsCodeChallenge ? codeVerifier : convertBase64ToBase64url(hash));
+      url.searchParams.set('code_challenge_method', this.useCodeVerifierAsCodeChallenge ? 'plain' : 'S256');
     }
 
     const redirectResponse = new HttpResponseRedirect(url.href);
 
     // Add Code Challenge COOKIE for token request
-    if (this.useCodeVerifier) {
-
+    if (this.usePKCE) {
       // Encrypt this code_challenge cookie for security reasons
       redirectResponse.setCookie(CODE_VERIFIER_NAME, this.encryptString(codeVerifier), {
         httpOnly: true,
@@ -335,16 +332,14 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
       params.set('client_secret', this.config.clientSecret);
     }
 
-    // Add code_verifier if config.useCodeVerifier is true
-    if (this.useCodeVerifier) {
-      const codeChallenge = ctx.request.cookies[CODE_VERIFIER_NAME]
-      if (!codeChallenge) {
-        throw new InvalidCodeChallengeError();
+    if (this.usePKCE) {
+      const encryptedCodeVerifier = ctx.request.cookies[CODE_VERIFIER_NAME]
+      if (!encryptedCodeVerifier) {
+        throw new CodeVerifierNotFound();
       }
 
-      // Decrypt code verifier
-      const decryptedCodeChallenge = this.decryptString(codeChallenge)
-      params.set('code_verifier', decryptedCodeChallenge);
+      const codeVerifier = this.decryptString(encryptedCodeVerifier)
+      params.set('code_verifier', codeVerifier);
     }
 
     const headers: Record<string, string> = {
@@ -424,7 +419,6 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @param {string} encryptedMessage - String to decrypt
    */
     private decryptString(encryptedMessage: string): string {
-
       const hashedSecret = this.getCodeVerifierSecretBuffer();
 
       // Get init vector back from encryptedMessage
