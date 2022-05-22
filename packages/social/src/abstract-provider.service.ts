@@ -349,7 +349,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
 
     if (this.useAuthorizationHeaderForTokenEndpoint) {
       const auth = Buffer.from(`${this.config.clientId}:${this.config.clientSecret}`).toString('base64');
-      headers['Authorization'] = `Basic ${auth}`;
+      headers.Authorization = `Basic ${auth}`;
     }
 
     const response = await fetch(this.tokenEndpoint, {
