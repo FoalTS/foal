@@ -1,8 +1,9 @@
 // std
 import { URL, URLSearchParams } from 'url';
+import * as crypto from 'crypto';
 
 // 3p
-import { Config, Context, generateToken, HttpResponseRedirect } from '@foal/core';
+import { Config, Context, generateToken, HttpResponseRedirect, convertBase64ToBase64url } from '@foal/core';
 import * as fetch from 'node-fetch';
 
 /**
@@ -40,6 +41,20 @@ export class InvalidStateError extends Error {
   readonly name = 'InvalidStateError';
   constructor() {
     super('Suspicious operation: the state of the callback does not match the state of the authorization request.');
+  }
+}
+
+/**
+ * Error thrown if the (encrypted) code verifier is not found in cookie.
+ *
+ * @export
+ * @class CodeVerifierNotFound
+ * @extends {Error}
+ */
+export class CodeVerifierNotFound extends Error {
+  readonly name = 'CodeVerifierNotFound';
+  constructor() {
+    super('Suspicious operation: encrypted code verifier not found in cookie.');
   }
 }
 
@@ -85,6 +100,7 @@ export class TokenError extends Error {
 }
 
 const STATE_COOKIE_NAME = 'oauth2-state';
+const CODE_VERIFIER_COOKIE_NAME = 'oauth2-code-verifier'
 
 export interface ObjectType {
   [name: string]: any;
@@ -127,6 +143,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @memberof AbstractProvider
    */
   protected readonly abstract authEndpoint: string;
+
   /**
    * URL of the token endpoint from which we retrieve an access token.
    *
@@ -155,11 +172,55 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    */
   protected readonly scopeSeparator: string = ' ';
 
+  /**
+   * Enables code flow with PKCE.
+   *
+   * @protected
+   * @type {boolean}
+   * @memberof AbstractProvider
+   */
+  protected readonly usePKCE: boolean = false;
+
+  /**
+   * Specifies whether to use the plain code verifier string as PKCE code challenge.
+   *
+   * @protected
+   * @type {boolean}
+   * @memberof AbstractProvider
+   */
+  protected readonly useCodeVerifierAsCodeChallenge: boolean = false;
+
+  /**
+   * Configuration path from which the code verifier secret must be retrieved.
+   *
+   * @protected
+   * @type {boolean}
+   * @memberof AbstractProvider
+   */
+  protected readonly codeVerifierSecretPath: string = 'settings.social.secret.codeVerifierSecret';
+
+  /**
+   * Specifies whether the client ID and client secret must be sent in a Authorization header using Basic scheme.
+   *
+   * @protected
+   * @memberof AbstractProvider
+   */
+  protected readonly useAuthorizationHeaderForTokenEndpoint: boolean = false;
+
+  /**
+   * Algorithm used for the code verifier encryption.
+   *
+   * @protected
+   * @type {string}
+   * @memberof AbstractProvider
+   */
+  private readonly cryptAlgorithm: string = 'aes-256-ctr' ;
+
   private get config() {
     return {
       clientId: Config.getOrThrow(this.configPaths.clientId, 'string'),
       clientSecret: Config.getOrThrow(this.configPaths.clientSecret, 'string'),
-      redirectUri: Config.getOrThrow(this.configPaths.redirectUri, 'string'),
+      redirectUri: Config.getOrThrow(this.configPaths.redirectUri, 'string')
     };
   }
 
@@ -208,14 +269,36 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
       }
     }
 
-    // Return a redirection response with the state as cookie.
-    return new HttpResponseRedirect(url.href)
-      .setCookie(STATE_COOKIE_NAME, state, {
+    // We use a base64url-encoded random token making OAuth2 PKCE spec compliant - see https://datatracker.ietf.org/doc/html/rfc7636#appendix-B for more information
+    const codeVerifier = await generateToken();
+
+    if (this.usePKCE) {
+      const hash = crypto.createHash('sha256').update(codeVerifier).digest('base64');
+      url.searchParams.set('code_challenge', this.useCodeVerifierAsCodeChallenge ? codeVerifier : convertBase64ToBase64url(hash));
+      url.searchParams.set('code_challenge_method', this.useCodeVerifierAsCodeChallenge ? 'plain' : 'S256');
+    }
+
+    const redirectResponse = new HttpResponseRedirect(url.href);
+
+    // Add Code Challenge COOKIE for token request
+    if (this.usePKCE) {
+      // Encrypt this code_challenge cookie for security reasons
+      redirectResponse.setCookie(CODE_VERIFIER_COOKIE_NAME, this.encryptString(codeVerifier), {
         httpOnly: true,
         maxAge: 300,
         path: '/',
         secure: Config.get('settings.social.cookie.secure', 'boolean', false)
       });
+    }
+
+    // Return a redirection response with the state as cookie.
+    return redirectResponse
+      .setCookie(STATE_COOKIE_NAME, state, {
+        httpOnly: true,
+        maxAge: 300,
+        path: '/',
+        secure: Config.get('settings.social.cookie.secure', 'boolean', false)
+      })
   }
 
   /**
@@ -243,14 +326,35 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     params.set('grant_type', 'authorization_code');
     params.set('code', ctx.request.query.code || '');
     params.set('redirect_uri', this.config.redirectUri);
-    params.set('client_id', this.config.clientId);
-    params.set('client_secret', this.config.clientSecret);
+
+    if (!this.useAuthorizationHeaderForTokenEndpoint) {
+      params.set('client_id', this.config.clientId);
+      params.set('client_secret', this.config.clientSecret);
+    }
+
+    if (this.usePKCE) {
+      const encryptedCodeVerifier = ctx.request.cookies[CODE_VERIFIER_COOKIE_NAME]
+      if (!encryptedCodeVerifier) {
+        throw new CodeVerifierNotFound();
+      }
+
+      const codeVerifier = this.decryptString(encryptedCodeVerifier)
+      params.set('code_verifier', codeVerifier);
+    }
+
+    const headers: Record<string, string> = {
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
+
+    if (this.useAuthorizationHeaderForTokenEndpoint) {
+      const auth = Buffer.from(`${this.config.clientId}:${this.config.clientSecret}`).toString('base64');
+      headers.Authorization = `Basic ${auth}`;
+    }
 
     const response = await fetch(this.tokenEndpoint, {
       body: params,
-      headers: {
-        Accept: 'application/json'
-      },
+      headers,
       method: 'POST',
     });
     const body = await response.json();
@@ -282,4 +386,59 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
   private async getState(): Promise<string> {
     return generateToken();
   }
+
+  /**
+   * This function is for encrypt a string using aes-256 and codeVerifierSecret.
+   * Notice that init vector base64-encoded is concatenated at start of encrypted message.
+   * We'll need init vector to decrypt message.
+   * Init vector is 16 bytes length and it base64-encoded is 24 bytes length.
+   *
+   * @param {string} message - String to encrypt
+   */
+  private encryptString(message: string): string {
+
+    const hashedSecret = this.getCodeVerifierSecretBuffer();
+
+    // Initiate iv with random bytes
+    const initVector = crypto.randomBytes(16);
+
+    // Create cipher
+    const cipher = crypto.createCipheriv(this.cryptAlgorithm, hashedSecret, initVector);
+
+    // Encrypt data, concat final
+    const data = cipher.update(Buffer.from(message));
+    const encryptedMessage = Buffer.concat([data, cipher.final()])
+
+    return `${initVector.toString('base64')}${encryptedMessage.toString('base64')}`
+  }
+
+  /**
+   * This function is for decrypt a string using aes-256 and codeVerifierSecret
+   * encryptedMessage is {iv}{encrypted data}
+   *
+   * @param {string} encryptedMessage - String to decrypt
+   */
+    private decryptString(encryptedMessage: string): string {
+      const hashedSecret = this.getCodeVerifierSecretBuffer();
+
+      // Get init vector back from encryptedMessage
+      const initVector: Buffer = Buffer.from(encryptedMessage.substring(0,24), 'base64'); // original iv is 16 bytes long, so base64 encoded is 24 bytes long
+      const message: string = encryptedMessage.substring(24);
+
+      // Create decipher
+      const decipher = crypto.createDecipheriv(this.cryptAlgorithm, hashedSecret, initVector);
+
+      // Decrypt data, concat final
+      const data = decipher.update(Buffer.from(message, 'base64'));
+      const decryptedMessage = Buffer.concat([data, decipher.final()])
+
+      return decryptedMessage.toString()
+    }
+
+    private getCodeVerifierSecretBuffer(): Buffer {
+      // Get secret from config file or throw an error if not defined
+      const codeVerifierSecret = Config.getOrThrow(this.codeVerifierSecretPath, 'string');
+      // We create a sha256 hash to ensure that key is 32 bytes long
+      return crypto.createHash('sha256').update(codeVerifierSecret).digest();
+    }
 }
