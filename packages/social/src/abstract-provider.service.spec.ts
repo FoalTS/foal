@@ -303,6 +303,16 @@ describe('AbstractProvider', () => {
         strictEqual(searchParams.get('foo'), 'bar2');
       });
 
+      it('with a redirect path that do NOT contain PKCE parameters.', async () => {
+        provider = createService(ConcreteProvider);
+
+        const response = await provider.redirect();
+        const searchParams = new URLSearchParams(response.path);
+
+        strictEqual(searchParams.get('code_challenge'), null);
+        strictEqual(searchParams.get('code_challenge_method'), null);
+      });
+
     });
 
   });
