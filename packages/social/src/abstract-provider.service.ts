@@ -100,7 +100,7 @@ export class TokenError extends Error {
 }
 
 const STATE_COOKIE_NAME = 'oauth2-state';
-const CODE_VERIFIER_NAME = 'oauth2-code-verifier'
+const CODE_VERIFIER_COOKIE_NAME = 'oauth2-code-verifier'
 
 export interface ObjectType {
   [name: string]: any;
@@ -283,7 +283,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     // Add Code Challenge COOKIE for token request
     if (this.usePKCE) {
       // Encrypt this code_challenge cookie for security reasons
-      redirectResponse.setCookie(CODE_VERIFIER_NAME, this.encryptString(codeVerifier), {
+      redirectResponse.setCookie(CODE_VERIFIER_COOKIE_NAME, this.encryptString(codeVerifier), {
         httpOnly: true,
         maxAge: 300,
         path: '/',
@@ -333,7 +333,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     }
 
     if (this.usePKCE) {
-      const encryptedCodeVerifier = ctx.request.cookies[CODE_VERIFIER_NAME]
+      const encryptedCodeVerifier = ctx.request.cookies[CODE_VERIFIER_COOKIE_NAME]
       if (!encryptedCodeVerifier) {
         throw new CodeVerifierNotFound();
       }

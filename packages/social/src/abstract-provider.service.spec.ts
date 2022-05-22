@@ -28,7 +28,7 @@ import {
 } from './abstract-provider.service';
 
 const STATE_COOKIE_NAME = 'oauth2-state';
-const CODE_VERIFIER_NAME = 'oauth2-code-verifier';
+const CODE_VERIFIER_COOKIE_NAME = 'oauth2-code-verifier';
 
 describe('InvalidStateError', () => {
 
@@ -735,7 +735,7 @@ describe('Abstract Provider With PKCE', () => {
       it('should send a request which contains a grant type, a code, a redirect URI,'
         + 'a client ID, a client secret and code_verifier and return the response body.', async () => {
 
-        const codeVerifier = 'challenge';
+        const codeVerifier = 'code verifier';
 
         class AppController {
           @Post('/token')
@@ -763,7 +763,7 @@ describe('Abstract Provider With PKCE', () => {
         const ctx = new Context({
           cookies: {
             [STATE_COOKIE_NAME]: 'xxx',
-            [CODE_VERIFIER_NAME]: encryptHelper(codeVerifier, iv, secret)
+            [CODE_VERIFIER_COOKIE_NAME]: encryptHelper(codeVerifier, iv, secret)
           },
           query: {
             code: 'an_authorization_code',
