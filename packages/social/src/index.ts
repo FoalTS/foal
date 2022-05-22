@@ -9,6 +9,7 @@ export {
   UserInfoAndTokens,
   SocialTokens,
   InvalidStateError,
+  CodeVerifierNotFound,
   TokenError,
   AuthorizationError,
   ObjectType,
@@ -31,6 +32,10 @@ export {
   LinkedInProvider,
   LinkedInUserInfoParams,
 } from './linkedin-provider.service';
+export {
+  TwitterProvider,
+  TwitterAuthParameter,
+} from './twitter-provider.service'
 export {
   UserInfoError,
 } from './user-info.error';
