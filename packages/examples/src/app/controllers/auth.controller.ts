@@ -8,10 +8,10 @@ import {
   Session,
   UseSessions,
 } from '@foal/core';
-import { FacebookProvider, GithubProvider, GoogleProvider, LinkedInProvider } from '@foal/social';
+import { FacebookProvider, GithubProvider, GoogleProvider, LinkedInProvider, TwitterProvider } from '@foal/social';
 import { TypeORMStore } from '@foal/typeorm';
 
-@UseSessions({ cookie: true })
+@UseSessions({ cookie: true, store: TypeORMStore })
 export class AuthController {
   @dependency
   google: GoogleProvider;
@@ -24,6 +24,9 @@ export class AuthController {
 
   @dependency
   linkedin: LinkedInProvider;
+
+  @dependency
+  twitter: TwitterProvider;
 
   @dependency
   store: TypeORMStore;
@@ -69,6 +72,17 @@ export class AuthController {
   @Get('/signin/linkedin/cb')
   async handleLinkedInRedirection(ctx: Context<any, Session>) {
     const { userInfo } = await this.linkedin.getUserInfo(ctx);
+    return this.createSessionAndSaveUserInfo(userInfo, ctx);
+  }
+
+  @Get('/signin/twitter')
+  redirectToTwittern() {
+    return this.twitter.redirect();
+  }
+
+  @Get('/signin/twitter/cb')
+  async handleTwitterRedirection(ctx: Context<any, Session>) {
+    const { userInfo } = await this.twitter.getUserInfo(ctx);
     return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
 

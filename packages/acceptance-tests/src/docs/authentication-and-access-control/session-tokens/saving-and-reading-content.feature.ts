@@ -40,7 +40,7 @@ describe('Feature: Saving and reading content', () => {
     class ApiController {
 
       @Post('/subscribe')
-      suscribe(ctx: Context<any, Session>) {
+      subscribe(ctx: Context<any, Session>) {
         const plan = ctx.session.get<string>('plan', 'free');
         // ...
         // Not in the documentation

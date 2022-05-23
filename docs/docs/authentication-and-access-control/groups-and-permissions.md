@@ -69,7 +69,7 @@ export async function main(args: { codeName: string, name: string }) {
 
   try {
     console.log(
-      await permission.save();
+      await permission.save()
     );
   } catch (error: any) {
     console.log(error.message);

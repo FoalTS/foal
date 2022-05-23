@@ -543,7 +543,7 @@ import { Context, HttpResponseNoContent, Post, Session, UseSessions } from '@foa
 export class ApiController {
 
   @Post('/subscribe')
-  suscribe(ctx: Context<any, Session>) {
+  subscribe(ctx: Context<any, Session>) {
     const plan = ctx.session.get<string>('plan', 'free');
     // ...
   }

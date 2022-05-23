@@ -13,16 +13,26 @@ settings:
     local:
       directory: 'uploaded'
   social:
+    secret: 
+      codeVerifierSecret: 'my secret'
     google:
-      clientId: '635863747771-ihd9cqkij7eb6dsh4o0pel0licaouftk.apps.googleusercontent.com'
+      clientId: 'env(GOOGLE_CLIENTID)'
+      clientSecret: 'env(GOOGLE_SECRET)'
       redirectUri: 'http://localhost:3001/signin/google/cb'
     facebook:
-      clientId: '2347404038904704'
+      clientId: 'env(FACEBOOK_CLIENTID)'
+      clientSecret: 'env(FACEBOOK_SECRET)'
       redirectUri: 'http://localhost:3001/signin/facebook/cb'
     github:
-      clientId: '990d351d6696637faa20'
+      clientId: 'env(GITHUB_CLIENTID)'
+      clientSecret: 'env(GITHUB_SECRET)'
       redirectUri: 'http://localhost:3001/signin/github/cb'
     linkedin:
-      clientId: '77na9s6izn8vrs'
+      clientId: 'env(LINKEDIN_CLIENTID)'
+      clientSecret: 'env(LINKEDIN_SECRET)'
       redirectUri: 'http://localhost:3001/signin/linkedin/cb'
+    twitter:
+      clientId: 'env(TWITTER_CLIENTID)'
+      clientSecret: 'env(TWITTER_SECRET)'
+      redirectUri: 'http://localhost:3001/signin/twitter/cb'
 

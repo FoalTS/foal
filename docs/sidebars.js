@@ -102,7 +102,7 @@ module.exports = {
         'frontend-integration/jsx-server-side-rendering',
         'frontend-integration/nuxt.js',
       ]),
-      category('File System', [
+      category('File Storage', [
         'file-system/local-and-cloud-storage',
         'file-system/upload-and-download-files',
       ]),
