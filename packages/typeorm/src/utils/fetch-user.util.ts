@@ -17,5 +17,5 @@ import { getRepository } from 'typeorm';
  * @returns {FetchUser} The returned function expecting an id.
  */
 export function fetchUser(userEntityClass: Class<{ id: number|string }>): FetchUser {
-  return async (id: number|string) => await getRepository(userEntityClass).findOne({ id }) ?? null;
+  return (id: number|string) => getRepository(userEntityClass).findOneBy({ id });
 }

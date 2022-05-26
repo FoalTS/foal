@@ -1,6 +1,6 @@
 // std
 import { ServiceManager } from '@foal/core';
-import { notStrictEqual, strictEqual } from 'assert';
+import { strictEqual } from 'assert';
 
 // 3p
 import { Column, createConnection, Entity, getConnection, getManager, PrimaryGeneratedColumn } from 'typeorm';

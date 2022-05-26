@@ -92,7 +92,12 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 
       await getManager().save(user);
 
-      const user2 = await getManager().findOne(User, user.id, { relations: ['userPermissions'] });
+      const user2 = await getManager().findOne(User, {
+        where: { id: user.id },
+        relations: {
+          userPermissions: true,
+        },
+      });
       if (!user2) {
         throw new Error('User should have been saved.');
       }
@@ -115,7 +120,12 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 
       await getManager().save(user);
 
-      const user2 = await getManager().findOne(User, user.id, { relations: ['groups'] });
+      const user2 = await getManager().findOne(User, {
+        where: { id: user.id },
+        relations: {
+          groups: true,
+        },
+      });
       if (!user2) {
         throw new Error('User should have been saved.');
       }

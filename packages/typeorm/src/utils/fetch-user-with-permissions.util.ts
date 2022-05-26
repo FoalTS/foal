@@ -1,6 +1,7 @@
 // 3p
 import { Class, FetchUser } from '@foal/core';
 import { getRepository } from 'typeorm';
+import { UserWithPermissions } from '../entities';
 
 /**
  * Create a function that finds the first entity that matches some id. Groups and permissions
@@ -14,12 +15,24 @@ import { getRepository } from 'typeorm';
  * - JWTOptional (@foal/jwt)
  *
  * @export
- * @param {(Class<{ id: number|string }>)} userEntityClass - The entity class which must extend UserWithPermissions.
+ * @param {Class<UserWithPermissions>} userEntityClass - The entity class which must extend UserWithPermissions.
  * @returns {FetchUser} The returned function expecting an id.
  */
-export function fetchUserWithPermissions(userEntityClass: Class<{ id: number|string }>): FetchUser {
-  return async (id: number|string) => await getRepository(userEntityClass).findOne(
-    { id },
-    { relations: [ 'userPermissions', 'groups', 'groups.permissions' ] }
-  ) ?? null;
+export function fetchUserWithPermissions(userEntityClass: Class<UserWithPermissions>): FetchUser {
+  return (id: number|string) => {
+    // TODO: test this.
+    if (typeof id === 'string') {
+      id = parseInt(id, 10);
+      // throw is id is NaN
+    }
+    return getRepository(userEntityClass).findOne({
+      where: { id },
+      relations: {
+        userPermissions: true,
+        groups: {
+          permissions: true,
+        }
+      }
+    });
+  }
 }
