@@ -76,7 +76,7 @@ export class AuthController {
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  async login(ctx: Context<User|undefined, Session>) {
+  async login(ctx: Context<User|null, Session>) {
     const email = ctx.request.body.email;
     const password = ctx.request.body.password;
 
@@ -99,7 +99,7 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(ctx: Context<User|undefined, Session>) {
+  async logout(ctx: Context<User|null, Session>) {
     await ctx.session.destroy();
     return new HttpResponseNoContent();
   }
@@ -110,5 +110,5 @@ export class AuthController {
 
 The `login` method first checks that the user exists and that the credentials provided are correct. If so, it associates the user with the current session.
 
-On subsequent requests, the *UseSessions* hook will retrieve the user's ID from the session and set the `ctx.user` property accordingly. If the user has not previously logged in, then `ctx.user` will be `undefined`. If they have, then `ctx.user` will be an instance of `User`. This is made possible by the `user` option we provided to the hook earlier. It is actually the function that takes the user ID as parameter and returns the value to assign to `ctx.user`.
+On subsequent requests, the *UseSessions* hook will retrieve the user's ID from the session and set the `ctx.user` property accordingly. If the user has not previously logged in, then `ctx.user` will be `null`. If they have, then `ctx.user` will be an instance of `User`. This is made possible by the `user` option we provided to the hook earlier. It is actually the function that takes the user ID as parameter and returns the value to assign to `ctx.user`.
 

@@ -104,7 +104,7 @@ describe('Feature: Saving and reading content', () => {
       }
 
       @Post('/add-flash-content')
-      addFlashContent(ctx: Context<undefined, Session>) {
+      addFlashContent(ctx: Context<any, Session>) {
         /* ======================= DOCUMENTATION BEGIN ======================= */
         ctx.session.set('error', 'Incorrect email or password', { flash: true });
         /* ======================= DOCUMENTATION END ========================= */
@@ -113,7 +113,7 @@ describe('Feature: Saving and reading content', () => {
       }
 
       @Get('/read-flash-content')
-      readFlashContent(ctx: Context<undefined, Session>) {
+      readFlashContent(ctx: Context<any, Session>) {
         return new HttpResponseOK(
           ctx.session.get<string>('error', 'No error')
         );

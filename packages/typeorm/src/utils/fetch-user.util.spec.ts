@@ -71,19 +71,23 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
 
     it('should return the user fetched from the database (id: number).', async () => {
       const actual = await fetchUser(User)(user.id, new ServiceManager());
-      notStrictEqual(actual, undefined);
-      strictEqual((actual as User).id, user.id);
+      if (actual === null) {
+        throw new Error('The user should not be null.');
+      }
+      strictEqual(actual.id, user.id);
     });
 
     it('should return the user fetched from the database (id: string).', async () => {
       const actual = await fetchUser(User)(user.id.toString(), new ServiceManager());
-      notStrictEqual(actual, undefined);
-      strictEqual((actual as User).id, user.id);
+      if (actual === null) {
+        throw new Error('The user should not be null.');
+      }
+      strictEqual(actual.id, user.id);
     });
 
-    it('should return undefined if no user is found in the database.', async () => {
+    it('should return null if no user is found in the database.', async () => {
       const actual = await fetchUser(User)(56, new ServiceManager());
-      strictEqual(actual, undefined);
+      strictEqual(actual, null);
     });
 
   });

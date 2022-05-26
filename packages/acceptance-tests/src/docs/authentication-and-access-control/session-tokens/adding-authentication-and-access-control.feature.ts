@@ -38,7 +38,7 @@ describe('Feature: Adding authentication and access control', () => {
 
   it('Example: Simple authentication', async () => {
 
-    let user: User|undefined;
+    let user: User|null = null;
 
     @Entity()
     class User extends BaseEntity {
@@ -77,7 +77,7 @@ describe('Feature: Adding authentication and access control', () => {
       }
 
       @Get('/products')
-      readProducts(ctx: Context) {
+      readProducts(ctx: Context<User>) {
         // If the ctx.session is defined and the session is attached to a user
         // then ctx.user is an instance of User. Otherwise it is undefined.
         // Not in the documentation
@@ -104,21 +104,21 @@ describe('Feature: Adding authentication and access control', () => {
     const user2 = new User();
     await user2.save();
 
-    strictEqual(user, undefined);
+    strictEqual(user, null);
 
     await request(app)
       .get('/api/products')
       .expect(200)
       .expect([]);
 
-    strictEqual(user, undefined);
+    strictEqual(user, null);
 
     const response = await request(app)
       .post(`/api/login?id=${user2.id}`)
       .send({})
       .expect(200);
 
-    strictEqual(user, undefined);
+    strictEqual(user, null);
 
     const token: undefined|string = response.body.token;
     if (token === undefined) {
@@ -131,7 +131,7 @@ describe('Feature: Adding authentication and access control', () => {
       .expect(200)
       .expect([]);
 
-    notStrictEqual(user, undefined);
+    notStrictEqual(user, null);
     strictEqual((user as unknown as User).id, user2.id);
 
   });
@@ -288,7 +288,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    function userToJSON(user: User|undefined) {
+    function userToJSON(user: User|null) {
       if (!user) {
         return 'null';
       }
@@ -302,13 +302,13 @@ describe('Feature: Adding authentication and access control', () => {
     @UseSessions({
       cookie: true,
       user: fetchUser(User),
-      userCookie: (ctx, services) => userToJSON(ctx.user)
+      userCookie: (ctx, services) => userToJSON(ctx.user as User|null)
     })
     class ApiController {
 
       @Get('/products')
       @UserRequired()
-      async readProducts(ctx: Context) {
+      async readProducts(ctx: Context<User>) {
         const products = await Product.find({ owner: ctx.user });
         return new HttpResponseOK(products);
       }

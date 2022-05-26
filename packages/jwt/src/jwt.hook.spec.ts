@@ -96,7 +96,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   const fetchUser: FetchUser = async (id, services) => {
     actualServices = services;
-    return id === '1' ? user : undefined;
+    return id === '1' ? user : null;
   };
 
   let ctx: Context;
@@ -151,10 +151,10 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       } else {
 
-        it('should let ctx.user equal undefined if the Authorization header does not exist.', async () => {
+        it('should let ctx.user equal null if the Authorization header does not exist.', async () => {
           const response = await hook(ctx, services);
           strictEqual(response, undefined);
-          strictEqual(ctx.user, undefined);
+          strictEqual(ctx.user, null);
         });
 
       }
@@ -195,12 +195,12 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
       } else {
 
-        it('should let ctx.user equal undefined if the cookie does not exist.', async () => {
+        it('should let ctx.user equal null if the cookie does not exist.', async () => {
           const hook = getHookFunction(JWT({ cookie: true }));
 
           const response = await hook(ctx, services);
           strictEqual(response, undefined);
-          strictEqual(ctx.user, undefined);
+          strictEqual(ctx.user, null);
         });
 
       }
@@ -765,7 +765,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
         await hook(ctx, services);
 
-        notStrictEqual(ctx.user, undefined);
+        notStrictEqual(ctx.user, null);
         strictEqual((ctx.user as any).foo, 'bar');
       });
 
@@ -787,7 +787,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
         await hook(ctx, services);
 
-        notStrictEqual(ctx.user, undefined);
+        notStrictEqual(ctx.user, null);
         strictEqual((ctx.user as any).foo, 'bar');
       });
 
@@ -802,7 +802,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
         await hook(ctx, services);
 
-        notStrictEqual(ctx.user, undefined);
+        notStrictEqual(ctx.user, null);
         strictEqual((ctx.user as any).foo, 'bar');
       });
 
@@ -814,7 +814,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
         await hook(ctx, services);
 
-        notStrictEqual(ctx.user, undefined);
+        notStrictEqual(ctx.user, null);
         strictEqual((ctx.user as any).foo, 'bar');
       });
 
@@ -828,7 +828,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
         await hook(ctx, services);
 
-        notStrictEqual(ctx.user, undefined);
+        notStrictEqual(ctx.user, null);
         strictEqual((ctx.user as any).foo, 'bar');
       });
 

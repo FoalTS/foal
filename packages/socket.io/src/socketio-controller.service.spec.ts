@@ -106,7 +106,7 @@ describe('SocketIOController', () => {
         notStrictEqual(actualContext?.socket, undefined);
         notDeepStrictEqual(actualContext?.socket, {});
         deepStrictEqual(actualContext?.state, {});
-        strictEqual(actualContext?.user, undefined);
+        strictEqual(actualContext?.user, null);
       });
 
       it('and should emit a connection error if SocketIOController.onConnection throws or rejects an error.', async () => {
@@ -165,7 +165,7 @@ describe('SocketIOController', () => {
         notStrictEqual(actualContext?.socket, undefined);
         notDeepStrictEqual(actualContext?.socket, {});
         deepStrictEqual(actualContext?.state, {});
-        strictEqual(actualContext?.user, undefined);
+        strictEqual(actualContext?.user, null);
       });
 
       it('and should return an ok response if the controller method returns a WebsocketResponse (with no payload).', async () => {

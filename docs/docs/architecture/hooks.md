@@ -395,7 +395,7 @@ export class UserService {
   };
 
   getUser(key: string) {
-    return this.users[key];
+    return this.users[key] ?? null;
   }
 }
 

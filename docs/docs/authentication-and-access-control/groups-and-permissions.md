@@ -340,7 +340,7 @@ export class ProductController {
 
 | Context | Response |
 | --- | --- |
-| `ctx.user` is undefined | 401 - UNAUTHORIZED |
+| `ctx.user` is null | 401 - UNAUTHORIZED |
 | `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
 
 ```typescript
@@ -349,7 +349,7 @@ export class ProductController {
 
 | Context | Response |
 | --- | --- |
-| `ctx.user` is undefined | Redirects to `/login` (302 - FOUND) |
+| `ctx.user` is null | Redirects to `/login` (302 - FOUND) |
 | `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
 
 *Example*

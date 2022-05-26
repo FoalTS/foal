@@ -28,7 +28,7 @@ export class AuthController {
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
-  async signup(ctx: Context<User|undefined, Session>) {
+  async signup(ctx: Context<User|null, Session>) {
     const email = ctx.request.body.email;
     const password = ctx.request.body.password;
 

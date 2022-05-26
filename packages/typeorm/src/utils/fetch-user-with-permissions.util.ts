@@ -18,8 +18,8 @@ import { getRepository } from 'typeorm';
  * @returns {FetchUser} The returned function expecting an id.
  */
 export function fetchUserWithPermissions(userEntityClass: Class<{ id: number|string }>): FetchUser {
-  return (id: number|string) => getRepository(userEntityClass).findOne(
+  return async (id: number|string) => await getRepository(userEntityClass).findOne(
     { id },
     { relations: [ 'userPermissions', 'groups', 'groups.permissions' ] }
-  );
+  ) ?? null;
 }

@@ -398,9 +398,9 @@ export class ApiController {
   }
 
   @Get('/products')
-  readProducts(ctx: Context) {
+  readProducts(ctx: Context<User>) {
     // If the ctx.session is defined and the session is attached to a user
-    // then ctx.user is an instance of User. Otherwise it is undefined.
+    // then ctx.user is an instance of User. Otherwise it is null.
     return new HttpResponseOK([]);
   }
 
@@ -493,7 +493,7 @@ In the following example, the `user` cookie is empty if no user is logged in or 
 *Server-side code*
 
 ```typescript
-function userToJSON(user: User|undefined) {
+function userToJSON(user: User|null) {
   if (!user) {
     return 'null';
   }
@@ -507,13 +507,13 @@ function userToJSON(user: User|undefined) {
 @UseSessions({
   cookie: true,
   user: fetchUser(User),
-  userCookie: (ctx, services) => userToJSON(ctx.user)
+  userCookie: (ctx, services) => userToJSON(ctx.user as User|null)
 })
 export class ApiController {
 
   @Get('/products')
   @UserRequired()
-  async readProducts(ctx: Context) {
+  async readProducts(ctx: Context<User>) {
     const products = await Product.find({ owner: ctx.user });
     return new HttpResponseOK(products);
   }
@@ -899,10 +899,10 @@ interface SessionState {
 The function `fetchUser` from the package `@foal/typeorm` takes an `@Entity()` class as parameter and returns a function with this signature:
 
 ```typescript
-type FetchUser = (id: string|number, services: ServiceManager) => Promise<any>
+type FetchUser = (id: string|number, services: ServiceManager) => Promise<Context['user']>
 ```
 
-If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `undefined`.
+If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `null`.
 
 If needed you can implement your own `fetchUser` function with this exact signature.
 

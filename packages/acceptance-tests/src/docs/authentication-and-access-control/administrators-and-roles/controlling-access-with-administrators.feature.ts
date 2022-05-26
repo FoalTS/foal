@@ -41,7 +41,7 @@ describe('Feature: Controlling access with administrators', () => {
 
     // hooks/admin-required.hook.ts
     function AdminRequired() {
-      return Hook((ctx: Context<User>) => {
+      return Hook((ctx: Context<User|null>) => {
         if (!ctx.user) {
           return new HttpResponseUnauthorized();
         }
