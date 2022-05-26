@@ -42,15 +42,15 @@ describe('TestFooBarController', () => {
 
     [ testFooBar0, testFooBar1, testFooBar2 ] = await testFooBarRepository.save([
       {
-        owner: user1,
+        owner: { id: user1.id },
         text: 'TestFooBar 0',
       },
       {
-        owner: user2,
+        owner: { id: user2.id },
         text: 'TestFooBar 1',
       },
       {
-        owner: user2,
+        owner: { id: user2.id },
         text: 'TestFooBar 2',
       },
     ]);
@@ -83,7 +83,7 @@ describe('TestFooBarController', () => {
 
     it('should support pagination', async () => {
       const testFooBar3 = await getRepository(TestFooBar).save({
-        owner: user2,
+        owner: { id: user2.id },
         text: 'TestFooBar 3',
       });
 
@@ -191,8 +191,8 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseCreated object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne({
-        relations: [ 'owner' ],
+      const testFooBar = await getRepository(TestFooBar).findOneBy({
+        relations: { owner: true },
         where: { text: 'TestFooBar 3' },
       });
 
@@ -232,7 +232,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -256,7 +256,7 @@ describe('TestFooBarController', () => {
       ctx.user = user2;
       await controller.modifyTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -324,7 +324,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -348,7 +348,7 @@ describe('TestFooBarController', () => {
       ctx.user = user2;
       await controller.replaceTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -413,7 +413,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
       strictEqual(testFooBar, undefined);
     });
@@ -431,7 +431,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
       notStrictEqual(testFooBar, undefined);
     });

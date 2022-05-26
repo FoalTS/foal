@@ -64,7 +64,7 @@ export class ProfileController {
 
     const userId: number|undefined = ctx.request.query.userId;
     if (userId !== undefined) {
-      user = await User.findOne({ id: userId })
+      user = await User.findOneBy({ id: userId })
     }
 
     if (!user || !user.avatar) {

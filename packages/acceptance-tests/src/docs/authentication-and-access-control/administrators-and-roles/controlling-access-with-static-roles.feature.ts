@@ -81,7 +81,7 @@ describe('Feature: Controlling access with static roles', () => {
 
       @Post('/login-as-user')
       async loginAsUser(ctx: Context) {
-        const user = await User.findOneOrFail({ roles: ['user'] });
+        const user = await User.findOneByOrFail({ roles: 'user' });
 
         ctx.session = await createSession(this.store);
         ctx.session.setUser(user);
@@ -91,7 +91,7 @@ describe('Feature: Controlling access with static roles', () => {
 
       @Post('/login-as-admin')
       async loginAsAdmin(ctx: Context) {
-        const user = await User.findOneOrFail({ roles: ['admin'] });
+        const user = await User.findOneByOrFail({ roles: 'admin' });
 
         ctx.session = await createSession(this.store);
         ctx.session.setUser(user);

@@ -80,7 +80,7 @@ export class AuthController {
     const email = ctx.request.body.email;
     const password = ctx.request.body.password;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOneBy({ email });
     if (!user) {
       return new HttpResponseUnauthorized();
     }

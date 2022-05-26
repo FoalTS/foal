@@ -46,8 +46,7 @@
     "express-rate-limit": "~5.0.0",
     "jsonwebtoken": "~8.3.0",
     "mocha": "~8.3.0",
-    "mongodb": "~3.6.6",
-    "mongodb4": "npm:mongodb@~4.3.1",
+    "mongodb": "~4.3.1",
     "nuxt": "~2.9.2",
     "react": "~16.8.6",
     "react-dom": "~16.8.6",
@@ -56,7 +55,7 @@
     "superagent": "~5.0.5",
     "supertest": "~6.2.3",
     "ts-node": "~9.0.0",
-    "typeorm": "~0.2.26",
+    "typeorm": "~0.3.6",
     "typescript": "~4.5.4",
     "yamljs": "~0.3.0"
   }

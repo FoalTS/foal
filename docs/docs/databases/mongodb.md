@@ -91,8 +91,9 @@ export class User {
 *Example*
 ```typescript
 import { getMongoRepository } from 'typeorm';
+import { ObjectId } from 'mongodb';
 
-const user = await getMongoRepository(User).findOne('xxxx');
+const user = await getMongoRepository(User).findOneBy({ _id: new ObjectId('xxxx') });
 ```
 
 ## Authentication

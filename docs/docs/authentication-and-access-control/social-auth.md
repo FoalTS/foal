@@ -224,7 +224,7 @@ export class AuthController {
       throw new Error('Google should have returned an email address.');
     }
 
-    let user = await User.findOne({ email: userInfo.email });
+    let user = await User.findOneBy({ email: userInfo.email });
 
     if (!user) {
       // If the user has not already signed up, then add them to the database.
@@ -296,7 +296,7 @@ export class AuthController {
       throw new Error('Google should have returned an email address.');
     }
 
-    let user = await User.findOne({ email: userInfo.email });
+    let user = await User.findOneBy({ email: userInfo.email });
 
     if (!user) {
       // If the user has not already signed up, then add them to the database.

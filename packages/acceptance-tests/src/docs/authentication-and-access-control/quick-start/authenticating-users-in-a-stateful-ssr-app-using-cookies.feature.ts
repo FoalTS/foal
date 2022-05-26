@@ -78,7 +78,7 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
     @Post('/login')
     @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
-      const user = await User.findOne({ email: ctx.request.body.email });
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         ctx.session!.set('errorMessage', 'Unknown email.', { flash: true });

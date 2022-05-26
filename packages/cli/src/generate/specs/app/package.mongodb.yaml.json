@@ -27,7 +27,7 @@
     "@foal/core": "^2.0.0",
     "mongodb": "~4.3.1",
     "source-map-support": "~0.5.19",
-    "typeorm": "0.2.26",
+    "typeorm": "0.3.6",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {

@@ -468,7 +468,7 @@ import { Org } from '../entities';
 function AddOrgToContext() {
   return Hook(async ctx => {
     if (ctx.user) {
-      ctx.state.org = await Org.findOneOrFail(ctx.user.orgId);
+      ctx.state.org = await Org.findOneByOrFail({ id: ctx.user.orgId });
     }
   })
 }

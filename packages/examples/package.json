@@ -55,7 +55,7 @@
     "better-sqlite3": "~7.5.1",
     "graphql": "^15.5.0",
     "source-map-support": "~0.5.19",
-    "typeorm": "~0.2.26",
+    "typeorm": "~0.3.6",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {

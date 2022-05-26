@@ -51,9 +51,14 @@ describe('[Shell scripts] create-perm', () => {
 
     try {
       const group = await getRepository(Group).findOneOrFail({
-        codeName: 'admin',
-        name: 'Administrators',
-      }, { relations: ['permissions'] });
+        where: {
+          codeName: 'admin',
+          name: 'Administrators',
+        },
+        relations: {
+          permissions: true,
+        },
+      });
       strictEqual(group.permissions.length, 1);
       strictEqual(group.permissions[0].codeName, 'delete-users');
     } catch (error: any) {

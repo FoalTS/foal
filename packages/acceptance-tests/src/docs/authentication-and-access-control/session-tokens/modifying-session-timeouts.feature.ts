@@ -11,7 +11,6 @@ import {
   HttpResponseOK,
   IAppController,
   ServiceManager,
-  Session,
   Store,
   UseSessions
 } from '@foal/core';

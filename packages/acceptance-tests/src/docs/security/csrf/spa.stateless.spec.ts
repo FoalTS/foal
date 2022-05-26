@@ -31,7 +31,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     @Post('/login')
     @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
-      const user = await User.findOne({ email: ctx.request.body.email });
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseUnauthorized();

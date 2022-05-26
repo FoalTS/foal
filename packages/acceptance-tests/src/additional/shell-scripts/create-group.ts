@@ -19,28 +19,30 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  await createConnection({
+  const connection = await createConnection({
     database: './e2e_db.sqlite',
     entities: [ Permission, Group ],
     type: 'better-sqlite3',
   });
 
-  for (const codeName of args.permissions) {
-    const permission = await getRepository(Permission).findOne({ codeName });
-    if (!permission) {
-      console.log(`No permission with the code name "${codeName}" was found.`);
-      return;
-    }
-    group.permissions.push(permission);
-  }
-
   try {
+    for (const codeName of args.permissions) {
+      const permission = await Permission.findOneBy({ codeName });
+      if (!permission) {
+        console.log(
+          `No permission with the code name "${codeName}" was found.`
+        );
+        return;
+      }
+      group.permissions.push(permission);
+    }
+
     console.log(
-      await getManager().save(group)
+      await group.save()
     );
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await connection.close();
   }
 }

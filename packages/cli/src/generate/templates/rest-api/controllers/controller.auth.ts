@@ -36,7 +36,7 @@ export class /* upperFirstCamelName */Controller {
       skip: ctx.request.query.skip,
       take: ctx.request.query.take,
       where: {
-        owner: ctx.user
+        owner: { id: ctx.user.id }
       }
     });
     return new HttpResponseOK(/* camelName */s);
@@ -49,9 +49,9 @@ export class /* upperFirstCamelName */Controller {
   @ApiResponse(200, { description: 'Returns the /* camelName */.' })
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   async find/* upperFirstCamelName */ById(ctx: Context<User>) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne({
+    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({
       id: ctx.request.params./* camelName */Id,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
 
     if (!/* camelName */) {
@@ -70,7 +70,7 @@ export class /* upperFirstCamelName */Controller {
   async create/* upperFirstCamelName */(ctx: Context<User>) {
     const /* camelName */ = await getRepository(/* upperFirstCamelName */).save({
       ...ctx.request.body,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
     return new HttpResponseCreated(/* camelName */);
   }
@@ -84,9 +84,9 @@ export class /* upperFirstCamelName */Controller {
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   @ValidateBody({ .../* camelName */Schema, required: [] })
   async modify/* upperFirstCamelName */(ctx: Context<User>) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne({
+    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({
       id: ctx.request.params./* camelName */Id,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
 
     if (!/* camelName */) {
@@ -109,9 +109,9 @@ export class /* upperFirstCamelName */Controller {
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   @ValidateBody(/* camelName */Schema)
   async replace/* upperFirstCamelName */(ctx: Context<User>) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne({
+    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({
       id: ctx.request.params./* camelName */Id,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
 
     if (!/* camelName */) {
@@ -132,9 +132,9 @@ export class /* upperFirstCamelName */Controller {
   @ApiResponse(204, { description: '/* upperFirstCamelName */ successfully deleted.' })
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   async delete/* upperFirstCamelName */(ctx: Context<User>) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne({
+    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({
       id: ctx.request.params./* camelName */Id,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
 
     if (!/* camelName */) {

@@ -162,7 +162,7 @@ export class TypeORMStore extends SessionStore {
   async getSessionIDsOf(user: { id: number }): Promise<string[]> {
     const databaseSessions = await this.connection.getRepository(DatabaseSession).find({
       // Do not select unused fields.
-      select: ['id'],
+      select: { id: true },
       where: { user_id: user.id },
     });
     return databaseSessions.map(dbSession => dbSession.id);
