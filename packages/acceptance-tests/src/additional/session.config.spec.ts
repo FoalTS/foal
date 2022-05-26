@@ -8,7 +8,6 @@ import {
   HttpResponseOK,
   Post,
   ServiceManager,
-  Session,
   SessionStore,
   UseSessions,
 } from '@foal/core';
@@ -62,8 +61,8 @@ describe('The session store', () => {
 
       @Get('/products')
       @UseSessions({ required: true })
-      readProducts(ctx: Context<any, Session>) {
-        return new HttpResponseOK(ctx.session.get('products'));
+      readProducts(ctx: Context) {
+        return new HttpResponseOK(ctx.session!.get('products'));
       }
 
     }

@@ -537,20 +537,20 @@ const user = JSON.parse(decodeURIComponent(/* cookie value */));
 You can access and modify the session content with the `set` and `get` methods.
 
 ```typescript
-import { Context, HttpResponseNoContent, Post, Session, UseSessions } from '@foal/core';
+import { Context, HttpResponseNoContent, Post, UseSessions } from '@foal/core';
 
 @UseSessions(/* ... */)
 export class ApiController {
 
   @Post('/subscribe')
-  subscribe(ctx: Context<any, Session>) {
-    const plan = ctx.session.get<string>('plan', 'free');
+  subscribe(ctx: Context) {
+    const plan = ctx.session!.get<string>('plan', 'free');
     // ...
   }
 
   @Post('/choose-premium-plan')
-  choosePremimumPlan(ctx: Context<any, Session>) {
-    ctx.session.set('plan', 'premium');
+  choosePremimumPlan(ctx: Context) {
+    ctx.session!.set('plan', 'premium');
     return new HttpResponseNoContent();
   }
 }

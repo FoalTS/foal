@@ -41,7 +41,7 @@ describe('Feature: Modifying session timeouts', () => {
       }
 
       @Get('/')
-      index(ctx: Context<any, Session>) {
+      index(ctx: Context) {
         return new HttpResponseOK();
       }
 

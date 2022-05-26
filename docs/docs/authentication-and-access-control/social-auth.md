@@ -194,7 +194,6 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
-  Session,
   Store,
   UseSessions,
 } from '@foal/core';
@@ -218,7 +217,7 @@ export class AuthController {
   @UseSessions({
     cookie: true,
   })
-  async handleGoogleRedirection(ctx: Context<User, Session>) {
+  async handleGoogleRedirection(ctx: Context<User>) {
     const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
 
     if (!userInfo.email) {
@@ -234,7 +233,7 @@ export class AuthController {
       await user.save();
     }
 
-    ctx.session.setUser(user);
+    ctx.session!.setUser(user);
 
     return new HttpResponseRedirect('/');
   }

@@ -374,7 +374,6 @@ import {
   dependency,
   Get,
   render,
-  Session,
   Store,
   UseSessions,
 } from '@foal/core';
@@ -396,10 +395,10 @@ export class ViewController {
     required: true,
     redirectTo: '/login'
   })
-  async index(ctx: Context<User, Session>) {
+  async index(ctx: Context<User>) {
     return render(
       './templates/products.html',
-      { csrfToken: ctx.session.get('csrfToken') },
+      { csrfToken: ctx.session!.get('csrfToken') },
     );
   }
 }

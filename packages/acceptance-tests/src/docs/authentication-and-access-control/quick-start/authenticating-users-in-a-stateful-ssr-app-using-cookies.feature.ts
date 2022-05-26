@@ -19,7 +19,6 @@ import {
   IAppController,
   Post,
   render,
-  Session,
   Store,
   UserRequired,
   UseSessions,
@@ -64,42 +63,42 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
-    async signup(ctx: Context<any, Session>) {
+    async signup(ctx: Context) {
       const user = new User();
       user.email = ctx.request.body.email;
       user.password = await hashPassword(ctx.request.body.password);
       await user.save();
 
-      ctx.session.setUser(user);
-      await ctx.session.regenerateID();
+      ctx.session!.setUser(user);
+      await ctx.session!.regenerateID();
 
       return new HttpResponseRedirect('/');
     }
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
-    async login(ctx: Context<any, Session>) {
+    async login(ctx: Context) {
       const user = await User.findOne({ email: ctx.request.body.email });
 
       if (!user) {
-        ctx.session.set('errorMessage', 'Unknown email.', { flash: true });
+        ctx.session!.set('errorMessage', 'Unknown email.', { flash: true });
         return new HttpResponseRedirect('/login');
       }
 
       if (!await verifyPassword(ctx.request.body.password, user.password)) {
-        ctx.session.set('errorMessage', 'Invalid password.', { flash: true });
+        ctx.session!.set('errorMessage', 'Invalid password.', { flash: true });
         return new HttpResponseRedirect('/login');
       }
 
-      ctx.session.setUser(user);
-      await ctx.session.regenerateID();
+      ctx.session!.setUser(user);
+      await ctx.session!.regenerateID();
 
       return new HttpResponseRedirect('/');
     }
 
     @Post('/logout')
-    async logout(ctx: Context<any, Session>) {
-      await ctx.session.destroy();
+    async logout(ctx: Context) {
+      await ctx.session!.destroy();
 
       return new HttpResponseRedirect('/login');
     }
@@ -139,10 +138,10 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
     }
 
     @Get('/login')
-    login(ctx: Context<any, Session>) {
+    login(ctx: Context) {
       // Not in the documentation: __dirname
       return render('./templates/login.html', {
-        errorMessage: ctx.session.get<string>('errorMessage', '')
+        errorMessage: ctx.session!.get<string>('errorMessage', '')
       }, __dirname);
     }
 

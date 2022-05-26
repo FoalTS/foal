@@ -494,7 +494,7 @@ interface State {
 
 export class ApiController {
   // ...
-  readOrgName(ctx: Context<any, any, State>) {
+  readOrgName(ctx: Context<any, State>) {
     // ...
   }
 }
