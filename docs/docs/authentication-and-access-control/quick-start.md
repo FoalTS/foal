@@ -140,7 +140,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -158,21 +158,21 @@ export class AuthController {
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
-  async signup(ctx: Context<any, Session>) {
+  async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
     user.password = await hashPassword(ctx.request.body.password);
     await user.save();
 
-    ctx.session.setUser(user);
-    await ctx.session.regenerateID();
+    ctx.session!.setUser(user);
+    await ctx.session!.regenerateID();
 
     return new HttpResponseOK();
   }
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  async login(ctx: Context<any, Session>) {
+  async login(ctx: Context) {
     const user = await User.findOne({ email: ctx.request.body.email });
 
     if (!user) {
@@ -183,15 +183,15 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    ctx.session.setUser(user);
-    await ctx.session.regenerateID();
+    ctx.session!.setUser(user);
+    await ctx.session!.regenerateID();
 
     return new HttpResponseOK();
   }
 
   @Post('/logout')
-  async logout(ctx: Context<any, Session>) {
-    await ctx.session.destroy();
+  async logout(ctx: Context) {
+    await ctx.session!.destroy();
 
     return new HttpResponseOK();
   }
@@ -719,7 +719,7 @@ npm run migrations
 
 *src/app/app.controller.ts*
 ```typescript
-import { Context, controller, dependency, Get, IAppController, render, Session, Store, UserRequired, UseSessions } from '@foal/core';
+import { Context, controller, dependency, Get, IAppController, render, Store, UserRequired, UseSessions } from '@foal/core';
 import { fetchUser } from '@foal/typeorm';
 import { createConnection } from 'typeorm';
 
@@ -751,9 +751,9 @@ export class AppController implements IAppController {
   }
 
   @Get('/login')
-  login(ctx: Context<any, Session>) {
+  login(ctx: Context) {
     return render('./templates/login.html', {
-      errorMessage: ctx.session.get<string>('errorMessage', '')
+      errorMessage: ctx.session!.get<string>('errorMessage', '')
     });
   }
 
@@ -762,7 +762,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, hashPassword, HttpResponseRedirect, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, hashPassword, HttpResponseRedirect, Post, ValidateBody, verifyPassword } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -780,42 +780,42 @@ export class AuthController {
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
-  async signup(ctx: Context<any, Session>) {
+  async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
     user.password = await hashPassword(ctx.request.body.password);
     await user.save();
 
-    ctx.session.setUser(user);
-    await ctx.session.regenerateID();
+    ctx.session!.setUser(user);
+    await ctx.session!.regenerateID();
 
     return new HttpResponseRedirect('/');
   }
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  async login(ctx: Context<any, Session>) {
+  async login(ctx: Context) {
     const user = await User.findOne({ email: ctx.request.body.email });
 
     if (!user) {
-      ctx.session.set('errorMessage', 'Unknown email.', { flash: true });
+      ctx.session!.set('errorMessage', 'Unknown email.', { flash: true });
       return new HttpResponseRedirect('/login');
     }
 
     if (!await verifyPassword(ctx.request.body.password, user.password)) {
-      ctx.session.set('errorMessage', 'Invalid password.', { flash: true });
+      ctx.session!.set('errorMessage', 'Invalid password.', { flash: true });
       return new HttpResponseRedirect('/login');
     }
 
-    ctx.session.setUser(user);
-    await ctx.session.regenerateID();
+    ctx.session!.setUser(user);
+    await ctx.session!.regenerateID();
 
     return new HttpResponseRedirect('/');
   }
 
   @Post('/logout')
-  async logout(ctx: Context<any, Session>) {
-    await ctx.session.destroy();
+  async logout(ctx: Context) {
+    await ctx.session!.destroy();
 
     return new HttpResponseRedirect('/login');
   }

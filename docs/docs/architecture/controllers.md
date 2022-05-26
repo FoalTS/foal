@@ -101,8 +101,8 @@ It has four properties:
 | --- | --- | --- |
 | `request` | `Request` | Gives information about the HTTP request. |
 | `state` | object | Object which can be used to forward data accross several hooks (see [Hooks](./hooks.md)). |
-| `user` | `any\|undefined` | The current user (see [Authentication](../authentication-and-access-control/quick-start.md)). | 
-| `session`| `Session\|undefined` | The session object if you use sessions. |
+| `user` | `any\|null` | The current user (see [Authentication](../authentication-and-access-control/quick-start.md)). | 
+| `session`| `Session\|null` | The session object if you use sessions. |
 
 
 ### HTTP Requests

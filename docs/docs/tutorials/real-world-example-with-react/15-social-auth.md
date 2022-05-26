@@ -111,7 +111,7 @@ Open the file and add two new routes.
 | `/api/auth/google/callback` | `GET` | Handles redirection from Google once the user has approved the connection. |
 
 ```typescript
-import { Context, dependency, Get, HttpResponseRedirect, Session } from '@foal/core';
+import { Context, dependency, Get, HttpResponseRedirect } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
 import { User } from '../../entities';
 import * as fetch from 'node-fetch';
@@ -136,7 +136,7 @@ export class SocialAuthController {
   }
 
   @Get('/google/callback')
-  async handleGoogleRedirection(ctx: Context<User, Session>) {
+  async handleGoogleRedirection(ctx: Context<User>) {
     const { userInfo } = await this.google.getUserInfo<GoogleUserInfo>(ctx);
 
     if (!userInfo.email) {
@@ -160,7 +160,7 @@ export class SocialAuthController {
       await user.save();
     }
 
-    ctx.session.setUser(user);
+    ctx.session!.setUser(user);
     ctx.user = user;
 
     return new HttpResponseRedirect('/');

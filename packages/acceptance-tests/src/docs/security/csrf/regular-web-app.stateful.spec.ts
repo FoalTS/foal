@@ -18,7 +18,6 @@ import {
   HttpResponseRedirect,
   Post,
   render,
-  Session,
   UseSessions,
   ValidateBody,
   verifyPassword
@@ -81,8 +80,8 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
       // Nothing in documentation
       store: TypeORMStore,
     })
-    async index(ctx: Context<User, Session>) {
-      return new HttpResponseOK({ csrfToken: ctx.session.get('csrfToken') });
+    async index(ctx: Context) {
+      return new HttpResponseOK({ csrfToken: ctx.session!.get('csrfToken') });
       // In documentation:
       // return render(
       //   './templates/products.html',

@@ -39,7 +39,7 @@ describe('Feature: Specifying the store locally', () => {
 
   it('Example: Usage with Redis store', async () => {
 
-    let session: Session|undefined;
+    let session: Session|null = null;
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
@@ -81,21 +81,21 @@ describe('Feature: Specifying the store locally', () => {
     const app = await createApp(AppController, { serviceManager: services });
     store = services.get(RedisStore);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     await request(app)
       .get('/api/products')
       .expect(200)
       .expect([]);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const response = await request(app)
       .post('/api/login')
       .send({})
       .expect(200);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const token: undefined|string = response.body.token;
     if (token === undefined) {
@@ -108,7 +108,7 @@ describe('Feature: Specifying the store locally', () => {
       .expect(200)
       .expect([]);
 
-    notStrictEqual(session, undefined);
+    notStrictEqual(session, null);
     strictEqual((session as unknown as Session).getToken(), token);
 
   });

@@ -82,20 +82,26 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 
     it('should return the user fetched from the database (id: number).', async () => {
       const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
-      notStrictEqual(actual, undefined);
-      strictEqual((actual as User).id, user.id);
+      if (actual === null) {
+        throw new Error('The user should not be null.');
+      }
+      strictEqual(actual.id, user.id);
     });
 
     it('should return the user fetched from the database (id: string).', async () => {
       const actual = await fetchUserWithPermissions(User)(user.id.toString(), new ServiceManager());
-      notStrictEqual(actual, undefined);
-      strictEqual((actual as User).id, user.id);
+      if (actual === null) {
+        throw new Error('The user should not be null.');
+      }
+      strictEqual(actual.id, user.id);
     });
 
     it('should return the user fetched from the database with their groups and permissions.', async () => {
       const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
-      notStrictEqual(actual, undefined);
-      strictEqual((actual as User).id, user.id);
+      if (actual === null) {
+        throw new Error('The user should not be null.');
+      }
+      strictEqual(actual.id, user.id);
 
       ok(Array.isArray(actual.userPermissions), 'userPermissions is not an array');
       strictEqual(actual.userPermissions.length, 1);
@@ -110,9 +116,9 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       strictEqual(actual.groups[0].permissions[0].codeName, 'permission1');
     });
 
-    it('should return undefined if no user is found in the database.', async () => {
+    it('should return null if no user is found in the database.', async () => {
       const actual = await fetchUserWithPermissions(User)(56, new ServiceManager());
-      strictEqual(actual, undefined);
+      strictEqual(actual, null);
     });
 
   });

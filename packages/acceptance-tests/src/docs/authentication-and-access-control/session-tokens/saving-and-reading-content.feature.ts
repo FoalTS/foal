@@ -14,7 +14,6 @@ import {
   IAppController,
   Post,
   ServiceManager,
-  Session,
   Store,
   UseSessions
 } from '@foal/core';
@@ -40,16 +39,16 @@ describe('Feature: Saving and reading content', () => {
     class ApiController {
 
       @Post('/subscribe')
-      subscribe(ctx: Context<any, Session>) {
-        const plan = ctx.session.get<string>('plan', 'free');
+      subscribe(ctx: Context) {
+        const plan = ctx.session!.get<string>('plan', 'free');
         // ...
         // Not in the documentation
         return new HttpResponseOK(plan);
       }
 
       @Post('/choose-premium-plan')
-      choosePremimumPlan(ctx: Context<any, Session>) {
-        ctx.session.set('plan', 'premium');
+      choosePremimumPlan(ctx: Context) {
+        ctx.session!.set('plan', 'premium');
         return new HttpResponseNoContent();
       }
     }
@@ -104,18 +103,18 @@ describe('Feature: Saving and reading content', () => {
       }
 
       @Post('/add-flash-content')
-      addFlashContent(ctx: Context<undefined, Session>) {
+      addFlashContent(ctx: Context) {
         /* ======================= DOCUMENTATION BEGIN ======================= */
-        ctx.session.set('error', 'Incorrect email or password', { flash: true });
+        ctx.session!.set('error', 'Incorrect email or password', { flash: true });
         /* ======================= DOCUMENTATION END ========================= */
 
         return new HttpResponseOK();
       }
 
       @Get('/read-flash-content')
-      readFlashContent(ctx: Context<undefined, Session>) {
+      readFlashContent(ctx: Context) {
         return new HttpResponseOK(
-          ctx.session.get<string>('error', 'No error')
+          ctx.session!.get<string>('error', 'No error')
         );
       }
     }
