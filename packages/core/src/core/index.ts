@@ -6,4 +6,4 @@ export * from './openapi';
 export * from './hooks';
 export * from './routes';
 export * from './config';
-export { createService, dependency, Dependency, ServiceManager } from './service-manager';
+export { createService, dependency, Dependency, ServiceManager, ServiceNotFoundError } from './service-manager';

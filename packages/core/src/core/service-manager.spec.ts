@@ -8,7 +8,7 @@ import { ConcreteSessionStore } from '@foal/internal-test';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { Config, ConfigNotFoundError } from './config';
-import { createService, dependency, Dependency, IDependency, ServiceManager } from './service-manager';
+import { createService, dependency, Dependency, IDependency, ServiceManager, ServiceNotFoundError } from './service-manager';
 
 describe('dependency', () => {
 
@@ -425,6 +425,13 @@ describe('ServiceManager', () => {
         } catch (error: any) {
           strictEqual(error.message, 'No service was found with the identifier "foobar".');
         }
+      });
+
+      it('should throw an error if the service is a class and the option "doNotInstantiateIfNotFound" is true.', () => {
+        throws(
+          () => serviceManager.get(Foobar, { doNotInstantiateIfNotFound: true }),
+          new ServiceNotFoundError('Foobar'),
+        );
       });
 
       it('should instantiate and return the service.', () => {

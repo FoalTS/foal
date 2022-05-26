@@ -72,6 +72,13 @@ export function createControllerOrService<T>(
   return serviceManager.get(serviceClass);
 }
 
+export class ServiceNotFoundError extends Error {
+  constructor(serviceName: string) {
+    super();
+    this.message = `Service "${serviceName}" not found. Did you inject it in the ServiceManager?`;
+  }
+}
+
 /**
  * Identity Mapper that instantiates and returns service singletons.
  *
@@ -134,9 +141,9 @@ export class ServiceManager {
    * @returns {*} - The service instance.
    * @memberof ServiceManager
    */
-  get<T>(identifier: ClassOrAbstractClass<T>): T;
+  get<T>(identifier: ClassOrAbstractClass<T>, options?: { doNotInstantiateIfNotFound: boolean }): T;
   get(identifier: string): any;
-  get(identifier: string|ClassOrAbstractClass): any {
+  get(identifier: string|ClassOrAbstractClass, options: { doNotInstantiateIfNotFound: boolean } = { doNotInstantiateIfNotFound: false }): any {
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
     if (identifier === ServiceManager || identifier.isServiceManager === true) {
       // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
@@ -152,6 +159,10 @@ export class ServiceManager {
     // Throw an error if the identifier is a string and no service was found in the map.
     if (typeof identifier === 'string') {
       throw new Error(`No service was found with the identifier "${identifier}".`);
+    }
+
+    if (options.doNotInstantiateIfNotFound) {
+      throw new ServiceNotFoundError(identifier.name);
     }
 
     if (identifier.hasOwnProperty('concreteClassConfigPath')) {

@@ -336,7 +336,9 @@ describe('makeControllerRoutes', () => {
       title: 'foo',
       version: '0.0.0'
     };
-    const openApi = services.get(OpenApi);
+    let openApi: OpenApi;
+
+    before(() => openApi = services.get(OpenApi))
 
     beforeEach(() => Config.set('settings.openapi.enabled', true));
 
