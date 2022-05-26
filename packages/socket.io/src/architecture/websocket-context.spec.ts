@@ -18,7 +18,7 @@ describe('WebsocketContext', () => {
     strictEqual(actual.socket, socket);
     deepStrictEqual(actual.state, {});
     strictEqual(actual.user, undefined);
-    strictEqual(actual.session, undefined);
+    strictEqual(actual.session, null);
   });
 
 });

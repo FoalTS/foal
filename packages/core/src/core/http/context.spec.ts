@@ -12,7 +12,7 @@ describe('Context', () => {
     strictEqual(actual.request, request);
     deepStrictEqual(actual.state, {});
     strictEqual(actual.user, undefined);
-    strictEqual(actual.session, undefined);
+    strictEqual(actual.session, null);
   });
 
 });

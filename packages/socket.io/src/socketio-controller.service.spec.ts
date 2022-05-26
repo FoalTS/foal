@@ -102,7 +102,7 @@ describe('SocketIOController', () => {
 
         strictEqual(actualContext?.eventName, '');
         strictEqual(actualContext?.payload, undefined);
-        strictEqual(actualContext?.session, undefined);
+        strictEqual(actualContext?.session, null);
         notStrictEqual(actualContext?.socket, undefined);
         notDeepStrictEqual(actualContext?.socket, {});
         deepStrictEqual(actualContext?.state, {});
@@ -161,7 +161,7 @@ describe('SocketIOController', () => {
         deepStrictEqual(actualContext?.payload, payload);
         deepStrictEqual(actualPayload, payload);
 
-        strictEqual(actualContext?.session, undefined);
+        strictEqual(actualContext?.session, null);
         notStrictEqual(actualContext?.socket, undefined);
         notDeepStrictEqual(actualContext?.socket, {});
         deepStrictEqual(actualContext?.state, {});

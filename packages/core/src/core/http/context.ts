@@ -108,8 +108,8 @@ interface Request extends IncomingMessage {
  * @class Context
  * @template User
  */
-export class Context<User = any, ContextSession = Session | undefined, ContextState = any> {
-  state: ContextState = {} as ContextState;
+export class Context<User = any, ContextSession = Session | null, ContextState = { [key: string]: any }> {
+  state: ContextState;
   user: User;
   session: ContextSession;
   request: Request;
@@ -121,5 +121,7 @@ export class Context<User = any, ContextSession = Session | undefined, ContextSt
    */
   constructor(request: any) {
     this.request = request;
+    this.state = {} as any;
+    this.session = null as any;
   }
 }

@@ -166,10 +166,10 @@ describe('UseSessions', () => {
 
           context('given options.create is false or undefined', async () => {
 
-            it('should let ctx.session equal undefined.', async () => {
+            it('should let ctx.session equal null.', async () => {
               await hook(ctx, services);
 
-              strictEqual(ctx.session, undefined);
+              strictEqual(ctx.session, null);
             });
 
           });
@@ -306,10 +306,10 @@ describe('UseSessions', () => {
 
             beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, create: false })));
 
-            it('should let ctx.session equal undefined.', async () => {
+            it('should let ctx.session equal null.', async () => {
               await hook(ctx, services);
 
-              strictEqual(ctx.session, undefined);
+              strictEqual(ctx.session, null);
             });
 
           });
