@@ -1,7 +1,7 @@
 // 3p
-import { createService } from '@foal/core';
+import { ServiceManager } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
-import { createConnection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -13,6 +13,12 @@ export const schema = {
 };
 
 export async function main({ token }: { token: string }) {
-  await createConnection(require('../../ormconfig.json'));
-  await createService(TypeORMStore).destroy(token);
+  const dataSource = await new DataSource(require('../../ormconfig.json'));
+  await dataSource.initialize();
+
+  const services = new ServiceManager()
+    .set('TYPEORM_DATA_SOURCE', dataSource);
+
+  const store = services.get(TypeORMStore);
+  await store.destroy(token);
 }
