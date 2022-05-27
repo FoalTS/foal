@@ -163,7 +163,6 @@ export {
   createOpenApiDocument,
   createService,
   dependency,
-  ServiceNotFoundError,
 
   getApiCallbacks,
   getApiCompleteOperation,
