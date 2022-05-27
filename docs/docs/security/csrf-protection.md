@@ -378,8 +378,6 @@ import {
   UseSessions,
 } from '@foal/core';
 
-import { User } from '../entities';
-
 export class ViewController {
   @dependency
   store: Store;
@@ -395,7 +393,7 @@ export class ViewController {
     required: true,
     redirectTo: '/login'
   })
-  async index(ctx: Context<User>) {
+  async index(ctx: Context) {
     return render(
       './templates/products.html',
       { csrfToken: ctx.session!.get('csrfToken') },
