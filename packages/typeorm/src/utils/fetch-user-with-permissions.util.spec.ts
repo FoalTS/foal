@@ -3,7 +3,8 @@ import { ServiceManager } from '@foal/core';
 import { ok, strictEqual } from 'assert';
 
 // 3p
-import { createConnection, Entity, getConnection, getManager } from 'typeorm';
+import { DataSource, Entity } from 'typeorm';
+import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 
 // FoalTS
 import { Group, Permission, UserWithPermissions } from '../entities';
@@ -16,6 +17,8 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     @Entity()
     class User extends UserWithPermissions { }
 
+    let dataSource: DataSource;
+    let services: ServiceManager;
     let user: User;
 
     before(async function() {
@@ -24,7 +27,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         case 'mariadb':
           // Increase timeout to make the test pass on Github Actions VM.
           this.timeout(6000);
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -36,7 +39,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           });
           break;
         case 'postgres':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -48,7 +51,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           break;
         case 'sqlite':
         case 'better-sqlite3':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -59,6 +62,8 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         default:
           break;
       }
+      await dataSource.initialize();
+
       const permission1 = new Permission();
       permission1.codeName = 'permission1';
       permission1.name = '';
@@ -66,22 +71,31 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission2 = new Permission();
       permission2.codeName = 'permission2';
       permission2.name = '';
+      await dataSource.getRepository(Permission).save([permission1, permission2]);
 
       const group = new Group();
       group.name = 'group1';
       group.codeName = 'group1';
       group.permissions = [permission1];
+      await dataSource.getRepository(Group).save(group);
 
       user = new User();
       user.groups = [group];
       user.userPermissions = [permission2];
-      await getManager().save([ permission1, permission2, group, user]);
+      await dataSource.getRepository(User).save(user);
+
+      services = new ServiceManager()
+        .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
     });
 
-    after(() => getConnection().close());
+    after(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     it('should return the user fetched from the database (id: number).', async () => {
-      const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
+      const actual = await fetchUserWithPermissions(User)(user.id, services);
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -89,7 +103,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     });
 
     it('should return the user fetched from the database (id: string).', async () => {
-      const actual = await fetchUserWithPermissions(User)(user.id.toString(), new ServiceManager());
+      const actual = await fetchUserWithPermissions(User)(user.id.toString(), services);
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -97,7 +111,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     });
 
     it('should return the user fetched from the database with their groups and permissions.', async () => {
-      const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
+      const actual = await fetchUserWithPermissions(User)(user.id, services);
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -117,7 +131,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     });
 
     it('should return null if no user is found in the database.', async () => {
-      const actual = await fetchUserWithPermissions(User)(56, new ServiceManager());
+      const actual = await fetchUserWithPermissions(User)(56, services);
       strictEqual(actual, null);
     });
 

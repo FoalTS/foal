@@ -43,7 +43,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
       const connection = await createTestConnection([ DatabaseSession ], typeOrmConnectionName);
 
       const serviceManager = new ServiceManager();
-      serviceManager.get(TypeORMStore).setConnection(connection);
+      serviceManager.get(TypeORMStore).setDataSource(connection);
 
       const app = await createApp(AppController, { serviceManager });
 
@@ -79,7 +79,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
 
       async init() {
         const connection = await createTestConnection([ DatabaseSession ], 'connection2');
-        this.store.setConnection(connection);
+        this.store.setDataSource(connection);
       }
     }
 

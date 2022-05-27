@@ -3,7 +3,8 @@ import { ServiceManager } from '@foal/core';
 import { strictEqual } from 'assert';
 
 // 3p
-import { Column, createConnection, Entity, getConnection, getMongoManager, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, DataSource, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 
 // FoalTS
 import { fetchMongoDBUser } from './fetch-mongodb-user.util';
@@ -29,11 +30,13 @@ describe('fetchMongoDBUser', () => {
     name: string;
   }
 
+  let dataSource: DataSource;
+  let services: ServiceManager;
   let user: User;
   let user2: User2;
 
   before(async () => {
-    await createConnection({
+    dataSource = new DataSource({
       database: 'test',
       dropSchema: true,
       entities: [User, User2],
@@ -42,21 +45,29 @@ describe('fetchMongoDBUser', () => {
       synchronize: true,
       type: 'mongodb',
     });
+    await dataSource.initialize();
 
     user = new User();
     user.name = 'foobar';
-    await getMongoManager().save(user);
+    await dataSource.getMongoRepository(User).save(user);
 
     user2 = new User2();
     user2.name = 'foobar2';
-    await getMongoManager().save(user2);
+    await dataSource.getMongoRepository(User2).save(user2);
+
+    services = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
   });
 
-  after(() => getConnection().close());
+  after(async () => {
+    if (dataSource) {
+      await dataSource.destroy();
+    }
+  });
 
   it('should throw an Error if the ID is a number.', async () => {
     try {
-      await fetchMongoDBUser(User)(46, new ServiceManager());
+      await fetchMongoDBUser(User)(46, services);
       throw new Error('An error should have been thrown');
     } catch (error: any) {
       strictEqual(error.message, 'Unexpected type for MongoDB user ID: number.');
@@ -64,7 +75,7 @@ describe('fetchMongoDBUser', () => {
   });
 
   it('should return the user fetched from the database (id).', async () => {
-    const actual = await fetchMongoDBUser(User)(user.id.toString(), new ServiceManager());
+    const actual = await fetchMongoDBUser(User)(user.id.toString(), services);
     if (actual === null) {
       throw new Error('The user should not be null.');
     }
@@ -72,7 +83,7 @@ describe('fetchMongoDBUser', () => {
   });
 
   it('should return the user fetched from the database (_id).', async () => {
-    const actual = await fetchMongoDBUser(User2)(user2._id.toString(), new ServiceManager());
+    const actual = await fetchMongoDBUser(User2)(user2._id.toString(), services);
     if (actual === null) {
       throw new Error('The user should not be null.');
     }
@@ -80,7 +91,7 @@ describe('fetchMongoDBUser', () => {
   });
 
   it('should return null if no user is found in the database (string).', async () => {
-    const actual = await fetchMongoDBUser(User)('5c584690ba14b143235f195d', new ServiceManager());
+    const actual = await fetchMongoDBUser(User)('5c584690ba14b143235f195d', services);
     strictEqual(actual, null);
   });
 

@@ -3,7 +3,8 @@ import { ServiceManager } from '@foal/core';
 import { strictEqual } from 'assert';
 
 // 3p
-import { Column, createConnection, Entity, getConnection, getManager, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 
 // FoalTS
 import { fetchUser } from './fetch-user.util';
@@ -21,13 +22,15 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
       name: string;
     }
 
+    let dataSource: DataSource;
+    let services: ServiceManager;
     let user: User;
 
     before(async () => {
       switch (type) {
         case 'mysql':
         case 'mariadb':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [ User ],
@@ -39,7 +42,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
           });
           break;
         case 'postgres':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [ User ],
@@ -51,7 +54,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
           break;
         case 'sqlite':
         case 'better-sqlite3':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
             entities: [ User ],
@@ -61,16 +64,25 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
           break;
         default:
           break;
-        }
+      }
+      await dataSource.initialize();
+
       user = new User();
       user.name = 'foobar';
-      await getManager().save(user);
+      await dataSource.getRepository(User).save(user);
+
+      services = new ServiceManager()
+        .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
     });
 
-    after(() => getConnection().close());
+    after(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     it('should return the user fetched from the database (id: number).', async () => {
-      const actual = await fetchUser(User)(user.id, new ServiceManager());
+      const actual = await fetchUser(User)(user.id, services);
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -78,7 +90,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
     });
 
     it('should return the user fetched from the database (id: string).', async () => {
-      const actual = await fetchUser(User)(user.id.toString(), new ServiceManager());
+      const actual = await fetchUser(User)(user.id.toString(), services);
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -86,7 +98,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
     });
 
     it('should return null if no user is found in the database.', async () => {
-      const actual = await fetchUser(User)(56, new ServiceManager());
+      const actual = await fetchUser(User)(56, services);
       strictEqual(actual, null);
     });
 

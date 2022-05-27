@@ -1068,7 +1068,7 @@ export class AppController {
 
   async init() {
     const connection = await createConnection('connection2');
-    this.store.setConnection(connection);
+    this.store.setDataSource(connection);
   }
 }
 ```
@@ -1084,7 +1084,7 @@ async function main() {
   const connection = await createConnection('connection2');
 
   const serviceManager = new ServiceManager();
-  serviceManager.get(TypeORMStore).setConnection(connection);
+  serviceManager.get(TypeORMStore).setDataSource(connection);
 
   const app = await createApp(AppController, { serviceManager });
 

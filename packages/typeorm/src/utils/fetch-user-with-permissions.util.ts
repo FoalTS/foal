@@ -1,6 +1,7 @@
 // 3p
 import { Class, FetchUser } from '@foal/core';
-import { getRepository } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 import { UserWithPermissions } from '../entities';
 
 /**
@@ -19,13 +20,14 @@ import { UserWithPermissions } from '../entities';
  * @returns {FetchUser} The returned function expecting an id.
  */
 export function fetchUserWithPermissions(userEntityClass: Class<UserWithPermissions>): FetchUser {
-  return (id: number|string) => {
+  return (id: number|string, services) => {
     // TODO: test this.
     if (typeof id === 'string') {
       id = parseInt(id, 10);
       // throw is id is NaN
     }
-    return getRepository(userEntityClass).findOne({
+    const dataSource = services.get(TYPEORM_DATA_SOURCE_KEY) as DataSource;
+    return dataSource.getRepository(userEntityClass).findOne({
       where: { id },
       relations: {
         userPermissions: true,
