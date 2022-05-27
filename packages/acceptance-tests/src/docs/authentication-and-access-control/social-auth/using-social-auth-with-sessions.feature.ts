@@ -112,7 +112,7 @@ describe('Feature: Using social auth with sessions', () => {
     });
 
     // Known user
-    const ctx = new Context({
+    const ctx = new Context<User>({
       query: {
         code: 'known_user'
       }
@@ -126,7 +126,7 @@ describe('Feature: Using social auth with sessions', () => {
     deepStrictEqual(ctx.session.userId, user.id);
 
     // Unknown user
-    const ctx2 = new Context({
+    const ctx2 = new Context<User>({
       query: {
         code: 'unknown_user'
       }
