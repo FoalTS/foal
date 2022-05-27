@@ -85,8 +85,6 @@ describe('Feature: Using social auth with sessions', () => {
 
     }
 
-    }
-
     /* ======================= DOCUMENTATION END ========================= */
 
     await createTestConnection([ User, DatabaseSession ]);
