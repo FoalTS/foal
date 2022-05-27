@@ -62,7 +62,7 @@ describe('Feature: Using social auth with sessions', () => {
       @UseSessions({
         cookie: true,
       })
-      async handleGoogleRedirection(ctx: Context) {
+      async handleGoogleRedirection(ctx: Context<User>) {
         const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
 
         if (!userInfo.email) {
@@ -82,6 +82,8 @@ describe('Feature: Using social auth with sessions', () => {
 
         return new HttpResponseRedirect('/');
       }
+
+    }
 
     }
 
