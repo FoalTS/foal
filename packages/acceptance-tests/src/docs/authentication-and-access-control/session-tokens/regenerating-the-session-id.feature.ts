@@ -14,7 +14,6 @@ import {
   Get,
   HttpResponseOK,
   IAppController,
-  Session,
   Store,
   UseSessions
 } from '@foal/core';
@@ -46,14 +45,14 @@ describe('Feature: Regenerating the session ID', () => {
       }
 
       @Get('/regenerated-id')
-      async regenerateID(ctx: Context<any, Session>) {
+      async regenerateID(ctx: Context) {
         /* ======================= DOCUMENTATION BEGIN ======================= */
 
-        await ctx.session.regenerateID();
+        await ctx.session!.regenerateID();
 
         /* ======================= DOCUMENTATION END ========================= */
 
-        return new HttpResponseOK({ token: ctx.session.getToken() });
+        return new HttpResponseOK({ token: ctx.session!.getToken() });
       }
 
       async init() {

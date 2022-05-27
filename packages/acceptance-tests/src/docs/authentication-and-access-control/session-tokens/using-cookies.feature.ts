@@ -37,7 +37,7 @@ describe('Feature: Using cookies', () => {
 
   it('Example: Simple usage with cookies', async () => {
 
-    let session: Session|undefined;
+    let session: Session|null = null;
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
@@ -83,7 +83,7 @@ describe('Feature: Using cookies', () => {
 
     const app = await createApp(AppController);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const response = await request(app)
       .get('/api/products')
@@ -91,7 +91,7 @@ describe('Feature: Using cookies', () => {
 
     const token = readCookie(response.get('Set-Cookie'), cookieName).value;
 
-    notStrictEqual(session, undefined);
+    notStrictEqual(session, null);
     strictEqual((session as unknown as Session).getToken(), token);
 
     const response2 = await request(app)

@@ -18,7 +18,7 @@ export class ProfileController {
   disk: Disk;
 
   @Post('/image')
-  @Hook(async ctx => { ctx.user = await getRepository(User).findOne({ email: 'john@foalts.org' }); })
+  @Hook(async ctx => { ctx.user = await getRepository(User).findOne({ email: 'john@foalts.org' }) ?? null; })
   @ValidateMultipartFormDataBody({
     files: {
       profile: { required: true, saveTo: 'images/profiles' }
@@ -41,7 +41,7 @@ export class ProfileController {
   }
 
   @Get('/image')
-  @Hook(async ctx => { ctx.user = await getRepository(User).findOne({ email: 'john@foalts.org' }); })
+  @Hook(async ctx => { ctx.user = await getRepository(User).findOne({ email: 'john@foalts.org' }) ?? null; })
   async downloadProfilePicture(ctx: Context<User>) {
     const { profile } = ctx.user;
 

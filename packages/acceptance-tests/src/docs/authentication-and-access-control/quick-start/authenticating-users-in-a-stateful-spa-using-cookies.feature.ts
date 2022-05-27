@@ -15,7 +15,6 @@ import {
   HttpResponseUnauthorized,
   IAppController,
   Post,
-  Session,
   Store,
   UserRequired,
   UseSessions,
@@ -60,21 +59,21 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
-    async signup(ctx: Context<any, Session>) {
+    async signup(ctx: Context) {
       const user = new User();
       user.email = ctx.request.body.email;
       user.password = await hashPassword(ctx.request.body.password);
       await user.save();
 
-      ctx.session.setUser(user);
-      await ctx.session.regenerateID();
+      ctx.session!.setUser(user);
+      await ctx.session!.regenerateID();
 
       return new HttpResponseOK();
     }
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
-    async login(ctx: Context<any, Session>) {
+    async login(ctx: Context) {
       const user = await User.findOne({ email: ctx.request.body.email });
 
       if (!user) {
@@ -85,15 +84,15 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
         return new HttpResponseUnauthorized();
       }
 
-      ctx.session.setUser(user);
-      await ctx.session.regenerateID();
+      ctx.session!.setUser(user);
+      await ctx.session!.regenerateID();
 
       return new HttpResponseOK();
     }
 
     @Post('/logout')
-    async logout(ctx: Context<any, Session>) {
-      await ctx.session.destroy();
+    async logout(ctx: Context) {
+      await ctx.session!.destroy();
 
       return new HttpResponseOK();
     }

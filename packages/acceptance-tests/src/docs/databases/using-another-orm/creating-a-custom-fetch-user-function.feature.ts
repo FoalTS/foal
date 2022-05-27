@@ -16,9 +16,6 @@ describe('Feature: Creating a custom fetch user function.', () => {
           throw new Error('The user ID must be a number.');
         }
         const user = await userModel.findOne({ id });
-        if (user === null) {
-          return undefined;
-        }
         return user;
       };
     }
@@ -41,7 +38,7 @@ describe('Feature: Creating a custom fetch user function.', () => {
       'The user ID must be a number.'
     );
     deepStrictEqual(await fetchUser(User)(1, services), { id: 1 })
-    strictEqual(await fetchUser(User)(2, services), undefined)
+    strictEqual(await fetchUser(User)(2, services), null)
 
   });
 

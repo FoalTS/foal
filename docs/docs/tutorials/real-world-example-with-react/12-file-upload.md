@@ -59,7 +59,7 @@ export class ProfileController {
 
   @Get('/avatar')
   @ValidateQueryParam('userId', { type: 'number' }, { required: false })
-  async readProfileImage(ctx: Context<User|undefined>) {
+  async readProfileImage(ctx: Context<User|null>) {
     let user = ctx.user;
 
     const userId: number|undefined = ctx.request.query.userId;

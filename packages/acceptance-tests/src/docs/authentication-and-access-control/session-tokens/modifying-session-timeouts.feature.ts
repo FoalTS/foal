@@ -11,7 +11,6 @@ import {
   HttpResponseOK,
   IAppController,
   ServiceManager,
-  Session,
   Store,
   UseSessions
 } from '@foal/core';
@@ -41,7 +40,7 @@ describe('Feature: Modifying session timeouts', () => {
       }
 
       @Get('/')
-      index(ctx: Context<undefined, Session>) {
+      index(ctx: Context) {
         return new HttpResponseOK();
       }
 

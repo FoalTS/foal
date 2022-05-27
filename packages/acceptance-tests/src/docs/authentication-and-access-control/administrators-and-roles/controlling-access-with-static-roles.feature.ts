@@ -41,7 +41,7 @@ describe('Feature: Controlling access with static roles', () => {
 
     // hooks/role-required.hook.ts
     function RoleRequired(role: string) {
-      return Hook((ctx: Context<User>) => {
+      return Hook((ctx: Context<User|null>) => {
         if (!ctx.user) {
           return new HttpResponseUnauthorized();
         }

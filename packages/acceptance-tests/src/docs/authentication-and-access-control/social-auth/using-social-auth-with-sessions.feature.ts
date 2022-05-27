@@ -13,7 +13,6 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
-  Session,
   Store,
   UseSessions,
 } from '@foal/core';
@@ -63,7 +62,7 @@ describe('Feature: Using social auth with sessions', () => {
       @UseSessions({
         cookie: true,
       })
-      async handleGoogleRedirection(ctx: Context<User, Session>) {
+      async handleGoogleRedirection(ctx: Context<User>) {
         const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
 
         if (!userInfo.email) {
@@ -79,7 +78,7 @@ describe('Feature: Using social auth with sessions', () => {
           await user.save();
         }
 
-        ctx.session.setUser(user);
+        ctx.session!.setUser(user);
 
         return new HttpResponseRedirect('/');
       }
@@ -113,7 +112,7 @@ describe('Feature: Using social auth with sessions', () => {
     });
 
     // Known user
-    const ctx = new Context<any, Session>({
+    const ctx = new Context<User>({
       query: {
         code: 'known_user'
       }
@@ -127,7 +126,7 @@ describe('Feature: Using social auth with sessions', () => {
     deepStrictEqual(ctx.session.userId, user.id);
 
     // Unknown user
-    const ctx2 = new Context<any, Session>({
+    const ctx2 = new Context<User>({
       query: {
         code: 'unknown_user'
       }

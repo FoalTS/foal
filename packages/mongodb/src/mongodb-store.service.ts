@@ -23,21 +23,16 @@ export class MongoDBStore extends SessionStore {
   }
 
   async boot() {
-    console.log('[Debug CI] [MongoDBStore.boot] beginning');
     if (!this.mongoDBClient) {
       const mongoDBURI = Config.getOrThrow(
         'settings.mongodb.uri',
         'string',
         'You must provide the URI of your database when using MongoDBStore.'
       );
-      console.log('[Debug CI] [MongoDBStore.boot] before connect');
       this.mongoDBClient = await MongoClient.connect(mongoDBURI);
-      console.log('[Debug CI] [MongoDBStore.boot] after connect');
     }
-    console.log('[Debug CI] [MongoDBStore.boot] middle');
     this.collection = this.mongoDBClient.db().collection<DatabaseSession>('sessions');
     this.collection.createIndex({ sessionID: 1 }, { unique: true });
-    console.log('[Debug CI] [MongoDBStore.boot] end');
   }
 
   async save(state: SessionState, maxInactivity: number): Promise<void> {

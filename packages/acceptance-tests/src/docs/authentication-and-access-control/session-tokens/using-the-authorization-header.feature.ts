@@ -36,7 +36,7 @@ describe('Feature: Using the Authorization header', () => {
 
   it('Example: Simple usage with optional bearer tokens', async () => {
 
-    let session: Session|undefined;
+    let session: Session|null = null;
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
@@ -85,21 +85,21 @@ describe('Feature: Using the Authorization header', () => {
 
     const app = await createApp(AppController);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     await request(app)
       .get('/api/products')
       .expect(200)
       .expect([]);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const response = await request(app)
       .post('/api/login')
       .send({})
       .expect(200);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const token: undefined|string = response.body.token;
     if (token === undefined) {
@@ -112,14 +112,14 @@ describe('Feature: Using the Authorization header', () => {
       .expect(200)
       .expect([]);
 
-    notStrictEqual(session, undefined);
+    notStrictEqual(session, null);
     strictEqual((session as unknown as Session).getToken(), token);
 
   });
 
   it('Example: Usage with required bearer tokens', async () => {
 
-    let session: Session|undefined;
+    let session: Session|null = null;
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
@@ -168,7 +168,7 @@ describe('Feature: Using the Authorization header', () => {
 
     const app = await createApp(AppController);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     await request(app)
       .get('/api/products')
@@ -178,14 +178,14 @@ describe('Feature: Using the Authorization header', () => {
         description: 'Authorization header not found.'
       });
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const response = await request(app)
       .post('/api/login')
       .send({})
       .expect(200);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const token: undefined|string = response.body.token;
     if (token === undefined) {
@@ -198,7 +198,7 @@ describe('Feature: Using the Authorization header', () => {
       .expect(200)
       .expect([]);
 
-    notStrictEqual(session, undefined);
+    notStrictEqual(session, null);
     strictEqual((session as unknown as Session).getToken(), token);
   });
 

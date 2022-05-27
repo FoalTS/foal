@@ -29,7 +29,7 @@ To do so, you will have to remove TypeORM and all its utilities and implement so
 
 If you wish to use the `user` option of `@JWTRequired` or `@UseSessions` to set the `ctx.user` property, then you will need to implement your own `fetchUser` function.
 
-This utility returns a function that takes an `id` as parameter which might be a `string` or a `number` and returns a promise. The promise value must be `undefined` is no user matches the given `id` and the *user object* otherwise.
+This utility returns a function that takes an `id` as parameter which might be a `string` or a `number` and returns a promise. The promise value must be `null` is no user matches the given `id` and the *user object* otherwise.
 
 *Example*
 ```typescript
@@ -41,9 +41,6 @@ export function fetchUser(userModel: any): FetchUser {
       throw new Error('The user ID must be a number.');
     }
     const user = await userModel.findOne({ id });
-    if (user === null) {
-      return undefined;
-    }
     return user;
   };
 }

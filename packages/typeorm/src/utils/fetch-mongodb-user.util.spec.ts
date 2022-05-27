@@ -1,6 +1,6 @@
 // std
 import { ServiceManager } from '@foal/core';
-import { notStrictEqual, strictEqual } from 'assert';
+import { strictEqual } from 'assert';
 
 // 3p
 import { Column, createConnection, Entity, getConnection, getMongoManager, ObjectID, ObjectIdColumn } from 'typeorm';
@@ -65,19 +65,23 @@ describe('fetchMongoDBUser', () => {
 
   it('should return the user fetched from the database (id).', async () => {
     const actual = await fetchMongoDBUser(User)(user.id.toString(), new ServiceManager());
-    notStrictEqual(actual, undefined);
+    if (actual === null) {
+      throw new Error('The user should not be null.');
+    }
     strictEqual(user.id.equals(actual.id), true);
   });
 
   it('should return the user fetched from the database (_id).', async () => {
     const actual = await fetchMongoDBUser(User2)(user2._id.toString(), new ServiceManager());
-    notStrictEqual(actual, undefined);
+    if (actual === null) {
+      throw new Error('The user should not be null.');
+    }
     strictEqual(user2._id.equals(actual._id), true);
   });
 
-  it('should return undefined if no user is found in the database (string).', async () => {
+  it('should return null if no user is found in the database (string).', async () => {
     const actual = await fetchMongoDBUser(User)('5c584690ba14b143235f195d', new ServiceManager());
-    strictEqual(actual, undefined);
+    strictEqual(actual, null);
   });
 
 });

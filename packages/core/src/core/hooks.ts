@@ -20,7 +20,7 @@ export type HookPostFunction = (response: HttpResponse) => void | Promise<void>;
  *
  * @export
  */
-export type HookFunction = (ctx: Context, services: ServiceManager) =>
+export type HookFunction<C = Context> = (ctx: C, services: ServiceManager) =>
   void | HttpResponse | HookPostFunction | Promise <void | HttpResponse | HookPostFunction>;
 
 /**
@@ -37,12 +37,12 @@ export type HookDecorator = (target: any, propertyKey?: string) => any;
  * @param {HookFunction[]} hookFunction - The function from which the hook should be created.
  * @returns {HookDecorator} - The hook decorator.
  */
-export function Hook(
-  hookFunction: HookFunction, openApiDecorators: OpenApiDecorator[] = [], options: { openapi?: boolean } = {}
+export function Hook<C = Context>(
+  hookFunction: HookFunction<C>, openApiDecorators: OpenApiDecorator[] = [], options: { openapi?: boolean } = {}
 ): HookDecorator {
   return (target: any, propertyKey?: string) => {
     // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
-    const hooks: HookFunction[] = Reflect.getOwnMetadata('hooks', target, propertyKey as string) || [];
+    const hooks: HookFunction<C>[] = Reflect.getOwnMetadata('hooks', target, propertyKey as string) || [];
     hooks.unshift(hookFunction);
     Reflect.defineMetadata('hooks', hooks, target, propertyKey as string);
 
