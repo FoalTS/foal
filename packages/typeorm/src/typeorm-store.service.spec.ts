@@ -5,8 +5,9 @@ import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 import { DataSource } from 'typeorm';
 
 // FoalTS
-import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
+import { createService, createSession, ServiceManager, SessionAlreadyExists, SessionState } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
+import { TYPEORM_DATA_SOURCE_KEY } from './common';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3';
 
@@ -221,8 +222,10 @@ function storeTestSuite(type: DBType) {
       dataSource = createTestDataSource(type);
       await dataSource.initialize();
 
-      store = createService(TypeORMStore);
-      store.setDataSource(dataSource);
+      const services = new ServiceManager()
+        .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+      store = services.get(TypeORMStore);
     });
 
     beforeEach(async () => {
