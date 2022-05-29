@@ -1,0 +1,62 @@
+---
+title: Version 2.9 release notes
+author: Loïc Poullain
+author_title: Fullstack developer and creator of FoalTS
+author_url: https://github.com/LoicPoullain
+author_image_url: https://avatars1.githubusercontent.com/u/13604533?v=4
+image: blog/twitter-banners/version-2.9-release-notes.png
+tags: [release]
+---
+
+![Banner](./assets/version-2.9-is-here/banner.png)
+
+Version 2.9 of [Foal](https://foalts.org/) has been released! Here are the improvements that it brings.
+
+<!--truncate-->
+
+## New OAuth2 Twitter Provider
+
+After LinkedIn, Google, Github and Facebook, Foal now supports Twitter for social authentication.
+
+👉 [Link to the documentation](https://foalts.org/docs/authentication-and-access-control/social-auth/)
+
+A big thanks to [@LeonardoSalvucci](https://github.com/LeonardoSalvucci) for having implemented this feature.
+
+```typescript
+// 3p
+import { Context, dependency, Get } from '@foal/core';
+import { TwitterProvider } from '@foal/social';
+
+export class AuthController {
+  @dependency
+  twitter: TwitterProvider;
+
+  @Get('/signin/twitter')
+  redirectToTwitter() {
+    // Your "Login In with Twitter" button should point to this route.
+    // The user will be redirected to Twitter auth page.
+    return this.twitter.redirect();
+  }
+
+  @Get('/signin/twitter/callback')
+  async handleTwitterRedirection(ctx: Context) {
+    // Once the user gives their permission to log in with Twitter, the OAuth server
+    // will redirect the user to this route. This route must match the redirect URI.
+    const { userInfo, tokens } = await this.twitter.getUserInfo(ctx);
+
+    // Do something with the user information AND/OR the access token.
+    // If you only need the access token, you can call the "getTokens" method.
+
+    // The method usually ends with a HttpResponseRedirect object as returned value.
+  }
+
+}
+```
+
+## OAuth2 Providers support PKCE Code Flow
+
+OAuth2 abstract provider now supports PKCE code flow. If you wish to implement your own provider using PKCE, it's now possible!
+
+## Support for version 15 of `graphql` and latest version of `type-graphql`
+
+Foal's dependencies have been updated so as to support the latest version of [TypeGraphQL](https://typegraphql.com/).

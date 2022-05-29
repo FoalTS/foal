@@ -12,6 +12,7 @@ In addition to traditional password authentication, Foal provides services to au
 - Facebook
 - Github
 - Linkedin
+- Twitter
 
 If your provider is not listed here but supports OAuth 2.0, then you can still [extend the `AbstractProvider`](#custom-provider) class to integrate it or use a [community provider](#community-providers) below.
 
@@ -365,6 +366,73 @@ export class GithubProvider extends AbstractProvider<GithubAuthParameter, Github
 } 
 ```
 
+### Sending the Client Credentials in an Authorization Header
+
+> *This feature is available from version 2.9 onwards.*
+
+When requesting the token endpoint, the provider sends the client ID and secret as a query parameter by default. If you want to send them in an `Authorization` header using the *basic* scheme, you can do so by setting the `useAuthorizationHeaderForTokenEndpoint` property to `true`.
+
+### Enabling Code Flow with PKCE
+
+> *This feature is available from version 2.9 onwards.*
+
+If you want to enable code flow with PKCE, you can do so by setting the `usePKCE` property to `true`.
+
+> By default, the provider will perform a SHA256 hash to generate the code challenge. If you wish to use the plaintext code verifier string as code challenge, you can do so by setting the `useCodeVerifierAsCodeChallenge` property to `true`.
+
+When using this feature, the provider encrypts the code verifier and stores it in a cookie on the client. In order to do this, you need to provide a secret using the configuration key `settings.social.secret.codeVerifierSecret`.
+
+<Tabs
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
+```yaml
+settings:
+  social:
+    secret:
+      codeVerifierSecret: 'xxx'
+```
+
+</TabItem>
+<TabItem value="json">
+
+```json
+{
+  "settings": {
+    "social": {
+      "secret": {
+        "codeVerifierSecret": "xxx"
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+<TabItem value="js">
+
+```javascript
+module.exports = {
+  settings: {
+    social: {
+      secret: {
+        codeVerifierSecret: 'xxx'
+      }
+    }
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+
 ## Official Providers
 
 ### Google
@@ -484,6 +552,19 @@ const { userInfo } = await this.linkedin.getUserInfo(ctx, {
 | `fields` | `string[]` | List of fields that the returned user info object should contain. Additional documentation on [field projections](https://developer.linkedin.com/docs/guide/v2/concepts/projections). |
 | `projection` | `string` | LinkedIn projection parameter. |
 
+### Twitter
+
+> *This feature is available from version 2.9 onwards.*
+
+|Service name| Default scopes | Available scopes |
+|---|---|---|
+| `TwitterProvider` | `users.read tweet.read` | [API documentation](https://developer.twitter.com/en/docs/twitter-api/users/lookup/api-reference/get-users-me) |
+
+#### Register an OAuth application
+
+Visit [this page](https://developer.twitter.com/en/portal/dashboard) to create an application and obtain a client ID and a client secret. You must configure Oauth2 settings to be used with public client; 
+
+
 ## Community Providers
 
 There are no community providers available yet! If you want to share one, feel free to [open a PR](https://github.com/FoalTS/foal) on Github.
@@ -493,6 +574,7 @@ There are no community providers available yet! If you want to share one, feel f
 | Error | Description |
 | --- | --- |
 | `InvalidStateError` | The `state` query does not match the value found in the cookie. |
+| `CodeVerifierNotFound` | The encrypted code verifier was not found in the cookie (only when using PKCE). |
 | `AuthorizationError` | The authorization server returns an error. This can happen when a user does not give consent on the provider page. |
 | `UserInfoError` | Thrown in `AbstractProvider.getUserFromTokens` if the request to the resource server is unsuccessful. |
 

@@ -1,5 +1,5 @@
 {
-  "type": "sqlite",
+  "type": "better-sqlite3",
   "database": "./test_db.sqlite",
   "entities": ["build/app/**/*.entity.js"],
   "migrations": ["build/migrations/*.js"],
