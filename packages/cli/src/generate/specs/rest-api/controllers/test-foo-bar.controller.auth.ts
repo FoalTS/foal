@@ -70,7 +70,7 @@ export class TestFooBarController {
   async createTestFooBar(ctx: Context<User>) {
     const testFooBar = await getRepository(TestFooBar).save({
       ...ctx.request.body,
-      owner: { id: ctx.user.is }
+      owner: { id: ctx.user.id }
     });
     return new HttpResponseCreated(testFooBar);
   }
