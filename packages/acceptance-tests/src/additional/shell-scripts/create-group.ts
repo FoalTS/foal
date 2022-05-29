@@ -1,6 +1,6 @@
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager, getRepository } from 'typeorm';
+import { createTestDataSource } from '../../common';
 
 export const schema = {
   additionalProperties: false,
@@ -19,11 +19,8 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  const connection = await createConnection({
-    database: './e2e_db.sqlite',
-    entities: [ Permission, Group ],
-    type: 'better-sqlite3',
-  });
+  const dataSource = createTestDataSource([ Group, Permission ]);
+  await dataSource.initialize();
 
   try {
     for (const codeName of args.permissions) {
@@ -43,6 +40,6 @@ export async function main(args: { codeName: string, name: string, permissions: 
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await connection.close();
+    await dataSource.destroy();
   }
 }

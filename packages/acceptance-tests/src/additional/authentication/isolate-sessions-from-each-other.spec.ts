@@ -1,5 +1,6 @@
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
@@ -13,23 +14,28 @@ import {
   HttpResponseNoContent,
   HttpResponseOK,
   Post,
+  ServiceManager,
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../common';
+import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { createTestDataSource, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should be isolated from each other.', () => {
+
+  let dataSource: DataSource;
 
   before(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
     Config.set('settings.logErrors', false);
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.logErrors');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   @UseSessions()
@@ -69,10 +75,6 @@ describe('Sessions should be isolated from each other.', () => {
       return new HttpResponseNoContent();
     }
 
-    async init() {
-      await createTestConnection([ DatabaseSession ]);
-    }
-
   }
 
   let app: any;
@@ -80,7 +82,13 @@ describe('Sessions should be isolated from each other.', () => {
   let token2: string;
 
   before(async () => {
-    app = await createApp(AppController);
+    dataSource = await createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const serviceManager = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+    app = await createApp(AppController, { serviceManager });
   });
 
   it('Step 1: Create two sessions.', async () => {

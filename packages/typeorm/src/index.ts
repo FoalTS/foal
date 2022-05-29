@@ -5,6 +5,9 @@
  */
 
 export {
+  TYPEORM_DATA_SOURCE_KEY
+} from './common';
+export {
   Group,
   Permission,
   UserWithPermissions,

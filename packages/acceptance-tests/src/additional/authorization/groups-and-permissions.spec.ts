@@ -1,5 +1,5 @@
 // 3p
-import { createConnection, Entity, getConnection, getRepository } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource, Entity } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -20,6 +20,7 @@ import {
   TypeORMStore,
   UserWithPermissions
 } from '@foal/typeorm';
+import { createTestDataSource } from '../../common';
 
 describe('[Authorization|permissions] Users', () => {
 
@@ -45,14 +46,11 @@ describe('[Authorization|permissions] Users', () => {
     }
   }
 
+  let dataSource: DataSource;
+
   before(async () => {
-    await createConnection({
-      database: 'e2e_db.sqlite',
-      dropSchema: true,
-      entities: [ User, Permission, Group, DatabaseSession ],
-      synchronize: true,
-      type: 'better-sqlite3',
-    });
+    dataSource = createTestDataSource([ User, Permission, Group, DatabaseSession ]);
+    await dataSource.initialize();
 
     const user1 = new User();
     const user2 = new User();
@@ -60,18 +58,18 @@ describe('[Authorization|permissions] Users', () => {
     const perm = new Permission();
     perm.codeName = 'access-foo';
     perm.name = 'Foo permission';
-    await getRepository(Permission).save(perm);
+    await dataSource.getRepository(Permission).save(perm);
 
     const group = new Group();
     group.name = 'Administrators';
     group.codeName = 'administrators';
     group.permissions = [ perm ];
-    await getRepository(Group).save(group);
+    await dataSource.getRepository(Group).save(group);
 
     user1.userPermissions = [ perm ];
     user2.groups = [ group ];
 
-    await getRepository(User).save([ user1, user2 ]);
+    await dataSource.getRepository(User).save([ user1, user2 ]);
 
     const store = createService(TypeORMStore);
 
@@ -89,7 +87,9 @@ describe('[Authorization|permissions] Users', () => {
   });
 
   after(async () => {
-    await getConnection().close();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('cannot access protected routes if they do not have the permission.', () => {

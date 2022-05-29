@@ -1,5 +1,6 @@
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
@@ -17,18 +18,22 @@ import {
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Saving and reading content', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Usage with premium and free plans', async () => {
@@ -59,13 +64,14 @@ describe('Feature: Saving and reading content', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
-    const services = new ServiceManager();
+    dataSource = await createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const services = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
     const app = await createApp(AppController, { serviceManager: services });
     const store = services.get(Store);
 
@@ -98,10 +104,6 @@ describe('Feature: Saving and reading content', () => {
     @UseSessions({ required: true })
     class AppController implements IAppController {
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
-
       @Post('/add-flash-content')
       addFlashContent(ctx: Context) {
         /* ======================= DOCUMENTATION BEGIN ======================= */
@@ -119,7 +121,12 @@ describe('Feature: Saving and reading content', () => {
       }
     }
 
-    const services = new ServiceManager();
+    dataSource = await createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const services = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
     const app = await createApp(AppController, { serviceManager: services });
     const store = services.get(Store);
 

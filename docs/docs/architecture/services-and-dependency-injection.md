@@ -235,18 +235,18 @@ async function main() {
 *src/controllers/api.controller.ts (example)*
 ```typescript
 import { dependency, Get, HttpResponseOK } from '@foal/core';
-import { Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 import { Product } from '../entities';
 
 class ApiController {
 
   @dependency
-  connection: Connection;
+  dataSource: DataSource;
 
   @Get('/products')
-  async readProducts() {
-    const products = await this.connection.getRepository(Product).find();
+  async readProducts() {
+    const products = await this.dataSource.getRepository(Product).find();
     return new HttpResponseOK(products);
   }
 

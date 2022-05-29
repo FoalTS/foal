@@ -3,27 +3,26 @@ import { strictEqual } from 'assert';
 
 // 3p
 import Ajv from 'ajv';
-import { createConnection, getConnection, getRepository } from 'typeorm';
 
 // FoalTS
 import { Group, Permission } from '@foal/typeorm';
 import { main as createGroup, schema } from './create-group';
+import { createTestDataSource } from '../../common';
 
 describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
-    const connection = await createConnection({
-      database: './e2e_db.sqlite',
-      dropSchema: true,
-      entities: [ Permission, Group ],
-      synchronize: true,
-      type: 'better-sqlite3',
-    });
-    await getRepository(Permission).save({
-      codeName: 'delete-users',
-      name: 'Permission to delete users',
-    });
-    await connection.close();
+    const dataSource = createTestDataSource([ Group, Permission ]);
+    await dataSource.initialize();
+
+    try {
+      await dataSource.getRepository(Permission).save({
+        codeName: 'delete-users',
+        name: 'Permission to delete users',
+      });
+    } finally {
+      await dataSource.destroy();
+    }
   });
 
   it('should work as expected.', async () => {
@@ -43,14 +42,11 @@ describe('[Shell scripts] create-perm', () => {
 
     await createGroup(args);
 
-    await createConnection({
-      database: './e2e_db.sqlite',
-      entities: [ Permission, Group ],
-      type: 'better-sqlite3',
-    });
+    const dataSource = createTestDataSource([ Group, Permission ]);
+    await dataSource.initialize();
 
     try {
-      const group = await getRepository(Group).findOneOrFail({
+      const group = await dataSource.getRepository(Group).findOneOrFail({
         where: {
           codeName: 'admin',
           name: 'Administrators',
@@ -64,7 +60,7 @@ describe('[Shell scripts] create-perm', () => {
     } catch (error: any) {
       throw error;
     } finally {
-      await getConnection().close();
+      await dataSource.destroy();
     }
   });
 });

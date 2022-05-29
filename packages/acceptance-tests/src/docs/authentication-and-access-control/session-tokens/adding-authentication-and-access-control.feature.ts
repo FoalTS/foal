@@ -2,7 +2,7 @@
 import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource, BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -22,18 +22,22 @@ import {
   UserRequired,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { DatabaseSession, fetchUser, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple authentication', async () => {
@@ -94,12 +98,15 @@ describe('Feature: Adding authentication and access control', () => {
         controller('/api', ApiController),
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession, User ]);
-      }
     }
 
-    const app = await createApp(AppController);
+    dataSource = await createTestDataSource([ DatabaseSession, User ]);
+    await dataSource.initialize();
+
+    const serviceManager = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+    const app = await createApp(AppController, { serviceManager });
 
     const user2 = new User();
     await user2.save();
@@ -167,12 +174,13 @@ describe('Feature: Adding authentication and access control', () => {
         controller('/api', ApiController),
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession, User ]);
-      }
     }
+    dataSource = await createTestDataSource([ DatabaseSession, User ]);
+    await dataSource.initialize();
 
-    const services = new ServiceManager();
+    const services = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
     const app = await createApp(AppController, { serviceManager: services });
 
     const user = new User();
@@ -231,12 +239,14 @@ describe('Feature: Adding authentication and access control', () => {
         controller('/api', ApiController),
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession, User ]);
-      }
     }
 
-    const services = new ServiceManager();
+    dataSource = await createTestDataSource([ DatabaseSession, User ]);
+    await dataSource.initialize();
+
+    const services = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
     const app = await createApp(AppController, { serviceManager: services });
 
     const user = new User();
@@ -324,12 +334,14 @@ describe('Feature: Adding authentication and access control', () => {
         controller('/api', ApiController),
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession, User, Product ]);
-      }
     }
 
-    const services = new ServiceManager();
+    dataSource = await createTestDataSource([ DatabaseSession, User, Product ]);
+    await dataSource.initialize();
+
+    const services = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
     const app = await createApp(AppController, { serviceManager: services });
 
     const user = new User();

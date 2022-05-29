@@ -2,25 +2,29 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, getConnection, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
 import {
   Config, Context, controller, createApp, createSession,
   dependency, Get, Hook, HttpResponseForbidden, HttpResponseOK,
-  HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
+  HttpResponseUnauthorized, IAppController, Post, ServiceManager, Store, UseSessions
 } from '@foal/core';
-import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { DatabaseSession, fetchUser, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with static roles', () => {
 
   beforeEach(() => Config.set('settings.session.store', getTypeORMStorePath()));
 
+  let dataSource: DataSource;
+
   afterEach(async () => {
     Config.remove('settings.session.store');
-    await getConnection().close();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: A simple access control.', async () => {
@@ -75,10 +79,6 @@ describe('Feature: Controlling access with static roles', () => {
         controller('/api', ApiController)
       ];
 
-      async init() {
-        await createTestConnection([ User, DatabaseSession ]);
-      }
-
       @Post('/login-as-user')
       async loginAsUser(ctx: Context) {
         const user = await User.findOneByOrFail({ roles: 'user' });
@@ -100,7 +100,13 @@ describe('Feature: Controlling access with static roles', () => {
       }
     }
 
-    const app = await createApp(AppController);
+    dataSource = createTestDataSource([ User, DatabaseSession ]);
+    await dataSource.initialize();
+
+    const serviceManager = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+    const app = await createApp(AppController, { serviceManager });
 
     const user = new User();
     user.roles = [ 'user' ];
