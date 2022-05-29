@@ -19,11 +19,12 @@ import { UserWithPermissions } from '../entities';
  * @returns {FetchUser} The returned function expecting an id.
  */
 export function fetchUserWithPermissions(userEntityClass: Class<UserWithPermissions>): FetchUser {
-  return (id: number|string) => {
-    // TODO: test this.
+  return async (id: number|string) => {
     if (typeof id === 'string') {
       id = parseInt(id, 10);
-      // throw is id is NaN
+      if (isNaN(id)) {
+        throw new Error('Suspicious operation: the provided ID cannot be parsed to a number.');
+      }
     }
     return getRepository(userEntityClass).findOne({
       where: { id },
