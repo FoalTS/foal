@@ -367,9 +367,13 @@ export class GithubProvider extends AbstractProvider<GithubAuthParameter, Github
 
 ### Sending the Client Credentials in an Authorization Header
 
+> *This feature is available from version 2.9 onwards.*
+
 When requesting the token endpoint, the provider sends the client ID and secret as a query parameter by default. If you want to send them in an `Authorization` header using the *basic* scheme, you can do so by setting the `useAuthorizationHeaderForTokenEndpoint` property to `true`.
 
 ### Enabling Code Flow with PKCE
+
+> *This feature is available from version 2.9 onwards.*
 
 If you want to enable code flow with PKCE, you can do so by setting the `usePKCE` property to `true`.
 
@@ -548,6 +552,8 @@ const { userInfo } = await this.linkedin.getUserInfo(ctx, {
 | `projection` | `string` | LinkedIn projection parameter. |
 
 ### Twitter
+
+> *This feature is available from version 2.9 onwards.*
 
 |Service name| Default scopes | Available scopes |
 |---|---|---|
