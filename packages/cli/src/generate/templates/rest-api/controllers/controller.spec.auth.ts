@@ -415,7 +415,7 @@ describe('/* upperFirstCamelName */Controller', () => {
 
       const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */2.id });
 
-      strictEqual(/* camelName */, undefined);
+      strictEqual(/* camelName */, null);
     });
 
     it('should not delete the other /* camelName */s.', async () => {
@@ -433,7 +433,7 @@ describe('/* upperFirstCamelName */Controller', () => {
 
       const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */1.id });
 
-      notStrictEqual(/* camelName */, undefined);
+      notStrictEqual(/* camelName */, null);
     });
 
     it('should return an HttpResponseNotFound if the /* camelName */ was not found.', async () => {

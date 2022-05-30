@@ -415,7 +415,7 @@ describe('TestFooBarController', () => {
 
       const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
-      strictEqual(testFooBar, undefined);
+      strictEqual(testFooBar, null);
     });
 
     it('should not delete the other testFooBars.', async () => {
@@ -433,7 +433,7 @@ describe('TestFooBarController', () => {
 
       const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
-      notStrictEqual(testFooBar, undefined);
+      notStrictEqual(testFooBar, null);
     });
 
     it('should return an HttpResponseNotFound if the testFooBar was not found.', async () => {
