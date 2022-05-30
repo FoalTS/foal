@@ -228,8 +228,6 @@ export class RootResolverService {
 
 ## GraphiQL
 
-> *This feature is available from version 2.3 onwards.*
-
 ![GraphiQL](./images/graphiql.png)
 
 You can generate a `GraphiQL` page with the `GraphiQLController` class by installing the following package.

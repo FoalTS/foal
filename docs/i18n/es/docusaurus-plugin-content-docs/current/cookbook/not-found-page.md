@@ -27,8 +27,6 @@ class AppController {
 
 In case you want to intercept all HTTP verbs (POST, PUT, etc), you can also use the `@All` decorator for this.
 
-> *This feature is available from version 2.1 onwards.*
-
 ```typescript
 import { All, HttpResponseNotFound } from '@foal/core';
 
