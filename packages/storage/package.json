@@ -1,6 +1,6 @@
 {
   "name": "@foal/storage",
-  "version": "2.8.2",
+  "version": "2.9.0",
   "description": "Storage components for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -14,7 +14,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -44,12 +44,12 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^2.8.2",
+    "@foal/core": "^2.9.0",
     "busboy": "~0.3.1",
     "mime": "~2.4.4"
   },
   "devDependencies": {
-    "@foal/internal-test": "^2.8.2",
+    "@foal/internal-test": "^2.9.0",
     "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
     "@types/supertest": "2.0.10",

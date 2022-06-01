@@ -75,7 +75,7 @@ export class AuthController {
   }
 
   @Get('/signin/twitter')
-  redirectToTwittern() {
+  redirectToTwitter() {
     return this.twitter.redirect();
   }
 

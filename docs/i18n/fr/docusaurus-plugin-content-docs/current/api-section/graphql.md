@@ -29,6 +29,8 @@ title: GraphQL
 To use GraphQL with FoalTS, you need to install the packages `graphql` and `@foal/graphql`. The first one is maintained by the GraphQL community and parses and resolves queries. The second is specific to FoalTS and allows you to configure a controller compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), [Apollo Client](https://www.apollographql.com/docs/react/), etc), load type definitions from separate files or handle errors thrown in resolvers.
 
 ```bash
+npm install graphql@15 @foal/graphql
+# OR
 npm install graphql@14 @foal/graphql
 ```
 
@@ -226,8 +228,6 @@ export class RootResolverService {
 
 ## GraphiQL
 
-> *This feature is available from version 2.3 onwards.*
-
 ![GraphiQL](./images/graphiql.png)
 
 You can generate a `GraphiQL` page with the `GraphiQLController` class by installing the following package.
@@ -418,6 +418,17 @@ export class ApiController extends GraphQLController {
 ```
 
 ## Using TypeGraphQL
+
+
+:::info
+
+TypeGraphQL requires version 15 of the `graphql` package:
+
+```bash
+npm install graphql@15
+```
+
+:::
 
 > *[TypeGraphQL](https://typegraphql.com/) is a library that allows you to create GraphQL schemas and resolvers with TypeScript classes and decorators.*
 

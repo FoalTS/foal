@@ -1,7 +1,7 @@
 {
   "name": "@foal/internal-test",
   "private": true,
-  "version": "2.8.2",
+  "version": "2.9.0",
   "description": "Unpublished package used to run some tests.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,7 +13,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16.0.0"
   },
   "publishConfig": {
     "access": "public"

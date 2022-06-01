@@ -478,8 +478,6 @@ export class AuthController {
 
 ## Reading User Information on the Client (cookies)
 
-> *This feature is available from version 2.2 onwards.*
-
 When building a SPA with cookie-based authentication, it can sometimes be difficult to know if the user is logged in or to obtain certain information about the user (`isAdmin`, etc).
 
 Since the authentication token is stored in a cookie with the `httpOnly` directive set to `true` (to mitigate XSS attacks), the front-end application has no way of knowing if a user is logged in, except by making an additional request to the server.
