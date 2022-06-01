@@ -14,7 +14,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=16"
   },
   "publishConfig": {
     "access": "public"
