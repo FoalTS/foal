@@ -23,7 +23,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16.0.0"
   },
   "bin": {
     "foal": "./lib/index.js"
