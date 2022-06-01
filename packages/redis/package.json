@@ -49,7 +49,7 @@
     "@types/node": "10.17.24",
     "mocha": "~8.3.0",
     "rimraf": "~2.6.2",
-    "ts-node": "~9.0.0",
+    "ts-node": "~10.8.0",
     "typescript": "~4.5.4"
   }
 }

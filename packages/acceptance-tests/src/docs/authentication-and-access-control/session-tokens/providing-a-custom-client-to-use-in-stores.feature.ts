@@ -2,7 +2,7 @@
 import * as request from 'supertest';
 import { createClient } from 'redis';
 import { getConnection } from '@foal/typeorm/node_modules/typeorm';
-import { MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb4';
 
 // FoalTS
 import { createApp, createSession, dependency, Get, HttpResponseInternalServerError, HttpResponseOK, ServiceManager } from '@foal/core';
