@@ -21,7 +21,7 @@
     "lint:fix": "eslint --ext ts --fix src"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16.0.0"
   },
   "dependencies": {
     "@foal/core": "^2.0.0",

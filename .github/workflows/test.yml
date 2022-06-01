@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14, 16, 18]
+        node-version: [16, 18]
 
     env:
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
@@ -29,8 +29,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Use npm version 8.3
-      run: npm install -g npm@8.3
+    - name: Use npm version 8.5
+      run: npm install -g npm@8.5
     - name: Install global dependencies (pm2, codecov)
       run: npm install -g pm2 codecov
     - name: Install project dependencies
