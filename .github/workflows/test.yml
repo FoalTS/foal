@@ -29,6 +29,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Use npm version 8.5
+      run: npm install -g npm@8.5
     - name: Install global dependencies (pm2, codecov)
       run: npm install -g pm2 codecov
     - name: Install project dependencies
