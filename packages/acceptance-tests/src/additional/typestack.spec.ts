@@ -1,11 +1,12 @@
 // 3p
 import * as request from 'supertest';
-import { BaseEntity, Column, createConnection, Entity, getConnection, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
 import { IsNumber, IsString } from '@foal/typestack/node_modules/class-validator';
+import { createTestDataSource } from '../common';
 
 describe('ValidateBody hook', () => {
 
@@ -23,15 +24,18 @@ describe('ValidateBody hook', () => {
     price: number;
   }
 
-  before(() => createConnection({
-    database: 'e2e_db.sqlite',
-    dropSchema: true,
-    entities: [Product],
-    synchronize: true,
-    type: 'better-sqlite3',
-  }));
+  let dataSource: DataSource;
 
-  after(() => getConnection().close());
+  before(async () => {
+    dataSource = createTestDataSource([ Product ]);
+    await dataSource.initialize();
+  });
+
+  after(async () => {
+    if (dataSource) {
+      await dataSource.destroy();
+    }
+  });
 
   it('should unserialize and validate HTTP request bodies', async () => {
     class AppController {

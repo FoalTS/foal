@@ -2,7 +2,7 @@
 import { notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, createConnection, Entity, getConnection, getManager } from 'typeorm';
+import { BaseEntity, DataSource, Entity } from 'typeorm';
 
 // FoalTS
 import { Group } from './group.entity';
@@ -16,11 +16,13 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     @Entity()
     class User extends UserWithPermissions { }
 
+    let dataSource: DataSource;
+
     before(async () => {
       switch (type) {
         case 'mysql':
         case 'mariadb':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -32,7 +34,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           });
           break;
         case 'postgres':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -44,7 +46,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           break;
         case 'sqlite':
         case 'better-sqlite3':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -55,9 +57,14 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         default:
           break;
       }
+      await dataSource.initialize();
     });
 
-    after(() => getConnection().close());
+    after(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     beforeEach(async () => {
       await Permission.delete({});
@@ -74,7 +81,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const user = new User();
       user.groups = [];
       user.userPermissions = [];
-      await getManager().save(user);
+      await dataSource.getRepository(User).save(user);
       notStrictEqual(user.id, undefined);
     });
 
@@ -82,7 +89,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission = new Permission();
       permission.name = 'permission1';
       permission.codeName = '';
-      await getManager().save(permission);
+      await dataSource.getRepository(Permission).save(permission);
 
       const user = new User();
       user.groups = [];
@@ -90,9 +97,9 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         permission
       ];
 
-      await getManager().save(user);
+      await dataSource.getRepository(User).save(user);
 
-      const user2 = await getManager().findOne(User, {
+      const user2 = await dataSource.getRepository(User).findOne({
         where: { id: user.id },
         relations: {
           userPermissions: true,
@@ -112,15 +119,15 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const group = new Group();
       group.name = 'group1';
       group.codeName = 'group1';
-      await getManager().save(group);
+      await dataSource.getRepository(Group).save(group);
 
       const user = new User();
       user.groups = [ group ];
       user.userPermissions = [];
 
-      await getManager().save(user);
+      await dataSource.getRepository(User).save(user);
 
-      const user2 = await getManager().findOne(User, {
+      const user2 = await dataSource.getRepository(User).findOne({
         where: { id: user.id },
         relations: {
           groups: true,

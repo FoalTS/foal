@@ -1,22 +1,27 @@
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
-import { Config, Context, createApp, createSession, dependency, Get, Hook, HttpResponseOK, Store, UseSessions } from '@foal/core';
-import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../common';
+import { Config, Context, createApp, createSession, dependency, Get, Hook, HttpResponseOK, ServiceManager, Store, UseSessions } from '@foal/core';
+import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { createTestDataSource, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should not be saved when an error has been thrown', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
     Config.set('settings.logErrors', false);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.logErrors');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   function SetFooContent() {
@@ -67,17 +72,19 @@ describe('Sessions should not be saved when an error has been thrown', () => {
       return new HttpResponseOK(ctx.session?.get('foo') ?? 'null');
     }
 
-    async init() {
-      await createTestConnection([ DatabaseSession ]);
-    }
-
   }
 
   let app: any;
   let token: string;
 
   beforeEach(async () => {
-    app = await createApp(AppController);
+    dataSource = await createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const serviceManager = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+    app = await createApp(AppController, { serviceManager });
 
     await request(app)
       .get('/new-session')

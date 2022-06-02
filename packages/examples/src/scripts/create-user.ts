@@ -1,11 +1,12 @@
 // 3p
-import { createConnection, getManager } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { Permission, User } from '../app/entities';
 
 export async function main() {
-  await createConnection(require('../../ormconfig.json'));
+  const dataSource = new DataSource(require('../../ormconfig.json'));
+  await dataSource.initialize();
 
   const user = new User();
   user.email = 'john@foalts.org';
@@ -21,7 +22,6 @@ export async function main() {
 
   user.userPermissions = [ permission ];
 
-  console.log(
-    await getManager().save([ permission, user, user2 ])
-  );
+  console.log(await dataSource.getRepository(Permission).save([ permission ]));
+  console.log(await dataSource.getRepository(User).save([ user, user2 ]));
 }

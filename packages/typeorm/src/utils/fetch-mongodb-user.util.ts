@@ -1,8 +1,9 @@
 // 3p
 import { Class, FetchUser } from '@foal/core';
 // tslint:disable-next-line:no-unused-variable
-import { getMongoRepository, ObjectID } from 'typeorm';
+import { DataSource, ObjectID } from 'typeorm';
 import { ObjectId } from 'mongodb';
+import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 
 /**
  * Create a function that finds the first MongoDB entity that matches some id.
@@ -19,10 +20,11 @@ import { ObjectId } from 'mongodb';
  * @returns {FetchUser} The returned function expecting an id.
  */
 export function fetchMongoDBUser(userEntityClass: Class<{ id: ObjectID }|{ _id: ObjectID }>): FetchUser {
-  return async (id: number|string) => {
+  return async (id: number|string, services) => {
     if (typeof id === 'number') {
       throw new Error('Unexpected type for MongoDB user ID: number.');
     }
-    return getMongoRepository(userEntityClass).findOneBy({ _id: new ObjectId(id) });
+    const dataSource = services.get(TYPEORM_DATA_SOURCE_KEY) as DataSource;
+    return dataSource.getMongoRepository(userEntityClass).findOneBy({ _id: new ObjectId(id) });
   };
 }

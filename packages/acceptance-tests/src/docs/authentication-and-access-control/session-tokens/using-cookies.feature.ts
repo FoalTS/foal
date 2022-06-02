@@ -3,6 +3,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
@@ -21,18 +22,22 @@ import {
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Using cookies', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple usage with cookies', async () => {
@@ -74,14 +79,17 @@ describe('Feature: Using cookies', () => {
         controller('/api', ApiController),
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const cookieName = 'sessionID';
 
-    const app = await createApp(AppController);
+    dataSource = await createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const serviceManager = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+    const app = await createApp(AppController, { serviceManager });
 
     strictEqual(session, null);
 
@@ -130,14 +138,16 @@ describe('Feature: Using cookies', () => {
         controller('/api', ApiController),
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const cookieName = 'sessionID';
 
-    const services = new ServiceManager();
+    dataSource = await createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const services = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
     const app = await createApp(AppController, { serviceManager: services });
 
     const response = await request(app)

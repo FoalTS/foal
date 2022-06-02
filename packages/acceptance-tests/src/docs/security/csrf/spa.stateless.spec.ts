@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { Connection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 import { sign } from 'jsonwebtoken';
 import * as request from 'supertest';
 
@@ -20,7 +20,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, setAuthCookie } from '@foal/jwt';
-import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../../../common';
+import { createFixtureUser, createTestDataSource, credentialsSchema, readCookie, User } from '../../../common';
 
 describe('Feature: Stateless CSRF protection in a Single-Page Application', () => {
 
@@ -84,7 +84,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
 
   const csrfCookieName = 'Custom-XSRF-Token';
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let user: User;
 
   let app: any;
@@ -96,7 +96,8 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.set('settings.jwt.csrf.enabled', true);
     Config.set('settings.jwt.csrf.cookie.name', csrfCookieName);
 
-    connection = await createTestConnection([ User ]);
+    dataSource = createTestDataSource([ User ]);
+    await dataSource.initialize();
 
     user = await createFixtureUser(1);
     await user.save();
@@ -109,7 +110,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.remove('settings.jwt.csrf.enabled');
     Config.remove('settings.jwt.csrf.cookie.name');
 
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('Step 1: User logs in and gets a CSRF token.', () => {

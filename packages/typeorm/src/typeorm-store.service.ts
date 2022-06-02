@@ -1,5 +1,6 @@
-import { SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
-import { Column, Connection, Entity, getConnection, IsNull, LessThan, Not, PrimaryColumn } from 'typeorm';
+import { Dependency, SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
+import { Column, DataSource, Entity, IsNull, LessThan, Not, PrimaryColumn } from 'typeorm';
+import { TYPEORM_DATA_SOURCE_KEY } from './common';
 
 @Entity({
   name: 'sessions'
@@ -39,18 +40,8 @@ export class DatabaseSession {
  */
 export class TypeORMStore extends SessionStore {
 
-  private _connection: Connection;
-
-  setConnection(connection: Connection) {
-    this._connection = connection;
-  }
-
-  get connection(): Connection {
-    if (this._connection) {
-      return this._connection;
-    }
-    return getConnection();
-  }
+  @Dependency(TYPEORM_DATA_SOURCE_KEY)
+  dataSource: DataSource;
 
   async save(state: SessionState, maxInactivity: number): Promise<void> {
     if (typeof state.userId === 'string') {
@@ -58,7 +49,7 @@ export class TypeORMStore extends SessionStore {
     }
 
     try {
-      await this.connection
+      await this.dataSource
         .getRepository(DatabaseSession)
         .createQueryBuilder()
         .insert()
@@ -86,7 +77,7 @@ export class TypeORMStore extends SessionStore {
   }
 
   async read(id: string): Promise<SessionState | null> {
-    const session = await this.connection.getRepository(DatabaseSession).findOneBy({ id });
+    const session = await this.dataSource.getRepository(DatabaseSession).findOneBy({ id });
     if (!session) {
       return null;
     }
@@ -107,7 +98,7 @@ export class TypeORMStore extends SessionStore {
       throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
     }
 
-    const dbSession = this.connection.getRepository(DatabaseSession).create({
+    const dbSession = this.dataSource.getRepository(DatabaseSession).create({
       content: JSON.stringify(state.content),
       created_at: state.createdAt,
       flash: JSON.stringify(state.flash),
@@ -118,21 +109,21 @@ export class TypeORMStore extends SessionStore {
     });
 
     // The "save" method performs an UPSERT.
-    await this.connection.getRepository(DatabaseSession).save(dbSession);
+    await this.dataSource.getRepository(DatabaseSession).save(dbSession);
   }
 
   async destroy(sessionID: string): Promise<void> {
-    await this.connection.getRepository(DatabaseSession)
+    await this.dataSource.getRepository(DatabaseSession)
       .delete({ id: sessionID });
   }
 
   async clear(): Promise<void> {
-    await this.connection.getRepository(DatabaseSession)
+    await this.dataSource.getRepository(DatabaseSession)
       .clear();
   }
 
   async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
-    await this.connection
+    await this.dataSource
       .getRepository(DatabaseSession)
       .createQueryBuilder()
       .delete()
@@ -144,7 +135,7 @@ export class TypeORMStore extends SessionStore {
   }
 
   async getAuthenticatedUserIds(): Promise<number[]> {
-    const sessions = await this.connection
+    const sessions = await this.dataSource
       .getRepository(DatabaseSession)
       .createQueryBuilder()
       .select('DISTINCT user_id')
@@ -156,11 +147,11 @@ export class TypeORMStore extends SessionStore {
   }
 
   async destroyAllSessionsOf(user: { id: number }): Promise<void> {
-    await this.connection.getRepository(DatabaseSession).delete({ user_id: user.id });
+    await this.dataSource.getRepository(DatabaseSession).delete({ user_id: user.id });
   }
 
   async getSessionIDsOf(user: { id: number }): Promise<string[]> {
-    const databaseSessions = await this.connection.getRepository(DatabaseSession).find({
+    const databaseSessions = await this.dataSource.getRepository(DatabaseSession).find({
       // Do not select unused fields.
       select: { id: true },
       where: { user_id: user.id },
@@ -174,7 +165,7 @@ export class TypeORMStore extends SessionStore {
    * @memberof RedisStore
    */
   async close(): Promise<void> {
-    await this.connection.close();
+    await this.dataSource.close();
   }
 
 }

@@ -1,22 +1,27 @@
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
-  Config, controller, createApp, Get, HttpResponseOK, IAppController, UseSessions
+  Config, controller, createApp, Get, HttpResponseOK, IAppController, ServiceManager, UseSessions
 } from '@foal/core';
-import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Requiring the session cookie', async () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple example.', async () => {
@@ -40,12 +45,15 @@ describe('Feature: Requiring the session cookie', async () => {
         controller('/api', ApiController),
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
-    const app = await createApp(AppController);
+    dataSource = await createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const serviceManager = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+    const app = await createApp(AppController, { serviceManager });
 
     await request(app)
       .get('/api/products')

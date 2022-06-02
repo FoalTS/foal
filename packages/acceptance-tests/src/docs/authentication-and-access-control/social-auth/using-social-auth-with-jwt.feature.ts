@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource, BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import { decode, sign } from 'jsonwebtoken';
 
 // FoalTS
@@ -17,18 +17,22 @@ import {
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
 import { getSecretOrPrivateKey, setAuthCookie } from '@foal/jwt';
-import { closeTestConnection, createTestConnection } from '../../../common';
+import { createTestDataSource } from '../../../common';
 import { DatabaseSession } from '@foal/typeorm';
 
 describe('Feature: Using social auth with JWT', () => {
+
+  let dataSource: DataSource;
 
   before(() => {
     Config.set('settings.jwt.secret', 'my_secret');
   })
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.jwt.secret');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple auth controller.', async () => {
@@ -92,7 +96,8 @@ describe('Feature: Using social auth with JWT', () => {
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    await createTestConnection([ User, DatabaseSession ]);
+    dataSource = createTestDataSource([ User, DatabaseSession ]);
+    await dataSource.initialize();
 
     const user = new User();
     user.email = 'jane.doe@foalts.org';

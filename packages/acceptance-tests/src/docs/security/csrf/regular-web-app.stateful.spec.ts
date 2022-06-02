@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { Connection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -23,7 +23,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
-import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../../../common';
+import { createFixtureUser, createTestDataSource, credentialsSchema, readCookie, User } from '../../../common';
 
 describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
 
@@ -117,7 +117,7 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
 
   const csrfCookieName = 'Custom-XSRF-Token';
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let user: User;
 
   let app: any;
@@ -128,7 +128,8 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     Config.set('settings.session.csrf.enabled', true);
     Config.set('settings.session.csrf.cookie.name', csrfCookieName);
 
-    connection = await createTestConnection([ User, DatabaseSession ]);
+    dataSource = createTestDataSource([ User, DatabaseSession ]);
+    await dataSource.initialize();
 
     user = await createFixtureUser(1);
     await user.save();
@@ -140,7 +141,7 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     Config.remove('settings.session.csrf.enabled');
     Config.remove('settings.session.csrf.cookie.name');
 
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('Step 1: User logs in.', () => {

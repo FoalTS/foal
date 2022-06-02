@@ -2,24 +2,30 @@
 import { } from 'assert';
 
 // 3p
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, controller, createApp, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
-import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { Config, controller, createApp, Get, HttpResponseOK, Post, ServiceManager, UseSessions } from '@foal/core';
+import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+
 
 describe('Feature: Disabling CSRF protection on a specific route.', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.csrf.enabled', true);
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.csrf.enabled');
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: use case with @UseSessions.', async () => {
@@ -49,10 +55,6 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
         controller('/api', ApiController)
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
-
       @Get('/')
       @UseSessions({ cookie: true })
       index() {
@@ -61,7 +63,13 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
 
     }
 
-    const app = await createApp(AppController);
+    dataSource = createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const serviceManager = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+    const app = await createApp(AppController, { serviceManager });
 
     let token = '';
 

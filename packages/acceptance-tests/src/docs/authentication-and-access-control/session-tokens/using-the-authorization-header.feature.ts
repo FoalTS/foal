@@ -3,6 +3,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm'
 
 // FoalTS
 import {
@@ -16,22 +17,27 @@ import {
   HttpResponseOK,
   IAppController,
   Post,
+  ServiceManager,
   Session,
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Using the Authorization header', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple usage with optional bearer tokens', async () => {
@@ -77,13 +83,15 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
-    const app = await createApp(AppController);
+    dataSource = createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const serviceManager = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+    const app = await createApp(AppController, { serviceManager });
 
     strictEqual(session, null);
 
@@ -160,13 +168,15 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
-    const app = await createApp(AppController);
+    dataSource = createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
+
+    const serviceManager = new ServiceManager()
+      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+
+    const app = await createApp(AppController, { serviceManager });
 
     strictEqual(session, null);
 

@@ -1,22 +1,18 @@
 // 3p
 import Ajv from 'ajv';
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import { Permission } from '@foal/typeorm';
 import { main as createPerm, schema } from './create-perm';
+import { createTestDataSource } from '../../common';
 
 describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
-    const connection = await createConnection({
-      database: './e2e_db.sqlite',
-      dropSchema: true,
-      entities: [ Permission ],
-      synchronize: true,
-      type: 'better-sqlite3',
-    });
-    await connection.close();
+    const dataSource = createTestDataSource([ Permission ]);
+    await dataSource.initialize();
+    await dataSource.destroy();
   });
 
   it('should work as expected.', async () => {
@@ -35,18 +31,15 @@ describe('[Shell scripts] create-perm', () => {
 
     await createPerm(args);
 
-    await createConnection({
-      database: './e2e_db.sqlite',
-      entities: [ Permission ],
-      type: 'better-sqlite3',
-    });
+    const dataSource = createTestDataSource([ Permission ]);
+    await dataSource.initialize();
 
     try {
-      await getRepository(Permission).findOneByOrFail(args);
+      await dataSource.getRepository(Permission).findOneByOrFail(args);
     } catch (error: any) {
       throw error;
     } finally {
-      await getConnection().close();
+      await dataSource.destroy();
     }
   });
 });
