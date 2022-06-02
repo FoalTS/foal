@@ -27,6 +27,7 @@ export interface CreateAppOptions {
   preMiddlewares?: (Middleware|ErrorMiddleware)[];
   afterPreMiddlewares?: (Middleware|ErrorMiddleware)[];
   postMiddlewares?: (Middleware|ErrorMiddleware)[];
+  ignoreDefaultHeaders?: boolean;
 }
 
 function handleJsonErrors(err: any, req: any, res: any, next: (err?: any) => any) {
@@ -89,7 +90,11 @@ export async function createApp(
     app.use(logger(loggerFormat));
   }
 
-  app.use(protectionHeaders);
+  // check ignore default headers
+  if (!options.ignoreDefaultHeaders) {
+      app.use(protectionHeaders);
+  }
+
 
   // Serve static files.
   app.use(
