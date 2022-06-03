@@ -90,7 +90,6 @@ module.exports = {
         'authentication-and-access-control/groups-and-permissions',
       ]),
       category('API', [
-        'api-section/rest-blueprints',
         'api-section/openapi-and-swagger-ui',
         'api-section/public-api-and-cors-requests',
         'api-section/graphql',

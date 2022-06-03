@@ -19,7 +19,6 @@ foal g entity flight
 foal g hook foo-bar
 foal g service foo
 foal g controller bar --register
-foal g rest-api product --register
 foal g script bar-script
 
 # Test linting
