@@ -7,26 +7,31 @@ import {
   isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { TestFooBar } from '../entities';
+import { createDataSource } from '../create-data-source';
 import { TestFooBarController } from './test-foo-bar.controller';
 
 describe('TestFooBarController', () => {
 
+  let dataSource: DataSource;
   let controller: TestFooBarController;
   let testFooBar1: TestFooBar;
   let testFooBar2: TestFooBar;
 
-  before(() => createConnection());
+  before(async () => {
+    dataSource = createDataSource();
+    await dataSource.initialize();
+  });
 
-  after(() => getConnection().close());
+  after(() => dataSource.destroy());
 
   beforeEach(async () => {
     controller = createController(TestFooBarController);
 
-    const repository = getRepository(TestFooBar);
+    const repository = dataSource.getRepository(TestFooBar);
     await repository.clear();
     [ testFooBar1, testFooBar2 ] = await repository.save([
       {
@@ -63,7 +68,7 @@ describe('TestFooBarController', () => {
     });
 
     it('should support pagination', async () => {
-      const testFooBar3 = await getRepository(TestFooBar).save({
+      const testFooBar3 = await dataSource.getRepository(TestFooBar).save({
         text: 'TestFooBar 3',
       });
 
@@ -152,7 +157,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseCreated object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOneBy({ text: 'TestFooBar 3' });
+      const testFooBar = await dataSource.getRepository(TestFooBar).findOneBy({ text: 'TestFooBar 3' });
 
       if (!testFooBar) {
         throw new Error('No testFooBar 3 was found in the database.');
@@ -188,7 +193,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
+      const testFooBar = await dataSource.getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -211,7 +216,7 @@ describe('TestFooBarController', () => {
       });
       await controller.modifyTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
+      const testFooBar = await dataSource.getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -260,7 +265,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
+      const testFooBar = await dataSource.getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -283,7 +288,7 @@ describe('TestFooBarController', () => {
       });
       await controller.replaceTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
+      const testFooBar = await dataSource.getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -329,7 +334,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
+      const testFooBar = await dataSource.getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
       strictEqual(testFooBar, null);
     });
@@ -346,7 +351,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
+      const testFooBar = await dataSource.getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
       notStrictEqual(testFooBar, null);
     });
