@@ -14,7 +14,7 @@ import {
 import { DatabaseSession, fetchUser, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
-describe.only('Feature: Controlling access with administrators', () => {
+describe('Feature: Controlling access with administrators', () => {
 
   let dataSource: DataSource;
 
