@@ -1,7 +1,7 @@
 // 3p
 import { ServiceManager } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
+import { createDataSource } from '../app/create-data-source';
 
 export const schema = {
   additionalProperties: false,
@@ -13,7 +13,7 @@ export const schema = {
 };
 
 export async function main({ token }: { token: string }) {
-  const dataSource = await new DataSource(require('../../ormconfig.json'));
+  const dataSource = createDataSource();
   await dataSource.initialize();
 
   const services = new ServiceManager()

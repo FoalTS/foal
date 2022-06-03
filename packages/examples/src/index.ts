@@ -11,17 +11,16 @@ import * as http from 'http';
 
 // 3p
 import { Config, createApp, displayServerURL, ServiceManager } from '@foal/core';
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { AppController } from './app/app.controller';
+import { appDataSource } from './app/data-source';
 
 async function main() {
-  const dataSource = new DataSource(require('../ormconfig.json'));
-  await dataSource.initialize();
+  await appDataSource.initialize();
 
   const serviceManager = new ServiceManager()
-    .set('TYPEORM_DATA_SOURCE', dataSource);
+    .set('TYPEORM_DATA_SOURCE', appDataSource);
 
   const app = await createApp(AppController, { serviceManager });
 

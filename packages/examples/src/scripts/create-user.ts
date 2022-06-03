@@ -3,9 +3,10 @@ import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { Permission, User } from '../app/entities';
+import { createDataSource } from '../app/create-data-source';
 
 export async function main() {
-  const dataSource = new DataSource(require('../../ormconfig.json'));
+  const dataSource = createDataSource();
   await dataSource.initialize();
 
   const user = new User();
