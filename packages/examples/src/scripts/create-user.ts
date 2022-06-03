@@ -1,6 +1,3 @@
-// 3p
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
-
 // App
 import { Permission, User } from '../app/entities';
 import { createDataSource } from '../app/create-data-source';
