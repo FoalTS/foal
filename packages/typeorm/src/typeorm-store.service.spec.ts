@@ -5,7 +5,7 @@ import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 import { DataSource } from 'typeorm';
 
 // FoalTS
-import { createService, createSession, ServiceManager, SessionAlreadyExists, SessionState } from '@foal/core';
+import { createSession, ServiceManager, SessionAlreadyExists, SessionState } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 import { TYPEORM_DATA_SOURCE_KEY } from './common';
 

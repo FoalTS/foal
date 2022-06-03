@@ -1,6 +1,5 @@
 // 3p
 import Ajv from 'ajv';
-import { DataSource } from 'typeorm';
 
 // FoalTS
 import { Permission } from '@foal/typeorm';
