@@ -88,32 +88,6 @@ function test_rest_api_with_body () {
     fi
 }
 
-# test_rest_api GET "http://localhost:3001/products" 200
-# test_rest_api GET "http://localhost:3001/products/20000" 404
-# test_rest_api GET "http://localhost:3001/products/ab" 400
-
-# test_rest_api_with_body POST "http://localhost:3001/products" 201 '{ "text": "value1" }'
-# test_rest_api_with_body POST "http://localhost:3001/products" 400 '{}'
-# test_rest_api_with_body POST "http://localhost:3001/products/1" 404
-
-# test_rest_api GET "http://localhost:3001/products/1" 200
-
-# test_rest_api_with_body PUT "http://localhost:3001/products" 404
-# test_rest_api_with_body PUT "http://localhost:3001/products/1" 200 '{ "text": "value2" }'
-# test_rest_api_with_body PUT "http://localhost:3001/products/1" 400 '{}'
-# test_rest_api_with_body PUT "http://localhost:3001/products/20000" 404 '{ "text": "value2" }'
-# test_rest_api_with_body PUT "http://localhost:3001/products/ab" 400 '{ "text": "value2" }'
-
-# test_rest_api_with_body PATCH "http://localhost:3001/products" 404
-# test_rest_api_with_body PATCH "http://localhost:3001/products/1" 200 '{ "text": "value2" }'
-# test_rest_api_with_body PATCH "http://localhost:3001/products/20000" 404 '{ "text": "value2" }'
-# test_rest_api_with_body PATCH "http://localhost:3001/products/ab" 400 '{ "text": "value2" }'
-
-# test_rest_api DELETE "http://localhost:3001/products" 404
-# test_rest_api DELETE "http://localhost:3001/products/1" 204
-# test_rest_api DELETE "http://localhost:3001/products/1" 404
-# test_rest_api DELETE "http://localhost:3001/products/ab" 400
-
 # pm2 delete index
 
 # Test the default shell scripts to create users.
