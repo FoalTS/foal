@@ -1,5 +1,4 @@
 // 3p
-// import { isCommon } from '@foal/password';
 import { createConnection, getConnection, getMongoManager } from 'typeorm';
 
 // App
@@ -8,21 +7,16 @@ import { User } from '../app/entities';
 export const schema = {
   additionalProperties: false,
   properties: {
-    // email: { type: 'string', format: 'email' },
-    // password: { type: 'string' },
+
   },
-  required: [ /* 'email', 'password' */ ],
+  required: [
+
+  ],
   type: 'object',
 };
 
-export async function main(/*args*/) {
+export async function main() {
   const user = new User();
-  // user.email = args.email;
-  // if (await isCommon(args.password)) {
-  //   console.log('This password is too common. Please choose another one.');
-  //   return;
-  // }
-  // await user.setPassword(args.password);
 
   await createConnection();
 
