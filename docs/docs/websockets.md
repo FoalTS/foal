@@ -54,6 +54,13 @@ async function main() {
 
   // Instanciate, init and connect websocket controllers.
   await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
+  
+  // or if you need public access and therefore CORS headers for the socket...
+  /*
+  const wsc = serviceManager.get(WebsocketController);
+  wsc.options.cors = {origin: "*"};
+  await wsc.attachHttpServer(httpServer);
+  */
 
   // ...
 }
