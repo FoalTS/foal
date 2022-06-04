@@ -4,7 +4,7 @@ import {
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
   Put, ValidateBody, ValidatePathParam, ValidateQueryParam
 } from '@foal/core';
-import { getRepository } from 'typeorm';
+import { getRepository } from '@foal/typeorm/node_modules/typeorm';
 
 import { Product } from './product.entity';
 

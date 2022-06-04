@@ -7,7 +7,7 @@ import {
   isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
-import { getConnection, getRepository } from 'typeorm';
+import { getConnection, getRepository } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { Product } from './product.entity';
