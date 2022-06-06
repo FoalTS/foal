@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
-    "@types/node": "10.17.24",
+    "@types/node": "16.11.7",
     "copy": "~0.3.2",
     "jsonwebtoken": "~8.5.1",
     "mocha": "~8.3.0",

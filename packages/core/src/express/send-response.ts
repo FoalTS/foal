@@ -35,7 +35,7 @@ export function sendResponse(response: HttpResponse, res: any): void {
   }
 
   if (response.stream === true) {
-    pipeline(response.body, res, err => {
+    pipeline(response.body, res, (err: any) => {
       if (err) { console.log(err); }
     });
     return;
