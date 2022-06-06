@@ -379,7 +379,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       ctx = createContext({ Authorization: `Bearer ${token}` });
 
       await rejects(
-        () => hook(ctx, services),
+        async () => hook(ctx, services),
         {
           message: '[CONFIG] You must provide at least one of these configuration keys: '
             + 'settings.jwt.secret or settings.jwt.publicKey.'

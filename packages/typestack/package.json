@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
-    "@types/node": "10.17.24",
+    "@types/node": "16.11.7",
     "class-transformer": "~0.3.1",
     "class-validator": "~0.10.0",
     "copy": "~0.3.2",

@@ -5,7 +5,7 @@ export function getSecretOrPrivateKey(): Buffer|string {
   if (secret) {
     const secretEncoding = Config.get('settings.jwt.secretEncoding', 'string');
     if (secretEncoding) {
-      return Buffer.from(secret, secretEncoding);
+      return Buffer.from(secret, secretEncoding as BufferEncoding|undefined);
     }
     return secret;
   }

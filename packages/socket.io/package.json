@@ -46,7 +46,7 @@
   "devDependencies": {
     "@socket.io/redis-adapter": "~7.2.0",
     "@types/mocha": "7.0.2",
-    "@types/node": "10.17.24",
+    "@types/node": "16.11.7",
     "mocha": "~8.3.0",
     "rimraf": "~2.6.2",
     "socket.io-client": "~4.5.0",

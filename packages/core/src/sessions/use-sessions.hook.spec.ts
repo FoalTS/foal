@@ -131,7 +131,7 @@ describe('UseSessions', () => {
 
     it('should throw an error if the configuration value settings.session.store is empty.', () => {
       return rejects(
-        () => hook(ctx, services),
+        async () => hook(ctx, services),
         new ConfigNotFoundError('settings.session.store')
       );
     });
@@ -139,7 +139,7 @@ describe('UseSessions', () => {
     it('should use the session store package provided in settings.session.store.', () => {
       Config.set('settings.session.store', '@foal/internal-test');
 
-      return doesNotReject(() => hook(ctx, services));
+      return doesNotReject(async () => hook(ctx, services));
     });
 
   });
@@ -568,7 +568,7 @@ describe('UseSessions', () => {
             it('should throw an error if the session state has no CSRF token.', async () => {
               ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID }, {}, method);
               return rejects(
-                () => hook(ctx, services),
+                async () => hook(ctx, services),
                 {
                   message: 'Unexpected error: the session content does not have a "csrfToken" field. '
                     + 'Are you sure you created the session with "createSession"?'
@@ -997,7 +997,7 @@ describe('UseSessions', () => {
 
             await ctx.session.destroy();
 
-            return doesNotReject(() => postHookFunction(new HttpResponseOK()));
+            return doesNotReject(async () => postHookFunction(new HttpResponseOK()));
           }
         );
 
