@@ -36,7 +36,7 @@
     "@types/react": "~16.8.14",
     "@types/react-dom": "~16.9.4",
     "@types/redis": "~2.8.14",
-    "@types/supertest": "~2.0.12",
+    "@types/supertest": "2.0.12",
     "@types/yamljs": "~0.2.30",
     "ajv": "~8.9.0",
     "better-sqlite3": "~7.5.1",
@@ -57,7 +57,7 @@
     "supertest": "~6.2.3",
     "ts-node": "~10.8.1",
     "typeorm": "~0.2.26",
-    "typescript": "~4.5.4",
+    "typescript": "~4.7.3",
     "yamljs": "~0.3.0"
   }
 }

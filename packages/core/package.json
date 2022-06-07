@@ -89,7 +89,7 @@
     "@foal/internal-test": "^2.9.0",
     "@types/mocha": "7.0.2",
     "@types/node": "16.11.7",
-    "@types/supertest": "2.0.10",
+    "@types/supertest": "2.0.12",
     "ajv-errors": "~3.0.0",
     "ejs": "~3.1.8",
     "mocha": "~8.3.0",
@@ -99,7 +99,7 @@
     "supertest": "~6.2.3",
     "ts-node": "~10.8.1",
     "twig": "~1.15.4",
-    "typescript": "~4.5.4",
+    "typescript": "~4.7.3",
     "yamljs": "~0.3.0"
   }
 }

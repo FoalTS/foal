@@ -57,7 +57,7 @@
     "rimraf": "~3.0.2",
     "ts-node": "~10.8.1",
     "type-graphql": "~1.1.1",
-    "typescript": "~4.5.4"
+    "typescript": "~4.7.3"
   },
   "peerDependencies": {
     "graphql": ">= 14.3.0 < 16.0.0"
