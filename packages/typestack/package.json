@@ -44,8 +44,8 @@
     "lib/"
   ],
   "peerDependencies": {
-    "class-transformer": "~0.3.1",
-    "class-validator": "^0.10.0"
+    "class-transformer": "~0.5.1",
+    "class-validator": "~0.13.2"
   },
   "dependencies": {
     "@foal/core": "^2.9.0"
@@ -53,8 +53,8 @@
   "devDependencies": {
     "@types/mocha": "7.0.2",
     "@types/node": "16.11.7",
-    "class-transformer": "~0.3.1",
-    "class-validator": "~0.10.0",
+    "class-transformer": "~0.5.1",
+    "class-validator": "~0.13.2",
     "copy": "~0.3.2",
     "mocha": "~8.3.0",
     "rimraf": "~3.0.2",
