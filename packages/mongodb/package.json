@@ -46,7 +46,7 @@
   ],
   "dependencies": {
     "@foal/core": "^2.9.0",
-    "mongodb": "~4.3.1"
+    "mongodb": "~4.7.0"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",
