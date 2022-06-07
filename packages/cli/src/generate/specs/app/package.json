@@ -30,7 +30,7 @@
   "dependencies": {
     "@foal/core": "^2.0.0",
     "@foal/typeorm": "^2.0.0",
-    "source-map-support": "~0.5.19",
+    "source-map-support": "~0.5.21",
     "better-sqlite3": "~7.5.1",
     "typeorm": "0.2.26"
   },

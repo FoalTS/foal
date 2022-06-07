@@ -57,7 +57,7 @@
     "bin/"
   ],
   "dependencies": {
-    "ajv": "~8.9.0",
+    "ajv": "~8.11.0",
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
     "commander": "~7.2.0"
