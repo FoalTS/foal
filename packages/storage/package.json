@@ -50,11 +50,11 @@
   },
   "devDependencies": {
     "@foal/internal-test": "^2.9.0",
-    "@types/mocha": "7.0.2",
+    "@types/mocha": "9.1.1",
     "@types/node": "16.11.7",
     "@types/supertest": "2.0.12",
     "copy": "~0.3.2",
-    "mocha": "~8.3.0",
+    "mocha": "~10.0.0",
     "rimraf": "~3.0.2",
     "supertest": "~6.2.3",
     "ts-node": "~10.8.1",

@@ -45,7 +45,7 @@
     "glob": "~7.1.4"
   },
   "devDependencies": {
-    "@types/mocha": "7.0.2",
+    "@types/mocha": "9.1.1",
     "@types/node": "16.11.7",
     "apollo-cache-inmemory": "~1.5.1",
     "apollo-client": "~2.5.1",
@@ -53,7 +53,7 @@
     "graphql": "~15.8.0",
     "graphql-request": "~1.8.2",
     "graphql-tag": "~2.10.1",
-    "mocha": "~8.3.0",
+    "mocha": "~10.0.0",
     "rimraf": "~3.0.2",
     "ts-node": "~10.8.1",
     "type-graphql": "~1.1.1",
