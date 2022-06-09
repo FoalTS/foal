@@ -35,7 +35,7 @@ module.exports = {
     announcementBar: {
       id: 'survey-summer-2022',
       content:
-        '👉 Don\'t forget to participate to <a href="https://forms.gle/3HAzQboxSBXvpJbB6">FoalTS 2022 survey</a>! Deadline is May 31. ✨',
+        '👉 Don\'t forget to participate to <a href="https://forms.gle/3HAzQboxSBXvpJbB6">FoalTS 2022 survey</a>! Deadline is June 31. ✨',
     },
     algolia: {
       apiKey: '888cc664f8cdf532950f93fdd481eac1',
