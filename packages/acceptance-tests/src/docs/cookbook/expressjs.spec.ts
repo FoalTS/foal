@@ -14,7 +14,7 @@ it('[Docs] Cookbook > ExpressJS', async () => {
 
   /* Code - begin */
   const expressApp = express();
-  expressApp.use((req, res, next) => {
+  expressApp.use((req: any, res: any, next: () => void) => {
     called = true;
     next();
   });

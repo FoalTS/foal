@@ -59,7 +59,7 @@ describe('ValidateBody hook', () => {
         },
         {
           children: [],
-          constraints: { isNumber: 'price must be a number' },
+          constraints: { isNumber: 'price must be a number conforming to the specified constraints' },
           property: 'price',
           target: {},
         }
