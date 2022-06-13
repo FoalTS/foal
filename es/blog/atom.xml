@@ -2,11 +2,24 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://foalts.org/es/blog</id>
     <title>FoalTS Blog</title>
-    <updated>2022-05-29T00:00:00.000Z</updated>
+    <updated>2022-06-13T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://foalts.org/es/blog"/>
     <subtitle>FoalTS Blog</subtitle>
     <icon>https://foalts.org/es/img/logo.png</icon>
+    <entry>
+        <title type="html"><![CDATA[FoalTS 2022 survey is open!]]></title>
+        <id>/2022/06/13/FoalTS-2022-survey-is-open</id>
+        <link href="https://foalts.org/es/blog/2022/06/13/FoalTS-2022-survey-is-open"/>
+        <updated>2022-06-13T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[FoalTS 2022 survey is now open (yes, a few months late 🙃)!]]></summary>
+        <content type="html"><![CDATA[<p>FoalTS 2022 survey is now open (yes, a few months late 🙃)!</p><p>Your responses to these questions are really valuable as they help me better understand what you need and how to improve the framework going forward 👌.</p><p>I read every response carefully so feel free to say anything you have to say!</p><p>👉 <a href="https://forms.gle/3HAzQboxSBXvpJbB6" target="_blank" rel="noopener noreferrer">The link to the survey</a>.</p><p>The survey closes on June 31.</p>]]></content>
+        <author>
+            <name>Loïc Poullain</name>
+            <uri>https://github.com/LoicPoullain</uri>
+        </author>
+        <category label="survey" term="survey"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Version 2.9 release notes]]></title>
         <id>/2022/05/29/version-2.9-release-notes</id>

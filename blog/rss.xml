@@ -4,9 +4,18 @@
         <title>FoalTS Blog</title>
         <link>https://foalts.org/blog</link>
         <description>FoalTS Blog</description>
-        <lastBuildDate>Sun, 29 May 2022 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 13 Jun 2022 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
+        <item>
+            <title><![CDATA[FoalTS 2022 survey is open!]]></title>
+            <link>https://foalts.org/blog/2022/06/13/FoalTS-2022-survey-is-open</link>
+            <guid>/2022/06/13/FoalTS-2022-survey-is-open</guid>
+            <pubDate>Mon, 13 Jun 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[FoalTS 2022 survey is now open (yes, a few months late 🙃)!]]></description>
+            <content:encoded><![CDATA[<p>FoalTS 2022 survey is now open (yes, a few months late 🙃)!</p><p>Your responses to these questions are really valuable as they help me better understand what you need and how to improve the framework going forward 👌.</p><p>I read every response carefully so feel free to say anything you have to say!</p><p>👉 <a href="https://forms.gle/3HAzQboxSBXvpJbB6" target="_blank" rel="noopener noreferrer">The link to the survey</a>.</p><p>The survey closes on June 31.</p>]]></content:encoded>
+            <category>survey</category>
+        </item>
         <item>
             <title><![CDATA[Version 2.9 release notes]]></title>
             <link>https://foalts.org/blog/2022/05/29/version-2.9-release-notes</link>
