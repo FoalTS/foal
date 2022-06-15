@@ -28,7 +28,7 @@ it('Foal should support JSX Server-Side Rendering with React.', async () => {
   <title>Home</title>
 </head>
 <body>
-  <div data-reactroot="">Hello world!</div>
+  <div>Hello world!</div>
 </body>
 </html>`;
 
