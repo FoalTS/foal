@@ -1,13 +1,13 @@
 // std
-import { ServiceManager } from '@foal/core';
 import { strictEqual } from 'assert';
 
 // 3p
+import { ServiceManager } from '@foal/core';
 import { Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 
 // FoalTS
 import { fetchUser } from './fetch-user.util';
+import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 
 function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3') {
 

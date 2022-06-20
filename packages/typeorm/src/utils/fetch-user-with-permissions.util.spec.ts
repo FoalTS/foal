@@ -1,12 +1,12 @@
 // std
-import { ServiceManager } from '@foal/core';
 import { ok, strictEqual, rejects } from 'assert';
 
 // 3p
+import { ServiceManager } from '@foal/core';
 import { DataSource, Entity } from 'typeorm';
-import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 
 // FoalTS
+import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 import { Group, Permission, UserWithPermissions } from '../entities';
 import { fetchUserWithPermissions } from './fetch-user-with-permissions.util';
 

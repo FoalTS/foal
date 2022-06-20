@@ -1,6 +1,8 @@
 // 3p
 import { Class, FetchUser } from '@foal/core';
 import { DataSource } from 'typeorm';
+
+// FoalTS
 import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 import { UserWithPermissions } from '../entities';
 
@@ -21,7 +23,6 @@ import { UserWithPermissions } from '../entities';
  */
 export function fetchUserWithPermissions(userEntityClass: Class<UserWithPermissions>): FetchUser {
   return (id: number|string, services) => {
-    // TODO: test this.
     if (typeof id === 'string') {
       id = parseInt(id, 10);
       if (isNaN(id)) {

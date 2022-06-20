@@ -1,12 +1,12 @@
 // std
-import { ServiceManager } from '@foal/core';
 import { strictEqual } from 'assert';
 
 // 3p
+import { ServiceManager } from '@foal/core';
 import { Column, DataSource, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
-import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 
 // FoalTS
+import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 import { fetchMongoDBUser } from './fetch-mongodb-user.util';
 
 describe('fetchMongoDBUser', () => {
