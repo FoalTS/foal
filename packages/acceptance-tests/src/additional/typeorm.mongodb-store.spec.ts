@@ -42,7 +42,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
 
   let app: any;
   let token: string;
-  let mongoClient: MongoClient;
+  let mongoClient: any;
 
   @Entity()
   class User {

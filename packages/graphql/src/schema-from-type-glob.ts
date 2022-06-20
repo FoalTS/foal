@@ -1,4 +1,5 @@
 import * as glob from 'glob';
+import { GraphQLSchema } from 'graphql';
 import { schemaFromTypePaths } from './schema-from-type-paths';
 
 /**
@@ -6,10 +7,10 @@ import { schemaFromTypePaths } from './schema-from-type-paths';
  *
  * @export
  * @param {string} pattern - A glob pattern describing the file paths.
- * @returns {Promise<object>} The GraphQL schema.
+ * @returns {Promise<GraphQLSchema>} The GraphQL schema.
  */
-export async function schemaFromTypeGlob(pattern: string): Promise<object> {
-  return new Promise<object>((resolve, reject) => {
+export async function schemaFromTypeGlob(pattern: string): Promise<GraphQLSchema> {
+  return new Promise<GraphQLSchema>((resolve, reject) => {
     glob(pattern, {}, (err, files) => {
       if (err) {
         return reject(err);

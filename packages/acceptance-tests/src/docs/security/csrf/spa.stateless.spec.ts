@@ -46,7 +46,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
           { email: user.email },
           getSecretOrPrivateKey(),
           { subject: user.id.toString() },
-          (err, encoded) => {
+          (err: any, encoded: any) => {
             if (err) {
               return reject(err);
             }

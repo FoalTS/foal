@@ -22,6 +22,7 @@ import { get, Server } from 'http';
 // 3p
 import { Config, controller, createApp, dependency } from '@foal/core';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import fetch from 'node-fetch';
 import { ApolloClient } from 'apollo-client';
 import { HttpLink } from 'apollo-link-http';
 import { buildSchema } from 'graphql';
@@ -99,7 +100,7 @@ describe('[Acceptance test] GraphQLController', () => {
     });
 
     it('apollo-client.', async () => {
-      const httpLink = new HttpLink({ uri: 'http://localhost:3000/graphql' });
+      const httpLink = new HttpLink({ uri: 'http://localhost:3000/graphql', fetch });
       const cache = new InMemoryCache();
       const client = new ApolloClient({ cache, link: httpLink });
       const { data } = await client.query({
