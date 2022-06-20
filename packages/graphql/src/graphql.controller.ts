@@ -1,7 +1,7 @@
 // 3p
 import { Context, Get, HttpResponse, HttpResponseBadRequest, HttpResponseOK, Post, } from '@foal/core';
 import Ajv from 'ajv';
-import { graphql } from 'graphql';
+import { graphql, GraphQLSchema } from 'graphql';
 
 const getQuerySchema = {
   properties: {
@@ -40,7 +40,7 @@ const ajv = new Ajv();
  * @class GraphQLController
  */
 export abstract class GraphQLController {
-  abstract schema: object|Promise<object>;
+  abstract schema: GraphQLSchema|Promise<GraphQLSchema>;
   resolvers: object;
 
   getResolverContext(ctx: Context): object {

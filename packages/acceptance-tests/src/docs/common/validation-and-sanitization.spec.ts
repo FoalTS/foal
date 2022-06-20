@@ -427,7 +427,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
         .expect([
           {
             children: [],
-            constraints: { length: 'title must be longer than or equal to 10 characters' },
+            constraints: { isLength: 'title must be longer than or equal to 10 characters' },
             property: 'title',
             target: { text: 'foo' },
           },

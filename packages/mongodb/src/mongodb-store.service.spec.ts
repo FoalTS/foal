@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, doesNotReject, doesNotThrow, rejects, strictEqual, throws } from 'assert';
+import { deepStrictEqual, doesNotReject, doesNotThrow, rejects, strictEqual } from 'assert';
 
 // 3p
 import {
@@ -62,9 +62,9 @@ describe('MongoDBStore', () => {
         await store.boot();
         await store.close();
 
-        throws(
+        await rejects(
           () => mongoDBClient.db().collection(COLLECTION_NAME).findOne(),
-          new MongoNotConnectedError('MongoClient must be connected to perform this operation'),
+          new MongoNotConnectedError('Client must be connected before running operations'),
         );
       });
 

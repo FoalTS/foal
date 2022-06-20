@@ -7,7 +7,7 @@
 
 // 3p
 import { red, yellow } from 'colors/safe';
-import * as program from 'commander';
+import { program } from 'commander';
 
 // FoalTS
 import { createSecret } from './create-secret';
@@ -41,7 +41,8 @@ program
   .version(pkg.version, '-v, --version');
 
 program
-  .command('createapp <name>')
+  .command('createapp')
+  .argument('<name>', 'Name of the application')
   .description('Create a new project.')
   .option('-G, --no-git', 'Don\'t initialize a git repository')
   .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
@@ -63,7 +64,8 @@ program
   .action(() => createSecret().then(secret => console.log(secret)));
 
 program
-  .command('run <name>')
+  .command('run')
+  .argument('<name>', 'Name of the script to run')
   .alias('run-script')
   .description('Run a shell script.')
   .action((name: string) => {
@@ -71,7 +73,9 @@ program
   });
 
 program
-  .command('connect <framework> <path>')
+  .command('connect')
+  .argument('<framework>', 'Frontend framework to connect to')
+  .argument('<path>', 'Path to the frontend project')
   .description('Configure your frontend to interact with your application.')
   .addHelpText('after', `
 Available frameworks:
@@ -107,7 +111,9 @@ const generateTypes: GenerateType[] = [
 ];
 
 program
-  .command('generate <type> [name]')
+  .command('generate')
+  .argument('<type>', 'Type of the file to generate')
+  .argument('[name]', 'Name of the file to generate')
   .description('Generate and/or modify files.')
   .option(
     '-r, --register',
@@ -162,7 +168,8 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
   });
 
 program
-  .command('rmdir <name>')
+  .command('rmdir')
+  .argument('<name>', 'Name of the directory to remove')
   .description('Remove a directory and all its contents, including any subdirectories and files.')
   .action(async (name: string) => {
     try {
