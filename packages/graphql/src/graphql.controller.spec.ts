@@ -16,7 +16,7 @@ describe('GraphQLController', () => {
 
   let controller: GraphQLController;
   class ConcreteController extends GraphQLController {
-    schema = {};
+    schema = buildSchema('type Query { hello: String }');
   }
 
   beforeEach(() => controller = createController(ConcreteController));
