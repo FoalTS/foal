@@ -1,9 +1,6 @@
 // 3p
 import { Class, FetchUser } from '@foal/core';
-import { DataSource } from 'typeorm';
-
-// FoalTS
-import { TYPEORM_DATA_SOURCE_KEY } from '../common';
+import { BaseEntity } from 'typeorm';
 
 /**
  * Create a function that finds the first entity that matches some id.
@@ -16,12 +13,9 @@ import { TYPEORM_DATA_SOURCE_KEY } from '../common';
  * - JWTOptional (@foal/jwt)
  *
  * @export
- * @param {(Class<{ id: number|string }>)} userEntityClass - The entity class.
+ * @param {(Class<{ id: number|string }> & typeof BaseEntity)} userEntityClass - The entity class.
  * @returns {FetchUser} The returned function expecting an id.
  */
-export function fetchUser(userEntityClass: Class<{ id: number|string }>): FetchUser {
-  return (id: number|string, services) => {
-    const dataSource = services.get(TYPEORM_DATA_SOURCE_KEY) as DataSource;
-    return dataSource.getRepository(userEntityClass).findOneBy({ id });
-  }
+export function fetchUser(userEntityClass: Class<{ id: number|string }> & typeof BaseEntity): FetchUser {
+  return (id: number|string) => userEntityClass.findOneBy({ id });
 }

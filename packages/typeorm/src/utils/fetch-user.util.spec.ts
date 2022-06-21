@@ -3,18 +3,17 @@ import { strictEqual } from 'assert';
 
 // 3p
 import { ServiceManager } from '@foal/core';
-import { Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { fetchUser } from './fetch-user.util';
-import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 
 function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3') {
 
   describe(`with ${type}`, () => {
 
     @Entity()
-    class User {
+    class User extends BaseEntity {
       @PrimaryGeneratedColumn()
       id: number;
 
@@ -23,7 +22,6 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
     }
 
     let dataSource: DataSource;
-    let services: ServiceManager;
     let user: User;
 
     before(async () => {
@@ -70,9 +68,6 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
       user = new User();
       user.name = 'foobar';
       await dataSource.getRepository(User).save(user);
-
-      services = new ServiceManager()
-        .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
     });
 
     after(async () => {
@@ -82,7 +77,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
     });
 
     it('should return the user fetched from the database (id: number).', async () => {
-      const actual = await fetchUser(User)(user.id, services);
+      const actual = await fetchUser(User)(user.id, new ServiceManager());
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -90,7 +85,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
     });
 
     it('should return the user fetched from the database (id: string).', async () => {
-      const actual = await fetchUser(User)(user.id.toString(), services);
+      const actual = await fetchUser(User)(user.id.toString(), new ServiceManager());
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -98,7 +93,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
     });
 
     it('should return null if no user is found in the database.', async () => {
-      const actual = await fetchUser(User)(56, services);
+      const actual = await fetchUser(User)(56, new ServiceManager());
       strictEqual(actual, null);
     });
 

@@ -6,7 +6,6 @@ import { ServiceManager } from '@foal/core';
 import { DataSource, Entity } from 'typeorm';
 
 // FoalTS
-import { TYPEORM_DATA_SOURCE_KEY } from '../common';
 import { Group, Permission, UserWithPermissions } from '../entities';
 import { fetchUserWithPermissions } from './fetch-user-with-permissions.util';
 
@@ -18,7 +17,6 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     class User extends UserWithPermissions { }
 
     let dataSource: DataSource;
-    let services: ServiceManager;
     let user: User;
 
     before(async function() {
@@ -83,9 +81,6 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       user.groups = [group];
       user.userPermissions = [permission2];
       await dataSource.getRepository(User).save(user);
-
-      services = new ServiceManager()
-        .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
     });
 
     after(async () => {
@@ -95,7 +90,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     });
 
     it('should return the user fetched from the database (id: number).', async () => {
-      const actual = await fetchUserWithPermissions(User)(user.id, services);
+      const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -110,7 +105,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     });
 
     it('should return the user fetched from the database (id: string).', async () => {
-      const actual = await fetchUserWithPermissions(User)(user.id.toString(), services);
+      const actual = await fetchUserWithPermissions(User)(user.id.toString(), new ServiceManager());
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -118,7 +113,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     });
 
     it('should return the user fetched from the database with their groups and permissions.', async () => {
-      const actual = await fetchUserWithPermissions(User)(user.id, services);
+      const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
       if (actual === null) {
         throw new Error('The user should not be null.');
       }
@@ -138,7 +133,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     });
 
     it('should return null if no user is found in the database.', async () => {
-      const actual = await fetchUserWithPermissions(User)(56, services);
+      const actual = await fetchUserWithPermissions(User)(56, new ServiceManager());
       strictEqual(actual, null);
     });
 
