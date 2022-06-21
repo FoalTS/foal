@@ -18,7 +18,7 @@ export class MongoDBStore extends SessionStore {
   private mongoDBClient: MongoClient;
   private collection: Collection<DatabaseSession>;
 
-  setMongoDBClient(mongoDBClient: MongoClient) {
+  setMongoDBClient(mongoDBClient: MongoClient): void {
     this.mongoDBClient = mongoDBClient;
   }
 

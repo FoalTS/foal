@@ -12,7 +12,7 @@ export class RedisStore extends SessionStore {
 
   private redisClient: ReturnType<typeof createClient>;
 
-  setRedisClient(redisClient: ReturnType<typeof createClient>) {
+  setRedisClient(redisClient: ReturnType<typeof createClient>): void {
     this.redisClient = redisClient;
   }
 

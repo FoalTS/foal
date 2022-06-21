@@ -1,9 +1,6 @@
 // 3p
-import { Dependency, SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
+import { SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
 import { Column, DataSource, Entity, IsNull, LessThan, Not, PrimaryColumn } from 'typeorm';
-
-// FoalTS
-import { TYPEORM_DATA_SOURCE_KEY } from './common';
 
 @Entity({
   name: 'sessions'
@@ -43,8 +40,11 @@ export class DatabaseSession {
  */
 export class TypeORMStore extends SessionStore {
 
-  @Dependency(TYPEORM_DATA_SOURCE_KEY)
-  dataSource: DataSource;
+  private dataSource: DataSource;
+
+  setDataSource(dataSource: DataSource): void {
+    this.dataSource = dataSource;
+  }
 
   async save(state: SessionState, maxInactivity: number): Promise<void> {
     if (typeof state.userId === 'string') {

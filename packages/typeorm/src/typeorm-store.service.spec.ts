@@ -7,7 +7,6 @@ import { DataSource } from 'typeorm';
 // FoalTS
 import { createSession, ServiceManager, SessionAlreadyExists, SessionState } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
-import { TYPEORM_DATA_SOURCE_KEY } from './common';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3';
 
@@ -223,9 +222,9 @@ function storeTestSuite(type: DBType) {
       await dataSource.initialize();
 
       const services = new ServiceManager()
-        .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
 
       store = services.get(TypeORMStore);
+      store.setDataSource(dataSource);
     });
 
     beforeEach(async () => {
