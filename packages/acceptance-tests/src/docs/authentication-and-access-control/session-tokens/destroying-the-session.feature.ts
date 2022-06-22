@@ -18,7 +18,6 @@ import {
   Post,
   readSession,
   ServiceManager,
-  Store,
   UseSessions
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
@@ -70,8 +69,8 @@ describe('Feature: Destroying the session', () => {
 
     const serviceManager = new ServiceManager();
 
-    const app = await createApp(AppController, { serviceManager: services });
-    const store = services.get(Store);
+    const app = await createApp(AppController, { serviceManager });
+    const store = serviceManager.get(TypeORMStore);
     store.setDataSource(dataSource)
 
     const session = await createSession(store);
