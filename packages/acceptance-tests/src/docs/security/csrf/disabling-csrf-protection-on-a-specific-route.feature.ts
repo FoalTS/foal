@@ -7,7 +7,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import { Config, controller, createApp, Get, HttpResponseOK, Post, ServiceManager, UseSessions } from '@foal/core';
-import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 
@@ -66,8 +66,9 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
     dataSource = createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize();
 
-    const serviceManager = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager });
 

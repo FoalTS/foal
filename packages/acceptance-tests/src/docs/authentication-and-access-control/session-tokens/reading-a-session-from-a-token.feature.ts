@@ -10,9 +10,8 @@ import {
   createSession,
   readSession,
   ServiceManager,
-  Store,
 } from '@foal/core';
-import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Reading a session from a token', () => {
@@ -34,10 +33,10 @@ describe('Feature: Reading a session from a token', () => {
     dataSource = await createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize()
 
-    const services = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource)
+    const serviceManager = new ServiceManager();
 
-    const store = services.get(Store);
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     async function getFoo(token: string): Promise<any> {
       /* ======================= DOCUMENTATION BEGIN ======================= */

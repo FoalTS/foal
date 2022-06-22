@@ -22,7 +22,7 @@ import {
   UserRequired,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, fetchUser, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { DatabaseSession, fetchUser, TypeORMStore } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
@@ -103,8 +103,9 @@ describe('Feature: Adding authentication and access control', () => {
     dataSource = await createTestDataSource([ DatabaseSession, User ]);
     await dataSource.initialize();
 
-    const serviceManager = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager });
 
@@ -178,8 +179,9 @@ describe('Feature: Adding authentication and access control', () => {
     dataSource = await createTestDataSource([ DatabaseSession, User ]);
     await dataSource.initialize();
 
-    const services = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager: services });
 
@@ -244,8 +246,9 @@ describe('Feature: Adding authentication and access control', () => {
     dataSource = await createTestDataSource([ DatabaseSession, User ]);
     await dataSource.initialize();
 
-    const services = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager: services });
 
@@ -339,8 +342,9 @@ describe('Feature: Adding authentication and access control', () => {
     dataSource = await createTestDataSource([ DatabaseSession, User, Product ]);
     await dataSource.initialize();
 
-    const services = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager: services });
 

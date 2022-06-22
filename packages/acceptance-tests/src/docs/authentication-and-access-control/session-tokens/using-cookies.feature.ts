@@ -22,7 +22,7 @@ import {
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Using cookies', () => {
@@ -86,8 +86,9 @@ describe('Feature: Using cookies', () => {
     dataSource = await createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize();
 
-    const serviceManager = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager });
 
@@ -145,8 +146,9 @@ describe('Feature: Using cookies', () => {
     dataSource = await createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize();
 
-    const services = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const services = new ServiceManager();
+    const store = services.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager: services });
 

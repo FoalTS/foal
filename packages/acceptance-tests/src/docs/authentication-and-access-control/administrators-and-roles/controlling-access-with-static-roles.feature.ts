@@ -11,7 +11,7 @@ import {
   dependency, Get, Hook, HttpResponseForbidden, HttpResponseOK,
   HttpResponseUnauthorized, IAppController, Post, ServiceManager, Store, UseSessions
 } from '@foal/core';
-import { DatabaseSession, fetchUser, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { DatabaseSession, fetchUser, TypeORMStore } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with static roles', () => {
@@ -103,8 +103,9 @@ describe('Feature: Controlling access with static roles', () => {
     dataSource = createTestDataSource([ User, DatabaseSession ]);
     await dataSource.initialize();
 
-    const serviceManager = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager });
 

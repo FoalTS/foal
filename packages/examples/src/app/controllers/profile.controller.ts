@@ -1,8 +1,9 @@
 import {
-  ApiInfo, ApiServer, Context, Dependency, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Post, render
+  ApiInfo, ApiServer, Context, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Post, render
 } from '@foal/core';
 import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
+
+import { appDataSource } from '../data-source';
 
 import { User } from '../entities';
 
@@ -17,12 +18,9 @@ export class ProfileController {
   @dependency
   disk: Disk;
 
-  @Dependency('TYPEORM_DATA_SOURCE')
-  dataSource: DataSource;
-
   @Post('/image')
-  @Hook(async function (this: ProfileController, ctx) {
-    ctx.user = await this.dataSource.getRepository(User).findOneBy({ email: 'john@foalts.org' })
+  @Hook(async ctx => {
+    ctx.user = await appDataSource.getRepository(User).findOneBy({ email: 'john@foalts.org' })
   })
   @ValidateMultipartFormDataBody({
     files: {
@@ -40,14 +38,14 @@ export class ProfileController {
     }
 
     user.profile = ctx.request.body.files.profile.path;
-    await this.dataSource.getRepository(User).save(user);
+    await appDataSource.getRepository(User).save(user);
 
     return new HttpResponseRedirect('/profile');
   }
 
   @Get('/image')
   @Hook(async function (this: ProfileController, ctx) {
-    ctx.user = await this.dataSource.getRepository(User).findOneBy({ email: 'john@foalts.org' })
+    ctx.user = await appDataSource.getRepository(User).findOneBy({ email: 'john@foalts.org' })
   })
   async downloadProfilePicture(ctx: Context<User>) {
     const { profile } = ctx.user;

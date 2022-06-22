@@ -4,7 +4,7 @@ import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import { Config, Context, createApp, createSession, dependency, Get, Hook, HttpResponseOK, ServiceManager, Store, UseSessions } from '@foal/core';
-import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should not be saved when an error has been thrown', () => {
@@ -81,8 +81,9 @@ describe('Sessions should not be saved when an error has been thrown', () => {
     dataSource = await createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize();
 
-    const serviceManager = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     app = await createApp(AppController, { serviceManager });
 

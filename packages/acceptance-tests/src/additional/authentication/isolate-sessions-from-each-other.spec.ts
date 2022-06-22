@@ -18,7 +18,7 @@ import {
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should be isolated from each other.', () => {
@@ -85,8 +85,9 @@ describe('Sessions should be isolated from each other.', () => {
     dataSource = await createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize();
 
-    const serviceManager = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataStore(dataSource);
 
     app = await createApp(AppController, { serviceManager });
   });

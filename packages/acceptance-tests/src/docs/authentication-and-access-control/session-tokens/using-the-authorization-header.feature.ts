@@ -22,7 +22,7 @@ import {
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Using the Authorization header', () => {
@@ -88,8 +88,9 @@ describe('Feature: Using the Authorization header', () => {
     dataSource = createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize();
 
-    const serviceManager = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager });
 
@@ -170,11 +171,13 @@ describe('Feature: Using the Authorization header', () => {
       ];
     }
 
+    // remplacer ça par fonction setUpDataSourceAndStore?
     dataSource = createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize();
 
-    const serviceManager = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager });
 

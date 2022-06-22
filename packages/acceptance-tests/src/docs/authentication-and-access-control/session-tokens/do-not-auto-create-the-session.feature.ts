@@ -20,7 +20,7 @@ import {
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TYPEORM_DATA_SOURCE_KEY } from '@foal/typeorm';
+import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Do not Auto-Create the Session when using sessions with cookies', async () => {
@@ -76,8 +76,9 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
     dataSource = await createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize();
 
-    const serviceManager = new ServiceManager()
-      .set(TYPEORM_DATA_SOURCE_KEY, dataSource);
+    const serviceManager = new ServiceManager();
+    const store = serviceManager.get(TypeORMStore);
+    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager });
 
