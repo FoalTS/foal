@@ -81,7 +81,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const user = new User();
       user.groups = [];
       user.userPermissions = [];
-      await dataSource.getRepository(User).save(user);
+      await user.save();
       notStrictEqual(user.id, undefined);
     });
 
@@ -89,7 +89,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission = new Permission();
       permission.name = 'permission1';
       permission.codeName = '';
-      await dataSource.getRepository(Permission).save(permission);
+      await permission.save();
 
       const user = new User();
       user.groups = [];
@@ -97,9 +97,9 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         permission
       ];
 
-      await dataSource.getRepository(User).save(user);
+      await user.save();
 
-      const user2 = await dataSource.getRepository(User).findOne({
+      const user2 = await User.findOne({
         where: { id: user.id },
         relations: {
           userPermissions: true,
@@ -119,15 +119,15 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const group = new Group();
       group.name = 'group1';
       group.codeName = 'group1';
-      await dataSource.getRepository(Group).save(group);
+      await group.save();
 
       const user = new User();
       user.groups = [ group ];
       user.userPermissions = [];
 
-      await dataSource.getRepository(User).save(user);
+      await user.save();
 
-      const user2 = await dataSource.getRepository(User).findOne({
+      const user2 = await User.findOne({
         where: { id: user.id },
         relations: {
           groups: true,

@@ -69,18 +69,18 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission2 = new Permission();
       permission2.codeName = 'permission2';
       permission2.name = '';
-      await dataSource.getRepository(Permission).save([permission1, permission2]);
+      await Permission.save([permission1, permission2]);
 
       const group = new Group();
       group.name = 'group1';
       group.codeName = 'group1';
       group.permissions = [permission1];
-      await dataSource.getRepository(Group).save(group);
+      await group.save();
 
       user = new User();
       user.groups = [group];
       user.userPermissions = [permission2];
-      await dataSource.getRepository(User).save(user);
+      await user.save();
     });
 
     after(async () => {

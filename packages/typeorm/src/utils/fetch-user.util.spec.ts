@@ -67,7 +67,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
 
       user = new User();
       user.name = 'foobar';
-      await dataSource.getRepository(User).save(user);
+      await user.save();
     });
 
     after(async () => {

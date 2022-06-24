@@ -72,14 +72,14 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission = new Permission();
       permission.name = '';
       permission.codeName = '';
-      await dataSource.getRepository(Permission).save(permission);
+      await permission.save();
       notStrictEqual(permission.id, undefined);
     });
 
     it('should have a "name".', () => {
       const permission = new Permission();
       permission.codeName = '';
-      return dataSource.getRepository(Permission).save(permission)
+      return permission.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -96,7 +96,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission = new Permission();
       permission.name = '';
 
-      await dataSource.getRepository(Permission).save(permission)
+      await permission.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -113,7 +113,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         permission.codeName = 'This is a very long long long long long long line.'
           + 'This is a very long long long long long long line.1';
 
-        await dataSource.getRepository(Permission).save(permission)
+        await permission.save()
           .then(() => fail('The promise should be rejected.'))
           .catch(err => {
             ok(err instanceof QueryFailedError);
@@ -125,12 +125,12 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       }
 
       permission.codeName = 'foo';
-      await dataSource.getRepository(Permission).save(permission);
+      await permission.save();
 
       const permission2 = new Permission();
       permission2.name = '';
       permission2.codeName = 'foo';
-      await dataSource.getRepository(Permission).save(permission2)
+      await permission2.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);

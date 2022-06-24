@@ -77,7 +77,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       group.name = '';
       group.codeName = 'group';
       group.permissions = [];
-      await dataSource.getRepository(Group).save(group);
+      await group.save();
       notStrictEqual(group.id, undefined);
     });
 
@@ -85,7 +85,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const group = new Group();
       group.codeName = 'group';
       group.permissions = [];
-      await dataSource.getRepository(Group).save(group)
+      await group.save()
         .then(() => fail('This promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -101,7 +101,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       if (type !== 'sqlite' && type !== 'better-sqlite3') {
         group.name = 'This is a very long long long long long long long long long long long long line1.';
 
-        await dataSource.getRepository(Group).save(group)
+        await group.save()
           .then(() => fail('This promise should be rejected.'))
           .catch(err => {
             ok(err instanceof QueryFailedError);
@@ -117,7 +117,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const group = new Group();
       group.name = '';
 
-      await dataSource.getRepository(Group).save(group)
+      await group.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -134,7 +134,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         group.codeName = 'This is a very long long long long long long line.'
           + 'This is a very long long long long long long line.1';
 
-        await dataSource.getRepository(Group).save(group)
+        await group.save()
           .then(() => fail('The promise should be rejected.'))
           .catch(err => {
             ok(err instanceof QueryFailedError);
@@ -146,12 +146,12 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 
       }
       group.codeName = 'foo';
-      await dataSource.getRepository(Group).save(group);
+      await group.save();
 
       const group2 = new Group();
       group2.name = '';
       group2.codeName = 'foo';
-      await dataSource.getRepository(Group).save(group2)
+      await group2.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -168,7 +168,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission = new Permission();
       permission.name = 'permission1';
       permission.codeName = '';
-      await dataSource.getRepository(Permission).save(permission);
+      await permission.save();
 
       const group = new Group();
       group.name = 'group1';
@@ -177,9 +177,9 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         permission
       ];
 
-      await dataSource.getRepository(Group).save(group);
+      await group.save();
 
-      const group2 = await dataSource.getRepository(Group).findOne({
+      const group2 = await Group.findOne({
         where: { id: group.id },
         relations: {
           permissions: true
