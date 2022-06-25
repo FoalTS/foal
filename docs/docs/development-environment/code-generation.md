@@ -112,6 +112,48 @@ src/
    '- index.ts
 ```
 
+## Create REST API
+
+```shell
+foal g rest-api <name>
+```
+
+Create a new controller and a new entity to build a basic REST API. Depending on which directories are found, they will be generated in `src/app/{entities}|{controllers}/` or in `{entities}|{controllers}/`.
+
+*Example*
+```shell
+foal g rest-api order
+foal g rest-api api/product
+```
+
+*Output*
+```
+src/
+ '- app/
+  |- controllers/
+  | |- api/
+  | | |- product.controller.ts
+  | | '- index.ts
+  | |- order.controller.ts
+  | '- index.ts
+  '- entities/
+    |- index.entity.ts
+    |- order.entity.ts
+    '- index.ts
+```
+
+### The `--register` flag
+
+If you wish to automatically create a new route attached to this controller, you can use the `--register` flag to do so (see [create-a-controller](#create-a-controller)).
+
+*Example*
+```shell
+foal g controller api --register
+foal g controller api/product --register
+```
+
+See the page [REST Blueprints](../api-section/rest-blueprints.md) for more details.
+
 ## Create a hook
 
 ```shell

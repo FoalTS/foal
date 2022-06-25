@@ -136,5 +136,6 @@ If you use sessions with `@UseSessions`, you must use the `MongoDBStore` from `@
 ## Limitations
 
 When using MongoDB, there are some features that are not available:
-- the *Groups & Permissions* system.
+- the `foal g rest-api <name>` command,
+- and the *Groups & Permissions* system.
 

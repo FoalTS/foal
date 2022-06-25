@@ -216,4 +216,5 @@ You're now ready to use it in your hooks.
 ## Limitations
 
 When using another ORM than TypeORM some features, are not available:
-- the *Groups & Permissions* system.
+- the *Groups & Permissions* system,
+- and the `foal g rest-api` command.
