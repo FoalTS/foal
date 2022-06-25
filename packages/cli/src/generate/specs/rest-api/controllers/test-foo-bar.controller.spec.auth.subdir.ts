@@ -415,7 +415,7 @@ describe('TestFooBarController', () => {
 
       const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
-      strictEqual(testFooBar, undefined);
+      strictEqual(testFooBar, null);
     });
 
     it('should not delete the other testFooBars.', async () => {

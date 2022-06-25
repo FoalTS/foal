@@ -415,7 +415,7 @@ describe('/* upperFirstCamelName */Controller', () => {
 
       const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */2.id });
 
-      strictEqual(/* camelName */, undefined);
+      strictEqual(/* camelName */, null);
     });
 
     it('should not delete the other /* camelName */s.', async () => {
