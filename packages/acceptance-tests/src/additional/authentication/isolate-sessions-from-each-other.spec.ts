@@ -14,11 +14,10 @@ import {
   HttpResponseNoContent,
   HttpResponseOK,
   Post,
-  ServiceManager,
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should be isolated from each other.', () => {
@@ -75,6 +74,11 @@ describe('Sessions should be isolated from each other.', () => {
       return new HttpResponseNoContent();
     }
 
+    async init() {
+      dataSource = await createTestDataSource([ DatabaseSession ]);
+      await dataSource.initialize();
+    }
+
   }
 
   let app: any;
@@ -82,14 +86,7 @@ describe('Sessions should be isolated from each other.', () => {
   let token2: string;
 
   before(async () => {
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
-
-    const serviceManager = new ServiceManager();
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataStore(dataSource);
-
-    app = await createApp(AppController, { serviceManager });
+    app = await createApp(AppController);
   });
 
   it('Step 1: Create two sessions.', async () => {

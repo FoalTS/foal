@@ -18,7 +18,7 @@ import {
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Saving and reading content', () => {
@@ -64,16 +64,17 @@ describe('Feature: Saving and reading content', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-    }
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
+      async init() {
+        dataSource = await createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
+    }
 
     const services = new ServiceManager();
 
     const app = await createApp(AppController, { serviceManager: services });
     const store = services.get(Store);
-    store.setDataSource(dataSource);
 
     const session = await createSession(store);
     await session.commit();
@@ -104,6 +105,11 @@ describe('Feature: Saving and reading content', () => {
     @UseSessions({ required: true })
     class AppController implements IAppController {
 
+      async init() {
+        dataSource = await createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
+
       @Post('/add-flash-content')
       addFlashContent(ctx: Context) {
         /* ======================= DOCUMENTATION BEGIN ======================= */
@@ -121,14 +127,9 @@ describe('Feature: Saving and reading content', () => {
       }
     }
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
-
     const services = new ServiceManager();
-
     const app = await createApp(AppController, { serviceManager: services });
-    const store = services.get(TypeORMStore);
-    store.setDataSource(dataSource);
+    const store = services.get(Store);
 
     const session = await createSession(store);
     await session.commit();

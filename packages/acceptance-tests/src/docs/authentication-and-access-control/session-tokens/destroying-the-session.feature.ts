@@ -18,9 +18,10 @@ import {
   Post,
   readSession,
   ServiceManager,
+  Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Destroying the session', () => {
@@ -62,16 +63,15 @@ describe('Feature: Destroying the session', () => {
         controller('', AuthController),
       ];
 
+      async init() {
+        dataSource = await createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
     }
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
-
-    const serviceManager = new ServiceManager();
-
-    const app = await createApp(AppController, { serviceManager });
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataSource(dataSource)
+    const services = new ServiceManager();
+    const app = await createApp(AppController, { serviceManager: services });
+    const store = services.get(Store);
 
     const session = await createSession(store);
     await session.commit();

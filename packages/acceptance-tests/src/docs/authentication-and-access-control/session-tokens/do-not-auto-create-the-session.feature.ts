@@ -16,11 +16,10 @@ import {
   HttpResponseOK,
   IAppController,
   Post,
-  ServiceManager,
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Do not Auto-Create the Session when using sessions with cookies', async () => {
@@ -71,16 +70,14 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
       subControllers = [
         controller('/api', ApiController),
       ];
+
+      async init() {
+        dataSource = await createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
     }
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
-
-    const serviceManager = new ServiceManager();
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataSource(dataSource);
-
-    const app = await createApp(AppController, { serviceManager });
+    const app = await createApp(AppController);
 
     strictEqual(alreadyExists, true);
 

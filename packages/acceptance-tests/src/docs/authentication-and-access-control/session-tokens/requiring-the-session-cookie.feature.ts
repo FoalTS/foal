@@ -4,9 +4,9 @@ import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
-  Config, controller, createApp, Get, HttpResponseOK, IAppController, ServiceManager, UseSessions
+  Config, controller, createApp, Get, HttpResponseOK, IAppController, UseSessions
 } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Requiring the session cookie', async () => {
@@ -45,16 +45,13 @@ describe('Feature: Requiring the session cookie', async () => {
         controller('/api', ApiController),
       ];
 
+      async init() {
+        dataSource = await createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
     }
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
-
-    const serviceManager = new ServiceManager();
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataSource(dataSource);
-
-    const app = await createApp(AppController, { serviceManager });
+    const app = await createApp(AppController);
 
     await request(app)
       .get('/api/products')

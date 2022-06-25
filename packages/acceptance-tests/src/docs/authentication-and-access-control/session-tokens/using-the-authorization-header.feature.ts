@@ -17,12 +17,11 @@ import {
   HttpResponseOK,
   IAppController,
   Post,
-  ServiceManager,
   Session,
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Using the Authorization header', () => {
@@ -83,16 +82,14 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
+
+      async init() {
+        dataSource = createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
     }
 
-    dataSource = createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
-
-    const serviceManager = new ServiceManager();
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataSource(dataSource);
-
-    const app = await createApp(AppController, { serviceManager });
+    const app = await createApp(AppController);
 
     strictEqual(session, null);
 
@@ -169,17 +166,14 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
+
+      async init() {
+        dataSource = createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
     }
 
-    // remplacer ça par fonction setUpDataSourceAndStore?
-    dataSource = createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
-
-    const serviceManager = new ServiceManager();
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataSource(dataSource);
-
-    const app = await createApp(AppController, { serviceManager });
+    const app = await createApp(AppController);
 
     strictEqual(session, null);
 

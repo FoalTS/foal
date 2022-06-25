@@ -9,9 +9,9 @@ import * as request from 'supertest';
 import {
   Config, Context, controller, createApp, createSession,
   dependency, Get, Hook, HttpResponseForbidden, HttpResponseOK,
-  HttpResponseUnauthorized, IAppController, Post, ServiceManager, Store, UseSessions
+  HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
-import { DatabaseSession, fetchUser, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession, fetchUser } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with administrators', () => {
@@ -79,6 +79,11 @@ describe('Feature: Controlling access with administrators', () => {
         controller('/api', ApiController)
       ];
 
+      async init() {
+        dataSource = createTestDataSource([ User, DatabaseSession ]);
+        await dataSource.initialize();
+      }
+
       @Post('/login-as-user')
       async loginAsUser(ctx: Context) {
         const user = await User.findOneByOrFail({ isAdmin: false });
@@ -100,14 +105,7 @@ describe('Feature: Controlling access with administrators', () => {
       }
     }
 
-    dataSource = createTestDataSource([ User, DatabaseSession ]);
-    await dataSource.initialize();
-
-    const serviceManager = new ServiceManager();
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataSource(dataSource);
-
-    const app = await createApp(AppController, { serviceManager });
+    const app = await createApp(AppController);
 
     const user = new User();
     user.isAdmin = false;

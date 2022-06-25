@@ -15,11 +15,10 @@ import {
   Get,
   HttpResponseOK,
   IAppController,
-  ServiceManager,
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Regenerating the session ID', () => {
@@ -61,16 +60,14 @@ describe('Feature: Regenerating the session ID', () => {
         return new HttpResponseOK({ token: ctx.session!.getToken() });
       }
 
+      async init() {
+        dataSource = await createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
+
     }
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
-
-    const serviceManager = new ServiceManager();
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataSource(dataSource);
-
-    const app = await createApp(AppController, { serviceManager });
+    const app = await createApp(AppController);
 
     let token = '';
 

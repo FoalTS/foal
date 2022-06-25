@@ -79,18 +79,17 @@ describe('Feature: Using cookies', () => {
         controller('/api', ApiController),
       ];
 
+      async init() {
+        dataSource = await createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
     }
 
     const cookieName = 'sessionID';
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
+    const services = new ServiceManager();
 
-    const serviceManager = new ServiceManager();
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataSource(dataSource);
-
-    const app = await createApp(AppController, { serviceManager });
+    const app = await createApp(AppController, { serviceManager: services });
 
     strictEqual(session, null);
 

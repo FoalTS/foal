@@ -16,8 +16,5 @@ export async function main({ token }: { token: string }) {
   const dataSource = createDataSource();
   await dataSource.initialize();
 
-  const store = createService(TypeORMStore);
-  store.setDataSource(dataSource);
-
-  await store.destroy(token);
+  await createService(TypeORMStore).destroy(token);
 }

@@ -4,21 +4,13 @@ import 'source-map-support/register';
 import * as http from 'http';
 
 // 3p
-import { Config, createApp, displayServerURL, ServiceManager } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
+import { Config, createApp, displayServerURL } from '@foal/core';
 
 // App
 import { AppController } from './app/app.controller';
-import { appDataSource } from './app/data-source';
 
 async function main() {
-  await appDataSource.initialize();
-
-  const serviceManager = new ServiceManager();
-  const store = serviceManager.get(TypeORMStore);
-  store.setDataSource(appDataSource);
-
-  const app = await createApp(AppController, { serviceManager });
+  const app = await createApp(AppController);
 
   const httpServer = http.createServer(app);
   const port = Config.get('port', 'number', 3001);

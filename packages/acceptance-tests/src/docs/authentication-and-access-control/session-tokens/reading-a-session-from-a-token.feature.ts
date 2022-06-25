@@ -7,11 +7,12 @@ import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 // FoalTS
 import {
   Config,
+  createService,
   createSession,
   readSession,
-  ServiceManager,
+  Store,
 } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Reading a session from a token', () => {
@@ -30,13 +31,7 @@ describe('Feature: Reading a session from a token', () => {
   });
 
   it('Example: Simple example.', async () => {
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize()
-
-    const serviceManager = new ServiceManager();
-
-    const store = serviceManager.get(TypeORMStore);
-    store.setDataSource(dataSource);
+    const store = createService(Store);
 
     async function getFoo(token: string): Promise<any> {
       /* ======================= DOCUMENTATION BEGIN ======================= */
@@ -51,6 +46,9 @@ describe('Feature: Reading a session from a token', () => {
 
       return foo;
     }
+
+    dataSource = await createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize()
 
     const session = await createSession(store);
     session.set('foo', 'bar');
