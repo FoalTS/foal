@@ -7,12 +7,12 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Config, Context, controller, createApp, createSession,
+  Config, Context, controller, createSession,
   dependency, Get, Hook, HttpResponseForbidden, HttpResponseOK,
   HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with static roles', () => {
 
@@ -79,11 +79,6 @@ describe('Feature: Controlling access with static roles', () => {
         controller('/api', ApiController)
       ];
 
-      async init() {
-        dataSource = createTestDataSource([ User, DatabaseSession ]);
-        await dataSource.initialize();
-      }
-
       @Post('/login-as-user')
       async loginAsUser(ctx: Context) {
         const user = await User.findOneByOrFail({ roles: 'user' });
@@ -105,7 +100,9 @@ describe('Feature: Controlling access with static roles', () => {
       }
     }
 
-    const app = await createApp(AppController);
+    let app: any;
+
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession ]));
 
     const user = new User();
     user.roles = [ 'user' ];

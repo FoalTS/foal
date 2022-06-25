@@ -3,10 +3,10 @@ import * as request from 'supertest';
 import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
-import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';
+import { Context, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
 import { IsNumber, IsString } from '@foal/typestack/node_modules/class-validator';
-import { createTestDataSource } from '../common';
+import { createAppAndSetUpDB } from '../common';
 
 describe('ValidateBody hook', () => {
 
@@ -25,11 +25,7 @@ describe('ValidateBody hook', () => {
   }
 
   let dataSource: DataSource;
-
-  before(async () => {
-    dataSource = createTestDataSource([ Product ]);
-    await dataSource.initialize();
-  });
+  let app: any;
 
   after(async () => {
     if (dataSource) {
@@ -48,7 +44,7 @@ describe('ValidateBody hook', () => {
       }
     }
 
-    const app = await createApp(AppController);
+    ({ app, dataSource} = await createAppAndSetUpDB(AppController, [ Product ]));
 
     await request(app)
       .post('/products')

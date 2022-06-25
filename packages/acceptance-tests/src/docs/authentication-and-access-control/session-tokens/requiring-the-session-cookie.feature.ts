@@ -4,10 +4,10 @@ import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
-  Config, controller, createApp, Get, HttpResponseOK, IAppController, UseSessions
+  Config, controller, Get, HttpResponseOK, IAppController, UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Requiring the session cookie', async () => {
 
@@ -44,14 +44,10 @@ describe('Feature: Requiring the session cookie', async () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = await createTestDataSource([ DatabaseSession ]);
-        await dataSource.initialize();
-      }
     }
 
-    const app = await createApp(AppController);
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
 
     await request(app)
       .get('/api/products')

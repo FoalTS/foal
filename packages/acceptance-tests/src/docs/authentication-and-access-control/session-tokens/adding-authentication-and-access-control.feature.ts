@@ -10,7 +10,6 @@ import {
   Config,
   Context,
   controller,
-  createApp,
   createSession,
   dependency,
   Get,
@@ -23,7 +22,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAppAndSetUpDB, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
 
@@ -97,14 +96,11 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = await createTestDataSource([ DatabaseSession, User ]);
-        await dataSource.initialize();
-      }
     }
 
-    const app = await createApp(AppController);
+    let app: any;
+
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession ]));
 
     const user2 = new User();
     await user2.save();
@@ -171,17 +167,12 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = await createTestDataSource([ DatabaseSession, User ]);
-        await dataSource.initialize();
-      }
-
     }
 
     const services = new ServiceManager();
 
-    const app = await createApp(AppController, { serviceManager: services });
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession ], { serviceManager: services }));
 
     const user = new User();
     await user.save();
@@ -238,17 +229,12 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = await createTestDataSource([ DatabaseSession, User ]);
-        await dataSource.initialize();
-      }
-
     }
 
     const services = new ServiceManager();
 
-    const app = await createApp(AppController, { serviceManager: services });
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession ], { serviceManager: services }));
 
     const user = new User();
     await user.save();
@@ -334,17 +320,12 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = await createTestDataSource([ DatabaseSession, User, Product ]);
-        await dataSource.initialize();
-      }
-
     }
 
     const services = new ServiceManager();
 
-    const app = await createApp(AppController, { serviceManager: services });
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession, Product ], { serviceManager: services }))
 
     const user = new User();
     user.email = 'foo@foalts.org';

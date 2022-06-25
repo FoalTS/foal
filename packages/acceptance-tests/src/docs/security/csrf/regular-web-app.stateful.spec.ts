@@ -10,7 +10,6 @@ import {
   Config,
   Context,
   controller,
-  createApp,
   createSession,
   dependency,
   Get,
@@ -23,7 +22,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
-import { createFixtureUser, createTestDataSource, credentialsSchema, readCookie, User } from '../../../common';
+import { createFixtureUser, createAppAndSetUpDB, credentialsSchema, readCookie, User } from '../../../common';
 
 describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
 
@@ -128,13 +127,10 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     Config.set('settings.session.csrf.enabled', true);
     Config.set('settings.session.csrf.cookie.name', csrfCookieName);
 
-    dataSource = createTestDataSource([ User, DatabaseSession ]);
-    await dataSource.initialize();
+    ({ app, dataSource }  = await createAppAndSetUpDB(AppController, [ User, DatabaseSession ]));
 
     user = await createFixtureUser(1);
     await user.save();
-
-    app = await createApp(AppController);
   });
 
   after(async () => {

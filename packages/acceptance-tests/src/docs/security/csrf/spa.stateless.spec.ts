@@ -11,7 +11,6 @@ import {
   Config,
   Context,
   controller,
-  createApp,
   HttpResponseCreated,
   HttpResponseNoContent,
   HttpResponseUnauthorized,
@@ -20,7 +19,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, setAuthCookie } from '@foal/jwt';
-import { createFixtureUser, createTestDataSource, credentialsSchema, readCookie, User } from '../../../common';
+import { createAppAndSetUpDB, createFixtureUser, credentialsSchema, readCookie, User } from '../../../common';
 
 describe('Feature: Stateless CSRF protection in a Single-Page Application', () => {
 
@@ -96,13 +95,10 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.set('settings.jwt.csrf.enabled', true);
     Config.set('settings.jwt.csrf.cookie.name', csrfCookieName);
 
-    dataSource = createTestDataSource([ User ]);
-    await dataSource.initialize();
+    ({ app, dataSource }  = await createAppAndSetUpDB(AppController, [ User ]));
 
     user = await createFixtureUser(1);
     await user.save();
-
-    app = await createApp(AppController);
   });
 
   after(async () => {

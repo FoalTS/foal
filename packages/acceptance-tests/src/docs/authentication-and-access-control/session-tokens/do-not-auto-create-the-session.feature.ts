@@ -10,7 +10,6 @@ import {
   Config,
   Context,
   controller,
-  createApp,
   createSession,
   dependency,
   HttpResponseOK,
@@ -20,7 +19,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Do not Auto-Create the Session when using sessions with cookies', async () => {
 
@@ -70,14 +69,11 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = await createTestDataSource([ DatabaseSession ]);
-        await dataSource.initialize();
-      }
     }
 
-    const app = await createApp(AppController);
+
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
 
     strictEqual(alreadyExists, true);
 

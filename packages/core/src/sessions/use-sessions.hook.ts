@@ -37,6 +37,34 @@ export interface UseSessionOptions {
   userCookie?: (ctx: Context, services: ServiceManager) => string|Promise<string>;
 }
 
+class SessionError extends Error {}
+
+function getSessionIDFromRequest(ctx: Context, location: 'token-in-header'|'token-in-cookie', required: boolean): string|undefined {
+  let token: string|undefined;
+
+  switch (location) {
+    case 'token-in-header':
+      const headerContent = ctx.request.get('Authorization');
+      if (!headerContent && required) {
+        throw new SessionError('Authorization header not found.');
+      }
+      token = headerContent?.split('Bearer ')[1] as string|undefined;
+      if (!token) {
+        throw new SessionError('Expected a bearer token. Scheme is Authorization: Bearer <token>.');
+      }
+      return token;
+    case 'token-in-cookie':
+      const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
+      token = ctx.request.cookies[cookieName];
+      if (!token && required) {
+        throw new SessionError('Session cookie not found.');
+      }
+      return token;
+    default:
+      throw new Error('Invalid location');
+  }
+}
+
 export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
   function badRequestOrRedirect(description: string): HttpResponse {
@@ -83,42 +111,22 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     /* Validate the request */
 
-    let sessionID: string;
+    let sessionID: string|undefined;
 
-    if (options.cookie) {
-      const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
-      const content = ctx.request.cookies[cookieName] as string|undefined;
-
-      if (!content) {
-        if (!options.required) {
-          if (options.create ?? true) {
-            ctx.session = await createSession(store);
-          }
-          return postFunction;
-        }
-        return badRequestOrRedirect('Session cookie not found.');
+    try {
+      sessionID = getSessionIDFromRequest(ctx, options.cookie ? 'token-in-cookie' : 'token-in-header', !!options.required);
+    } catch (error) {
+      if (error instanceof SessionError) {
+        return badRequestOrRedirect(error.message);
       }
+      throw error;
+    }
 
-      sessionID = content;
-    } else {
-      const authorizationHeader = ctx.request.get('Authorization') || '';
-
-      if (!authorizationHeader) {
-        if (!options.required) {
-          if (options.create) {
-            ctx.session = await createSession(store);
-          }
-          return postFunction;
-        }
-        return badRequestOrRedirect('Authorization header not found.');
+    if (!sessionID) {
+      if (options.create ?? options.cookie) {
+        ctx.session = await createSession(store);
       }
-
-      const content = authorizationHeader.split('Bearer ')[1] as string|undefined;
-      if (!content) {
-        return badRequestOrRedirect('Expected a bearer token. Scheme is Authorization: Bearer <token>.');
-      }
-
-      sessionID = content;
+      return postFunction;
     }
 
     /* Verify the session ID */

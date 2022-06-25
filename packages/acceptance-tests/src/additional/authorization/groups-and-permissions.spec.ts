@@ -4,7 +4,6 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  createApp,
   createService,
   createSession,
   Get,
@@ -20,7 +19,7 @@ import {
   TypeORMStore,
   UserWithPermissions
 } from '@foal/typeorm';
-import { createTestDataSource } from '../../common';
+import { createAppAndSetUpDB } from '../../common';
 
 describe('[Authorization|permissions] Users', () => {
 
@@ -49,8 +48,7 @@ describe('[Authorization|permissions] Users', () => {
   let dataSource: DataSource;
 
   before(async () => {
-    dataSource = createTestDataSource([ User, Permission, Group, DatabaseSession ]);
-    await dataSource.initialize();
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, Permission, Group, DatabaseSession ]));
 
     const user1 = new User();
     const user2 = new User();
@@ -82,8 +80,6 @@ describe('[Authorization|permissions] Users', () => {
     session2.setUser(user1);
     await session2.commit();
     tokenUser2 = session2.getToken();
-
-    app = await createApp(AppController);
   });
 
   after(async () => {

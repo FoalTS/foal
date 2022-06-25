@@ -11,7 +11,6 @@ import {
   Config,
   Context,
   controller,
-  createApp,
   createSession,
   HttpResponseNoContent,
   IAppController,
@@ -22,7 +21,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Destroying the session', () => {
 
@@ -62,15 +61,13 @@ describe('Feature: Destroying the session', () => {
       subControllers = [
         controller('', AuthController),
       ];
-
-      async init() {
-        dataSource = await createTestDataSource([ DatabaseSession ]);
-        await dataSource.initialize();
-      }
     }
 
     const services = new ServiceManager();
-    const app = await createApp(AppController, { serviceManager: services });
+
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ], { serviceManager: services }));
+
     const store = services.get(Store);
 
     const session = await createSession(store);

@@ -10,7 +10,6 @@ import {
   Config,
   Context,
   controller,
-  createApp,
   createSession,
   dependency,
   Get,
@@ -22,7 +21,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Using the Authorization header', () => {
 
@@ -82,14 +81,10 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = createTestDataSource([ DatabaseSession ]);
-        await dataSource.initialize();
-      }
     }
 
-    const app = await createApp(AppController);
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
 
     strictEqual(session, null);
 
@@ -166,14 +161,10 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = createTestDataSource([ DatabaseSession ]);
-        await dataSource.initialize();
-      }
     }
 
-    const app = await createApp(AppController);
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
 
     strictEqual(session, null);
 

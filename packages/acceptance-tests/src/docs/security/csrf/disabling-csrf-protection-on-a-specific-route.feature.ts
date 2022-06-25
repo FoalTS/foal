@@ -6,10 +6,9 @@ import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
-import { Config, controller, createApp, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
+import { Config, controller, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
-
+import { createAppAndSetUpDB, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Disabling CSRF protection on a specific route.', () => {
 
@@ -55,11 +54,6 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
         controller('/api', ApiController)
       ];
 
-      async init() {
-        dataSource = createTestDataSource([ DatabaseSession ]);
-        await dataSource.initialize();
-      }
-
       @Get('/')
       @UseSessions({ cookie: true })
       index() {
@@ -68,7 +62,9 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
 
     }
 
-    const app = await createApp(AppController);
+    let app: any;
+
+    ({ app, dataSource }  = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
 
     let token = '';
 

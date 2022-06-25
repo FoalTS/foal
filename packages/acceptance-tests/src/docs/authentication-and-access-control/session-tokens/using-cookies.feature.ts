@@ -10,7 +10,6 @@ import {
   Config,
   Context,
   controller,
-  createApp,
   dependency,
   Get,
   HttpResponseOK,
@@ -23,7 +22,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAppAndSetUpDB, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Using cookies', () => {
 
@@ -78,18 +77,14 @@ describe('Feature: Using cookies', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = await createTestDataSource([ DatabaseSession ]);
-        await dataSource.initialize();
-      }
     }
 
     const cookieName = 'sessionID';
 
     const services = new ServiceManager();
 
-    const app = await createApp(AppController, { serviceManager: services });
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ], { serviceManager: services }));
 
     strictEqual(session, null);
 
@@ -137,18 +132,14 @@ describe('Feature: Using cookies', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        dataSource = await createTestDataSource([ DatabaseSession ]);
-        await dataSource.initialize();
-      }
     }
 
     const cookieName = 'sessionID';
 
     const services = new ServiceManager();
 
-    const app = await createApp(AppController, { serviceManager: services });
+    let app: any;
+    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ], { serviceManager: services }));
 
     const response = await request(app)
       .get('/api/products')

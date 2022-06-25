@@ -3,9 +3,9 @@ import * as request from 'supertest';
 import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
-import { Config, Context, createApp, createSession, dependency, Get, Hook, HttpResponseOK, Store, UseSessions } from '@foal/core';
+import { Config, Context, createSession, dependency, Get, Hook, HttpResponseOK, Store, UseSessions } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath } from '../../common';
+import { createAppAndSetUpDB, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should not be saved when an error has been thrown', () => {
 
@@ -72,18 +72,13 @@ describe('Sessions should not be saved when an error has been thrown', () => {
       return new HttpResponseOK(ctx.session?.get('foo') ?? 'null');
     }
 
-    async init() {
-      dataSource = await createTestDataSource([ DatabaseSession ]);
-      await dataSource.initialize();
-    }
-
   }
 
   let app: any;
   let token: string;
 
   beforeEach(async () => {
-    app = await createApp(AppController);
+    ({ app, dataSource }  = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
 
     await request(app)
       .get('/new-session')
