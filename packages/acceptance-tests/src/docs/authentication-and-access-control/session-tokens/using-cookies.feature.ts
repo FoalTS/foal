@@ -22,7 +22,7 @@ import {
   Store,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createTestDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Using cookies', () => {
@@ -138,16 +138,15 @@ describe('Feature: Using cookies', () => {
         controller('/api', ApiController),
       ];
 
+      async init() {
+        dataSource = await createTestDataSource([ DatabaseSession ]);
+        await dataSource.initialize();
+      }
     }
 
     const cookieName = 'sessionID';
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
-
     const services = new ServiceManager();
-    const store = services.get(TypeORMStore);
-    store.setDataSource(dataSource);
 
     const app = await createApp(AppController, { serviceManager: services });
 
