@@ -212,6 +212,7 @@ export {
 export {
   OPENAPI_SERVICE_ID,
   createApp,
+  CreateAppOptions,
 } from './express';
 export {
   Session,
