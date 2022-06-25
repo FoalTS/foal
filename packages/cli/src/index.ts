@@ -19,6 +19,7 @@ import {
   createController,
   createEntity,
   createHook,
+  createRestApi,
   createScript,
   createService,
   createVSCodeConfig,
@@ -105,9 +106,9 @@ Available frameworks:
     }
   });
 
-type GenerateType = 'controller'|'entity'|'hook'|'script'|'service'|'vscode-config';
+type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'script'|'service'|'vscode-config';
 const generateTypes: GenerateType[] = [
-  'controller', 'entity', 'hook', 'script', 'service', 'vscode-config'
+  'controller', 'entity', 'rest-api', 'hook', 'script', 'service', 'vscode-config'
 ];
 
 program
@@ -117,7 +118,12 @@ program
   .description('Generate and/or modify files.')
   .option(
     '-r, --register',
-    'Register the controller into app.controller.ts (only available if type=controller)',
+    'Register the controller into app.controller.ts (only available if type=controller|rest-api)',
+    false
+  )
+  .option(
+    '-a, --auth',
+    'Add an owner to the entities of the generated REST API (only available if type=rest-api)',
     false
   )
   .alias('g')
@@ -125,7 +131,7 @@ program
 Available types:
 ${generateTypes.map(t => `  - ${t}`).join('\n')}
   `)
-  .action(async (type: GenerateType, name: string, options: { register: boolean }) => {
+  .action(async (type: GenerateType, name: string, options: { register: boolean, auth: boolean }) => {
     if (!name && type !== 'vscode-config') {
       displayError(`Argument "name" is required when creating a ${type}. Please provide one.`);
       return;
@@ -137,6 +143,9 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
           break;
         case 'entity':
           createEntity({ name });
+          break;
+        case 'rest-api':
+          createRestApi({ name, register: options.register, auth: options.auth });
           break;
         case 'hook':
           createHook({ name });
