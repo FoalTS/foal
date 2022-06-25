@@ -19,7 +19,7 @@ import {
   TypeORMStore,
   UserWithPermissions
 } from '@foal/typeorm';
-import { createAppAndSetUpDB } from '../../common';
+import { createAppAndSetUpDabaseConnection } from '../../common';
 
 describe('[Authorization|permissions] Users', () => {
 
@@ -45,10 +45,10 @@ describe('[Authorization|permissions] Users', () => {
     }
   }
 
-  let dataSource: DataSource;
+  let closeDatabaseConnection = async () => {};
 
   before(async () => {
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, Permission, Group, DatabaseSession ]));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ User, Permission, Group, DatabaseSession ]));
 
     const user1 = new User();
     const user2 = new User();
@@ -83,9 +83,7 @@ describe('[Authorization|permissions] Users', () => {
   });
 
   after(async () => {
-    if (dataSource) {
-      await dataSource.destroy();
-    }
+    await closeDatabaseConnection();
   });
 
   it('cannot access protected routes if they do not have the permission.', () => {

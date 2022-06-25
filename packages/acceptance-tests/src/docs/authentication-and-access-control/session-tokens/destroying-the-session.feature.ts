@@ -21,11 +21,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Destroying the session', () => {
 
-  let dataSource: DataSource;
+  let closeDatabaseConnection = async () => {};
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -33,9 +33,7 @@ describe('Feature: Destroying the session', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (dataSource) {
-      await dataSource.destroy();
-    }
+    await closeDatabaseConnection();
   });
 
   it('Example: Simple log out', async () => {
@@ -66,7 +64,7 @@ describe('Feature: Destroying the session', () => {
     const services = new ServiceManager();
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ], { serviceManager: services }));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ], { serviceManager: services }));
 
     const store = services.get(Store);
 

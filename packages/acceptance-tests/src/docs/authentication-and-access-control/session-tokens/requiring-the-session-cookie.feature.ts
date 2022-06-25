@@ -7,11 +7,11 @@ import {
   Config, controller, Get, HttpResponseOK, IAppController, UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Requiring the session cookie', async () => {
 
-  let dataSource: DataSource;
+  let closeDatabaseConnection = async () => {};
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -19,9 +19,7 @@ describe('Feature: Requiring the session cookie', async () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (dataSource) {
-      await dataSource.destroy();
-    }
+    await closeDatabaseConnection();
   });
 
   it('Example: Simple example.', async () => {
@@ -47,7 +45,7 @@ describe('Feature: Requiring the session cookie', async () => {
     }
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ]));
 
     await request(app)
       .get('/api/products')

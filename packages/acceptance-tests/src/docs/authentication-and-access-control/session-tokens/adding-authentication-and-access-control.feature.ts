@@ -22,11 +22,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createAppAndSetUpDB, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAppAndSetUpDabaseConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
 
-  let dataSource: DataSource;
+  let closeDatabaseConnection = async () => {};
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -34,9 +34,7 @@ describe('Feature: Adding authentication and access control', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (dataSource) {
-      await dataSource.destroy();
-    }
+    await closeDatabaseConnection();
   });
 
   it('Example: Simple authentication', async () => {
@@ -100,7 +98,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     let app: any;
 
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession ]));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ User, DatabaseSession ]));
 
     const user2 = new User();
     await user2.save();
@@ -172,7 +170,7 @@ describe('Feature: Adding authentication and access control', () => {
     const services = new ServiceManager();
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession ], { serviceManager: services }));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ User, DatabaseSession ], { serviceManager: services }));
 
     const user = new User();
     await user.save();
@@ -234,7 +232,7 @@ describe('Feature: Adding authentication and access control', () => {
     const services = new ServiceManager();
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession ], { serviceManager: services }));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ User, DatabaseSession ], { serviceManager: services }));
 
     const user = new User();
     await user.save();
@@ -325,7 +323,7 @@ describe('Feature: Adding authentication and access control', () => {
     const services = new ServiceManager();
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession, Product ], { serviceManager: services }))
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ User, DatabaseSession, Product ], { serviceManager: services }))
 
     const user = new User();
     user.email = 'foo@foalts.org';

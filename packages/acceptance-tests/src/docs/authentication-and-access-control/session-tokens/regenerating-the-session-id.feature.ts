@@ -18,11 +18,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Regenerating the session ID', () => {
-
-  let dataSource: DataSource;
+  
+  let closeDatabaseConnection = async () => {};
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -30,9 +30,7 @@ describe('Feature: Regenerating the session ID', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (dataSource) {
-      await dataSource.destroy();
-    }
+    await closeDatabaseConnection();
   });
 
   it('Example: Simple Example.', async () => {
@@ -61,7 +59,7 @@ describe('Feature: Regenerating the session ID', () => {
     }
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ]));
 
     let token = '';
 

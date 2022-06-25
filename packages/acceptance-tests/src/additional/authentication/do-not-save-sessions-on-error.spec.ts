@@ -5,7 +5,7 @@ import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 // FoalTS
 import { Config, Context, createSession, dependency, Get, Hook, HttpResponseOK, Store, UseSessions } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDB, getTypeORMStorePath } from '../../common';
+import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should not be saved when an error has been thrown', () => {
 
@@ -78,7 +78,7 @@ describe('Sessions should not be saved when an error has been thrown', () => {
   let token: string;
 
   beforeEach(async () => {
-    ({ app, dataSource }  = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
+    ({ app, dataSource }  = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ]));
 
     await request(app)
       .get('/new-session')

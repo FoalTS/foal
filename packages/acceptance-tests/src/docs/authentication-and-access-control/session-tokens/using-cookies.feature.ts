@@ -22,11 +22,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDB, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAppAndSetUpDabaseConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Using cookies', () => {
 
-  let dataSource: DataSource;
+  let closeDatabaseConnection = async () => {};
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -34,9 +34,7 @@ describe('Feature: Using cookies', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (dataSource) {
-      await dataSource.destroy();
-    }
+    await closeDatabaseConnection();
   });
 
   it('Example: Simple usage with cookies', async () => {
@@ -84,7 +82,7 @@ describe('Feature: Using cookies', () => {
     const services = new ServiceManager();
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ], { serviceManager: services }));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ], { serviceManager: services }));
 
     strictEqual(session, null);
 
@@ -139,7 +137,7 @@ describe('Feature: Using cookies', () => {
     const services = new ServiceManager();
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ], { serviceManager: services }));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ], { serviceManager: services }));
 
     const response = await request(app)
       .get('/api/products')

@@ -19,11 +19,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Do not Auto-Create the Session when using sessions with cookies', async () => {
 
-  let dataSource: DataSource;
+  let closeDatabaseConnection = async () => {};
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -31,9 +31,7 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (dataSource) {
-      await dataSource.destroy();
-    }
+    await closeDatabaseConnection();
   });
 
   it('Example: Simple usage.', async () => {
@@ -73,7 +71,7 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
 
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ]));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ]));
 
     strictEqual(alreadyExists, true);
 

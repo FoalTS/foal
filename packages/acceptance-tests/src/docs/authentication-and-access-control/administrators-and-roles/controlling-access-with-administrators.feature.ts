@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -12,19 +12,17 @@ import {
   HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with administrators', () => {
 
-  let dataSource: DataSource;
+  let closeDatabaseConnection = async () => {};
 
   beforeEach(() => Config.set('settings.session.store', getTypeORMStorePath()));
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (dataSource) {
-      await dataSource.destroy();
-    }
+    await closeDatabaseConnection();
   });
 
   it('Example: A simple access control.', async () => {
@@ -102,7 +100,7 @@ describe('Feature: Controlling access with administrators', () => {
 
     let app: any;
 
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ User, DatabaseSession ]));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ User, DatabaseSession ]));
 
     const user = new User();
     user.isAdmin = false;

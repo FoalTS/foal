@@ -18,11 +18,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDB, getTypeORMStorePath } from '../../../common';
+import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Saving and reading content', () => {
 
-  let dataSource: DataSource;
+  let closeDatabaseConnection = async () => {};
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -30,9 +30,7 @@ describe('Feature: Saving and reading content', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (dataSource) {
-      await dataSource.destroy();
-    }
+    await closeDatabaseConnection();
   });
 
   it('Example: Usage with premium and free plans', async () => {
@@ -68,7 +66,7 @@ describe('Feature: Saving and reading content', () => {
     const services = new ServiceManager();
 
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ], { serviceManager: services }));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ], { serviceManager: services }));
 
     const store = services.get(Store);
 
@@ -119,7 +117,7 @@ describe('Feature: Saving and reading content', () => {
 
     const services = new ServiceManager();
     let app: any;
-    ({ app, dataSource } = await createAppAndSetUpDB(AppController, [ DatabaseSession ], { serviceManager: services }));
+    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ], { serviceManager: services }));
 
     const store = services.get(Store);
 
