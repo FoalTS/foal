@@ -10,7 +10,7 @@ describe('Feature: Forwarding data betweens hooks', () => {
 
     class Org {
 
-      static async findOneOrFail(orgId: number) {
+      static async findOneByOrFail({ id }: { id: number }) {
         return new Org('Hello!');
       }
 
@@ -23,7 +23,7 @@ describe('Feature: Forwarding data betweens hooks', () => {
     function AddOrgToContext() {
       return Hook(async ctx => {
         if (ctx.user) {
-          ctx.state.org = await Org.findOneOrFail(ctx.user.orgId);
+          ctx.state.org = await Org.findOneByOrFail({ id: ctx.user.orgId });
         }
       });
     }

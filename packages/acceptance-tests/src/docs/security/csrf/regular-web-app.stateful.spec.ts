@@ -44,7 +44,7 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
       store: TypeORMStore,
     })
     async login(ctx: Context) {
-      const user = await User.findOne({ email: ctx.request.body.email });
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseRedirect('/login');

@@ -81,7 +81,7 @@ describe('Feature: Controlling access with administrators', () => {
 
       @Post('/login-as-user')
       async loginAsUser(ctx: Context) {
-        const user = await User.findOneOrFail({ isAdmin: false });
+        const user = await User.findOneByOrFail({ isAdmin: false });
 
         ctx.session = await createSession(this.store);
         ctx.session.setUser(user);
@@ -91,7 +91,7 @@ describe('Feature: Controlling access with administrators', () => {
 
       @Post('/login-as-admin')
       async loginAsAdmin(ctx: Context) {
-        const user = await User.findOneOrFail({ isAdmin: true });
+        const user = await User.findOneByOrFail({ isAdmin: true });
 
         ctx.session = await createSession(this.store);
         ctx.session.setUser(user);

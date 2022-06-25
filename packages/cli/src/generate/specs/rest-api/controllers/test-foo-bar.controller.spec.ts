@@ -152,7 +152,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseCreated object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne({ text: 'TestFooBar 3' });
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ text: 'TestFooBar 3' });
 
       if (!testFooBar) {
         throw new Error('No testFooBar 3 was found in the database.');
@@ -188,7 +188,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -211,7 +211,7 @@ describe('TestFooBarController', () => {
       });
       await controller.modifyTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -260,7 +260,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -283,7 +283,7 @@ describe('TestFooBarController', () => {
       });
       await controller.replaceTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -329,7 +329,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar2.id });
 
       strictEqual(testFooBar, undefined);
     });
@@ -346,7 +346,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await getRepository(TestFooBar).findOneBy({ id: testFooBar1.id });
 
       notStrictEqual(testFooBar, undefined);
     });

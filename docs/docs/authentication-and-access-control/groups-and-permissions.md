@@ -152,7 +152,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
   const connection = await createConnection();
   try {
     for (const codeName of args.permissions) {
-      const permission = await Permission.findOne({ codeName });
+      const permission = await Permission.findOneBy({ codeName });
       if (!permission) {
         console.log(
           `No permission with the code name "${codeName}" was found.`
@@ -249,7 +249,7 @@ export async function main(args) {
   await createConnection();
 
   for (const codeName of args.userPermissions as string[]) {
-    const permission = await Permission.findOne({ codeName });
+    const permission = await Permission.findOneBy({ codeName });
     if (!permission) {
       console.log(`No permission with the code name "${codeName}" was found.`);
       return;
@@ -258,7 +258,7 @@ export async function main(args) {
   }
 
   for (const codeName of args.groups as string[]) {
-    const group = await Group.findOne({ codeName });
+    const group = await Group.findOneBy({ codeName });
     if (!group) {
       console.log(`No group with the code name "${codeName}" was found.`);
       return;
@@ -374,7 +374,7 @@ The classes `Permission`, `Group` and `UserWithPermissions` all extends the `Bas
 
 *Example*
 ```typescript
-const perm = await Permission.findOneOrFail({ codeName: 'perm1' });
+const perm = await Permission.findOneByOrFail({ codeName: 'perm1' });
 perm.name = 'Permission1';
 await perm.save();
 ```
