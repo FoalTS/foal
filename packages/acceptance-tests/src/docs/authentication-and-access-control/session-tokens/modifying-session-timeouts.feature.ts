@@ -15,29 +15,30 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';
 
 describe('Feature: Modifying session timeouts', () => {
+
+  let app: any;
+  let shutDownApp: ShutDownApp;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
     Config.set('settings.session.expirationTimeouts.inactivity', 1);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.session.expirationTimeouts.inactivity');
-    return closeTestConnection();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   it('Example: Simple authentication', async () => {
 
     @UseSessions({ required: true })
     class AppController implements IAppController {
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
 
       @Get('/')
       index(ctx: Context) {
@@ -47,7 +48,9 @@ describe('Feature: Modifying session timeouts', () => {
     }
 
     const services = new ServiceManager();
-    const app = await createApp(AppController, { serviceManager: services });
+
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ], { serviceManager: services }));
+
     const store = services.get(Store);
 
     const session = await createSession(store);

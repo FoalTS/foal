@@ -8,11 +8,12 @@ import * as request from 'supertest';
 // FoalTS
 import { Config, controller, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppWithDB, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAppWithDB, getTypeORMStorePath, readCookie, ShutDownApp, writeCookie } from '../../../common';
 
 describe('Feature: Disabling CSRF protection on a specific route.', () => {
 
-  let dataSource: DataSource;
+  let app: any;
+  let shutDownApp: ShutDownApp;
 
   beforeEach(() => {
     Config.set('settings.session.csrf.enabled', true);
@@ -22,8 +23,8 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
   afterEach(async () => {
     Config.remove('settings.session.csrf.enabled');
     Config.remove('settings.session.store');
-    if (dataSource) {
-      await dataSource.destroy();
+    if (shutDownApp) {
+      await shutDownApp();
     }
   });
 
@@ -62,9 +63,7 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
 
     }
 
-    let app: any;
-
-    ({ app, dataSource }  = await createAppWithDB(AppController, [ DatabaseSession ]));
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ]));
 
     let token = '';
 

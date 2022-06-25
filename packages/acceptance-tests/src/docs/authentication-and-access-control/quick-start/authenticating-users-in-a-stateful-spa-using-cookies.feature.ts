@@ -22,11 +22,13 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAppWithDB, getTypeORMStorePath, readCookie, ShutDownApp, writeCookie } from '../../../common';
 
 describe('Feature: Authenticating users in a stateful SPA using cookies', () => {
 
   let app: any;
+  let shutDownApp: ShutDownApp;
+
   let token: string;
   let response: request.Response|undefined;
   const cookieName = 'sessionID';
@@ -120,22 +122,20 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
       controller('/api', ApiController),
     ];
 
-    async init() {
-      await createTestConnection([ User, DatabaseSession ]);
-    }
-
   }
 
   /* ======================= DOCUMENTATION END ========================= */
 
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
-    app = await createApp(AppController);
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User, DatabaseSession ]));
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   function setCookieInBrowser(response: request.Response): void {

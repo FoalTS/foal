@@ -26,11 +26,13 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';
 
 describe('Feature: Authenticating users in a stateful SPA using the `Authorization` header', () => {
 
   let app: any;
+  let shutDownApp: ShutDownApp;
+
   let token: string;
 
   /* ======================= DOCUMENTATION BEGIN ======================= */
@@ -128,23 +130,20 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
       controller('/auth', AuthController),
       controller('/api', ApiController),
     ];
-
-    async init() {
-      await createTestConnection([ User, DatabaseSession ]);
-    }
-
   }
 
   /* ======================= DOCUMENTATION END ========================= */
 
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
-    app = await createApp(AppController);
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User, DatabaseSession ]));
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   function formatBearer(token: string) {

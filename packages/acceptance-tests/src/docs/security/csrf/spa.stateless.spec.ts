@@ -19,7 +19,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, setAuthCookie } from '@foal/jwt';
-import { createAppWithDB, createFixtureUser, credentialsSchema, readCookie, User } from '../../../common';
+import { createAppWithDB, createFixtureUser, credentialsSchema, readCookie, ShutDownApp, User } from '../../../common';
 
 describe('Feature: Stateless CSRF protection in a Single-Page Application', () => {
 
@@ -83,10 +83,11 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
 
   const csrfCookieName = 'Custom-XSRF-Token';
 
-  let dataSource: DataSource;
   let user: User;
 
   let app: any;
+  let shutDownApp: ShutDownApp;
+
   let authToken: string;
   let csrfToken: string;
 
@@ -95,7 +96,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.set('settings.jwt.csrf.enabled', true);
     Config.set('settings.jwt.csrf.cookie.name', csrfCookieName);
 
-    ({ app, dataSource }  = await createAppWithDB(AppController, [ User ]));
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User ]));
 
     user = await createFixtureUser(1);
     await user.save();
@@ -106,7 +107,9 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.remove('settings.jwt.csrf.enabled');
     Config.remove('settings.jwt.csrf.cookie.name');
 
-    await dataSource.destroy();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   it('Step 1: User logs in and gets a CSRF token.', () => {

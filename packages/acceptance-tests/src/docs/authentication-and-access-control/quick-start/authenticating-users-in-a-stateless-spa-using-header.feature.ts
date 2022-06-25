@@ -23,11 +23,13 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired } from '@foal/jwt';
-import { closeTestConnection, createTestConnection } from '../../../common';
+import { createAppWithDB, ShutDownApp } from '../../../common';
 
 describe('Feature: Authenticating users in a stateless SPA using the `Authorization` header', () => {
 
   let app: any;
+  let shutDownApp: ShutDownApp;
+
   let token: string;
 
   /* ======================= DOCUMENTATION BEGIN ======================= */
@@ -120,10 +122,6 @@ describe('Feature: Authenticating users in a stateless SPA using the `Authorizat
       controller('/api', ApiController),
     ];
 
-    async init() {
-      await createTestConnection([ User ]);
-    }
-
   }
 
   /* ======================= DOCUMENTATION END ========================= */
@@ -131,13 +129,15 @@ describe('Feature: Authenticating users in a stateless SPA using the `Authorizat
   before(async () => {
     Config.set('settings.jwt.secret', 'Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=');
     Config.set('settings.jwt.secretEncoding', 'base64');
-    app = await createApp(AppController);
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User ]));
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.jwt.secret');
     Config.remove('settings.jwt.secretEncoding');
-    return closeTestConnection();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   function formatBearer(token: string) {

@@ -22,7 +22,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
-import { createFixtureUser, createAppWithDB, credentialsSchema, readCookie, User } from '../../../common';
+import { createFixtureUser, createAppWithDB, credentialsSchema, readCookie, User, ShutDownApp } from '../../../common';
 
 describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
 
@@ -116,10 +116,11 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
 
   const csrfCookieName = 'Custom-XSRF-Token';
 
-  let dataSource: DataSource;
   let user: User;
 
   let app: any;
+  let shutDownApp: ShutDownApp;
+
   let sessionToken: string;
   let csrfToken: string;
 
@@ -127,7 +128,7 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     Config.set('settings.session.csrf.enabled', true);
     Config.set('settings.session.csrf.cookie.name', csrfCookieName);
 
-    ({ app, dataSource }  = await createAppWithDB(AppController, [ User, DatabaseSession ]));
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User, DatabaseSession ]));
 
     user = await createFixtureUser(1);
     await user.save();
@@ -137,7 +138,9 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     Config.remove('settings.session.csrf.enabled');
     Config.remove('settings.session.csrf.cookie.name');
 
-    await dataSource.destroy();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   it('Step 1: User logs in.', () => {
