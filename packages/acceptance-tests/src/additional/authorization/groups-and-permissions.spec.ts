@@ -19,7 +19,7 @@ import {
   TypeORMStore,
   UserWithPermissions
 } from '@foal/typeorm';
-import { createAppAndSetUpDabaseConnection } from '../../common';
+import { createAppWithDB, ShutDownApp } from '../../common';
 
 describe('[Authorization|permissions] Users', () => {
 
@@ -45,10 +45,10 @@ describe('[Authorization|permissions] Users', () => {
     }
   }
 
-  let closeDatabaseConnection = async () => {};
+  let shutDownApp: ShutDownApp;
 
   before(async () => {
-    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ User, Permission, Group, DatabaseSession ]));
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User, Permission, Group, DatabaseSession ]));
 
     const user1 = new User();
     const user2 = new User();
@@ -83,7 +83,9 @@ describe('[Authorization|permissions] Users', () => {
   });
 
   after(async () => {
-    await closeDatabaseConnection();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   it('cannot access protected routes if they do not have the permission.', () => {

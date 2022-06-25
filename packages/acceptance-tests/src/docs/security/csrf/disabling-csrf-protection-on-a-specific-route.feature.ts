@@ -8,7 +8,7 @@ import * as request from 'supertest';
 // FoalTS
 import { Config, controller, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDabaseConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAppWithDB, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Disabling CSRF protection on a specific route.', () => {
 
@@ -64,7 +64,7 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
 
     let app: any;
 
-    ({ app, dataSource }  = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ]));
+    ({ app, dataSource }  = await createAppWithDB(AppController, [ DatabaseSession ]));
 
     let token = '';
 

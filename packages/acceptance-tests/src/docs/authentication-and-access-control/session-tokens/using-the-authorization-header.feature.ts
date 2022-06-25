@@ -21,11 +21,12 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../../common';
+import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';
 
 describe('Feature: Using the Authorization header', () => {
 
-  let closeDatabaseConnection = async () => {};
+  let app: any;
+  let shutDownApp: ShutDownApp;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -33,7 +34,9 @@ describe('Feature: Using the Authorization header', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    await closeDatabaseConnection();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   it('Example: Simple usage with optional bearer tokens', async () => {
@@ -81,8 +84,7 @@ describe('Feature: Using the Authorization header', () => {
       ];
     }
 
-    let app: any;
-    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ]));
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ]));
 
     strictEqual(session, null);
 
@@ -161,8 +163,7 @@ describe('Feature: Using the Authorization header', () => {
       ];
     }
 
-    let app: any;
-    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ]));
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ]));
 
     strictEqual(session, null);
 

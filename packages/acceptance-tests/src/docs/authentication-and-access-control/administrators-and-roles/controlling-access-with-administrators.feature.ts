@@ -12,17 +12,20 @@ import {
   HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../../common';
+import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';
 
 describe('Feature: Controlling access with administrators', () => {
 
-  let closeDatabaseConnection = async () => {};
+  let app: any;
+  let shutDownApp: ShutDownApp;
 
   beforeEach(() => Config.set('settings.session.store', getTypeORMStorePath()));
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    await closeDatabaseConnection();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   it('Example: A simple access control.', async () => {
@@ -98,9 +101,7 @@ describe('Feature: Controlling access with administrators', () => {
       }
     }
 
-    let app: any;
-
-    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ User, DatabaseSession ]));
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User, DatabaseSession ]));
 
     const user = new User();
     user.isAdmin = false;

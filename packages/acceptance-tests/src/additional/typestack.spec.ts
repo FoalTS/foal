@@ -6,7 +6,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Context, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
 import { IsNumber, IsString } from '@foal/typestack/node_modules/class-validator';
-import { createAppAndSetUpDabaseConnection } from '../common';
+import { createAppWithDB, ShutDownApp } from '../common';
 
 describe('ValidateBody hook', () => {
 
@@ -24,11 +24,13 @@ describe('ValidateBody hook', () => {
     price: number;
   }
 
-  let closeDatabaseConnection = async () => {};
   let app: any;
+  let shutDownApp: ShutDownApp;
 
   after(async () => {
-    await closeDatabaseConnection();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   it('should unserialize and validate HTTP request bodies', async () => {
@@ -42,7 +44,7 @@ describe('ValidateBody hook', () => {
       }
     }
 
-    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ Product ]));
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ Product ]));
 
     await request(app)
       .post('/products')

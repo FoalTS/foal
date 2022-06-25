@@ -16,11 +16,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppAndSetUpDabaseConnection, getTypeORMStorePath } from '../../common';
+import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../common';
 
 describe('Sessions should be isolated from each other.', () => {
 
-  let closeDatabaseConnection = async () => {};
+  let shutDownApp: ShutDownApp;
 
   before(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -30,7 +30,9 @@ describe('Sessions should be isolated from each other.', () => {
   after(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.logErrors');
-    await closeDatabaseConnection();
+    if (shutDownApp) {
+      await shutDownApp();
+    }
   });
 
   @UseSessions()
@@ -76,7 +78,7 @@ describe('Sessions should be isolated from each other.', () => {
   let token2: string;
 
   before(async () => {
-    ({ app, closeDatabaseConnection } = await createAppAndSetUpDabaseConnection(AppController, [ DatabaseSession ]));
+    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ]));
   });
 
   it('Step 1: Create two sessions.', async () => {
