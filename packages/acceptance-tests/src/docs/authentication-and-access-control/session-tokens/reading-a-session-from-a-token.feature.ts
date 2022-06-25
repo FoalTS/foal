@@ -47,7 +47,7 @@ describe('Feature: Reading a session from a token', () => {
       return foo;
     }
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
+    dataSource = createTestDataSource([ DatabaseSession ]);
     await dataSource.initialize()
 
     const session = await createSession(store);

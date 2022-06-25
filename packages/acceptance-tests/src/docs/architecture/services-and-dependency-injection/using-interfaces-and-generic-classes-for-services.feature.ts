@@ -69,7 +69,9 @@ describe('Feature: Using interfaces and generic classes for services', () => {
     }
 
     async function main() {
-      dataSource = await createTestDataSource([ Product ]);
+      dataSource = createTestDataSource([ Product ]);
+      await dataSource.initialize();
+
       const productRepository = dataSource.getRepository(Product);
 
       const serviceManager = new ServiceManager()

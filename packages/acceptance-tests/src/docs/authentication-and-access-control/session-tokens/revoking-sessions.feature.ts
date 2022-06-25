@@ -42,7 +42,8 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
+    dataSource = createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
 
     const session = await createSession(store);
     await session.commit();
@@ -71,7 +72,8 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    dataSource = await createTestDataSource([ DatabaseSession ]);
+    dataSource = createTestDataSource([ DatabaseSession ]);
+    await dataSource.initialize();
 
     const session = await createSession(store);
     await session.commit();
