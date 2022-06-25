@@ -191,7 +191,7 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseCreated object.');
       }
 
-      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({
+      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne({
         relations: { owner: true },
         where: { text: '/* upperFirstCamelName */ 3' },
       });
