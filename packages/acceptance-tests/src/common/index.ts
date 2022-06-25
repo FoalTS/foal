@@ -1,3 +1,4 @@
+export * from './create-app-and-set-up-db';
 export * from './create-fixture-user';
 export * from './create-test-data-source';
 export * from './credentials-schema';
