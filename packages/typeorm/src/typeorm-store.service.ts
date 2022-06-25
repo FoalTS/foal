@@ -46,7 +46,7 @@ export class TypeORMStore extends SessionStore {
     this.dataSource = dataSource;
   }
 
-  get repository(): Repository<DatabaseSession> {
+  private get repository(): Repository<DatabaseSession> {
     if (this.dataSource) {
       return this.dataSource.getRepository(DatabaseSession);
     }
