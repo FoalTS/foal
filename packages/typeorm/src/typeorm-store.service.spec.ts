@@ -5,7 +5,7 @@ import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 import { DataSource } from 'typeorm';
 
 // FoalTS
-import { createSession, ServiceManager, SessionAlreadyExists, SessionState } from '@foal/core';
+import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3';
@@ -218,13 +218,10 @@ function storeTestSuite(type: DBType) {
     }
 
     beforeEach(async () => {
+      store = createService(TypeORMStore);
+
       dataSource = createTestDataSource(type);
       await dataSource.initialize();
-
-      const services = new ServiceManager()
-
-      store = services.get(TypeORMStore);
-      store.setDataSource(dataSource);
     });
 
     beforeEach(async () => {
@@ -269,6 +266,30 @@ function storeTestSuite(type: DBType) {
         user_id: state.userId ?? undefined,
       });
     }
+
+    describe('has a "setDataSource" method that', () => {
+
+      it('should override the default data source used by other methods.', async () => {
+        let clearHasBeenCalled = false;
+        const fakeDataSource: any = {
+          getRepository() {
+            return {
+              clear() {
+                clearHasBeenCalled = true;
+              }
+            }
+          }
+        };
+
+        store.setDataSource(fakeDataSource);
+
+        await store.clear();
+
+        strictEqual(clearHasBeenCalled, true);
+      });
+
+    });
+
 
     describe('has a "save" method that', () => {
 

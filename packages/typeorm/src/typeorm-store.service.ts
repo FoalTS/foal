@@ -1,11 +1,11 @@
 // 3p
 import { SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
-import { Column, DataSource, Entity, IsNull, LessThan, Not, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, DataSource, Entity, IsNull, LessThan, Not, PrimaryColumn, Repository } from 'typeorm';
 
 @Entity({
   name: 'sessions'
 })
-export class DatabaseSession {
+export class DatabaseSession extends BaseEntity {
   @PrimaryColumn({ length: 44 })
   id: string;
 
@@ -46,14 +46,20 @@ export class TypeORMStore extends SessionStore {
     this.dataSource = dataSource;
   }
 
+  get repository(): Repository<DatabaseSession> {
+    if (this.dataSource) {
+      return this.dataSource.getRepository(DatabaseSession);
+    }
+    return DatabaseSession.getRepository();
+  }
+
   async save(state: SessionState, maxInactivity: number): Promise<void> {
     if (typeof state.userId === 'string') {
       throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
     }
 
     try {
-      await this.dataSource
-        .getRepository(DatabaseSession)
+      await this.repository
         .createQueryBuilder()
         .insert()
         .values({
@@ -80,7 +86,7 @@ export class TypeORMStore extends SessionStore {
   }
 
   async read(id: string): Promise<SessionState | null> {
-    const session = await this.dataSource.getRepository(DatabaseSession).findOneBy({ id });
+    const session = await this.repository.findOneBy({ id });
     if (!session) {
       return null;
     }
@@ -101,7 +107,7 @@ export class TypeORMStore extends SessionStore {
       throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
     }
 
-    const dbSession = this.dataSource.getRepository(DatabaseSession).create({
+    const dbSession = this.repository.create({
       content: JSON.stringify(state.content),
       created_at: state.createdAt,
       flash: JSON.stringify(state.flash),
@@ -112,22 +118,21 @@ export class TypeORMStore extends SessionStore {
     });
 
     // The "save" method performs an UPSERT.
-    await this.dataSource.getRepository(DatabaseSession).save(dbSession);
+    await this.repository.save(dbSession);
   }
 
   async destroy(sessionID: string): Promise<void> {
-    await this.dataSource.getRepository(DatabaseSession)
+    await this.repository
       .delete({ id: sessionID });
   }
 
   async clear(): Promise<void> {
-    await this.dataSource.getRepository(DatabaseSession)
+    await this.repository
       .clear();
   }
 
   async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
-    await this.dataSource
-      .getRepository(DatabaseSession)
+    await this.repository
       .createQueryBuilder()
       .delete()
       .where([
@@ -138,8 +143,7 @@ export class TypeORMStore extends SessionStore {
   }
 
   async getAuthenticatedUserIds(): Promise<number[]> {
-    const sessions = await this.dataSource
-      .getRepository(DatabaseSession)
+    const sessions = await this.repository
       .createQueryBuilder()
       .select('DISTINCT user_id')
       .where({
@@ -150,25 +154,16 @@ export class TypeORMStore extends SessionStore {
   }
 
   async destroyAllSessionsOf(user: { id: number }): Promise<void> {
-    await this.dataSource.getRepository(DatabaseSession).delete({ user_id: user.id });
+    await this.repository.delete({ user_id: user.id });
   }
 
   async getSessionIDsOf(user: { id: number }): Promise<string[]> {
-    const databaseSessions = await this.dataSource.getRepository(DatabaseSession).find({
+    const databaseSessions = await this.repository.find({
       // Do not select unused fields.
       select: { id: true },
       where: { user_id: user.id },
     });
     return databaseSessions.map(dbSession => dbSession.id);
-  }
-
-  /**
-   * Closes the connection to the database.
-   *
-   * @memberof RedisStore
-   */
-  async close(): Promise<void> {
-    await this.dataSource.close();
   }
 
 }
