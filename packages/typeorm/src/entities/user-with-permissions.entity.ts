@@ -28,26 +28,26 @@ export abstract class UserWithPermissions extends BaseEntity {
    * @returns {Promise<T[]>}
    * @memberof UserWithPermissions
    */
-  static async withPerm<T extends UserWithPermissions>(codeName: string): Promise<T[]> {
+  static async withPerm<T extends UserWithPermissions>(this: (new () => T) & typeof UserWithPermissions, codeName: string): Promise<T[]> {
     const userWithUserPermissionsQb = this
-      .createQueryBuilder('user1')
+      .createQueryBuilder<T>('user1')
       .select('user1.id')
       .innerJoin('user1.userPermissions', 'userPermission')
       .where('userPermission.codeName = :codeName');
 
     const userWithGroupPermissionsQb = this
-      .createQueryBuilder('user2')
+      .createQueryBuilder<T>('user2')
       .select('user2.id')
       .innerJoin('user2.groups', 'group')
       .innerJoin('group.permissions', 'groupPermission')
       .where('groupPermission.codeName = :codeName');
 
     return await this
-      .createQueryBuilder('user')
+      .createQueryBuilder<T>('user')
       .where('user.id IN (' + userWithUserPermissionsQb.getQuery() + ')')
       .orWhere('user.id IN (' + userWithGroupPermissionsQb.getQuery() + ')')
       .setParameters({ codeName })
-      .getMany() as T[];
+      .getMany();
   }
 
   @PrimaryGeneratedColumn()

@@ -108,7 +108,7 @@ function entityTestSuite(type: DBType) {
       });
       await getRepository(DatabaseSession).save(dbSession);
 
-      return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail(id));
+      return doesNotReject(() => getRepository(DatabaseSession).findOneByOrFail({ id }));
     });
 
     it('should have a "content" column which supports long strings.', async () => {
@@ -291,7 +291,7 @@ function storeTestSuite(type: DBType) {
         it('should save the session state in the database.', async () => {
           await store.save(state, maxInactivity);
 
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+          const dbSession = await getRepository(DatabaseSession).findOneByOrFail({ id: state.id });
           deepStrictEqual(convertDbSessionToState(dbSession), state);
         });
 
@@ -365,7 +365,7 @@ function storeTestSuite(type: DBType) {
         it('should save the session state in the database.', async () => {
           await store.update(state, maxInactivity);
 
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+          const dbSession = await getRepository(DatabaseSession).findOneByOrFail({ id: state.id });
           deepStrictEqual(convertDbSessionToState(dbSession), state);
         });
 
@@ -400,14 +400,14 @@ function storeTestSuite(type: DBType) {
         it('should update the session state in the database.', async () => {
           await store.update(updatedState, maxInactivity);
 
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+          const dbSession = await getRepository(DatabaseSession).findOneByOrFail({ id: state.id });
           deepStrictEqual(convertDbSessionToState(dbSession), updatedState);
         });
 
         it('should not update the other session states in the database.', async () => {
           await store.update(updatedState, maxInactivity);
 
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state2.id });
+          const dbSession = await getRepository(DatabaseSession).findOneByOrFail({ id: state2.id });
           deepStrictEqual(convertDbSessionToState(dbSession), state2);
         });
 
@@ -437,13 +437,13 @@ function storeTestSuite(type: DBType) {
         it('should delete the session in the database.', async () => {
           await store.destroy(state.id);
 
-          strictEqual((await getRepository(DatabaseSession).findOne({ id: state.id })), undefined);
+          strictEqual((await getRepository(DatabaseSession).findOneBy({ id: state.id })), null);
         });
 
         it('should not delete the other sessions in the database.', async () => {
           await store.destroy(state.id);
 
-          return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: state2.id }));
+          return doesNotReject(() => getRepository(DatabaseSession).findOneByOrFail({ id: state2.id }));
         });
 
       });
@@ -504,19 +504,19 @@ function storeTestSuite(type: DBType) {
       it('should not remove unexpired sessions.', async () => {
         await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: 'xxx' }));
+        return doesNotReject(() => getRepository(DatabaseSession).findOneByOrFail({ id: 'xxx' }));
       });
 
       it('should remove sessions expired due to inactivity.', async () => {
         await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'yyy' }));
+        return rejects(() => getRepository(DatabaseSession).findOneByOrFail({ id: 'yyy' }));
       });
 
       it('should remove sessions expired due to absolute end of life.', async () => {
         await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'zzz' }));
+        return rejects(() => getRepository(DatabaseSession).findOneByOrFail({ id: 'zzz' }));
       });
 
     });

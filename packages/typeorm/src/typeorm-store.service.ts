@@ -86,7 +86,7 @@ export class TypeORMStore extends SessionStore {
   }
 
   async read(id: string): Promise<SessionState | null> {
-    const session = await this.connection.getRepository(DatabaseSession).findOne({ id });
+    const session = await this.connection.getRepository(DatabaseSession).findOneBy({ id });
     if (!session) {
       return null;
     }
