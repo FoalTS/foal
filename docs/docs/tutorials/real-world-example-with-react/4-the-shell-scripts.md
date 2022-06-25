@@ -19,6 +19,7 @@ import { DataSource } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
+import { createDataSource } from '../app/create-data-source';
 
 export const schema = {
   additionalProperties: false,
@@ -38,7 +39,7 @@ export async function main(args: { email: string, password: string, name?: strin
   user.name = args.name ?? 'Unknown';
   user.avatar = '';
 
-  const dataSource = new DataSource();
+  const dataSource = createDataSource();
   await dataSource.initialize();
 
   try {

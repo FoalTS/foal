@@ -48,7 +48,7 @@ Replace the content of the new created file `src/scripts/create-perm.ts` with th
 ```typescript
 // 3p
 import { Permission } from '@foal/typeorm';
-import { DataSource } from 'typeorm';
+import { createDataSource } from '../app/create-data-source';
 
 export const schema = {
   additionalProperties: false,
@@ -65,7 +65,7 @@ export async function main(args: { codeName: string, name: string }) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  const dataSource = new DataSource();
+  const dataSource = createDataSource();
   await dataSource.initialize();
 
   try {
@@ -131,7 +131,7 @@ Replace the content of the new created file `src/scripts/create-group.ts` with t
 ```typescript
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { DataSource } from 'typeorm';
+import { createDataSource } from '../app/create-data-source';
 
 export const schema = {
   additionalProperties: false,
@@ -150,7 +150,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  const dataSource = new DataSource();
+  const dataSource = createDataSource();
   await dataSource.initialize();
 
   try {
@@ -225,10 +225,10 @@ Replace the content of the new created file `src/scripts/create-user.ts` with th
 // 3p
 import { hashPassword } from '@foal/core';
 import { Group, Permission } from '@foal/typeorm';
-import { DataSource } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
+import { createDataSource } from '../app/create-data-source';
 
 export const schema = {
   additionalProperties: false,
@@ -249,7 +249,7 @@ export async function main(args) {
   user.email = args.email;
   user.password = await hashPassword(args.password);
 
-  const dataSource = new DataSource();
+  const dataSource = createDataSource();
   await dataSource.initialize();
 
   for (const codeName of args.userPermissions as string[]) {
