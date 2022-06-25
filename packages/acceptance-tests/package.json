@@ -42,7 +42,7 @@
     "socket.io-client": "~4.5.1",
     "superagent": "~7.1.6",
     "supertest": "~6.2.3",
-    "typeorm": "~0.2.26",
+    "typeorm": "~0.3.6",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
