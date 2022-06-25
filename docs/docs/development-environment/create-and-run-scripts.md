@@ -28,7 +28,7 @@ import { Logger } from '../app/services';
 export async function main() {
   const connection = await createConnection();
   try {
-    const users = await connection.getRepository(User).find();
+    const users = await User.find();
     const logger = createService(Logger);
     logger.log(users);
   } finally {

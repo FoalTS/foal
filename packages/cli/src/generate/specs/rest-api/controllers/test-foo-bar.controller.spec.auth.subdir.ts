@@ -7,7 +7,7 @@ import {
   isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 // App
 import { TestFooBar, User } from '../../../entities';
@@ -29,18 +29,15 @@ describe('TestFooBarController', () => {
   beforeEach(async () => {
     controller = createController(TestFooBarController);
 
-    const testFooBarRepository = getRepository(TestFooBar);
-    const userRepository = getRepository(User);
+    await TestFooBar.clear();
+    await User.clear();
 
-    await testFooBarRepository.clear();
-    await userRepository.clear();
-
-    [ user1, user2 ] = await userRepository.save([
+    [ user1, user2 ] = await User.save([
       {},
       {},
     ]);
 
-    [ testFooBar0, testFooBar1, testFooBar2 ] = await testFooBarRepository.save([
+    [ testFooBar0, testFooBar1, testFooBar2 ] = await TestFooBar.save([
       {
         owner: user1,
         text: 'TestFooBar 0',
@@ -82,7 +79,7 @@ describe('TestFooBarController', () => {
     });
 
     it('should support pagination', async () => {
-      const testFooBar3 = await getRepository(TestFooBar).save({
+      const testFooBar3 = await TestFooBar.save({
         owner: user2,
         text: 'TestFooBar 3',
       });
@@ -191,7 +188,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseCreated object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne({
+      const testFooBar = await TestFooBar.findOne({
         relations: [ 'owner' ],
         where: { text: 'TestFooBar 3' },
       });
@@ -232,7 +229,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await TestFooBar.findOne(testFooBar2.id);
 
       if (!testFooBar) {
         throw new Error();
@@ -256,7 +253,7 @@ describe('TestFooBarController', () => {
       ctx.user = user2;
       await controller.modifyTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await TestFooBar.findOne(testFooBar1.id);
 
       if (!testFooBar) {
         throw new Error();
@@ -324,7 +321,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await TestFooBar.findOne(testFooBar2.id);
 
       if (!testFooBar) {
         throw new Error();
@@ -348,7 +345,7 @@ describe('TestFooBarController', () => {
       ctx.user = user2;
       await controller.replaceTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await TestFooBar.findOne(testFooBar1.id);
 
       if (!testFooBar) {
         throw new Error();
@@ -413,7 +410,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await TestFooBar.findOne(testFooBar2.id);
 
       strictEqual(testFooBar, undefined);
     });
@@ -431,7 +428,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await TestFooBar.findOne(testFooBar1.id);
 
       notStrictEqual(testFooBar, undefined);
     });

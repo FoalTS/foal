@@ -16,7 +16,7 @@ describe('[Shell scripts] create-perm', () => {
     await dataSource.initialize();
 
     try {
-      await dataSource.getRepository(Permission).save({
+      await Permission.save({
         codeName: 'delete-users',
         name: 'Permission to delete users',
       });
@@ -46,7 +46,7 @@ describe('[Shell scripts] create-perm', () => {
     await dataSource.initialize();
 
     try {
-      const group = await dataSource.getRepository(Group).findOneOrFail({
+      const group = await Group.findOneOrFail({
         where: {
           codeName: 'admin',
           name: 'Administrators',

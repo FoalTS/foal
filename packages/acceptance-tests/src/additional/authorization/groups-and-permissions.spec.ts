@@ -58,18 +58,18 @@ describe('[Authorization|permissions] Users', () => {
     const perm = new Permission();
     perm.codeName = 'access-foo';
     perm.name = 'Foo permission';
-    await dataSource.getRepository(Permission).save(perm);
+    await perm.save();
 
     const group = new Group();
     group.name = 'Administrators';
     group.codeName = 'administrators';
     group.permissions = [ perm ];
-    await dataSource.getRepository(Group).save(group);
+    await group.save();
 
     user1.userPermissions = [ perm ];
     user2.groups = [ group ];
 
-    await dataSource.getRepository(User).save([ user1, user2 ]);
+    await User.save([ user1, user2 ]);
 
     const store = createService(TypeORMStore);
 

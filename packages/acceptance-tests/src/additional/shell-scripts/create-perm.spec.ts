@@ -34,7 +34,7 @@ describe('[Shell scripts] create-perm', () => {
     await dataSource.initialize();
 
     try {
-      await dataSource.getRepository(Permission).findOneByOrFail(args);
+      await Permission.findOneByOrFail(args);
     } catch (error: any) {
       throw error;
     } finally {

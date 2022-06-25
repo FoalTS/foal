@@ -4,7 +4,6 @@ import {
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
   Put, ValidateBody, ValidatePathParam, ValidateQueryParam
 } from '@foal/core';
-import { getRepository } from 'typeorm';
 
 import { TestFooBar } from '../entities';
 
@@ -32,7 +31,7 @@ export class TestFooBarController {
   @ValidateQueryParam('skip', { type: 'number' }, { required: false })
   @ValidateQueryParam('take', { type: 'number' }, { required: false })
   async findTestFooBars(ctx: Context) {
-    const testFooBars = await getRepository(TestFooBar).find({
+    const testFooBars = await TestFooBar.find({
       skip: ctx.request.query.skip,
       take: ctx.request.query.take,
       where: {},
@@ -47,7 +46,7 @@ export class TestFooBarController {
   @ApiResponse(200, { description: 'Returns the testFooBar.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
   async findTestFooBarById(ctx: Context) {
-    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
+    const testFooBar = await TestFooBar.findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -63,7 +62,7 @@ export class TestFooBarController {
   @ApiResponse(201, { description: 'TestFooBar successfully created. Returns the testFooBar.' })
   @ValidateBody(testFooBarSchema)
   async createTestFooBar(ctx: Context) {
-    const testFooBar = await getRepository(TestFooBar).save(ctx.request.body);
+    const testFooBar = await TestFooBar.save(ctx.request.body);
     return new HttpResponseCreated(testFooBar);
   }
 
@@ -76,7 +75,7 @@ export class TestFooBarController {
   @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody({ ...testFooBarSchema, required: [] })
   async modifyTestFooBar(ctx: Context) {
-    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
+    const testFooBar = await TestFooBar.findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -84,7 +83,7 @@ export class TestFooBarController {
 
     Object.assign(testFooBar, ctx.request.body);
 
-    await getRepository(TestFooBar).save(testFooBar);
+    await TestFooBar.save(testFooBar);
 
     return new HttpResponseOK(testFooBar);
   }
@@ -98,7 +97,7 @@ export class TestFooBarController {
   @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody(testFooBarSchema)
   async replaceTestFooBar(ctx: Context) {
-    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
+    const testFooBar = await TestFooBar.findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -106,7 +105,7 @@ export class TestFooBarController {
 
     Object.assign(testFooBar, ctx.request.body);
 
-    await getRepository(TestFooBar).save(testFooBar);
+    await TestFooBar.save(testFooBar);
 
     return new HttpResponseOK(testFooBar);
   }
@@ -118,13 +117,13 @@ export class TestFooBarController {
   @ApiResponse(204, { description: 'TestFooBar successfully deleted.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
   async deleteTestFooBar(ctx: Context) {
-    const testFooBar = await getRepository(TestFooBar).findOne(ctx.request.params.testFooBarId);
+    const testFooBar = await TestFooBar.findOne(ctx.request.params.testFooBarId);
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
     }
 
-    await getRepository(TestFooBar).delete(ctx.request.params.testFooBarId);
+    await TestFooBar.delete(ctx.request.params.testFooBarId);
 
     return new HttpResponseNoContent();
   }

@@ -20,6 +20,6 @@ export async function main() {
 
   user.userPermissions = [ permission ];
 
-  console.log(await dataSource.getRepository(Permission).save([ permission ]));
-  console.log(await dataSource.getRepository(User).save([ user, user2 ]));
+  console.log(await Permission.save([ permission ]));
+  console.log(await User.save([ user, user2 ]));
 }
