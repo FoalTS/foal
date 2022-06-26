@@ -59,14 +59,11 @@ describe('Feature: Saving and reading content', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    await createTestConnection([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);
@@ -98,10 +95,6 @@ describe('Feature: Saving and reading content', () => {
     @UseSessions({ required: true })
     class AppController implements IAppController {
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
-
       @Post('/add-flash-content')
       addFlashContent(ctx: Context) {
         /* ======================= DOCUMENTATION BEGIN ======================= */
@@ -121,6 +114,7 @@ describe('Feature: Saving and reading content', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    await createTestConnection([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

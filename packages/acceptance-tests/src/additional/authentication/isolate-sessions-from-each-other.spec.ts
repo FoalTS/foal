@@ -69,10 +69,6 @@ describe('Sessions should be isolated from each other.', () => {
       return new HttpResponseNoContent();
     }
 
-    async init() {
-      await createTestConnection([ DatabaseSession ]);
-    }
-
   }
 
   let app: any;
@@ -81,6 +77,7 @@ describe('Sessions should be isolated from each other.', () => {
 
   before(async () => {
     app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
   });
 
   it('Step 1: Create two sessions.', async () => {

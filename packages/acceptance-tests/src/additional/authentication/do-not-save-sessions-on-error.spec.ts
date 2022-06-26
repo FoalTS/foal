@@ -67,10 +67,6 @@ describe('Sessions should not be saved when an error has been thrown', () => {
       return new HttpResponseOK(ctx.session?.get('foo') ?? 'null');
     }
 
-    async init() {
-      await createTestConnection([ DatabaseSession ]);
-    }
-
   }
 
   let app: any;
@@ -78,6 +74,7 @@ describe('Sessions should not be saved when an error has been thrown', () => {
 
   beforeEach(async () => {
     app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
 
     await request(app)
       .get('/new-session')

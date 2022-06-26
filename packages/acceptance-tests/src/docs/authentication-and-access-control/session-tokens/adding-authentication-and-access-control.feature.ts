@@ -93,13 +93,10 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession, User ]);
-      }
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession, User ]);
 
     const user2 = new User();
     await user2.save();
@@ -166,14 +163,11 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession, User ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    await createTestConnection([ DatabaseSession, User ]);
 
     const user = new User();
     await user.save();
@@ -230,14 +224,11 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession, User ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    await createTestConnection([ DatabaseSession, User ]);
 
     const user = new User();
     await user.save();
@@ -321,14 +312,11 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession, User, Product ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    await createTestConnection([ DatabaseSession, User, Product ]);
 
     const user = new User();
     user.email = 'foo@foalts.org';

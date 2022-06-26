@@ -39,13 +39,10 @@ describe('Feature: Requiring the session cookie', async () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
 
     await request(app)
       .get('/api/products')

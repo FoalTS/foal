@@ -126,10 +126,6 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
       controller('/api', ApiController),
     ];
 
-    async init() {
-      await createTestConnection([ User, DatabaseSession ]);
-    }
-
     @Get('/')
     @UserRequired({ redirectTo: '/login' })
     index() {
@@ -152,6 +148,7 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
     app = await createApp(AppController);
+    await createTestConnection([ User, DatabaseSession ]);
   });
 
   after(() => {

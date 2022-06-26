@@ -35,10 +35,6 @@ describe('Feature: Modifying session timeouts', () => {
     @UseSessions({ required: true })
     class AppController implements IAppController {
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
-
       @Get('/')
       index(ctx: Context) {
         return new HttpResponseOK();
@@ -48,6 +44,7 @@ describe('Feature: Modifying session timeouts', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    await createTestConnection([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

@@ -73,15 +73,12 @@ describe('Feature: Using cookies', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const cookieName = 'sessionID';
 
     const app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
 
     strictEqual(session, null);
 
@@ -129,16 +126,13 @@ describe('Feature: Using cookies', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const cookieName = 'sessionID';
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    await createTestConnection([ DatabaseSession ]);
 
     const response = await request(app)
       .get('/api/products')

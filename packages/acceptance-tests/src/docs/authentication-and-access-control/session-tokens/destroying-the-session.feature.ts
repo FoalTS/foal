@@ -57,14 +57,11 @@ describe('Feature: Destroying the session', () => {
       subControllers = [
         controller('', AuthController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    await createTestConnection([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

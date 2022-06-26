@@ -75,10 +75,6 @@ describe('Feature: Controlling access with static roles', () => {
         controller('/api', ApiController)
       ];
 
-      async init() {
-        await createTestConnection([ User, DatabaseSession ]);
-      }
-
       @Post('/login-as-user')
       async loginAsUser(ctx: Context) {
         const user = await User.findOneByOrFail({ roles: 'user' });
@@ -101,6 +97,7 @@ describe('Feature: Controlling access with static roles', () => {
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ User, DatabaseSession ]);
 
     const user = new User();
     user.roles = [ 'user' ];

@@ -34,7 +34,6 @@ Open `app.controller.ts` and update its contents.
 
 ```typescript
 import { Context, controller, Get, HttpResponseNotFound, IAppController, render } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController, OpenapiController } from './controllers';
 
@@ -43,10 +42,6 @@ export class AppController implements IAppController {
     controller('/api', ApiController),
     controller('/swagger', OpenapiController)
   ];
-
-  async init() {
-    await createConnection();
-  }
 
   @Get('*')
   renderApp(ctx: Context) {
