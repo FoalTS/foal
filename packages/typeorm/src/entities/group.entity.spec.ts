@@ -2,7 +2,7 @@
 import { fail, notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, createConnection, getConnection, getManager, QueryFailedError } from 'typeorm';
+import { BaseEntity, DataSource, QueryFailedError } from 'typeorm';
 
 // FoalTS
 import { Group } from './group.entity';
@@ -12,11 +12,13 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 
   describe(`with ${type}`, () => {
 
+    let dataSource: DataSource;
+
     before(async () => {
       switch (type) {
         case 'mysql':
         case 'mariadb':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [Group, Permission],
@@ -28,7 +30,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           });
           break;
         case 'postgres':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [Group, Permission],
@@ -40,7 +42,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           break;
         case 'sqlite':
         case 'better-sqlite3':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
             entities: [Group, Permission],
@@ -51,9 +53,14 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         default:
           break;
       }
+      await dataSource.initialize();
     });
 
-    after(() => getConnection().close());
+    after(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     beforeEach(async () => {
       await Permission.delete({});
@@ -70,7 +77,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       group.name = '';
       group.codeName = 'group';
       group.permissions = [];
-      await getManager().save(group);
+      await group.save();
       notStrictEqual(group.id, undefined);
     });
 
@@ -78,7 +85,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const group = new Group();
       group.codeName = 'group';
       group.permissions = [];
-      await getManager().save(group)
+      await group.save()
         .then(() => fail('This promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -94,7 +101,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       if (type !== 'sqlite' && type !== 'better-sqlite3') {
         group.name = 'This is a very long long long long long long long long long long long long line1.';
 
-        await getManager().save(group)
+        await group.save()
           .then(() => fail('This promise should be rejected.'))
           .catch(err => {
             ok(err instanceof QueryFailedError);
@@ -110,7 +117,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const group = new Group();
       group.name = '';
 
-      await getManager().save(group)
+      await group.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -127,7 +134,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         group.codeName = 'This is a very long long long long long long line.'
           + 'This is a very long long long long long long line.1';
 
-        await getManager().save(group)
+        await group.save()
           .then(() => fail('The promise should be rejected.'))
           .catch(err => {
             ok(err instanceof QueryFailedError);
@@ -139,12 +146,12 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 
       }
       group.codeName = 'foo';
-      await getManager().save(group);
+      await group.save();
 
       const group2 = new Group();
       group2.name = '';
       group2.codeName = 'foo';
-      await getManager().save(group2)
+      await group2.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -161,7 +168,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission = new Permission();
       permission.name = 'permission1';
       permission.codeName = '';
-      await getManager().save(permission);
+      await permission.save();
 
       const group = new Group();
       group.name = 'group1';
@@ -170,9 +177,9 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         permission
       ];
 
-      await getManager().save(group);
+      await group.save();
 
-      const group2 = await getManager().findOne(Group, {
+      const group2 = await Group.findOne({
         where: { id: group.id },
         relations: {
           permissions: true
