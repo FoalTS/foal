@@ -1,9 +1,9 @@
 // std
-import { ServiceManager } from '@foal/core';
 import { strictEqual } from 'assert';
 
 // 3p
-import { Column, createConnection, Entity, getConnection, getMongoManager, ObjectID, ObjectIdColumn } from 'typeorm';
+import { ServiceManager } from '@foal/core';
+import { Column, DataSource, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 // FoalTS
 import { fetchMongoDBUser } from './fetch-mongodb-user.util';
@@ -32,8 +32,10 @@ describe('fetchMongoDBUser', () => {
   let user: User;
   let user2: User2;
 
+  let dataSource: DataSource;
+
   before(async () => {
-    await createConnection({
+    dataSource = new DataSource({
       database: 'test',
       dropSchema: true,
       entities: [User, User2],
@@ -42,17 +44,22 @@ describe('fetchMongoDBUser', () => {
       synchronize: true,
       type: 'mongodb',
     });
+    await dataSource.initialize();
 
     user = new User();
     user.name = 'foobar';
-    await getMongoManager().save(user);
+    await dataSource.getRepository(User).save(user);
 
     user2 = new User2();
     user2.name = 'foobar2';
-    await getMongoManager().save(user2);
+    await dataSource.getRepository(User).save(user2);
   });
 
-  after(() => getConnection().close());
+  after(async () => {
+    if (dataSource) {
+      await dataSource.destroy();
+    }
+  });
 
   it('should throw an Error if the ID is a number.', async () => {
     try {

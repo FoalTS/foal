@@ -1,9 +1,9 @@
 // std
-import { ServiceManager } from '@foal/core';
 import { strictEqual } from 'assert';
 
 // 3p
-import { Column, createConnection, Entity, getConnection, getManager, PrimaryGeneratedColumn } from 'typeorm';
+import { ServiceManager } from '@foal/core';
+import { Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { fetchUser } from './fetch-user.util';
@@ -21,13 +21,15 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
       name: string;
     }
 
+    let dataSource: DataSource;
+
     let user: User;
 
     before(async () => {
       switch (type) {
         case 'mysql':
         case 'mariadb':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [ User ],
@@ -39,7 +41,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
           });
           break;
         case 'postgres':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [ User ],
@@ -51,7 +53,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
           break;
         case 'sqlite':
         case 'better-sqlite3':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
             entities: [ User ],
@@ -61,13 +63,19 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
           break;
         default:
           break;
-        }
+      }
+      await dataSource.initialize();
+
       user = new User();
       user.name = 'foobar';
-      await getManager().save(user);
+      await dataSource.getRepository(User).save(user);
     });
 
-    after(() => getConnection().close());
+    after(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     it('should return the user fetched from the database (id: number).', async () => {
       const actual = await fetchUser(User)(user.id, new ServiceManager());
