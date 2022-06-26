@@ -16,9 +16,9 @@
     "test": "npm run build:test && npm run start:test",
     "dev:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "makemigrations": "foal rmdir build && tsc -p tsconfig.app.json && npx typeorm migration:generate --name migration && tsc -p tsconfig.app.json",
-    "migrations": "npx typeorm migration:run",
-    "revertmigration": "npx typeorm migration:revert"
+    "makemigrations": "foal rmdir build && tsc -p tsconfig.json && npx typeorm migration:generate src/migrations/migration -d build/data-source -p && tsc -p tsconfig.json",
+    "migrations": "npx typeorm migration:run -d build/data-source",
+    "revertmigration": "npx typeorm migration:revert -d build/data-source"
   },
   "funding": {
     "url": "https://github.com/sponsors/LoicPoullain"
