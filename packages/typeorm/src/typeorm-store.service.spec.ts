@@ -267,30 +267,6 @@ function storeTestSuite(type: DBType) {
       });
     }
 
-    describe('has a "setDataSource" method that', () => {
-
-      it('should override the default data source used by other methods.', async () => {
-        let clearHasBeenCalled = false;
-        const fakeDataSource: any = {
-          getRepository() {
-            return {
-              clear() {
-                clearHasBeenCalled = true;
-              }
-            }
-          }
-        };
-
-        store.setDataSource(fakeDataSource);
-
-        await store.clear();
-
-        strictEqual(clearHasBeenCalled, true);
-      });
-
-    });
-
-
     describe('has a "save" method that', () => {
 
       it('should throw if the user ID is defined and is not a number.', async () => {

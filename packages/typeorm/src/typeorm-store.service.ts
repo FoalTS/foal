@@ -1,6 +1,6 @@
 // 3p
 import { SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
-import { BaseEntity, Column, DataSource, Entity, IsNull, LessThan, Not, PrimaryColumn, Repository } from 'typeorm';
+import { BaseEntity, Column, Entity, IsNull, LessThan, Not, PrimaryColumn, Repository } from 'typeorm';
 
 @Entity({
   name: 'sessions'
@@ -40,16 +40,7 @@ export class DatabaseSession extends BaseEntity {
  */
 export class TypeORMStore extends SessionStore {
 
-  private dataSource: DataSource;
-
-  setDataSource(dataSource: DataSource): void {
-    this.dataSource = dataSource;
-  }
-
   private get repository(): Repository<DatabaseSession> {
-    if (this.dataSource) {
-      return this.dataSource.getRepository(DatabaseSession);
-    }
     return DatabaseSession.getRepository();
   }
 

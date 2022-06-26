@@ -1044,54 +1044,9 @@ await session.commit();
 
 ### Provide A Custom Client to Use in the Stores
 
-By default, the `MongoDBStore` and `RedisStore` create a new client to connect to their respective databases. The `TypeORMStore` uses the data source that registered the `DatabaseSession` entity.
+By default, the `MongoDBStore` and `RedisStore` create a new client to connect to their respective databases.
 
 This behavior can be overridden by providing a custom client to the stores at initialization.
-
-#### `TypeORMStore`
-
-*First example*
-```typescript
-import { dependency } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
-
-import { createDataSource } from './data-source';
-
-export class AppController {
-  @dependency
-  store: TypeORMStore;
-
-  // ...
-
-  async init() {
-    const dataSource = createDataSource();
-    await dataSource.initialize();
-
-    this.store.setDataSource(dataSource);
-  }
-}
-```
-
-*Second example*
-
-```typescript
-import { createApp, ServiceManager } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
-
-import { createDataSource } from './data-source';
-
-async function main() {
-  const dataSource = createDataSource();
-  await dataSource.initialize();
-
-  const serviceManager = new ServiceManager();
-  serviceManager.get(TypeORMStore).setDataSource(dataSource);
-
-  const app = await createApp(AppController, { serviceManager });
-
-  // ...
-}
-```
 
 #### `RedisStore`
 
