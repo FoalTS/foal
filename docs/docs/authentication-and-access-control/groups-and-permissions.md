@@ -272,7 +272,7 @@ export async function main(args) {
 
   try {
     console.log(
-      await user.save();
+      await user.save()
     );
   } catch (error: any) {
     console.log(error.message);

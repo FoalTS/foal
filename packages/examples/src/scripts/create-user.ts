@@ -20,6 +20,7 @@ export async function main() {
 
   user.userPermissions = [ permission ];
 
-  console.log(await Permission.save([ permission ]));
-  console.log(await User.save([ user, user2 ]));
+  console.log(await permission.save());
+  console.log(await user.save());
+  console.log(await user2.save());
 }
