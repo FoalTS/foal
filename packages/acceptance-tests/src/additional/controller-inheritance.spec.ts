@@ -120,7 +120,7 @@ describe('FoalTS', () => {
       type: 'object',
     };
 
-    class SomeEntity {
+    class SomeEntity extends BaseEntity {
 
     }
 
