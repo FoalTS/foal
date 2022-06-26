@@ -268,7 +268,7 @@ export async function main(args) {
 
   try {
     console.log(
-      await getManager().save(user)
+      await user.save()
     );
   } catch (error: any) {
     console.log(error.message);

@@ -25,7 +25,7 @@ export async function main(args: { codeName: string, name: string }) {
 
   try {
     console.log(
-      await getManager().save(permission)
+      await permission.save()
     );
   } catch (error: any) {
     console.log(error.message);

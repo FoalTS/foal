@@ -1,5 +1,5 @@
 // 3p
-import { createConnection, getManager } from '@foal/typeorm/node_modules/typeorm';
+import { createConnection } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { Permission, User } from '../app/entities';
@@ -21,7 +21,7 @@ export async function main() {
 
   user.userPermissions = [ permission ];
 
-  console.log(
-    await getManager().save([ permission, user, user2 ])
-  );
+  console.log(await permission.save());
+  console.log(await user.save());
+  console.log(await user2.save());
 }
