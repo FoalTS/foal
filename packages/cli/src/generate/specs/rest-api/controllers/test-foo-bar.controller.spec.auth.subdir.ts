@@ -321,7 +321,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await TestFooBar.findOne({ id: testFooBar2.id });
+      const testFooBar = await TestFooBar.findOneBy({ id: testFooBar2.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -345,7 +345,7 @@ describe('TestFooBarController', () => {
       ctx.user = user2;
       await controller.replaceTestFooBar(ctx);
 
-      const testFooBar = await TestFooBar.findOne({ id: testFooBar1.id });
+      const testFooBar = await TestFooBar.findOneBy({ id: testFooBar1.id });
 
       if (!testFooBar) {
         throw new Error();

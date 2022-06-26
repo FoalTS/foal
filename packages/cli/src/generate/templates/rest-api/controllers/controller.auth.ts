@@ -94,7 +94,7 @@ export class /* upperFirstCamelName */Controller {
 
     Object.assign(/* camelName */, ctx.request.body);
 
-    await /* camelName */.save();
+    await /* upperFirstCamelName */.save(/* camelName */);
 
     return new HttpResponseOK(/* camelName */);
   }
@@ -119,7 +119,7 @@ export class /* upperFirstCamelName */Controller {
 
     Object.assign(/* camelName */, ctx.request.body);
 
-    await /* camelName */.save();
+    await /* upperFirstCamelName */.save(/* camelName */);
 
     return new HttpResponseOK(/* camelName */);
   }

@@ -94,7 +94,7 @@ export class TestFooBarController {
 
     Object.assign(testFooBar, ctx.request.body);
 
-    await testFooBar.save();
+    await TestFooBar.save(testFooBar);
 
     return new HttpResponseOK(testFooBar);
   }
@@ -119,7 +119,7 @@ export class TestFooBarController {
 
     Object.assign(testFooBar, ctx.request.body);
 
-    await testFooBar.save();
+    await TestFooBar.save(testFooBar);
 
     return new HttpResponseOK(testFooBar);
   }
