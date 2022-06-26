@@ -77,13 +77,10 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
 
     strictEqual(session, null);
 
@@ -160,13 +157,10 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
 
     strictEqual(session, null);
 

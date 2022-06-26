@@ -75,10 +75,6 @@ describe('Feature: Controlling access with administrators', () => {
         controller('/api', ApiController)
       ];
 
-      async init() {
-        await createTestConnection([ User, DatabaseSession ]);
-      }
-
       @Post('/login-as-user')
       async loginAsUser(ctx: Context) {
         const user = await User.findOneByOrFail({ isAdmin: false });
@@ -101,6 +97,7 @@ describe('Feature: Controlling access with administrators', () => {
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ User, DatabaseSession ]);
 
     const user = new User();
     user.isAdmin = false;

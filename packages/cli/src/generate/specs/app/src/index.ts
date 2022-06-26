@@ -5,11 +5,14 @@ import * as http from 'http';
 
 // 3p
 import { Config, createApp, displayServerURL } from '@foal/core';
+import { createConnection } from 'typeorm';
 
 // App
 import { AppController } from './app/app.controller';
 
 async function main() {
+  await createConnection();
+
   const app = await createApp(AppController);
 
   const httpServer = http.createServer(app);

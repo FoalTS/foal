@@ -120,10 +120,6 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
       controller('/api', ApiController),
     ];
 
-    async init() {
-      await createTestConnection([ User, DatabaseSession ]);
-    }
-
   }
 
   /* ======================= DOCUMENTATION END ========================= */
@@ -131,6 +127,7 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
     app = await createApp(AppController);
+    await createTestConnection([ User, DatabaseSession ]);
   });
 
   after(() => {

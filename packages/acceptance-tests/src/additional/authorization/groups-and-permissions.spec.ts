@@ -1,5 +1,5 @@
 // 3p
-import { createConnection, Entity, getConnection } from '@foal/typeorm/node_modules/typeorm';
+import { Entity, getConnection } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -20,6 +20,7 @@ import {
   TypeORMStore,
   UserWithPermissions
 } from '@foal/typeorm';
+import { createTestConnection } from '../../common';
 
 describe('[Authorization|permissions] Users', () => {
 
@@ -46,13 +47,7 @@ describe('[Authorization|permissions] Users', () => {
   }
 
   before(async () => {
-    await createConnection({
-      database: 'e2e_db.sqlite',
-      dropSchema: true,
-      entities: [ User, Permission, Group, DatabaseSession ],
-      synchronize: true,
-      type: 'better-sqlite3',
-    });
+    await createTestConnection([ User, Permission, Group, DatabaseSession ]);
 
     const user1 = new User();
     const user2 = new User();

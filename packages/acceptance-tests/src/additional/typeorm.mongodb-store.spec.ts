@@ -30,12 +30,12 @@ import {
   BaseEntity,
   Column,
   Connection,
-  createConnection,
   Entity,
   getMongoRepository,
   ObjectID,
   ObjectIdColumn
 } from '@foal/typeorm/node_modules/typeorm';
+import { createTestConnection } from '../common';
 
 describe('[Sample] TypeORM & MongoDB Store', async () => {
 
@@ -139,12 +139,8 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
   before(async () => {
     Config.set('settings.mongodb.uri', 'mongodb://localhost:27017/e2e_db');
 
-    connection = await createConnection({
+    connection = await createTestConnection([User], {
       database: 'e2e_db',
-      dropSchema: true,
-      entities: [User],
-      host: 'localhost',
-      port: 27017,
       type: 'mongodb',
     });
 

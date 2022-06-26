@@ -1,21 +1,16 @@
 // 3p
 import Ajv from 'ajv';
-import { createConnection, getConnection } from 'typeorm';
 
 // FoalTS
 import { Permission } from '@foal/typeorm';
 import { main as createPerm, schema } from './create-perm';
+import { createTestConnection } from '../../common';
 
 describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
-    const connection = await createConnection({
-      database: './e2e_db.sqlite',
-      dropSchema: true,
-      entities: [ Permission ],
-      synchronize: true,
-      type: 'better-sqlite3',
-    });
+    // Clear database.
+    const connection = await createTestConnection([ Permission ]);
     await connection.close();
   });
 
@@ -35,18 +30,14 @@ describe('[Shell scripts] create-perm', () => {
 
     await createPerm(args);
 
-    await createConnection({
-      database: './e2e_db.sqlite',
-      entities: [ Permission ],
-      type: 'better-sqlite3',
-    });
+    const connection = await createTestConnection([ Permission ], { dropSchema: false });
 
     try {
       await Permission.findOneByOrFail(args);
     } catch (error: any) {
       throw error;
     } finally {
-      await getConnection().close();
+      await connection.close();
     }
   });
 });

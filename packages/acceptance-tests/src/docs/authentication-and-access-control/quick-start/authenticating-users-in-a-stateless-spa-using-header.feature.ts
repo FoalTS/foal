@@ -120,10 +120,6 @@ describe('Feature: Authenticating users in a stateless SPA using the `Authorizat
       controller('/api', ApiController),
     ];
 
-    async init() {
-      await createTestConnection([ User ]);
-    }
-
   }
 
   /* ======================= DOCUMENTATION END ========================= */
@@ -132,6 +128,7 @@ describe('Feature: Authenticating users in a stateless SPA using the `Authorizat
     Config.set('settings.jwt.secret', 'Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=');
     Config.set('settings.jwt.secretEncoding', 'base64');
     app = await createApp(AppController);
+    await createTestConnection([ User ]);
   });
 
   after(() => {

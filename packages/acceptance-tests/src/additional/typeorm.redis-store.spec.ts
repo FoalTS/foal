@@ -30,12 +30,12 @@ import {
   BaseEntity,
   Column,
   Connection,
-  createConnection,
   Entity,
   getMongoRepository,
   ObjectID,
   ObjectIdColumn
 } from '@foal/typeorm/node_modules/typeorm';
+import { createTestConnection } from '../common';
 
 describe('[Sample] MongoDB & Redis Store', async () => {
 
@@ -141,12 +141,8 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     Config.set('settings.mongodb.uri', MONGODB_URI);
     Config.set('settings.redis.uri', REDIS_URI);
 
-    connection = await createConnection({
+    connection = await createTestConnection([User], {
       database: 'e2e_db',
-      dropSchema: true,
-      entities: [User],
-      host: 'localhost',
-      port: 27017,
       type: 'mongodb',
     });
 

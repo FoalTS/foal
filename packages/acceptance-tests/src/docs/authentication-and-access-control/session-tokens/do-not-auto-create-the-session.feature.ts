@@ -65,13 +65,10 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
 
     strictEqual(alreadyExists, true);
 

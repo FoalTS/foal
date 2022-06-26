@@ -49,10 +49,6 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
         controller('/api', ApiController)
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
-
       @Get('/')
       @UseSessions({ cookie: true })
       index() {
@@ -62,6 +58,7 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
 
     let token = '';
 

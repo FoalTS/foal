@@ -32,10 +32,6 @@ describe('Feature: Overriding the cookie options', async () => {
     @UseSessions({ cookie: true })
     class AppController {
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
-
       @Get('/')
       index() {
         return new HttpResponseOK();
@@ -44,6 +40,7 @@ describe('Feature: Overriding the cookie options', async () => {
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
 
     Config.set('settings.session.cookie.name', 'xxx');
     Config.set('settings.session.cookie.domain', 'example.com');

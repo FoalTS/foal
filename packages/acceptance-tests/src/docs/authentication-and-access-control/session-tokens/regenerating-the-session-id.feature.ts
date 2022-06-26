@@ -54,13 +54,10 @@ describe('Feature: Regenerating the session ID', () => {
 
         return new HttpResponseOK({ token: ctx.session!.getToken() });
       }
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const app = await createApp(AppController);
+    await createTestConnection([ DatabaseSession ]);
 
     let token = '';
 
