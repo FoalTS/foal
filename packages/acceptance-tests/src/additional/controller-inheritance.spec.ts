@@ -9,7 +9,6 @@ import { BaseEntity } from 'typeorm';
 import {
   ApiInfo,
   ApiParameter,
-  Class,
   Context,
   createApp,
   createOpenApiDocument,
