@@ -42,7 +42,7 @@ describe('[Shell scripts] create-perm', () => {
     });
 
     try {
-      await getRepository(Permission).findOneOrFail(args);
+      await getRepository(Permission).findOneByOrFail(args);
     } catch (error: any) {
       throw error;
     } finally {

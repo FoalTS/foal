@@ -1,6 +1,6 @@
 // std
 import { ServiceManager } from '@foal/core';
-import { ok, strictEqual } from 'assert';
+import { ok, rejects, strictEqual } from 'assert';
 
 // 3p
 import { createConnection, Entity, getConnection, getManager } from 'typeorm';
@@ -86,6 +86,13 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         throw new Error('The user should not be null.');
       }
       strictEqual(actual.id, user.id);
+    });
+
+    it('should throw an error if the ID is a string and connot be parsed to a number.', async () => {
+      await rejects(
+        () => fetchUserWithPermissions(User)('xxxxx', new ServiceManager()),
+        new Error('Suspicious operation: the provided ID cannot be parsed to a number.'),
+      );
     });
 
     it('should return the user fetched from the database (id: string).', async () => {

@@ -20,9 +20,9 @@
     "lint": "eslint --ext ts src",
     "lint:fix": "eslint --ext ts --fix src",
 
-    "makemigrations": "foal rmdir build && tsc -p tsconfig.app.json && npx typeorm migration:generate --name migration && tsc -p tsconfig.app.json",
-    "migrations": "npx typeorm migration:run",
-    "revertmigration": "npx typeorm migration:revert"
+    "makemigrations": "foal rmdir build && tsc -p tsconfig.app.json && npx typeorm migration:generate src/migrations/migration -d build/data-source -p && tsc -p tsconfig.app.json",
+    "migrations": "npx typeorm migration:run -d build/data-source",
+    "revertmigration": "npx typeorm migration:revert -d build/data-source"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -32,7 +32,7 @@
     "@foal/typeorm": "^2.0.0",
     "source-map-support": "~0.5.21",
     "better-sqlite3": "~7.5.0",
-    "typeorm": "0.2.26",
+    "typeorm": "0.3.6",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {

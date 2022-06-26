@@ -63,7 +63,7 @@ describe('Feature: Using social auth with JWT', () => {
           throw new Error('Google should have returned an email address.');
         }
 
-        let user = await User.findOne({ email: userInfo.email });
+        let user = await User.findOneBy({ email: userInfo.email });
 
         if (!user) {
           // If the user has not already signed up, then add them to the database.
@@ -141,7 +141,7 @@ describe('Feature: Using social auth with JWT', () => {
       }
     });
 
-    strictEqual(await User.findOne({ email: 'unknown@foalts.org' }), undefined);
+    strictEqual(await User.findOneBy({ email: 'unknown@foalts.org' }), null);
 
     const response2 = await controller.handleGoogleRedirection(ctx2);
     const cookie2 = response2.getCookie('auth');
@@ -150,7 +150,7 @@ describe('Feature: Using social auth with JWT', () => {
       throw new Error('No cookie "auth" found.');
     }
 
-    const user2 = await User.findOneOrFail({ email: 'unknown@foalts.org' });
+    const user2 = await User.findOneByOrFail({ email: 'unknown@foalts.org' });
 
     const payload2 = decode(cookie2.value);
     strictEqual((payload2 as any).id, user2.id);

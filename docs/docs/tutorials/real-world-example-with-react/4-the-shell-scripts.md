@@ -104,7 +104,7 @@ export const schema = {
 export async function main(args: { author: string, title: string, link: string }) {
   const connection = await createConnection();
 
-  const user = await User.findOneOrFail({ email: args.author });
+  const user = await User.findOneByOrFail({ email: args.author });
 
   const story = new Story();
   story.author = user;

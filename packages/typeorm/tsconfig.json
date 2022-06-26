@@ -9,11 +9,14 @@
     "strictPropertyInitialization": false,
     "sourceMap": true,
     "declaration": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./typings"
+    ],
     "lib": [
       "es2017",
       "dom"
-    ],
-    "types": [ "node", "mocha" ]
+    ]
   },
   "include": [
     "./src/**/*.ts"

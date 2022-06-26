@@ -172,7 +172,12 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 
       await getManager().save(group);
 
-      const group2 = await getManager().findOne(Group, group.id, { relations: ['permissions'] });
+      const group2 = await getManager().findOne(Group, {
+        where: { id: group.id },
+        relations: {
+          permissions: true
+        }
+      });
       if (!group2) {
         throw new Error('Group should have been saved.');
       }

@@ -104,7 +104,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
       type: 'object',
     })
     async login(ctx: Context) {
-      const user = await getMongoRepository(User).findOne({ email: ctx.request.body.email });
+      const user = await getMongoRepository(User).findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
@@ -216,7 +216,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
 
     /* Add the admin group and permission */
 
-    const user2 = await getMongoRepository(User).findOne({ email: 'john@foalts.org' });
+    const user2 = await getMongoRepository(User).findOneBy({ email: 'john@foalts.org' });
     if (!user2) {
       throw new Error('John was not found in the database.');
     }

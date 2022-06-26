@@ -69,7 +69,7 @@ describe('Feature: Using social auth with sessions', () => {
           throw new Error('Google should have returned an email address.');
         }
 
-        let user = await User.findOne({ email: userInfo.email });
+        let user = await User.findOneBy({ email: userInfo.email });
 
         if (!user) {
           // If the user has not already signed up, then add them to the database.
@@ -134,11 +134,11 @@ describe('Feature: Using social auth with sessions', () => {
     ctx2.session = await createSession({} as any);
 
     strictEqual(ctx2.session.userId, null);
-    strictEqual(await User.findOne({ email: 'unknown@foalts.org' }), undefined);
+    strictEqual(await User.findOneBy({ email: 'unknown@foalts.org' }), null);
 
     await controller.handleGoogleRedirection(ctx2);
 
-    const user2 = await User.findOneOrFail({ email: 'unknown@foalts.org' })
+    const user2 = await User.findOneByOrFail({ email: 'unknown@foalts.org' })
 
     deepStrictEqual(ctx2.session.userId, user2.id);
   });

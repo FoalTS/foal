@@ -64,7 +64,7 @@ describe('Feature: Adding authentication and access control', () => {
         // Check the user credentials...
         // const user = ...
         // Not in the documentation
-        const user = await User.findOneOrFail(ctx.request.query.id);
+        const user = await User.findOneByOrFail({ id: ctx.request.query.id });
 
         ctx.session = await createSession(this.store);
 
@@ -309,7 +309,7 @@ describe('Feature: Adding authentication and access control', () => {
       @Get('/products')
       @UserRequired()
       async readProducts(ctx: Context<User>) {
-        const products = await Product.find({ owner: ctx.user });
+        const products = await Product.findBy({ owner: { id: ctx.user.id } });
         return new HttpResponseOK(products);
       }
 
