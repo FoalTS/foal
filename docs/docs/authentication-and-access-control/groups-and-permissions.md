@@ -222,7 +222,7 @@ Replace the content of the new created file `src/scripts/create-user.ts` with th
 // 3p
 import { hashPassword } from '@foal/core';
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 // App
 import { User } from '../app/entities';

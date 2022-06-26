@@ -1,6 +1,6 @@
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,

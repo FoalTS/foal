@@ -3,7 +3,7 @@ import { strictEqual } from 'assert';
 
 // 3p
 import Ajv from 'ajv';
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 // FoalTS
 import { Group, Permission } from '@foal/typeorm';
@@ -19,7 +19,7 @@ describe('[Shell scripts] create-perm', () => {
       synchronize: true,
       type: 'better-sqlite3',
     });
-    await getRepository(Permission).save({
+    await Permission.save({
       codeName: 'delete-users',
       name: 'Permission to delete users',
     });
@@ -50,7 +50,7 @@ describe('[Shell scripts] create-perm', () => {
     });
 
     try {
-      const group = await getRepository(Group).findOneOrFail({
+      const group = await Group.findOneOrFail({
         where: {
           codeName: 'admin',
           name: 'Administrators',
