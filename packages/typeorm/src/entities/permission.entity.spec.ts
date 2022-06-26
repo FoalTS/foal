@@ -2,7 +2,7 @@
 import { fail, notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, createConnection, getConnection, getManager, QueryFailedError } from 'typeorm';
+import { BaseEntity, DataSource, QueryFailedError } from 'typeorm';
 
 // FoalTS
 import { Permission } from './permission.entity';
@@ -11,11 +11,13 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 
   describe(`with ${type}`, () => {
 
+    let dataSource: DataSource;
+
     before(async () => {
       switch (type) {
         case 'mysql':
         case 'mariadb':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [Permission],
@@ -27,7 +29,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           });
           break;
         case 'postgres':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [Permission],
@@ -39,7 +41,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           break;
         case 'sqlite':
         case 'better-sqlite3':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
             entities: [Permission],
@@ -50,9 +52,14 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         default:
           break;
       }
+      await dataSource.initialize();
     });
 
-    after(() => getConnection().close());
+    after(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     beforeEach(async () => Permission.delete({}));
 
@@ -65,14 +72,14 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission = new Permission();
       permission.name = '';
       permission.codeName = '';
-      await getManager().save(permission);
+      await permission.save();
       notStrictEqual(permission.id, undefined);
     });
 
     it('should have a "name".', () => {
       const permission = new Permission();
       permission.codeName = '';
-      return getManager().save(permission)
+      return permission.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -89,7 +96,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission = new Permission();
       permission.name = '';
 
-      await getManager().save(permission)
+      await permission.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);
@@ -106,7 +113,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         permission.codeName = 'This is a very long long long long long long line.'
           + 'This is a very long long long long long long line.1';
 
-        await getManager().save(permission)
+        await permission.save()
           .then(() => fail('The promise should be rejected.'))
           .catch(err => {
             ok(err instanceof QueryFailedError);
@@ -118,12 +125,12 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       }
 
       permission.codeName = 'foo';
-      await getManager().save(permission);
+      await permission.save();
 
       const permission2 = new Permission();
       permission2.name = '';
       permission2.codeName = 'foo';
-      await getManager().save(permission2)
+      await permission2.save()
         .then(() => fail('The promise should be rejected.'))
         .catch(err => {
           ok(err instanceof QueryFailedError);

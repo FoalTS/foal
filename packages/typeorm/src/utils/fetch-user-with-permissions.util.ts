@@ -1,6 +1,6 @@
 // 3p
 import { Class, FetchUser } from '@foal/core';
-import { getRepository } from 'typeorm';
+import { BaseEntity } from 'typeorm';
 
 // FoalTS
 import { UserWithPermissions } from '../entities';
@@ -17,10 +17,10 @@ import { UserWithPermissions } from '../entities';
  * - JWTOptional (@foal/jwt)
  *
  * @export
- * @param {(Class<{ id: number|string }>)} userEntityClass - The entity class which must extend UserWithPermissions.
+ * @param {(Class<{ id: number|string }> & typeof BaseEntity)} userEntityClass - The entity class which must extend UserWithPermissions.
  * @returns {FetchUser} The returned function expecting an id.
  */
-export function fetchUserWithPermissions(userEntityClass: Class<UserWithPermissions>): FetchUser {
+export function fetchUserWithPermissions(userEntityClass: Class<UserWithPermissions> & typeof BaseEntity): FetchUser {
   return async (id: number | string) => {
     if (typeof id === 'string') {
       id = parseInt(id, 10);
@@ -28,7 +28,7 @@ export function fetchUserWithPermissions(userEntityClass: Class<UserWithPermissi
         throw new Error('Suspicious operation: the provided ID cannot be parsed to a number.');
       }
     }
-    return getRepository(userEntityClass).findOne({
+    return userEntityClass.findOne({
       where: { id },
       relations: {
         userPermissions: true,

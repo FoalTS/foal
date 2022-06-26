@@ -27,6 +27,7 @@ import * as request from 'supertest';
 // FoalTS
 import { fetchMongoDBUser } from '@foal/typeorm';
 import {
+  BaseEntity,
   Column,
   Connection,
   createConnection,
@@ -45,7 +46,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
   let mongoClient: any;
 
   @Entity()
-  class User {
+  class User extends BaseEntity {
     @ObjectIdColumn()
     id: ObjectID;
 
