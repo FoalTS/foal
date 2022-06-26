@@ -4,7 +4,6 @@ import {
   HttpResponseNoContent, HttpResponseNotFound, HttpResponseOK, Patch, Post,
   Put, ValidateBody, ValidatePathParam, ValidateQueryParam
 } from '@foal/core';
-import { getRepository } from 'typeorm';
 
 import { /* upperFirstCamelName */, User } from '/* entitiesPath */';
 
@@ -32,7 +31,7 @@ export class /* upperFirstCamelName */Controller {
   @ValidateQueryParam('skip', { type: 'number' }, { required: false })
   @ValidateQueryParam('take', { type: 'number' }, { required: false })
   async find/* upperFirstCamelName */s(ctx: Context<User>) {
-    const /* camelName */s = await getRepository(/* upperFirstCamelName */).find({
+    const /* camelName */s = await /* upperFirstCamelName */.find({
       skip: ctx.request.query.skip,
       take: ctx.request.query.take,
       where: {
@@ -49,7 +48,7 @@ export class /* upperFirstCamelName */Controller {
   @ApiResponse(200, { description: 'Returns the /* camelName */.' })
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   async find/* upperFirstCamelName */ById(ctx: Context<User>) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({
+    const /* camelName */ = await /* upperFirstCamelName */.findOneBy({
       id: ctx.request.params./* camelName */Id,
       owner: { id: ctx.user.id }
     });
@@ -68,7 +67,7 @@ export class /* upperFirstCamelName */Controller {
   @ApiResponse(201, { description: '/* upperFirstCamelName */ successfully created. Returns the /* camelName */.' })
   @ValidateBody(/* camelName */Schema)
   async create/* upperFirstCamelName */(ctx: Context<User>) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).save({
+    const /* camelName */ = await /* upperFirstCamelName */.save({
       ...ctx.request.body,
       owner: { id: ctx.user.id }
     });
@@ -84,7 +83,7 @@ export class /* upperFirstCamelName */Controller {
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   @ValidateBody({ .../* camelName */Schema, required: [] })
   async modify/* upperFirstCamelName */(ctx: Context<User>) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({
+    const /* camelName */ = await /* upperFirstCamelName */.findOneBy({
       id: ctx.request.params./* camelName */Id,
       owner: { id: ctx.user.id }
     });
@@ -95,7 +94,7 @@ export class /* upperFirstCamelName */Controller {
 
     Object.assign(/* camelName */, ctx.request.body);
 
-    await getRepository(/* upperFirstCamelName */).save(/* camelName */);
+    await /* upperFirstCamelName */.save(/* camelName */);
 
     return new HttpResponseOK(/* camelName */);
   }
@@ -109,7 +108,7 @@ export class /* upperFirstCamelName */Controller {
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   @ValidateBody(/* camelName */Schema)
   async replace/* upperFirstCamelName */(ctx: Context<User>) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({
+    const /* camelName */ = await /* upperFirstCamelName */.findOneBy({
       id: ctx.request.params./* camelName */Id,
       owner: { id: ctx.user.id }
     });
@@ -120,7 +119,7 @@ export class /* upperFirstCamelName */Controller {
 
     Object.assign(/* camelName */, ctx.request.body);
 
-    await getRepository(/* upperFirstCamelName */).save(/* camelName */);
+    await /* upperFirstCamelName */.save(/* camelName */);
 
     return new HttpResponseOK(/* camelName */);
   }
@@ -132,7 +131,7 @@ export class /* upperFirstCamelName */Controller {
   @ApiResponse(204, { description: '/* upperFirstCamelName */ successfully deleted.' })
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   async delete/* upperFirstCamelName */(ctx: Context<User>) {
-    const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({
+    const /* camelName */ = await /* upperFirstCamelName */.findOneBy({
       id: ctx.request.params./* camelName */Id,
       owner: { id: ctx.user.id }
     });
@@ -141,7 +140,7 @@ export class /* upperFirstCamelName */Controller {
       return new HttpResponseNotFound();
     }
 
-    await getRepository(/* upperFirstCamelName */).delete(ctx.request.params./* camelName */Id);
+    await /* upperFirstCamelName */.delete(ctx.request.params./* camelName */Id);
 
     return new HttpResponseNoContent();
   }
