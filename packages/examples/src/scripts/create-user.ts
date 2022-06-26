@@ -1,6 +1,6 @@
 // App
 import { Permission, User } from '../app/entities';
-import { createDataSource } from '../app/create-data-source';
+import { createDataSource } from '../data-source';
 
 export async function main() {
   const dataSource = createDataSource();

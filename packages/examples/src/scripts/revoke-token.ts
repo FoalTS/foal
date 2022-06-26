@@ -1,7 +1,7 @@
 // 3p
 import { createService } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
-import { createDataSource } from '../app/create-data-source';
+import { createDataSource } from '../data-source';
 
 export const schema = {
   additionalProperties: false,

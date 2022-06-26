@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
-import { createDataSource } from '../app/create-data-source';
+import { createDataSource } from '../data-source';
 
 describe('The server', () => {
 

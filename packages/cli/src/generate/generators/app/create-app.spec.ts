@@ -163,8 +163,6 @@ describe('createApp', () => {
     fs
       .cd('test-foo-bar/src/app')
       .assertEqual('app.controller.ts', 'app/src/app/app.controller.ts')
-      .assertEqual('data-source.ts', 'app/src/app/data-source.ts')
-      .assertEqual('create-data-source.ts', 'app/src/app/create-data-source.ts');
   });
 
   it('should render the src templates.', async () => {

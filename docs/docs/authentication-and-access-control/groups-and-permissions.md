@@ -48,7 +48,7 @@ Replace the content of the new created file `src/scripts/create-perm.ts` with th
 ```typescript
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createDataSource } from '../app/create-data-source';
+import { createDataSource } from '../data-source';
 
 export const schema = {
   additionalProperties: false,
@@ -131,7 +131,7 @@ Replace the content of the new created file `src/scripts/create-group.ts` with t
 ```typescript
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createDataSource } from '../app/create-data-source';
+import { createDataSource } from '../data-source';
 
 export const schema = {
   additionalProperties: false,
@@ -228,7 +228,7 @@ import { Group, Permission } from '@foal/typeorm';
 
 // App
 import { User } from '../app/entities';
-import { createDataSource } from '../app/create-data-source';
+import { createDataSource } from '../data-source';
 
 export const schema = {
   additionalProperties: false,

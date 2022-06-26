@@ -1055,7 +1055,7 @@ This behavior can be overridden by providing a custom client to the stores at in
 import { dependency } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
-import { createDataSource } from './create-data-source';
+import { createDataSource } from './data-source';
 
 export class AppController {
   @dependency
@@ -1078,7 +1078,7 @@ export class AppController {
 import { createApp, ServiceManager } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
-import { createDataSource } from './create-data-source';
+import { createDataSource } from './data-source';
 
 async function main() {
   const dataSource = createDataSource();

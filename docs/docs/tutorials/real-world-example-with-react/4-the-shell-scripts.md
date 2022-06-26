@@ -19,7 +19,7 @@ import { DataSource } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
-import { createDataSource } from '../app/create-data-source';
+import { createDataSource } from '../data-source';
 
 export const schema = {
   additionalProperties: false,

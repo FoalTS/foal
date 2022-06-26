@@ -121,8 +121,6 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         .ensureDir('app')
         .cd('app')
         .copy('app/src/app/app.controller.ts', 'app.controller.ts')
-        .copy('app/src/app/data-source.ts', 'data-source.ts')
-        .copy('app/src/app/create-data-source.ts', 'create-data-source.ts')
           // Controllers
           .ensureDir('controllers')
           .cd('controllers')
