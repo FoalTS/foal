@@ -348,7 +348,7 @@ describe('/* upperFirstCamelName */Controller', () => {
 
       const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */1.id });
 
-      notStrictEqual(/* camelName */, undefined);
+      notStrictEqual(/* camelName */, null);
     });
 
     it('should return an HttpResponseNotFound if the /* camelName */ was not found.', async () => {
