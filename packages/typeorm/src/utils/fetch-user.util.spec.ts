@@ -3,7 +3,7 @@ import { strictEqual } from 'assert';
 
 // 3p
 import { ServiceManager } from '@foal/core';
-import { Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { fetchUser } from './fetch-user.util';
@@ -13,7 +13,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
   describe(`with ${type}`, () => {
 
     @Entity()
-    class User {
+    class User extends BaseEntity {
       @PrimaryGeneratedColumn()
       id: number;
 
@@ -68,7 +68,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
 
       user = new User();
       user.name = 'foobar';
-      await dataSource.getRepository(User).save(user);
+      await user.save();
     });
 
     after(async () => {

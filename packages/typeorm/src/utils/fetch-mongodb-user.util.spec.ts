@@ -3,7 +3,7 @@ import { strictEqual } from 'assert';
 
 // 3p
 import { ServiceManager } from '@foal/core';
-import { Column, DataSource, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { BaseEntity, Column, DataSource, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 // FoalTS
 import { fetchMongoDBUser } from './fetch-mongodb-user.util';
@@ -11,7 +11,7 @@ import { fetchMongoDBUser } from './fetch-mongodb-user.util';
 describe('fetchMongoDBUser', () => {
 
   @Entity()
-  class User {
+  class User extends BaseEntity {
     @ObjectIdColumn()
     id: ObjectID;
 
@@ -20,7 +20,7 @@ describe('fetchMongoDBUser', () => {
   }
 
   @Entity()
-  class User2 {
+  class User2 extends BaseEntity {
     @ObjectIdColumn()
     // tslint:disable-next-line:variable-name
     _id: ObjectID;
@@ -48,11 +48,11 @@ describe('fetchMongoDBUser', () => {
 
     user = new User();
     user.name = 'foobar';
-    await dataSource.getRepository(User).save(user);
+    await user.save();
 
     user2 = new User2();
     user2.name = 'foobar2';
-    await dataSource.getRepository(User).save(user2);
+    await user2.save();
   });
 
   after(async () => {
