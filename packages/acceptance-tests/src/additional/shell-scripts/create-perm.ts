@@ -1,6 +1,6 @@
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -25,7 +25,7 @@ export async function main(args: { codeName: string, name: string }) {
 
   try {
     console.log(
-      await getManager().save(permission)
+      await permission.save()
     );
   } catch (error: any) {
     console.log(error.message);

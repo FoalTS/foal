@@ -1,6 +1,6 @@
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager, getRepository } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -26,7 +26,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
   });
 
   for (const codeName of args.permissions) {
-    const permission = await getRepository(Permission).findOneBy({ codeName });
+    const permission = await Permission.findOneBy({ codeName });
     if (!permission) {
       console.log(`No permission with the code name "${codeName}" was found.`);
       return;
@@ -36,7 +36,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
 
   try {
     console.log(
-      await getManager().save(group)
+      await group.save()
     );
   } catch (error: any) {
     console.log(error.message);

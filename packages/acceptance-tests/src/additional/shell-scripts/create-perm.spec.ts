@@ -1,6 +1,6 @@
 // 3p
 import Ajv from 'ajv';
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 // FoalTS
 import { Permission } from '@foal/typeorm';
@@ -42,7 +42,7 @@ describe('[Shell scripts] create-perm', () => {
     });
 
     try {
-      await getRepository(Permission).findOneByOrFail(args);
+      await Permission.findOneByOrFail(args);
     } catch (error: any) {
       throw error;
     } finally {

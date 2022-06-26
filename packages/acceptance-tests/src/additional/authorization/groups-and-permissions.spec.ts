@@ -1,5 +1,5 @@
 // 3p
-import { createConnection, Entity, getConnection, getRepository } from '@foal/typeorm/node_modules/typeorm';
+import { createConnection, Entity, getConnection } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -60,18 +60,18 @@ describe('[Authorization|permissions] Users', () => {
     const perm = new Permission();
     perm.codeName = 'access-foo';
     perm.name = 'Foo permission';
-    await getRepository(Permission).save(perm);
+    await perm.save();
 
     const group = new Group();
     group.name = 'Administrators';
     group.codeName = 'administrators';
     group.permissions = [ perm ];
-    await getRepository(Group).save(group);
+    await group.save();
 
     user1.userPermissions = [ perm ];
     user2.groups = [ group ];
 
-    await getRepository(User).save([ user1, user2 ]);
+    await User.save([ user1, user2 ]);
 
     const store = createService(TypeORMStore);
 

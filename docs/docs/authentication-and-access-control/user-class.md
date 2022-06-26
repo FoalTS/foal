@@ -32,8 +32,6 @@ There are several ways to create users.
 ### ... Programmatically
 
 ```typescript
-import { getManager, getRepository } from 'typeorm';
-
 import { User } from './src/app/entities';
 
 async function main() {
