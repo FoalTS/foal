@@ -77,7 +77,7 @@ import { ok } from 'assert';
 // 3p
 import { createApp } from '@foal/core';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
+import { Connection, createConnection } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
@@ -86,15 +86,21 @@ import { User } from '../app/entities';
 // Define a group of tests.
 describe('The server', () => {
 
+  let connection: Connection;
   let app: any;
 
   // Create the application and the connection to the database before running all the tests.
   before(async () => {
     app = await createApp(AppController);
+    connection = await createConnection();
   });
 
   // Close the database connection after running all the tests whether they succeed or failed.
-  after(() => getConnection().close());
+  after(async () => {
+    if (connection) {
+      await connection.close();
+    }
+  });
 
   // Define a nested group of tests.
   describe('on GET /api/todos requests', () => {
@@ -110,7 +116,7 @@ describe('The server', () => {
       const user = new User();
       user.email = 'john@foalts.org';
       await user.setPassword('john_password');
-      await getConnection().manager.save(user);
+      await user.save();
 
       // Log the user in.
       let cookie = '';

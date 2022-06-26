@@ -3,6 +3,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { Connection } from '@foal/typeorm/node_modules/typeorm'
 
 // FoalTS
 import {
@@ -22,17 +23,21 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Using cookies', () => {
+
+  let connection: Connection;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('Example: Simple usage with cookies', async () => {
@@ -78,7 +83,7 @@ describe('Feature: Using cookies', () => {
     const cookieName = 'sessionID';
 
     const app = await createApp(AppController);
-    await createTestConnection([ DatabaseSession ]);
+    connection = await createTestConnection([ DatabaseSession ]);
 
     strictEqual(session, null);
 
@@ -132,7 +137,7 @@ describe('Feature: Using cookies', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    await createTestConnection([ DatabaseSession ]);
+    connection = await createTestConnection([ DatabaseSession ]);
 
     const response = await request(app)
       .get('/api/products')

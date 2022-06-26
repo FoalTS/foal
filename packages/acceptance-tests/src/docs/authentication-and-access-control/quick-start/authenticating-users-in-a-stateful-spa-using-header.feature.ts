@@ -2,7 +2,7 @@
 import { notStrictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Connection, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -26,10 +26,11 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Authenticating users in a stateful SPA using the `Authorization` header', () => {
 
+  let connection: Connection;
   let app: any;
   let token: string;
 
@@ -136,12 +137,14 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
     app = await createApp(AppController);
-    await createTestConnection([ User, DatabaseSession ]);
+    connection = await createTestConnection([ User, DatabaseSession ]);
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   function formatBearer(token: string) {

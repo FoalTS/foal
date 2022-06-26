@@ -1,22 +1,27 @@
 // 3p
 import * as request from 'supertest';
+import { Connection } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import { Config, Context, createApp, createSession, dependency, Get, Hook, HttpResponseOK, Store, UseSessions } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../common';
+import { createTestConnection, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should not be saved when an error has been thrown', () => {
+
+  let connection: Connection;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
     Config.set('settings.logErrors', false);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.logErrors');
-    return closeTestConnection();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   function SetFooContent() {
@@ -74,7 +79,7 @@ describe('Sessions should not be saved when an error has been thrown', () => {
 
   beforeEach(async () => {
     app = await createApp(AppController);
-    await createTestConnection([ DatabaseSession ]);
+    connection = await createTestConnection([ DatabaseSession ]);
 
     await request(app)
       .get('/new-session')

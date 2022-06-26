@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, getConnection, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, Connection, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -16,11 +16,15 @@ import { createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with static roles', () => {
 
+  let connection: Connection;
+
   beforeEach(() => Config.set('settings.session.store', getTypeORMStorePath()));
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    await getConnection().close();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('Example: A simple access control.', async () => {
@@ -97,7 +101,7 @@ describe('Feature: Controlling access with static roles', () => {
     }
 
     const app = await createApp(AppController);
-    await createTestConnection([ User, DatabaseSession ]);
+    connection = await createTestConnection([ User, DatabaseSession ]);
 
     const user = new User();
     user.roles = [ 'user' ];

@@ -1,6 +1,9 @@
 // std
 import { rejects, strictEqual } from 'assert';
 
+// 3p
+import { Connection } from '@foal/typeorm/node_modules/typeorm';
+
 // FoalTS
 import {
   Config,
@@ -10,17 +13,21 @@ import {
   Store,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Reading a session from a token', () => {
+
+  let connection: Connection;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('Example: Simple example.', async () => {
@@ -40,7 +47,7 @@ describe('Feature: Reading a session from a token', () => {
       return foo;
     }
 
-    await createTestConnection([ DatabaseSession ]);
+    connection = await createTestConnection([ DatabaseSession ]);
 
     const session = await createSession(store);
     session.set('foo', 'bar');
