@@ -3,22 +3,16 @@ import { strictEqual } from 'assert';
 
 // 3p
 import Ajv from 'ajv';
-import { createConnection, getConnection } from 'typeorm';
 
 // FoalTS
 import { Group, Permission } from '@foal/typeorm';
 import { main as createGroup, schema } from './create-group';
+import { createTestConnection } from '../../common';
 
 describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
-    const connection = await createConnection({
-      database: './e2e_db.sqlite',
-      dropSchema: true,
-      entities: [ Permission, Group ],
-      synchronize: true,
-      type: 'better-sqlite3',
-    });
+    const connection = await createTestConnection([ Permission, Group ]);
     await Permission.save({
       codeName: 'delete-users',
       name: 'Permission to delete users',
@@ -43,11 +37,7 @@ describe('[Shell scripts] create-perm', () => {
 
     await createGroup(args);
 
-    await createConnection({
-      database: './e2e_db.sqlite',
-      entities: [ Permission, Group ],
-      type: 'better-sqlite3',
-    });
+    const connection = await createTestConnection([ Permission, Group ], { dropSchema: false });
 
     try {
       const group = await Group.findOneOrFail({
@@ -62,7 +52,7 @@ describe('[Shell scripts] create-perm', () => {
     } catch (error: any) {
       throw error;
     } finally {
-      await getConnection().close();
+      await connection.close();
     }
   });
 });

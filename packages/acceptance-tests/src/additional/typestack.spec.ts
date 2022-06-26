@@ -1,11 +1,12 @@
 // 3p
 import * as request from 'supertest';
-import { BaseEntity, Column, createConnection, Entity, getConnection, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, getConnection, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
 import { IsNumber, IsString } from '@foal/typestack/node_modules/class-validator';
+import { createTestConnection } from '../common';
 
 describe('ValidateBody hook', () => {
 
@@ -23,13 +24,7 @@ describe('ValidateBody hook', () => {
     price: number;
   }
 
-  before(() => createConnection({
-    database: 'e2e_db.sqlite',
-    dropSchema: true,
-    entities: [Product],
-    synchronize: true,
-    type: 'better-sqlite3',
-  }));
+  before(() => createTestConnection([ Product ]));
 
   after(() => getConnection().close());
 
