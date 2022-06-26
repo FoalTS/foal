@@ -17,7 +17,7 @@ import { UserWithPermissions } from '../entities';
  * - JWTOptional (@foal/jwt)
  *
  * @export
- * @param {(Class<{ id: number|string }> & typeof BaseEntity)} userEntityClass - The entity class which must extend UserWithPermissions.
+ * @param {(Class<UserWithPermissions> & typeof BaseEntity)} userEntityClass - The entity class which must extend UserWithPermissions.
  * @returns {FetchUser} The returned function expecting an id.
  */
 export function fetchUserWithPermissions(userEntityClass: Class<UserWithPermissions> & typeof BaseEntity): FetchUser {
