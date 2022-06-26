@@ -15,7 +15,7 @@ Open the file and replace its content with the following:
 ```typescript
 // 3p
 import { hashPassword } from '@foal/core';
-import { createConnection, getConnection } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
@@ -38,14 +38,14 @@ export async function main(args: { email: string, password: string, name?: strin
   user.name = args.name ?? 'Unknown';
   user.avatar = '';
 
-  await createConnection();
+  const connection = await createConnection();
 
   try {
     console.log(await user.save());
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await connection.close();
   }
 }
 

@@ -48,7 +48,7 @@ Replace the content of the new created file `src/scripts/create-perm.ts` with th
 ```typescript
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createConnection, getConnection } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 export const schema = {
   additionalProperties: false,
@@ -65,7 +65,7 @@ export async function main(args: { codeName: string, name: string }) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  await createConnection();
+  const connection = await createConnection();
 
   try {
     console.log(
@@ -74,7 +74,7 @@ export async function main(args: { codeName: string, name: string }) {
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await connection.close();
   }
 }
 ```
@@ -222,7 +222,7 @@ Replace the content of the new created file `src/scripts/create-user.ts` with th
 // 3p
 import { hashPassword } from '@foal/core';
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getConnection } from 'typeorm';
+import { createConnection } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
@@ -246,7 +246,7 @@ export async function main(args) {
   user.email = args.email;
   user.password = await hashPassword(args.password);
 
-  await createConnection();
+  const connection = await createConnection();
 
   for (const codeName of args.userPermissions as string[]) {
     const permission = await Permission.findOneBy({ codeName });
@@ -273,7 +273,7 @@ export async function main(args) {
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await connection.close();
   }
 }
 ```

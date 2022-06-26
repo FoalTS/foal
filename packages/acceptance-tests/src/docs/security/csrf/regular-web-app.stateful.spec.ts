@@ -140,7 +140,9 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     Config.remove('settings.session.csrf.enabled');
     Config.remove('settings.session.csrf.cookie.name');
 
-    await connection.close();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('Step 1: User logs in.', () => {

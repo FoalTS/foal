@@ -1,6 +1,5 @@
 // 3p
 import { Permission } from '@foal/typeorm';
-import { getConnection } from '@foal/typeorm/node_modules/typeorm';
 import { createTestConnection } from '../../common';
 
 export const schema = {
@@ -18,7 +17,7 @@ export async function main(args: { codeName: string, name: string }) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  await createTestConnection([ Permission ], { dropSchema: false });
+  const connection = await createTestConnection([ Permission ], { dropSchema: false });
 
   try {
     console.log(
@@ -27,6 +26,6 @@ export async function main(args: { codeName: string, name: string }) {
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await connection.close();
   }
 }

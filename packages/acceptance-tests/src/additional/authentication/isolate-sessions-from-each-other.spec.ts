@@ -1,5 +1,6 @@
 // 3p
 import * as request from 'supertest';
+import { Connection } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
@@ -17,19 +18,23 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../common';
+import { createTestConnection, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should be isolated from each other.', () => {
+
+  let connection: Connection;
 
   before(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
     Config.set('settings.logErrors', false);
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.logErrors');
-    return closeTestConnection();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   @UseSessions()
@@ -77,7 +82,7 @@ describe('Sessions should be isolated from each other.', () => {
 
   before(async () => {
     app = await createApp(AppController);
-    await createTestConnection([ DatabaseSession ]);
+    connection = await createTestConnection([ DatabaseSession ]);
   });
 
   it('Step 1: Create two sessions.', async () => {

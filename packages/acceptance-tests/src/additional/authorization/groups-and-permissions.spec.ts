@@ -1,5 +1,5 @@
 // 3p
-import { Entity, getConnection } from '@foal/typeorm/node_modules/typeorm';
+import { Entity, Connection } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -24,6 +24,7 @@ import { createTestConnection } from '../../common';
 
 describe('[Authorization|permissions] Users', () => {
 
+  let connection: Connection;
   let app: any;
   let tokenUser1: string;
   let tokenUser2: string;
@@ -47,7 +48,7 @@ describe('[Authorization|permissions] Users', () => {
   }
 
   before(async () => {
-    await createTestConnection([ User, Permission, Group, DatabaseSession ]);
+    connection = await createTestConnection([ User, Permission, Group, DatabaseSession ]);
 
     const user1 = new User();
     const user2 = new User();
@@ -84,7 +85,9 @@ describe('[Authorization|permissions] Users', () => {
   });
 
   after(async () => {
-    await getConnection().close();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('cannot access protected routes if they do not have the permission.', () => {

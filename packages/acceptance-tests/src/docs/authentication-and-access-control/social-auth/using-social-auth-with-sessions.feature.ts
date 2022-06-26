@@ -2,7 +2,7 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Connection, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
@@ -17,18 +17,22 @@ import {
   UseSessions,
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createTestConnection, getTypeORMStorePath } from '../../../common';
 import { DatabaseSession } from '@foal/typeorm';
 
 describe('Feature: Using social auth with sessions', () => {
+
+  let connection: Connection;
 
   before(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('Example: Simple auth controller.', async () => {
@@ -87,7 +91,7 @@ describe('Feature: Using social auth with sessions', () => {
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    await createTestConnection([ User, DatabaseSession ]);
+    connection = await createTestConnection([ User, DatabaseSession ]);
 
     const user = new User();
     user.email = 'jane.doe@foalts.org';

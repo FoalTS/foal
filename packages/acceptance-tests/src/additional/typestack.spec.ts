@@ -1,6 +1,6 @@
 // 3p
 import * as request from 'supertest';
-import { BaseEntity, Column, Entity, getConnection, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, Connection, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';
@@ -9,6 +9,8 @@ import { IsNumber, IsString } from '@foal/typestack/node_modules/class-validator
 import { createTestConnection } from '../common';
 
 describe('ValidateBody hook', () => {
+
+  let connection: Connection;
 
   @Entity()
   class Product extends BaseEntity {
@@ -24,9 +26,15 @@ describe('ValidateBody hook', () => {
     price: number;
   }
 
-  before(() => createTestConnection([ Product ]));
+  before(async () => {
+    connection = await createTestConnection([ Product ]);
+  });
 
-  after(() => getConnection().close());
+  after(async () => {
+    if (connection) {
+      await connection.close();
+    }
+  });
 
   it('should unserialize and validate HTTP request bodies', async () => {
     class AppController {

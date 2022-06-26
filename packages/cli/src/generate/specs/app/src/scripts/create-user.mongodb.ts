@@ -1,5 +1,5 @@
 // 3p
-import { createConnection, getConnection, getMongoManager } from 'typeorm';
+import { createConnection, getMongoManager } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
@@ -18,7 +18,7 @@ export const schema = {
 export async function main() {
   const user = new User();
 
-  await createConnection();
+  const connection = await createConnection();
 
   try {
     console.log(
@@ -27,6 +27,6 @@ export async function main() {
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await connection.close();
   }
 }

@@ -3,6 +3,7 @@ import { notStrictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { Connection } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
@@ -18,17 +19,21 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Regenerating the session ID', () => {
+
+  let connection: Connection;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('Example: Simple Example.', async () => {
@@ -57,7 +62,7 @@ describe('Feature: Regenerating the session ID', () => {
     }
 
     const app = await createApp(AppController);
-    await createTestConnection([ DatabaseSession ]);
+    connection = await createTestConnection([ DatabaseSession ]);
 
     let token = '';
 

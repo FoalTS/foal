@@ -1,20 +1,27 @@
 // std
 import { notStrictEqual, strictEqual } from 'assert';
 
+// 3p
+import { Connection } from '@foal/typeorm/node_modules/typeorm';
+
 // FoalTS
 import { Config, createService, createSession, readSession, Store } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createTestConnection, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Revoking sessions', () => {
+
+  let connection: Connection;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('Scenario: Revoking one session.', async () => {
@@ -37,7 +44,7 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    await createTestConnection([ DatabaseSession ]);
+    connection = await createTestConnection([ DatabaseSession ]);
 
     const session = await createSession(store);
     await session.commit();
@@ -66,7 +73,7 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    await createTestConnection([ DatabaseSession ]);
+    connection = await createTestConnection([ DatabaseSession ]);
 
     const session = await createSession(store);
     await session.commit();

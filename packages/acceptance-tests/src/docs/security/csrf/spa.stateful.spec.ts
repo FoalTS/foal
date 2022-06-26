@@ -108,7 +108,9 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
     Config.remove('settings.session.csrf.enabled');
     Config.remove('settings.session.csrf.cookie.name');
 
-    await connection.close();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('Step 1: User logs in and gets a CSRF token.', () => {

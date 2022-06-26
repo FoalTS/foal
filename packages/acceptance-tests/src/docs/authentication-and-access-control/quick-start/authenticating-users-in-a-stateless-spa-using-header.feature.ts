@@ -3,7 +3,7 @@ import { notStrictEqual } from 'assert';
 import { promisify } from 'util';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Connection, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import { sign } from 'jsonwebtoken';
 import * as request from 'supertest';
 
@@ -23,10 +23,11 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired } from '@foal/jwt';
-import { closeTestConnection, createTestConnection } from '../../../common';
+import { createTestConnection } from '../../../common';
 
 describe('Feature: Authenticating users in a stateless SPA using the `Authorization` header', () => {
 
+  let connection: Connection;
   let app: any;
   let token: string;
 
@@ -128,13 +129,15 @@ describe('Feature: Authenticating users in a stateless SPA using the `Authorizat
     Config.set('settings.jwt.secret', 'Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=');
     Config.set('settings.jwt.secretEncoding', 'base64');
     app = await createApp(AppController);
-    await createTestConnection([ User ]);
+    connection = await createTestConnection([ User ]);
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.jwt.secret');
     Config.remove('settings.jwt.secretEncoding');
-    return closeTestConnection();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   function formatBearer(token: string) {

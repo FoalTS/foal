@@ -109,7 +109,9 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.remove('settings.jwt.csrf.enabled');
     Config.remove('settings.jwt.csrf.cookie.name');
 
-    await connection.close();
+    if (connection) {
+      await connection.close();
+    }
   });
 
   it('Step 1: User logs in and gets a CSRF token.', () => {
