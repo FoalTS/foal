@@ -19,7 +19,7 @@ import { ObjectId } from 'mongodb';
  * @returns {FetchUser} The returned function expecting an id.
  */
 export function fetchMongoDBUser(userEntityClass: Class<{ id: ObjectID }|{ _id: ObjectID }> & typeof BaseEntity): FetchUser {
-  return async (id: number|string) => {
+  return (id: number|string) => {
     if (typeof id === 'number') {
       throw new Error('Unexpected type for MongoDB user ID: number.');
     }

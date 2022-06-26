@@ -5,9 +5,6 @@ import { BaseEntity } from 'typeorm';
 // FoalTS
 import { UserWithPermissions } from '../entities';
 
-// FoalTS
-import { UserWithPermissions } from '../entities';
-
 /**
  * Create a function that finds the first entity that matches some id. Groups and permissions
  * are also retreived so that `UserWithPermissions.hasPerm` and `PermissionRequired` can be used.

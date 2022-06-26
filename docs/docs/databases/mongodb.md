@@ -102,10 +102,10 @@ const user = await getMongoRepository(User).findOneBy({ _id: new ObjectId('xxxx'
 
 *user.entity.ts*
 ```typescript
-import { Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { BaseEntity, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
   @ObjectIdColumn()
   id: ObjectID;

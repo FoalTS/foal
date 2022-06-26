@@ -1,5 +1,5 @@
 // std
-import { ok, strictEqual, rejects } from 'assert';
+import { ok, rejects, strictEqual } from 'assert';
 
 // 3p
 import { ServiceManager } from '@foal/core';
@@ -65,11 +65,12 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission1 = new Permission();
       permission1.codeName = 'permission1';
       permission1.name = '';
+      await permission1.save();
 
       const permission2 = new Permission();
       permission2.codeName = 'permission2';
       permission2.name = '';
-      await Permission.save([permission1, permission2]);
+      await permission2.save();
 
       const group = new Group();
       group.name = 'group1';

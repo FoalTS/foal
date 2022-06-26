@@ -22,6 +22,7 @@ function testSuite(type: 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3')
     }
 
     let dataSource: DataSource;
+
     let user: User;
 
     before(async () => {

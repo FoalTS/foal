@@ -29,9 +29,10 @@ describe('fetchMongoDBUser', () => {
     name: string;
   }
 
-  let dataSource: DataSource;
   let user: User;
   let user2: User2;
+
+  let dataSource: DataSource;
 
   before(async () => {
     dataSource = new DataSource({
@@ -47,11 +48,11 @@ describe('fetchMongoDBUser', () => {
 
     user = new User();
     user.name = 'foobar';
-    await dataSource.getMongoRepository(User).save(user);
+    await user.save();
 
     user2 = new User2();
     user2.name = 'foobar2';
-    await dataSource.getMongoRepository(User2).save(user2);
+    await user2.save();
   });
 
   after(async () => {
