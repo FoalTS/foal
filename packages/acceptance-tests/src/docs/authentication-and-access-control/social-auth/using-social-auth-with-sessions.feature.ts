@@ -17,7 +17,7 @@ import {
   UseSessions,
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 import { DatabaseSession } from '@foal/typeorm';
 
 describe('Feature: Using social auth with sessions', () => {
@@ -91,7 +91,7 @@ describe('Feature: Using social auth with sessions', () => {
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    connection = await createTestConnection([ User, DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     const user = new User();
     user.email = 'jane.doe@foalts.org';

@@ -7,7 +7,7 @@ import { Connection } from '@foal/typeorm/node_modules/typeorm';
 // FoalTS
 import { Config, createService, createSession, readSession, Store } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Revoking sessions', () => {
 
@@ -44,7 +44,7 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const session = await createSession(store);
     await session.commit();
@@ -73,7 +73,7 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const session = await createSession(store);
     await session.commit();

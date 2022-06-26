@@ -26,7 +26,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Authenticating users in a stateful SPA using the `Authorization` header', () => {
 
@@ -137,7 +137,7 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
     app = await createApp(AppController);
-    connection = await createTestConnection([ User, DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ User, DatabaseSession ]);
   });
 
   after(async () => {

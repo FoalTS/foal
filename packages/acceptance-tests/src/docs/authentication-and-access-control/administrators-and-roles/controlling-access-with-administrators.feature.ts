@@ -12,7 +12,7 @@ import {
   HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with administrators', () => {
 
@@ -101,7 +101,7 @@ describe('Feature: Controlling access with administrators', () => {
     }
 
     const app = await createApp(AppController);
-    connection = await createTestConnection([ User, DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     const user = new User();
     user.isAdmin = false;

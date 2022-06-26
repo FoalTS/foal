@@ -7,7 +7,7 @@ import {
   Config, controller, createApp, Get, HttpResponseOK, IAppController, UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Requiring the session cookie', async () => {
 
@@ -47,7 +47,7 @@ describe('Feature: Requiring the session cookie', async () => {
     }
 
     const app = await createApp(AppController);
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
 
     await request(app)
       .get('/api/products')

@@ -20,7 +20,7 @@ import {
   TypeORMStore,
   UserWithPermissions
 } from '@foal/typeorm';
-import { createTestConnection } from '../../common';
+import { createAndInitializeDataSource } from '../../common';
 
 describe('[Authorization|permissions] Users', () => {
 
@@ -48,7 +48,7 @@ describe('[Authorization|permissions] Users', () => {
   }
 
   before(async () => {
-    connection = await createTestConnection([ User, Permission, Group, DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ User, Permission, Group, DatabaseSession ]);
 
     const user1 = new User();
     const user2 = new User();

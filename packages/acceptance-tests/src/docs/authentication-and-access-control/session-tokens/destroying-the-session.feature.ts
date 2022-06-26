@@ -22,7 +22,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Destroying the session', () => {
 
@@ -66,7 +66,7 @@ describe('Feature: Destroying the session', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

@@ -22,7 +22,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Using the Authorization header', () => {
 
@@ -85,7 +85,7 @@ describe('Feature: Using the Authorization header', () => {
     }
 
     const app = await createApp(AppController);
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
 
     strictEqual(session, null);
 
@@ -165,7 +165,7 @@ describe('Feature: Using the Authorization header', () => {
     }
 
     const app = await createApp(AppController);
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
 
     strictEqual(session, null);
 

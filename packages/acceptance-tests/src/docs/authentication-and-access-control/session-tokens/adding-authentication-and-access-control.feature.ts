@@ -23,7 +23,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
 
@@ -100,7 +100,7 @@ describe('Feature: Adding authentication and access control', () => {
     }
 
     const app = await createApp(AppController);
-    connection = await createTestConnection([ DatabaseSession, User ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession, User ]);
 
     const user2 = new User();
     await user2.save();
@@ -171,7 +171,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createTestConnection([ DatabaseSession, User ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession, User ]);
 
     const user = new User();
     await user.save();
@@ -232,7 +232,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createTestConnection([ DatabaseSession, User ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession, User ]);
 
     const user = new User();
     await user.save();
@@ -320,7 +320,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createTestConnection([ DatabaseSession, User, Product ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession, User, Product ]);
 
     const user = new User();
     user.email = 'foo@foalts.org';

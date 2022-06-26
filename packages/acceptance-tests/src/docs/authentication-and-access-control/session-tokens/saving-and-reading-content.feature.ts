@@ -19,7 +19,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Saving and reading content', () => {
 
@@ -68,7 +68,7 @@ describe('Feature: Saving and reading content', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);
@@ -119,7 +119,7 @@ describe('Feature: Saving and reading content', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

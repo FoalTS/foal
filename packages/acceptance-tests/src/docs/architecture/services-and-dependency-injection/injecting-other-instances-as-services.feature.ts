@@ -4,7 +4,7 @@ import * as request from 'supertest';
 // FoalTS
 import { controller, createApp, dependency, Get, HttpResponseOK, IAppController, ServiceManager } from '@foal/core';
 import { Connection, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
-import { createTestConnection } from '../../../common';
+import { createAndInitializeDataSource } from '../../../common';
 
 describe('Feature: Injecting other instances as services', () => {
 
@@ -50,7 +50,7 @@ describe('Feature: Injecting other instances as services', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main() {
-      connection = await createTestConnection([ Product ]);
+      connection = await createAndInitializeDataSource([ Product ]);
 
       const serviceManager = new ServiceManager();
       serviceManager.set(Connection, connection);

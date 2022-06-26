@@ -22,7 +22,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, removeAuthCookie, setAuthCookie } from '@foal/jwt';
-import { createTestConnection, readCookie, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Authenticating users in a stateless SPA using cookies', () => {
 
@@ -138,7 +138,7 @@ describe('Feature: Authenticating users in a stateless SPA using cookies', () =>
     Config.set('settings.jwt.secret', 'Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=');
     Config.set('settings.jwt.secretEncoding', 'base64');
     app = await createApp(AppController);
-    connection = await createTestConnection([ User ]);
+    connection = await createAndInitializeDataSource([ User ]);
   });
 
   after(async () => {

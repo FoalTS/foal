@@ -35,7 +35,7 @@ import {
   ObjectID,
   ObjectIdColumn
 } from '@foal/typeorm/node_modules/typeorm';
-import { createTestConnection } from '../common';
+import { createAndInitializeDataSource } from '../common';
 
 describe('[Sample] MongoDB & Redis Store', async () => {
 
@@ -141,7 +141,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     Config.set('settings.mongodb.uri', MONGODB_URI);
     Config.set('settings.redis.uri', REDIS_URI);
 
-    connection = await createTestConnection([User], {
+    connection = await createAndInitializeDataSource([User], {
       database: 'e2e_db',
       type: 'mongodb',
     });

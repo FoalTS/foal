@@ -35,7 +35,7 @@ import {
   ObjectID,
   ObjectIdColumn
 } from '@foal/typeorm/node_modules/typeorm';
-import { createTestConnection } from '../common';
+import { createAndInitializeDataSource } from '../common';
 
 describe('[Sample] TypeORM & MongoDB Store', async () => {
 
@@ -139,7 +139,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
   before(async () => {
     Config.set('settings.mongodb.uri', 'mongodb://localhost:27017/e2e_db');
 
-    connection = await createTestConnection([User], {
+    connection = await createAndInitializeDataSource([User], {
       database: 'e2e_db',
       type: 'mongodb',
     });

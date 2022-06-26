@@ -6,7 +6,7 @@ import { BaseEntity, Column, Entity, Connection, PrimaryGeneratedColumn } from '
 import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
 import { IsNumber, IsString } from '@foal/typestack/node_modules/class-validator';
-import { createTestConnection } from '../common';
+import { createAndInitializeDataSource } from '../common';
 
 describe('ValidateBody hook', () => {
 
@@ -27,7 +27,7 @@ describe('ValidateBody hook', () => {
   }
 
   before(async () => {
-    connection = await createTestConnection([ Product ]);
+    connection = await createAndInitializeDataSource([ Product ]);
   });
 
   after(async () => {

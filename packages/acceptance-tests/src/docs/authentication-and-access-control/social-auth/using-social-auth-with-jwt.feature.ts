@@ -17,7 +17,7 @@ import {
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
 import { getSecretOrPrivateKey, setAuthCookie } from '@foal/jwt';
-import { createTestConnection } from '../../../common';
+import { createAndInitializeDataSource } from '../../../common';
 import { DatabaseSession } from '@foal/typeorm';
 
 describe('Feature: Using social auth with JWT', () => {
@@ -96,7 +96,7 @@ describe('Feature: Using social auth with JWT', () => {
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    connection = await createTestConnection([ User, DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     const user = new User();
     user.email = 'jane.doe@foalts.org';

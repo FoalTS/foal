@@ -20,7 +20,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, setAuthCookie } from '@foal/jwt';
-import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../../../common';
+import { createFixtureUser, createAndInitializeDataSource, credentialsSchema, readCookie, User } from '../../../common';
 
 describe('Feature: Stateless CSRF protection in a Single-Page Application', () => {
 
@@ -96,7 +96,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.set('settings.jwt.csrf.enabled', true);
     Config.set('settings.jwt.csrf.cookie.name', csrfCookieName);
 
-    connection = await createTestConnection([ User ]);
+    connection = await createAndInitializeDataSource([ User ]);
 
     user = await createFixtureUser(1);
     await user.save();

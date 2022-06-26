@@ -18,7 +18,7 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should be isolated from each other.', () => {
 
@@ -82,7 +82,7 @@ describe('Sessions should be isolated from each other.', () => {
 
   before(async () => {
     app = await createApp(AppController);
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
   });
 
   it('Step 1: Create two sessions.', async () => {

@@ -10,7 +10,7 @@ import {
   Config, createApp, Get, HttpResponseOK, UseSessions,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Overriding the cookie options', async () => {
 
@@ -45,7 +45,7 @@ describe('Feature: Overriding the cookie options', async () => {
     }
 
     const app = await createApp(AppController);
-    connection = await createTestConnection([ DatabaseSession ]);
+    connection = await createAndInitializeDataSource([ DatabaseSession ]);
 
     Config.set('settings.session.cookie.name', 'xxx');
     Config.set('settings.session.cookie.domain', 'example.com');
