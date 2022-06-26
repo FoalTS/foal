@@ -7,7 +7,7 @@ import {
   isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 
 // App
 import { /* upperFirstCamelName */, User } from '/* entitiesPath */';
@@ -29,18 +29,15 @@ describe('/* upperFirstCamelName */Controller', () => {
   beforeEach(async () => {
     controller = createController(/* upperFirstCamelName */Controller);
 
-    const /* camelName */Repository = getRepository(/* upperFirstCamelName */);
-    const userRepository = getRepository(User);
+    await /* upperFirstCamelName */.clear();
+    await User.clear();
 
-    await /* camelName */Repository.clear();
-    await userRepository.clear();
-
-    [ user1, user2 ] = await userRepository.save([
+    [ user1, user2 ] = await User.save([
       {},
       {},
     ]);
 
-    [ /* camelName */0, /* camelName */1, /* camelName */2 ] = await /* camelName */Repository.save([
+    [ /* camelName */0, /* camelName */1, /* camelName */2 ] = await /* upperFirstCamelName */.save([
       {
         owner: user1,
         text: '/* upperFirstCamelName */ 0',
@@ -82,7 +79,7 @@ describe('/* upperFirstCamelName */Controller', () => {
     });
 
     it('should support pagination', async () => {
-      const /* camelName */3 = await getRepository(/* upperFirstCamelName */).save({
+      const /* camelName */3 = await /* upperFirstCamelName */.save({
         owner: user2,
         text: '/* upperFirstCamelName */ 3',
       });
@@ -191,7 +188,7 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseCreated object.');
       }
 
-      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOne({
+      const /* camelName */ = await /* upperFirstCamelName */.findOne({
         relations: { owner: true },
         where: { text: '/* upperFirstCamelName */ 3' },
       });
@@ -232,7 +229,7 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */2.id });
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */2.id });
 
       if (!/* camelName */) {
         throw new Error();
@@ -256,7 +253,7 @@ describe('/* upperFirstCamelName */Controller', () => {
       ctx.user = user2;
       await controller.modify/* upperFirstCamelName */(ctx);
 
-      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */1.id });
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */1.id });
 
       if (!/* camelName */) {
         throw new Error();
@@ -324,7 +321,7 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */2.id });
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */2.id });
 
       if (!/* camelName */) {
         throw new Error();
@@ -348,7 +345,7 @@ describe('/* upperFirstCamelName */Controller', () => {
       ctx.user = user2;
       await controller.replace/* upperFirstCamelName */(ctx);
 
-      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */1.id });
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */1.id });
 
       if (!/* camelName */) {
         throw new Error();
@@ -413,7 +410,7 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */2.id });
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */2.id });
 
       strictEqual(/* camelName */, null);
     });
@@ -431,7 +428,7 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const /* camelName */ = await getRepository(/* upperFirstCamelName */).findOneBy({ id: /* camelName */1.id });
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */1.id });
 
       notStrictEqual(/* camelName */, null);
     });
