@@ -17,6 +17,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     class User extends UserWithPermissions { }
 
     let dataSource: DataSource;
+
     let user: User;
 
     before(async function() {

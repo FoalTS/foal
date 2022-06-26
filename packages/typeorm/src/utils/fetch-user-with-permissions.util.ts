@@ -21,7 +21,7 @@ import { UserWithPermissions } from '../entities';
  * @returns {FetchUser} The returned function expecting an id.
  */
 export function fetchUserWithPermissions(userEntityClass: Class<UserWithPermissions> & typeof BaseEntity): FetchUser {
-  return async (id: number|string) => {
+  return async (id: number | string) => {
     if (typeof id === 'string') {
       id = parseInt(id, 10);
       if (isNaN(id)) {
