@@ -35,7 +35,7 @@ export class TestFooBarController {
       skip: ctx.request.query.skip,
       take: ctx.request.query.take,
       where: {
-        owner: ctx.user
+        owner: { id: ctx.user.id }
       }
     });
     return new HttpResponseOK(testFooBars);
@@ -48,9 +48,9 @@ export class TestFooBarController {
   @ApiResponse(200, { description: 'Returns the testFooBar.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
   async findTestFooBarById(ctx: Context<User>) {
-    const testFooBar = await TestFooBar.findOne({
+    const testFooBar = await TestFooBar.findOneBy({
       id: ctx.request.params.testFooBarId,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
 
     if (!testFooBar) {
@@ -69,7 +69,7 @@ export class TestFooBarController {
   async createTestFooBar(ctx: Context<User>) {
     const testFooBar = await TestFooBar.save({
       ...ctx.request.body,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
     return new HttpResponseCreated(testFooBar);
   }
@@ -83,9 +83,9 @@ export class TestFooBarController {
   @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody({ ...testFooBarSchema, required: [] })
   async modifyTestFooBar(ctx: Context<User>) {
-    const testFooBar = await TestFooBar.findOne({
+    const testFooBar = await TestFooBar.findOneBy({
       id: ctx.request.params.testFooBarId,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
 
     if (!testFooBar) {
@@ -108,9 +108,9 @@ export class TestFooBarController {
   @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody(testFooBarSchema)
   async replaceTestFooBar(ctx: Context<User>) {
-    const testFooBar = await TestFooBar.findOne({
+    const testFooBar = await TestFooBar.findOneBy({
       id: ctx.request.params.testFooBarId,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
 
     if (!testFooBar) {
@@ -131,9 +131,9 @@ export class TestFooBarController {
   @ApiResponse(204, { description: 'TestFooBar successfully deleted.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
   async deleteTestFooBar(ctx: Context<User>) {
-    const testFooBar = await TestFooBar.findOne({
+    const testFooBar = await TestFooBar.findOneBy({
       id: ctx.request.params.testFooBarId,
-      owner: ctx.user
+      owner: { id: ctx.user.id }
     });
 
     if (!testFooBar) {

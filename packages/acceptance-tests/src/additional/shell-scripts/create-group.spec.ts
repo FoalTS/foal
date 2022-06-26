@@ -51,9 +51,7 @@ describe('[Shell scripts] create-perm', () => {
           codeName: 'admin',
           name: 'Administrators',
         },
-        relations: {
-          permissions: true,
-        },
+        relations: { permissions: true }
       });
       strictEqual(group.permissions.length, 1);
       strictEqual(group.permissions[0].codeName, 'delete-users');

@@ -46,7 +46,7 @@ export class TestFooBarController {
   @ApiResponse(200, { description: 'Returns the testFooBar.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
   async findTestFooBarById(ctx: Context) {
-    const testFooBar = await TestFooBar.findOne(ctx.request.params.testFooBarId);
+    const testFooBar = await TestFooBar.findOneBy({ id: ctx.request.params.testFooBarId });
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -75,7 +75,7 @@ export class TestFooBarController {
   @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody({ ...testFooBarSchema, required: [] })
   async modifyTestFooBar(ctx: Context) {
-    const testFooBar = await TestFooBar.findOne(ctx.request.params.testFooBarId);
+    const testFooBar = await TestFooBar.findOneBy({ id: ctx.request.params.testFooBarId });
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -97,7 +97,7 @@ export class TestFooBarController {
   @ValidatePathParam('testFooBarId', { type: 'number' })
   @ValidateBody(testFooBarSchema)
   async replaceTestFooBar(ctx: Context) {
-    const testFooBar = await TestFooBar.findOne(ctx.request.params.testFooBarId);
+    const testFooBar = await TestFooBar.findOneBy({ id: ctx.request.params.testFooBarId });
 
     if (!testFooBar) {
       return new HttpResponseNotFound();
@@ -117,7 +117,7 @@ export class TestFooBarController {
   @ApiResponse(204, { description: 'TestFooBar successfully deleted.' })
   @ValidatePathParam('testFooBarId', { type: 'number' })
   async deleteTestFooBar(ctx: Context) {
-    const testFooBar = await TestFooBar.findOne(ctx.request.params.testFooBarId);
+    const testFooBar = await TestFooBar.findOneBy({ id: ctx.request.params.testFooBarId });
 
     if (!testFooBar) {
       return new HttpResponseNotFound();

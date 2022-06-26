@@ -46,7 +46,7 @@ export class /* upperFirstCamelName */Controller {
   @ApiResponse(200, { description: 'Returns the /* camelName */.' })
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   async find/* upperFirstCamelName */ById(ctx: Context) {
-    const /* camelName */ = await /* upperFirstCamelName */.findOne(ctx.request.params./* camelName */Id);
+    const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: ctx.request.params./* camelName */Id });
 
     if (!/* camelName */) {
       return new HttpResponseNotFound();
@@ -75,7 +75,7 @@ export class /* upperFirstCamelName */Controller {
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   @ValidateBody({ .../* camelName */Schema, required: [] })
   async modify/* upperFirstCamelName */(ctx: Context) {
-    const /* camelName */ = await /* upperFirstCamelName */.findOne(ctx.request.params./* camelName */Id);
+    const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: ctx.request.params./* camelName */Id });
 
     if (!/* camelName */) {
       return new HttpResponseNotFound();
@@ -97,7 +97,7 @@ export class /* upperFirstCamelName */Controller {
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   @ValidateBody(/* camelName */Schema)
   async replace/* upperFirstCamelName */(ctx: Context) {
-    const /* camelName */ = await /* upperFirstCamelName */.findOne(ctx.request.params./* camelName */Id);
+    const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: ctx.request.params./* camelName */Id });
 
     if (!/* camelName */) {
       return new HttpResponseNotFound();
@@ -117,7 +117,7 @@ export class /* upperFirstCamelName */Controller {
   @ApiResponse(204, { description: '/* upperFirstCamelName */ successfully deleted.' })
   @ValidatePathParam('/* camelName */Id', { type: 'number' })
   async delete/* upperFirstCamelName */(ctx: Context) {
-    const /* camelName */ = await /* upperFirstCamelName */.findOne(ctx.request.params./* camelName */Id);
+    const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: ctx.request.params./* camelName */Id });
 
     if (!/* camelName */) {
       return new HttpResponseNotFound();

@@ -512,9 +512,7 @@ export class ApiController {
   @Get('/products')
   @UserRequired()
   async readProducts(ctx: Context<User>) {
-    const products = await Product.findBy({ owner: {
-      id: ctx.user.id
-    } });
+    const products = await Product.findBy({ owner: { id: ctx.user.id } });
     return new HttpResponseOK(products);
   }
 

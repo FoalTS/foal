@@ -189,7 +189,7 @@ describe('/* upperFirstCamelName */Controller', () => {
       }
 
       const /* camelName */ = await /* upperFirstCamelName */.findOne({
-        relations: [ 'owner' ],
+        relations: { owner: true },
         where: { text: '/* upperFirstCamelName */ 3' },
       });
 
@@ -229,7 +229,7 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const /* camelName */ = await /* upperFirstCamelName */.findOne(/* camelName */2.id);
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */2.id });
 
       if (!/* camelName */) {
         throw new Error();
@@ -253,7 +253,7 @@ describe('/* upperFirstCamelName */Controller', () => {
       ctx.user = user2;
       await controller.modify/* upperFirstCamelName */(ctx);
 
-      const /* camelName */ = await /* upperFirstCamelName */.findOne(/* camelName */1.id);
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */1.id });
 
       if (!/* camelName */) {
         throw new Error();
@@ -321,7 +321,7 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const /* camelName */ = await /* upperFirstCamelName */.findOne(/* camelName */2.id);
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */2.id });
 
       if (!/* camelName */) {
         throw new Error();
@@ -345,7 +345,7 @@ describe('/* upperFirstCamelName */Controller', () => {
       ctx.user = user2;
       await controller.replace/* upperFirstCamelName */(ctx);
 
-      const /* camelName */ = await /* upperFirstCamelName */.findOne(/* camelName */1.id);
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */1.id });
 
       if (!/* camelName */) {
         throw new Error();
@@ -410,9 +410,9 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const /* camelName */ = await /* upperFirstCamelName */.findOne(/* camelName */2.id);
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */2.id });
 
-      strictEqual(/* camelName */, undefined);
+      strictEqual(/* camelName */, null);
     });
 
     it('should not delete the other /* camelName */s.', async () => {
@@ -428,9 +428,9 @@ describe('/* upperFirstCamelName */Controller', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const /* camelName */ = await /* upperFirstCamelName */.findOne(/* camelName */1.id);
+      const /* camelName */ = await /* upperFirstCamelName */.findOneBy({ id: /* camelName */1.id });
 
-      notStrictEqual(/* camelName */, undefined);
+      notStrictEqual(/* camelName */, null);
     });
 
     it('should return an HttpResponseNotFound if the /* camelName */ was not found.', async () => {

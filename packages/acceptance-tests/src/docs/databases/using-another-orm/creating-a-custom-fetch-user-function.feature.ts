@@ -15,7 +15,7 @@ describe('Feature: Creating a custom fetch user function.', () => {
         if (typeof id === 'string') {
           throw new Error('The user ID must be a number.');
         }
-        const user = await userModel.findOne({ id });
+        const user = await userModel.findOneBy({ id });
         return user;
       };
     }
@@ -23,7 +23,7 @@ describe('Feature: Creating a custom fetch user function.', () => {
     /* ======================= DOCUMENTATION END ========================= */
 
     class User {
-      static findOne({ id }: { id: number }): any {
+      static findOneBy({ id }: { id: number }): any {
         if (id === 1) {
           return { id: 1 };
         }

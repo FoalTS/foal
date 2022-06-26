@@ -40,7 +40,7 @@ export function fetchUser(userModel: any): FetchUser {
     if (typeof id === 'string') {
       throw new Error('The user ID must be a number.');
     }
-    const user = await userModel.findOne({ id });
+    const user = await userModel.findOneBy({ id });
     return user;
   };
 }
