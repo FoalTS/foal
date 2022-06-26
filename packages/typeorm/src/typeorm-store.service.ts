@@ -1,6 +1,6 @@
 // 3p
 import { SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
-import { BaseEntity, Column, DataSource, Entity, IsNull, LessThan, Not, PrimaryColumn, Repository } from 'typeorm';
+import { BaseEntity, Column, Entity, IsNull, LessThan, Not, PrimaryColumn, Repository } from 'typeorm';
 
 @Entity({
   name: 'sessions'
