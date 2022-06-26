@@ -1,6 +1,5 @@
 // 3p
 import * as request from 'supertest';
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import { Config, Context, createSession, dependency, Get, Hook, HttpResponseOK, Store, UseSessions } from '@foal/core';

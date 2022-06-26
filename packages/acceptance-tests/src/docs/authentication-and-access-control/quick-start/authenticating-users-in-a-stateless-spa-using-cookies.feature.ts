@@ -11,7 +11,6 @@ import {
   Config,
   Context,
   controller,
-  createApp,
   Get,
   hashPassword,
   HttpResponseOK,

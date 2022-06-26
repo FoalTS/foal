@@ -2,7 +2,7 @@
 import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { DataSource, BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS

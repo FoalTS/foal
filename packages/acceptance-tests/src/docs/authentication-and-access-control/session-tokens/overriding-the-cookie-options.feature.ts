@@ -6,7 +6,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Config, createApp, Get, HttpResponseOK, UseSessions,
+  Config, Get, HttpResponseOK, UseSessions,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
 import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';

@@ -1,5 +1,5 @@
 // 3p
-import { DataSource, Entity } from '@foal/typeorm/node_modules/typeorm';
+import { Entity } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS

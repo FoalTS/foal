@@ -5,7 +5,6 @@ import * as request from 'supertest';
 import {
   Config,
   Context,
-  createApp,
   createSession,
   Get,
   HttpResponseOK,

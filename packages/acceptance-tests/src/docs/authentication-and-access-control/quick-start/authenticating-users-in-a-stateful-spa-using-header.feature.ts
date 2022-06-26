@@ -10,7 +10,6 @@ import {
   Config,
   Context,
   controller,
-  createApp,
   createSession,
   dependency,
   Get,

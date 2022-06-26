@@ -2,7 +2,6 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS

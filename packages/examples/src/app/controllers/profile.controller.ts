@@ -3,8 +3,6 @@ import {
 } from '@foal/core';
 import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
 
-import { appDataSource } from '../data-source';
-
 import { User } from '../entities';
 
 @ApiInfo({
