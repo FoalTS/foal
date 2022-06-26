@@ -119,7 +119,7 @@ export class TestFooBarController {
 
     Object.assign(testFooBar, ctx.request.body);
 
-    await TestFooBar.save(testFooBar);
+    await testFooBar.save();
 
     return new HttpResponseOK(testFooBar);
   }
