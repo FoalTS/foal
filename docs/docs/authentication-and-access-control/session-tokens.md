@@ -645,7 +645,8 @@ Open `scripts/revoke-session.ts` and update its content.
 
 ```typescript
 import { createService, readSession, Store } from '@foal/core';
-import { createConnection } from 'typeorm';
+
+import { dataSource } from '../db';
 
 export const schema = {
   type: 'object',
@@ -656,7 +657,7 @@ export const schema = {
 }
 
 export async function main({ token }: { token: string }) {
-  await createConnection();
+  await dataSource.initialize();
 
   const store = createService(Store);
   await store.boot();
@@ -690,10 +691,11 @@ Open `scripts/revoke-all-sessions.ts` and update its content.
 
 ```typescript
 import { createService, Store } from '@foal/core';
-import { createConnection } from 'typeorm';
+
+import { dataSource } from '../db';
 
 export async function main() {
-  await createConnection();
+  await dataSource.initialize();
 
   const store = createService(Store);
   await store.boot();

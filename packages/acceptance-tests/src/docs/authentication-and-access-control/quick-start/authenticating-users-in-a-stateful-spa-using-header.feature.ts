@@ -2,7 +2,7 @@
 import { notStrictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Connection, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -30,7 +30,7 @@ import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../com
 
 describe('Feature: Authenticating users in a stateful SPA using the `Authorization` header', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let app: any;
   let token: string;
 
@@ -137,13 +137,13 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
     app = await createApp(AppController);
-    connection = await createAndInitializeDataSource([ User, DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
   });
 
   after(async () => {
     Config.remove('settings.session.store');
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

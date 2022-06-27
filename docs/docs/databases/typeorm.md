@@ -247,7 +247,7 @@ In this way, you can define a default configuration in the `config/default.{yml|
 > You learn more on how configuration works in Foal [here](../architecture/configuration.md)
 
 In the example below, we add two new options:
-- `dropSchema` clears the database each time we call `createConnection`
+- `dropSchema` clears the database each time we create the connection
 - and `synchronize` synchronizes the database tables with your entities so your do not have to generate and run migrations during testing.
 
 *config/test.yml*
@@ -264,17 +264,21 @@ database:
 
 *Example of a test*
 ```typescript
-import { createConnection, Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { createDataSource } from '../db';
 
 describe('xxx', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
-  beforeEach(() => connection = await createConnection())
+  beforeEach(async () => {
+    dataSource = createDataSource();
+    await dataSource.initialize();
+  });
 
   afterEach(async () => {
-    if (connection) {
-      await connection.close()
+    if (dataSource) {
+      await dataSource.destroy()
     }
   });
 

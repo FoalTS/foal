@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { Connection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -117,7 +117,7 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
 
   const csrfCookieName = 'Custom-XSRF-Token';
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let user: User;
 
   let app: any;
@@ -128,7 +128,7 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     Config.set('settings.session.csrf.enabled', true);
     Config.set('settings.session.csrf.cookie.name', csrfCookieName);
 
-    connection = await createAndInitializeDataSource([ User, DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     user = await createFixtureUser(1);
     await user.save();
@@ -140,8 +140,8 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     Config.remove('settings.session.csrf.enabled');
     Config.remove('settings.session.csrf.cookie.name');
 
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

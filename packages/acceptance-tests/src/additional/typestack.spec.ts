@@ -1,6 +1,6 @@
 // 3p
 import * as request from 'supertest';
-import { BaseEntity, Column, Entity, Connection, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';
@@ -10,7 +10,7 @@ import { createAndInitializeDataSource } from '../common';
 
 describe('ValidateBody hook', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   @Entity()
   class Product extends BaseEntity {
@@ -27,12 +27,12 @@ describe('ValidateBody hook', () => {
   }
 
   before(async () => {
-    connection = await createAndInitializeDataSource([ Product ]);
+    dataSource = await createAndInitializeDataSource([ Product ]);
   });
 
   after(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

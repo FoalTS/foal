@@ -3,16 +3,16 @@ import * as request from 'supertest';
 
 // FoalTS
 import { controller, createApp, dependency, Get, HttpResponseOK, IAppController, ServiceManager } from '@foal/core';
-import { Connection, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import { createAndInitializeDataSource } from '../../../common';
 
 describe('Feature: Injecting other instances as services', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   afterEach(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -29,11 +29,11 @@ describe('Feature: Injecting other instances as services', () => {
     class ApiController {
 
       @dependency
-      connection: Connection;
+      dataSource: DataSource;
 
       @Get('/products')
       async readProducts() {
-        const products = await this.connection.getRepository(Product).find();
+        const products = await this.dataSource.getRepository(Product).find();
         return new HttpResponseOK(products);
       }
 
@@ -50,10 +50,10 @@ describe('Feature: Injecting other instances as services', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main() {
-      connection = await createAndInitializeDataSource([ Product ]);
+      dataSource = await createAndInitializeDataSource([ Product ]);
 
       const serviceManager = new ServiceManager();
-      serviceManager.set(Connection, connection);
+      serviceManager.set(DataSource, dataSource);
 
       return await createApp(AppController, {
         serviceManager

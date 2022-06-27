@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { Connection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 import { sign } from 'jsonwebtoken';
 import * as request from 'supertest';
 
@@ -84,7 +84,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
 
   const csrfCookieName = 'Custom-XSRF-Token';
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let user: User;
 
   let app: any;
@@ -96,7 +96,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.set('settings.jwt.csrf.enabled', true);
     Config.set('settings.jwt.csrf.cookie.name', csrfCookieName);
 
-    connection = await createAndInitializeDataSource([ User ]);
+    dataSource = await createAndInitializeDataSource([ User ]);
 
     user = await createFixtureUser(1);
     await user.save();
@@ -109,8 +109,8 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.remove('settings.jwt.csrf.enabled');
     Config.remove('settings.jwt.csrf.cookie.name');
 
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

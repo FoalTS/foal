@@ -7,15 +7,16 @@ import {
   isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
-import { Connection, createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { /* upperFirstCamelName */, User } from '/* entitiesPath */';
+import { createDataSource } from '';
 import { /* upperFirstCamelName */Controller } from './/* kebabName */.controller';
 
 describe('/* upperFirstCamelName */Controller', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let controller: /* upperFirstCamelName */Controller;
   let /* camelName */0: /* upperFirstCamelName */;
   let /* camelName */1: /* upperFirstCamelName */;
@@ -24,12 +25,13 @@ describe('/* upperFirstCamelName */Controller', () => {
   let user2: User;
 
   before(async () => {
-    connection = await createConnection();
+    dataSource = createDataSource();
+    await dataSource.initialize();
   });
 
   after(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

@@ -210,15 +210,16 @@ To manually inject instances into the identity mapper, you can also provide your
 *src/index.ts (example)*
 ```typescript
 import { createApp, ServiceManager } from '@foal/core';
-import { Connection, createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 import { AppController } from './app/app.controller';
+import { dataSource } from './db';
 
 async function main() {
-  const connection = await createConnection();
+  await dataSource.initialize();
 
   const serviceManager = new ServiceManager();
-  serviceManager.set(Connection, connection);
+  serviceManager.set(DataSource, dataSource);
 
   const app = await createApp(AppController, {
     serviceManager
@@ -235,18 +236,18 @@ async function main() {
 *src/controllers/api.controller.ts (example)*
 ```typescript
 import { dependency, Get, HttpResponseOK } from '@foal/core';
-import { Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 import { Product } from '../entities';
 
 class ApiController {
 
   @dependency
-  connection: Connection;
+  dataSource: DataSource;
 
   @Get('/products')
   async readProducts() {
-    const products = await this.connection.getRepository(Product).find();
+    const products = await this.dataSource.getRepository(Product).find();
     return new HttpResponseOK(products);
   }
 
@@ -374,15 +375,15 @@ export class ConsoleLogger implements ILogger {
 *src/index.ts (example)*
 ```typescript
 import { createApp, ServiceManager } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { AppController } from './app/app.controller';
 import { Product } from './app/entities';
 import { ConsoleLogger } from './app/services';
+import { dataSource } from './db';
 
 async function main() {
-  const connection = await createConnection();
-  const productRepository = connection.getRepository(Product);
+  await dataSource.initialize();
+  const productRepository = dataSource.getRepository(Product);
 
   const serviceManager = new ServiceManager()
     .set('product', productRepository)

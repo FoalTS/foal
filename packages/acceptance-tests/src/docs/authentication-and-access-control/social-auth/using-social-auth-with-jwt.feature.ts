@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Connection, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import { decode, sign } from 'jsonwebtoken';
 
 // FoalTS
@@ -22,7 +22,7 @@ import { DatabaseSession } from '@foal/typeorm';
 
 describe('Feature: Using social auth with JWT', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   before(() => {
     Config.set('settings.jwt.secret', 'my_secret');
@@ -30,8 +30,8 @@ describe('Feature: Using social auth with JWT', () => {
 
   after(async () => {
     Config.remove('settings.jwt.secret');
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -96,7 +96,7 @@ describe('Feature: Using social auth with JWT', () => {
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    connection = await createAndInitializeDataSource([ User, DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     const user = new User();
     user.email = 'jane.doe@foalts.org';

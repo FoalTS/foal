@@ -3,7 +3,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
-import { Connection } from '@foal/typeorm/node_modules/typeorm'
+import { DataSource } from '@foal/typeorm/node_modules/typeorm'
 
 // FoalTS
 import {
@@ -27,7 +27,7 @@ import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCo
 
 describe('Feature: Using cookies', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -35,8 +35,8 @@ describe('Feature: Using cookies', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -83,7 +83,7 @@ describe('Feature: Using cookies', () => {
     const cookieName = 'sessionID';
 
     const app = await createApp(AppController);
-    connection = await createAndInitializeDataSource([ DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     strictEqual(session, null);
 
@@ -137,7 +137,7 @@ describe('Feature: Using cookies', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createAndInitializeDataSource([ DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const response = await request(app)
       .get('/api/products')

@@ -10,8 +10,8 @@ describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
     // Clear database.
-    const connection = await createAndInitializeDataSource([ Permission ]);
-    await connection.close();
+    const dataSource = await createAndInitializeDataSource([ Permission ]);
+    await dataSource.destroy();
   });
 
   it('should work as expected.', async () => {
@@ -30,14 +30,14 @@ describe('[Shell scripts] create-perm', () => {
 
     await createPerm(args);
 
-    const connection = await createAndInitializeDataSource([ Permission ], { dropSchema: false });
+    const dataSource = await createAndInitializeDataSource([ Permission ], { dropSchema: false });
 
     try {
       await Permission.findOneByOrFail(args);
     } catch (error: any) {
       throw error;
     } finally {
-      await connection.close();
+      await dataSource.destroy();
     }
   });
 });

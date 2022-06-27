@@ -3,7 +3,7 @@ import { strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
-import { Connection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
@@ -24,7 +24,7 @@ import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../com
 
 describe('Feature: Do not Auto-Create the Session when using sessions with cookies', async () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -32,8 +32,8 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -73,7 +73,7 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
     }
 
     const app = await createApp(AppController);
-    connection = await createAndInitializeDataSource([ DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     strictEqual(alreadyExists, true);
 

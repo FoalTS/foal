@@ -1,24 +1,26 @@
 // 3p
 import { createApp } from '@foal/core';
 import * as request from 'supertest';
-import { Connection, createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
+import { createDataSource } from '../../db';
 
 describe('The server', () => {
 
   let app;
-  let connection: Connection;
+  let dataSource: DataSource;
 
   before(async () => {
     app = await createApp(AppController);
-    connection = await createConnection();
+    dataSource = createDataSource();
+    await dataSource.initialization();
   });
 
   after(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

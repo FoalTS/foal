@@ -17,7 +17,7 @@ export async function main(args: { codeName: string, name: string }) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  const connection = await createAndInitializeDataSource([ Permission ], { dropSchema: false });
+  const dataSource = await createAndInitializeDataSource([ Permission ], { dropSchema: false });
 
   try {
     console.log(
@@ -26,6 +26,6 @@ export async function main(args: { codeName: string, name: string }) {
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await connection.close();
+    await dataSource.destroy();
   }
 }

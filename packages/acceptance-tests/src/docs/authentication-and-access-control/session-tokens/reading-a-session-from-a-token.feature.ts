@@ -2,7 +2,7 @@
 import { rejects, strictEqual } from 'assert';
 
 // 3p
-import { Connection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
@@ -17,7 +17,7 @@ import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../com
 
 describe('Feature: Reading a session from a token', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -25,8 +25,8 @@ describe('Feature: Reading a session from a token', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -47,7 +47,7 @@ describe('Feature: Reading a session from a token', () => {
       return foo;
     }
 
-    connection = await createAndInitializeDataSource([ DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const session = await createSession(store);
     session.set('foo', 'bar');
