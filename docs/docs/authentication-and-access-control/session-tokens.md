@@ -74,7 +74,7 @@ module.exports = {
 npm install typeorm @foal/typeorm
 ```
 
-This store uses the default TypeORM connection whose configuration is usually specified in `ormconfig.{json|yml|js}`.
+This store uses the default TypeORM connection whose configuration is usually specified in `config/default.{json|yml|js}`.
 
 Session states are saved in the `databasesession` table of your SQL database. In order to create it, you need to add and run migrations. For this purpose, you can export the `DatabaseSession` entity in your user file and execute the following commands.
 

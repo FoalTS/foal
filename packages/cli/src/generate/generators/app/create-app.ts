@@ -75,7 +75,6 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   fs
     .hideLogs()
     .copy('app/gitignore', '.gitignore')
-    .copy('app/ormconfig.js', 'ormconfig.js')
     .renderOnlyIf(!mongodb && !yaml, 'app/package.json', 'package.json', locals)
     .renderOnlyIf(!mongodb && yaml, 'app/package.yaml.json', 'package.json', locals)
     .renderOnlyIf(mongodb && !yaml, 'app/package.mongodb.json', 'package.json', locals)
