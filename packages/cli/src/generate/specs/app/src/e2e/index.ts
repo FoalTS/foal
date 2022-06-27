@@ -14,7 +14,7 @@ describe('The server', () => {
 
   before(async () => {
     app = await createApp(AppController);
-    dataSource = await createDataSource();
+    dataSource = createDataSource();
     await dataSource.initialize();
   });
 

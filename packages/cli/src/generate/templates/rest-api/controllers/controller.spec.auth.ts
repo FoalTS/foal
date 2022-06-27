@@ -11,7 +11,7 @@ import { DataSource } from 'typeorm';
 
 // App
 import { /* upperFirstCamelName */, User } from '/* entitiesPath */';
-import { createDataSource } from '';
+import { createDataSource } from '/* createDataSourcePath */';
 import { /* upperFirstCamelName */Controller } from './/* kebabName */.controller';
 
 describe('/* upperFirstCamelName */Controller', () => {

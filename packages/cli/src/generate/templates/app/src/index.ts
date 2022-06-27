@@ -11,7 +11,7 @@ import { AppController } from './app/app.controller';
 import { dataSource } from './db';
 
 async function main() {
-  await dataSource.initiliaze();
+  await dataSource.initialize();
 
   const app = await createApp(AppController);
 

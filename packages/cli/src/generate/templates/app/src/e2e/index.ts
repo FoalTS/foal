@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
-import { createDataSource } from '../../db';
+import { createDataSource } from '../db';
 
 describe('The server', () => {
 
@@ -15,7 +15,7 @@ describe('The server', () => {
   before(async () => {
     app = await createApp(AppController);
     dataSource = createDataSource();
-    await dataSource.initialization();
+    await dataSource.initialize();
   });
 
   after(async () => {
