@@ -111,14 +111,6 @@ describe('createApp', () => {
       .assertEqual('create-user.ts', 'app/src/scripts/create-user.ts');
   });
 
-  it('shoud copy the src/scripts templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true });
-
-    fs
-      .cd('test-foo-bar/src/scripts')
-      .assertEqual('create-user.ts', 'app/src/scripts/create-user.mongodb.ts');
-  });
-
   it('should render the src/app/controllers templates.', async () => {
     await createApp({ name: 'test-fooBar' });
 

@@ -104,7 +104,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
       type: 'object',
     })
     async login(ctx: Context) {
-      const user = await dataSource.getMongoRepository(User).findOneBy({ email: ctx.request.body.email });
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
@@ -154,7 +154,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     user.email = 'john@foalts.org';
     user.password = await hashPassword('password');
     user.isAdmin = false;
-    await dataSource.getMongoRepository(User).save(user);
+    await user.save();
 
     app = await createApp(AppController);
   });
@@ -212,13 +212,13 @@ describe('[Sample] MongoDB & Redis Store', async () => {
 
     /* Add the admin group and permission */
 
-    const user2 = await dataSource.getMongoRepository(User).findOneBy({ email: 'john@foalts.org' });
+    const user2 = await User.findOneBy({ email: 'john@foalts.org' });
     if (!user2) {
       throw new Error('John was not found in the database.');
     }
 
     user2.isAdmin = true;
-    await dataSource.getMongoRepository(User).save(user2);
+    await user2.save();
 
     /* Access the route that requires a specific permission */
 
