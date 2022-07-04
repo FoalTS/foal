@@ -3,12 +3,14 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm'
 
 // FoalTS
 import {
   Config,
   Context,
   controller,
+  createApp,
   dependency,
   Get,
   HttpResponseOK,
@@ -21,12 +23,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppWithDB, getTypeORMStorePath, readCookie, ShutDownApp, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Using cookies', () => {
 
-  let app: any;
-  let shutDownApp: ShutDownApp;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -34,8 +35,8 @@ describe('Feature: Using cookies', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -81,9 +82,8 @@ describe('Feature: Using cookies', () => {
 
     const cookieName = 'sessionID';
 
-    const services = new ServiceManager();
-
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ], { serviceManager: services }));
+    const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     strictEqual(session, null);
 
@@ -136,8 +136,8 @@ describe('Feature: Using cookies', () => {
     const cookieName = 'sessionID';
 
     const services = new ServiceManager();
-
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ], { serviceManager: services }));
+    const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const response = await request(app)
       .get('/api/products')

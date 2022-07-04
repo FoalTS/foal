@@ -1,6 +1,6 @@
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createTestDataSource } from '../../common';
+import { createAndInitializeDataSource } from '../../common';
 
 export const schema = {
   additionalProperties: false,
@@ -19,8 +19,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  const dataSource = createTestDataSource([ Group, Permission ]);
-  await dataSource.initialize();
+  const dataSource = await createAndInitializeDataSource([ Permission, Group ], { dropSchema: false });
 
   try {
     for (const codeName of args.permissions) {

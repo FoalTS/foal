@@ -1,6 +1,6 @@
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createTestDataSource } from '../../common';
+import { createAndInitializeDataSource } from '../../common';
 
 export const schema = {
   additionalProperties: false,
@@ -17,8 +17,7 @@ export async function main(args: { codeName: string, name: string }) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  const dataSource = createTestDataSource([ Permission ]);
-  await dataSource.initialize();
+  const dataSource = await createAndInitializeDataSource([ Permission ], { dropSchema: false });
 
   try {
     console.log(

@@ -1,7 +1,9 @@
 // 3p
 import { createService } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
-import { createDataSource } from '../data-source';
+
+// App
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -13,7 +15,6 @@ export const schema = {
 };
 
 export async function main({ token }: { token: string }) {
-  const dataSource = createDataSource();
   await dataSource.initialize();
 
   await createService(TypeORMStore).destroy(token);

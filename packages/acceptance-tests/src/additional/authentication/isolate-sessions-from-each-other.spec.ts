@@ -1,10 +1,12 @@
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
   Config,
   Context,
+  createApp,
   createSession,
   dependency,
   Get,
@@ -16,11 +18,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../common';
 
 describe('Sessions should be isolated from each other.', () => {
 
-  let shutDownApp: ShutDownApp;
+  let dataSource: DataSource;
 
   before(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -30,8 +32,8 @@ describe('Sessions should be isolated from each other.', () => {
   after(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.logErrors');
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -78,7 +80,8 @@ describe('Sessions should be isolated from each other.', () => {
   let token2: string;
 
   before(async () => {
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ]));
+    app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
   });
 
   it('Step 1: Create two sessions.', async () => {

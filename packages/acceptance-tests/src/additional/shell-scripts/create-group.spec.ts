@@ -7,22 +7,17 @@ import Ajv from 'ajv';
 // FoalTS
 import { Group, Permission } from '@foal/typeorm';
 import { main as createGroup, schema } from './create-group';
-import { createTestDataSource } from '../../common';
+import { createAndInitializeDataSource } from '../../common';
 
 describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
-    const dataSource = createTestDataSource([ Group, Permission ]);
-    await dataSource.initialize();
-
-    try {
-      await Permission.save({
-        codeName: 'delete-users',
-        name: 'Permission to delete users',
-      });
-    } finally {
-      await dataSource.destroy();
-    }
+    const dataSource = await createAndInitializeDataSource([ Permission, Group ]);
+    await Permission.save({
+      codeName: 'delete-users',
+      name: 'Permission to delete users',
+    });
+    await dataSource.destroy();
   });
 
   it('should work as expected.', async () => {
@@ -42,8 +37,7 @@ describe('[Shell scripts] create-perm', () => {
 
     await createGroup(args);
 
-    const dataSource = createTestDataSource([ Group, Permission ]);
-    await dataSource.initialize();
+    const dataSource = await createAndInitializeDataSource([ Permission, Group ], { dropSchema: false });
 
     try {
       const group = await Group.findOneOrFail({

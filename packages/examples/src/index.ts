@@ -14,10 +14,10 @@ import { Config, createApp, displayServerURL } from '@foal/core';
 
 // App
 import { AppController } from './app/app.controller';
-import { appDataSource } from './app/data-source';
+import { dataSource } from './db';
 
 async function main() {
-  await appDataSource.initialize();
+  await dataSource.initialize();
 
   const app = await createApp(AppController);
 

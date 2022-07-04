@@ -112,7 +112,6 @@ npm run migrations
 ```typescript
 import { controller, dependency, IAppController, Store, UseSessions } from '@foal/core';
 import { fetchUser } from '@foal/typeorm';
-import { createConnection } from 'typeorm';
 
 import { User } from './entities';
 import { ApiController, AuthController } from './controllers';
@@ -130,10 +129,6 @@ export class AppController implements IAppController {
     controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
-
-  async init() {
-    await createConnection();
-  }
 
 }
 ```
@@ -282,7 +277,6 @@ module.exports = {
 *src/app/app.controller.ts*
 ```typescript
 import { controller, IAppController } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController, AuthController } from './controllers';
 
@@ -292,10 +286,6 @@ export class AppController implements IAppController {
     controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
-
-  async init() {
-    await createConnection();
-  }
 
 }
 ```
@@ -417,7 +407,6 @@ npm run migrations
 *src/app/app.controller.ts*
 ```typescript
 import { controller, IAppController } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController, AuthController } from './controllers';
 
@@ -427,10 +416,6 @@ export class AppController implements IAppController {
     controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
-
-  async init() {
-    await createConnection();
-  }
 
 }
 ```
@@ -597,7 +582,6 @@ module.exports = {
 *src/app/app.controller.ts*
 ```typescript
 import { controller, IAppController } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController, AuthController } from './controllers';
 
@@ -607,10 +591,6 @@ export class AppController implements IAppController {
     controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
-
-  async init() {
-    await createConnection();
-  }
 
 }
 ```
@@ -721,7 +701,6 @@ npm run migrations
 ```typescript
 import { Context, controller, dependency, Get, IAppController, render, Store, UserRequired, UseSessions } from '@foal/core';
 import { fetchUser } from '@foal/typeorm';
-import { createConnection } from 'typeorm';
 
 import { ApiController, AuthController } from './controllers';
 import { User } from './entities';
@@ -739,10 +718,6 @@ export class AppController implements IAppController {
     controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
-  
-  async init() {
-    await createConnection();
-  }
 
   @Get('/')
   @UserRequired({ redirectTo: '/login' })

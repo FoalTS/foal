@@ -2,6 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -20,7 +21,7 @@ import {
   verifyPassword,
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
-import { createAppWithDB, createFixtureUser, credentialsSchema, readCookie, ShutDownApp, User } from '../../../common';
+import { createFixtureUser, createAndInitializeDataSource, credentialsSchema, readCookie, User } from '../../../common';
 
 describe('Feature: Stateful CSRF protection in a Single-Page Application', () => {
 
@@ -83,10 +84,10 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
 
   const csrfCookieName = 'Custom-XSRF-Token';
 
+  let dataSource: DataSource;
   let user: User;
 
   let app: any;
-  let shutDownApp: ShutDownApp;
 
   let sessionToken: string;
   let csrfToken: string;
@@ -95,7 +96,7 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
     Config.set('settings.session.csrf.enabled', true);
     Config.set('settings.session.csrf.cookie.name', csrfCookieName);
 
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User, DatabaseSession ]));
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     user = await createFixtureUser(1);
     await user.save();
@@ -105,8 +106,8 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
     Config.remove('settings.session.csrf.enabled');
     Config.remove('settings.session.csrf.cookie.name');
 
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

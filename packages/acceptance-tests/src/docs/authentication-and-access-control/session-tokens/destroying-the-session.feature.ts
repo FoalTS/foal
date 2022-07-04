@@ -4,12 +4,14 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
   Config,
   Context,
   controller,
+  createApp,
   createSession,
   HttpResponseNoContent,
   IAppController,
@@ -20,12 +22,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Destroying the session', () => {
 
-  let app: any;
-  let shutDownApp: ShutDownApp;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -33,8 +34,8 @@ describe('Feature: Destroying the session', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -64,9 +65,8 @@ describe('Feature: Destroying the session', () => {
     }
 
     const services = new ServiceManager();
-
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ], { serviceManager: services }));
-
+    const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

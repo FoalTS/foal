@@ -2,7 +2,7 @@
 import { promisify } from 'util';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import { sign } from 'jsonwebtoken';
 import * as request from 'supertest';
 
@@ -11,6 +11,7 @@ import {
   Config,
   Context,
   controller,
+  createApp,
   Get,
   hashPassword,
   HttpResponseOK,
@@ -21,12 +22,12 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, removeAuthCookie, setAuthCookie } from '@foal/jwt';
-import { createAppWithDB, readCookie, ShutDownApp, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Authenticating users in a stateless SPA using cookies', () => {
 
+  let dataSource: DataSource;
   let app: any;
-  let shutDownApp: ShutDownApp;
 
   let token: string;
   let response: request.Response|undefined;
@@ -137,14 +138,15 @@ describe('Feature: Authenticating users in a stateless SPA using cookies', () =>
   before(async () => {
     Config.set('settings.jwt.secret', 'Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=');
     Config.set('settings.jwt.secretEncoding', 'base64');
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User ]));
+    app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ User ]);
   });
 
   after(async () => {
     Config.remove('settings.jwt.secret');
     Config.remove('settings.jwt.secretEncoding');
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

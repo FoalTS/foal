@@ -2,29 +2,30 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
 import {
-  Config, Context, controller, createSession,
+  Config, Context, controller, createApp, createSession,
   dependency, Get, Hook, HttpResponseForbidden, HttpResponseOK,
   HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with static roles', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => Config.set('settings.session.store', getTypeORMStorePath()));
 
   let app: any;
-  let shutDownApp: ShutDownApp;
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -101,7 +102,8 @@ describe('Feature: Controlling access with static roles', () => {
       }
     }
 
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User, DatabaseSession ]));
+    const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     const user = new User();
     user.roles = [ 'user' ];

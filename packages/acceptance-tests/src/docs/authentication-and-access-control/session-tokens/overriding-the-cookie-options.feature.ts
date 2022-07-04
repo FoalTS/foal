@@ -3,18 +3,18 @@ import { strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
-  Config, Get, HttpResponseOK, UseSessions,
+  Config, createApp, Get, HttpResponseOK, UseSessions,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Overriding the cookie options', async () => {
 
-  let app: any;
-  let shutDownApp: ShutDownApp;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -28,8 +28,8 @@ describe('Feature: Overriding the cookie options', async () => {
     Config.remove('settings.session.cookie.path');
     Config.remove('settings.session.cookie.sameSite');
     Config.remove('settings.session.cookie.secure');
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -44,7 +44,8 @@ describe('Feature: Overriding the cookie options', async () => {
 
     }
 
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ]));
+    const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     Config.set('settings.session.cookie.name', 'xxx');
     Config.set('settings.session.cookie.domain', 'example.com');

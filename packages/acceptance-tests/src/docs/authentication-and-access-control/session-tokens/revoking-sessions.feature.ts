@@ -1,11 +1,13 @@
 // std
 import { notStrictEqual, strictEqual } from 'assert';
 
+// 3p
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
+
 // FoalTS
 import { Config, createService, createSession, readSession, Store } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath } from '../../../common';
-import { DataSource } from 'typeorm';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Revoking sessions', () => {
 
@@ -27,7 +29,7 @@ describe('Feature: Revoking sessions', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main({ token }: { token: string }) {
-      // await createConnection();
+      // await dataSource.initialize();
 
       const store = createService(Store);
       await store.boot();
@@ -42,8 +44,7 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    dataSource = createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const session = await createSession(store);
     await session.commit();
@@ -61,7 +62,7 @@ describe('Feature: Revoking sessions', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main() {
-      // await createConnection();
+      // await dataSource.initialize();
 
       const store = createService(Store);
       await store.boot();
@@ -72,8 +73,7 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    dataSource = createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize();
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const session = await createSession(store);
     await session.commit();

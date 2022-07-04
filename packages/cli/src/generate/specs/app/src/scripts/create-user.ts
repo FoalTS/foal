@@ -1,6 +1,6 @@
 // App
-import { appDataSource } from '../app/data-source';
 import { User } from '../app/entities';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -14,7 +14,7 @@ export const schema = {
 };
 
 export async function main() {
-  await appDataSource.initialize();
+  await dataSource.initialize();
 
   try {
     const user = new User();
@@ -22,6 +22,6 @@ export async function main() {
   } catch (error: any) {
     console.error(error.message);
   } finally {
-    await appDataSource.destroy();
+    await dataSource.destroy();
   }
 }

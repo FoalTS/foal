@@ -1,14 +1,16 @@
 // 3p
 import * as request from 'supertest';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
-import { Context, HttpResponseCreated, Post } from '@foal/core';
+import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
 import { IsNumber, IsString } from '@foal/typestack/node_modules/class-validator';
-import { createAppWithDB, ShutDownApp } from '../common';
+import { createAndInitializeDataSource } from '../common';
 
 describe('ValidateBody hook', () => {
+
+  let dataSource: DataSource;
 
   @Entity()
   class Product extends BaseEntity {
@@ -24,12 +26,13 @@ describe('ValidateBody hook', () => {
     price: number;
   }
 
-  let app: any;
-  let shutDownApp: ShutDownApp;
+  before(async () => {
+    dataSource = await createAndInitializeDataSource([ Product ]);
+  });
 
   after(async () => {
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -44,7 +47,7 @@ describe('ValidateBody hook', () => {
       }
     }
 
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ Product ]));
+    const app = await createApp(AppController);
 
     await request(app)
       .post('/products')

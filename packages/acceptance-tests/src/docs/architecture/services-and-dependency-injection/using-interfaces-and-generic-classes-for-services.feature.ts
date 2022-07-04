@@ -7,7 +7,7 @@ import * as request from 'supertest';
 // FoalTS
 import { controller, createApp, Dependency, Get, HttpResponseOK, IAppController, ServiceManager } from '@foal/core';
 import { Entity, DataSource, PrimaryGeneratedColumn, Repository } from '@foal/typeorm/node_modules/typeorm';
-import { createTestDataSource } from '../../../common';
+import { createAndInitializeDataSource } from '../../../common';
 
 describe('Feature: Using interfaces and generic classes for services', () => {
 
@@ -69,9 +69,7 @@ describe('Feature: Using interfaces and generic classes for services', () => {
     }
 
     async function main() {
-      dataSource = createTestDataSource([ Product ]);
-      await dataSource.initialize();
-
+      dataSource = await createAndInitializeDataSource([ Product ]);
       const productRepository = dataSource.getRepository(Product);
 
       const serviceManager = new ServiceManager()

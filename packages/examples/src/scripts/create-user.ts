@@ -1,9 +1,8 @@
 // App
 import { Permission, User } from '../app/entities';
-import { createDataSource } from '../data-source';
+import { dataSource } from '../db';
 
 export async function main() {
-  const dataSource = createDataSource();
   await dataSource.initialize();
 
   const user = new User();

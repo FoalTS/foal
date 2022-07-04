@@ -13,7 +13,7 @@ import {
   Store,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestDataSource, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Reading a session from a token', () => {
 
@@ -47,8 +47,7 @@ describe('Feature: Reading a session from a token', () => {
       return foo;
     }
 
-    dataSource = createTestDataSource([ DatabaseSession ]);
-    await dataSource.initialize()
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const session = await createSession(store);
     session.set('foo', 'bar');

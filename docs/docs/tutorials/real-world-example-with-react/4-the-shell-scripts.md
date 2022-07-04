@@ -15,11 +15,10 @@ Open the file and replace its content with the following:
 ```typescript
 // 3p
 import { hashPassword } from '@foal/core';
-import { DataSource } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
-import { createDataSource } from '../data-source';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -39,7 +38,6 @@ export async function main(args: { email: string, password: string, name?: strin
   user.name = args.name ?? 'Unknown';
   user.avatar = '';
 
-  const dataSource = createDataSource();
   await dataSource.initialize();
 
   try {
@@ -89,8 +87,8 @@ foal generate script create-story
 Open the `create-story.ts` file and replace its content.
 
 ```typescript
-import { createConnection } from 'typeorm';
 import { Story, User } from '../app/entities';
+import { dataSource } from' ../db';
 
 export const schema = {
   additionalProperties: false,
@@ -104,7 +102,7 @@ export const schema = {
 };
 
 export async function main(args: { author: string, title: string, link: string }) {
-  const connection = await createConnection();
+  await dataSource.initialize();
 
   const user = await User.findOneByOrFail({ email: args.author });
 
@@ -118,7 +116,7 @@ export async function main(args: { author: string, title: string, link: string }
   } catch (error: any) {
     console.error(error);
   } finally {
-    await connection.close();
+    await dataSource.destroy();
   }
 }
 

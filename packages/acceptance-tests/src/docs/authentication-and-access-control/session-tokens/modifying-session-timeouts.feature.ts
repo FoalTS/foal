@@ -1,10 +1,12 @@
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
   Config,
   Context,
+  createApp,
   createSession,
   Get,
   HttpResponseOK,
@@ -14,12 +16,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Modifying session timeouts', () => {
 
-  let app: any;
-  let shutDownApp: ShutDownApp;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -29,8 +30,8 @@ describe('Feature: Modifying session timeouts', () => {
   afterEach(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.session.expirationTimeouts.inactivity');
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -47,9 +48,8 @@ describe('Feature: Modifying session timeouts', () => {
     }
 
     const services = new ServiceManager();
-
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ], { serviceManager: services }));
-
+    const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

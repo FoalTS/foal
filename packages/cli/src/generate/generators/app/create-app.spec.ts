@@ -170,7 +170,7 @@ describe('createApp', () => {
 
     fs
       .cd('test-foo-bar/src')
-      .assertEqual('data-source.ts', 'app/src/data-source.ts')
+      .assertEqual('db.ts', 'app/src/db.ts')
       .assertEqual('e2e.ts', 'app/src/e2e.ts')
       .assertEqual('index.ts', 'app/src/index.ts')
       .assertEqual('test.ts', 'app/src/test.ts');

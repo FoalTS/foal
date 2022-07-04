@@ -5,7 +5,7 @@ import { DataSource } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
-import { createDataSource } from '../data-source';
+import { createDataSource } from '../db';
 
 describe('The server', () => {
 
@@ -17,9 +17,15 @@ describe('The server', () => {
     await dataSource.initialize();
 
     app = await createApp(AppController);
+    dataSource = createDataSource();
+    await dataSource.initialize();
   });
 
-  after(() => dataSource.destroy());
+  after(async () => {
+    if (dataSource) {
+      await dataSource.destroy();
+    }
+  });
 
   it('should return a 200 status on GET / requests.', () => {
     return request(app)

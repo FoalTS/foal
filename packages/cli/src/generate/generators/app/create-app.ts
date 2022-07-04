@@ -113,7 +113,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
       // Src
       .ensureDir('src')
       .cd('src')
-      .copy('app/src/data-source.ts', 'data-source.ts')
+      .copy('app/src/db.ts', 'db.ts')
       .copy('app/src/e2e.ts', 'e2e.ts')
       .copy('app/src/index.ts', 'index.ts')
       .copy('app/src/test.ts', 'test.ts')
@@ -154,7 +154,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         // Scripts
         .ensureDir('scripts')
         .cd('scripts')
-        .copy('app/src/scripts/create-user.ts', 'create-user.ts')
+        .copy('app/src/scripts/create-user.ts', 'create-user.ts');
 
   if (autoInstall) {
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';

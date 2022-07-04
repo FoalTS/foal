@@ -1,6 +1,5 @@
-export * from './create-app-with-db';
 export * from './create-fixture-user';
-export * from './create-test-data-source';
+export * from './create-and-initialize-data-source';
 export * from './credentials-schema';
 export * from './read-cookie';
 export { getTypeORMStorePath } from './typeorm-store';

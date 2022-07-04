@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -10,6 +10,7 @@ import {
   Config,
   Context,
   controller,
+  createApp,
   dependency,
   Get,
   hashPassword,
@@ -25,12 +26,12 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createAppWithDB, getTypeORMStorePath, readCookie, ShutDownApp, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Authenticating users in a statefull SSR application using cookies', () => {
 
+  let dataSource: DataSource;
   let app: any;
-  let shutDownApp: ShutDownApp;
 
   let token: string;
   let response: request.Response|undefined;
@@ -148,13 +149,14 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
 
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ User, DatabaseSession ]));
+    app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
   });
 
   after(async () => {
     Config.remove('settings.session.store');
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

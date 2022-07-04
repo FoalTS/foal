@@ -19,7 +19,7 @@ To do so, you will have to remove TypeORM and all its utilities and implement so
 
 3. Remove or replace the script `create-user` in `src/app/scripts`.
 
-4. In the file `app.controller.ts`, delete the connection creation call `createConnection`.
+4. In the file `app.controller.ts`, delete the connection creation called `dataSource.initialize()`.
 
 5. Finally, remove in `package.json` the scripts to manage migrations.
 

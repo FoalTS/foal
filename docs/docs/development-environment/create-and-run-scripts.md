@@ -19,20 +19,21 @@ Remove the content of `src/scripts/display-users.ts` and replace it with the bel
 ```typescript
 // 3p
 import { createService } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 // App
+import { dataSource } from '../db';
 import { User } from '../app/entities';
 import { Logger } from '../app/services';
 
 export async function main() {
-  const connection = await createConnection();
+  await dataSource.initialize();
+
   try {
     const users = await User.find();
     const logger = createService(Logger);
     logger.log(users);
   } finally {
-    connection.close();
+    dataSource.destroy();
   }
 }
 

@@ -3,12 +3,14 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
   Config,
   Context,
   controller,
+  createApp,
   createSession,
   dependency,
   Get,
@@ -20,12 +22,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createAppWithDB, getTypeORMStorePath, ShutDownApp } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Using the Authorization header', () => {
 
-  let app: any;
-  let shutDownApp: ShutDownApp;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -33,8 +34,8 @@ describe('Feature: Using the Authorization header', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (shutDownApp) {
-      await shutDownApp();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -83,7 +84,8 @@ describe('Feature: Using the Authorization header', () => {
       ];
     }
 
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ]));
+    const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     strictEqual(session, null);
 
@@ -162,7 +164,8 @@ describe('Feature: Using the Authorization header', () => {
       ];
     }
 
-    ({ app, shutDownApp } = await createAppWithDB(AppController, [ DatabaseSession ]));
+    const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     strictEqual(session, null);
 
