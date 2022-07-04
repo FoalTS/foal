@@ -7,15 +7,16 @@ import {
   isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
-import { Connection, createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { TestFooBar, User } from '../entities';
+import { createDataSource } from '../../db';
 import { TestFooBarController } from './test-foo-bar.controller';
 
 describe('TestFooBarController', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let controller: TestFooBarController;
   let testFooBar0: TestFooBar;
   let testFooBar1: TestFooBar;
@@ -24,12 +25,13 @@ describe('TestFooBarController', () => {
   let user2: User;
 
   before(async () => {
-    connection = await createConnection();
+    dataSource = createDataSource();
+    await dataSource.initialize();
   });
 
   after(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

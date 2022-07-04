@@ -1,5 +1,5 @@
 // 3p
-import { Entity, Connection } from '@foal/typeorm/node_modules/typeorm';
+import { Entity, DataSource } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -20,11 +20,11 @@ import {
   TypeORMStore,
   UserWithPermissions
 } from '@foal/typeorm';
-import { createTestConnection } from '../../common';
+import { createAndInitializeDataSource } from '../../common';
 
 describe('[Authorization|permissions] Users', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let app: any;
   let tokenUser1: string;
   let tokenUser2: string;
@@ -48,7 +48,7 @@ describe('[Authorization|permissions] Users', () => {
   }
 
   before(async () => {
-    connection = await createTestConnection([ User, Permission, Group, DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ User, Permission, Group, DatabaseSession ]);
 
     const user1 = new User();
     const user2 = new User();
@@ -85,8 +85,8 @@ describe('[Authorization|permissions] Users', () => {
   });
 
   after(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

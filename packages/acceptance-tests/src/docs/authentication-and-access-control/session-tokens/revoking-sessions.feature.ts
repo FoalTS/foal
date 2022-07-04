@@ -2,16 +2,16 @@
 import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { Connection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import { Config, createService, createSession, readSession, Store } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Revoking sessions', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -19,8 +19,8 @@ describe('Feature: Revoking sessions', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -29,7 +29,7 @@ describe('Feature: Revoking sessions', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main({ token }: { token: string }) {
-      // await createConnection();
+      // await dataSource.initialize();
 
       const store = createService(Store);
       await store.boot();
@@ -44,7 +44,7 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    connection = await createTestConnection([ DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const session = await createSession(store);
     await session.commit();
@@ -62,7 +62,7 @@ describe('Feature: Revoking sessions', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main() {
-      // await createConnection();
+      // await dataSource.initialize();
 
       const store = createService(Store);
       await store.boot();
@@ -73,7 +73,7 @@ describe('Feature: Revoking sessions', () => {
 
     const store = createService(Store);
 
-    connection = await createTestConnection([ DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const session = await createSession(store);
     await session.commit();

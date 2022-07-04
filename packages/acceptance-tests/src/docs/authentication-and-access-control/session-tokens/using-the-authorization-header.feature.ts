@@ -3,7 +3,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
-import { Connection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from '@foal/typeorm/node_modules/typeorm';
 
 // FoalTS
 import {
@@ -22,11 +22,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Using the Authorization header', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -34,8 +34,8 @@ describe('Feature: Using the Authorization header', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -85,7 +85,7 @@ describe('Feature: Using the Authorization header', () => {
     }
 
     const app = await createApp(AppController);
-    connection = await createTestConnection([ DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     strictEqual(session, null);
 
@@ -165,7 +165,7 @@ describe('Feature: Using the Authorization header', () => {
     }
 
     const app = await createApp(AppController);
-    connection = await createTestConnection([ DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     strictEqual(session, null);
 

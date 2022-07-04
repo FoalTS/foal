@@ -1,11 +1,9 @@
-// 3p
-import { createConnection } from '@foal/typeorm/node_modules/typeorm';
-
 // App
 import { Permission, User } from '../app/entities';
+import { dataSource  } from '../db';
 
 export async function main() {
-  await createConnection(require('../../ormconfig.json'));
+  await dataSource.initialize();
 
   const user = new User();
   user.email = 'john@foalts.org';

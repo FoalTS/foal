@@ -37,24 +37,26 @@ You can use [the SuperTest library](https://github.com/visionmedia/supertest) to
 // 3p
 import { createApp } from '@foal/core';
 import * as request from 'supertest';
-import { Connection, createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
+import { createDataSource } from '../db';
 
 describe('The server', () => {
 
   let app;
-  let connection: Connection;
+  let dataSource: DataSource;
 
   before(async () => {
     app = await createApp(AppController);
-    connection = await createConnection();
+    dataSource = createDataSource();
+    await dataSource.initialize();
   });
 
   after(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -77,28 +79,30 @@ import { ok } from 'assert';
 // 3p
 import { createApp } from '@foal/core';
 import * as request from 'supertest';
-import { Connection, createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
 import { User } from '../app/entities';
+import { createDataSource } from '../db';
 
 // Define a group of tests.
 describe('The server', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let app: any;
 
   // Create the application and the connection to the database before running all the tests.
   before(async () => {
     app = await createApp(AppController);
-    connection = await createConnection();
+    dataSource = createDataSource();
+    await dataSource.initialize();
   });
 
   // Close the database connection after running all the tests whether they succeed or failed.
   after(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 

@@ -4,14 +4,14 @@ import Ajv from 'ajv';
 // FoalTS
 import { Permission } from '@foal/typeorm';
 import { main as createPerm, schema } from './create-perm';
-import { createTestConnection } from '../../common';
+import { createAndInitializeDataSource } from '../../common';
 
 describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
     // Clear database.
-    const connection = await createTestConnection([ Permission ]);
-    await connection.close();
+    const dataSource = await createAndInitializeDataSource([ Permission ]);
+    await dataSource.destroy();
   });
 
   it('should work as expected.', async () => {
@@ -30,14 +30,14 @@ describe('[Shell scripts] create-perm', () => {
 
     await createPerm(args);
 
-    const connection = await createTestConnection([ Permission ], { dropSchema: false });
+    const dataSource = await createAndInitializeDataSource([ Permission ], { dropSchema: false });
 
     try {
       await Permission.findOneByOrFail(args);
     } catch (error: any) {
       throw error;
     } finally {
-      await connection.close();
+      await dataSource.destroy();
     }
   });
 });

@@ -75,7 +75,6 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   fs
     .hideLogs()
     .copy('app/gitignore', '.gitignore')
-    .copy('app/ormconfig.js', 'ormconfig.js')
     .renderOnlyIf(!mongodb && !yaml, 'app/package.json', 'package.json', locals)
     .renderOnlyIf(!mongodb && yaml, 'app/package.yaml.json', 'package.json', locals)
     .renderOnlyIf(mongodb && !yaml, 'app/package.mongodb.json', 'package.json', locals)
@@ -155,8 +154,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         // Scripts
         .ensureDir('scripts')
         .cd('scripts')
-        .copyOnlyIf(!mongodb, 'app/src/scripts/create-user.ts', 'create-user.ts')
-        .copyOnlyIf(mongodb, 'app/src/scripts/create-user.mongodb.ts', 'create-user.ts');
+        .copy('app/src/scripts/create-user.ts', 'create-user.ts');
 
   if (autoInstall) {
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';

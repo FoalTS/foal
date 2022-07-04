@@ -2,7 +2,7 @@
 import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Connection, Entity, ManyToOne, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, ManyToOne, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -23,11 +23,11 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -35,8 +35,8 @@ describe('Feature: Adding authentication and access control', () => {
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -100,7 +100,7 @@ describe('Feature: Adding authentication and access control', () => {
     }
 
     const app = await createApp(AppController);
-    connection = await createTestConnection([ DatabaseSession, User ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession, User ]);
 
     const user2 = new User();
     await user2.save();
@@ -171,7 +171,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createTestConnection([ DatabaseSession, User ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession, User ]);
 
     const user = new User();
     await user.save();
@@ -232,7 +232,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createTestConnection([ DatabaseSession, User ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession, User ]);
 
     const user = new User();
     await user.save();
@@ -320,7 +320,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
-    connection = await createTestConnection([ DatabaseSession, User, Product ]);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession, User, Product ]);
 
     const user = new User();
     user.email = 'foo@foalts.org';

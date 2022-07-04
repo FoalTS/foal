@@ -29,6 +29,7 @@ export function createRestApi({ name, register, auth }: { name: string, register
   const locals = {
     ...getNames(basename(name)),
     entitiesPath: `${name.split('/').map(() => '../').join('')}entities`,
+    createDataSourcePath: `${name.split('/').map(() => '../').join('')}../db`,
   };
   const subdir = dirname(name);
   const parentControllerPath = `${subdir === '.' ? 'app' : basename(subdir)}.controller.ts`;

@@ -6,16 +6,16 @@ import * as request from 'supertest';
 
 // FoalTS
 import { controller, createApp, Dependency, Get, HttpResponseOK, IAppController, ServiceManager } from '@foal/core';
-import { Entity, Connection, PrimaryGeneratedColumn, Repository } from '@foal/typeorm/node_modules/typeorm';
-import { createTestConnection } from '../../../common';
+import { Entity, DataSource, PrimaryGeneratedColumn, Repository } from '@foal/typeorm/node_modules/typeorm';
+import { createAndInitializeDataSource } from '../../../common';
 
 describe('Feature: Using interfaces and generic classes for services', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   afterEach(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -69,8 +69,8 @@ describe('Feature: Using interfaces and generic classes for services', () => {
     }
 
     async function main() {
-      connection = await createTestConnection([ Product ]);
-      const productRepository = connection.getRepository(Product);
+      dataSource = await createAndInitializeDataSource([ Product ]);
+      const productRepository = dataSource.getRepository(Product);
 
       const serviceManager = new ServiceManager()
         .set('product', productRepository)

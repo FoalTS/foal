@@ -74,7 +74,7 @@ module.exports = {
 npm install typeorm @foal/typeorm
 ```
 
-This store uses the default TypeORM connection whose configuration is usually specified in `ormconfig.{json|yml|js}`.
+This store uses the default TypeORM connection whose configuration is usually specified in `config/default.{json|yml|js}`.
 
 Session states are saved in the `databasesession` table of your SQL database. In order to create it, you need to add and run migrations. For this purpose, you can export the `DatabaseSession` entity in your user file and execute the following commands.
 
@@ -645,7 +645,8 @@ Open `scripts/revoke-session.ts` and update its content.
 
 ```typescript
 import { createService, readSession, Store } from '@foal/core';
-import { createConnection } from 'typeorm';
+
+import { dataSource } from '../db';
 
 export const schema = {
   type: 'object',
@@ -656,7 +657,7 @@ export const schema = {
 }
 
 export async function main({ token }: { token: string }) {
-  await createConnection();
+  await dataSource.initialize();
 
   const store = createService(Store);
   await store.boot();
@@ -690,10 +691,11 @@ Open `scripts/revoke-all-sessions.ts` and update its content.
 
 ```typescript
 import { createService, Store } from '@foal/core';
-import { createConnection } from 'typeorm';
+
+import { dataSource } from '../db';
 
 export async function main() {
-  await createConnection();
+  await dataSource.initialize();
 
   const store = createService(Store);
   await store.boot();

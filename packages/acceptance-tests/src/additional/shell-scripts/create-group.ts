@@ -1,6 +1,6 @@
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createTestConnection } from '../../common';
+import { createAndInitializeDataSource } from '../../common';
 
 export const schema = {
   additionalProperties: false,
@@ -19,7 +19,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  const connection = await createTestConnection([ Permission, Group ], { dropSchema: false });
+  const dataSource = await createAndInitializeDataSource([ Permission, Group ], { dropSchema: false });
 
   for (const codeName of args.permissions) {
     const permission = await Permission.findOneBy({ codeName });
@@ -37,6 +37,6 @@ export async function main(args: { codeName: string, name: string, permissions: 
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await connection.close();
+    await dataSource.destroy();
   }
 }

@@ -1,8 +1,6 @@
-// 3p
-import { createConnection } from 'typeorm';
-
 // App
 import { User } from '../app/entities';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -16,7 +14,7 @@ export const schema = {
 };
 
 export async function main() {
-  const connection = await createConnection();
+  await dataSource.initialize();
 
   try {
     const user = new User();
@@ -25,6 +23,6 @@ export async function main() {
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await connection.close();
+    await dataSource.destroy();
   }
 }

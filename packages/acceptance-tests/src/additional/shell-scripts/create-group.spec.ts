@@ -7,17 +7,17 @@ import Ajv from 'ajv';
 // FoalTS
 import { Group, Permission } from '@foal/typeorm';
 import { main as createGroup, schema } from './create-group';
-import { createTestConnection } from '../../common';
+import { createAndInitializeDataSource } from '../../common';
 
 describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
-    const connection = await createTestConnection([ Permission, Group ]);
+    const dataSource = await createAndInitializeDataSource([ Permission, Group ]);
     await Permission.save({
       codeName: 'delete-users',
       name: 'Permission to delete users',
     });
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('should work as expected.', async () => {
@@ -37,7 +37,7 @@ describe('[Shell scripts] create-perm', () => {
 
     await createGroup(args);
 
-    const connection = await createTestConnection([ Permission, Group ], { dropSchema: false });
+    const dataSource = await createAndInitializeDataSource([ Permission, Group ], { dropSchema: false });
 
     try {
       const group = await Group.findOneOrFail({
@@ -52,7 +52,7 @@ describe('[Shell scripts] create-perm', () => {
     } catch (error: any) {
       throw error;
     } finally {
-      await connection.close();
+      await dataSource.destroy();
     }
   });
 });

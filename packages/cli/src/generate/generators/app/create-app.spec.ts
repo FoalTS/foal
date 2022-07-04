@@ -111,14 +111,6 @@ describe('createApp', () => {
       .assertEqual('create-user.ts', 'app/src/scripts/create-user.ts');
   });
 
-  it('shoud copy the src/scripts templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true });
-
-    fs
-      .cd('test-foo-bar/src/scripts')
-      .assertEqual('create-user.ts', 'app/src/scripts/create-user.mongodb.ts');
-  });
-
   it('should render the src/app/controllers templates.', async () => {
     await createApp({ name: 'test-fooBar' });
 
@@ -190,7 +182,6 @@ describe('createApp', () => {
     fs
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
-      .assertEqual('ormconfig.js', 'app/ormconfig.js')
       .assertEqual('package.json', 'app/package.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.app.json', 'app/tsconfig.app.json')
@@ -205,7 +196,6 @@ describe('createApp', () => {
     fs
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
-      .assertEqual('ormconfig.js', 'app/ormconfig.js')
       .assertEqual('package.json', 'app/package.yaml.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.app.json', 'app/tsconfig.app.json')
@@ -221,7 +211,6 @@ describe('createApp', () => {
     fs
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
-      .assertEqual('ormconfig.js', 'app/ormconfig.js')
       .assertEqual('package.json', 'app/package.mongodb.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.app.json', 'app/tsconfig.app.json')
@@ -237,7 +226,6 @@ describe('createApp', () => {
     fs
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
-      .assertEqual('ormconfig.js', 'app/ormconfig.js')
       .assertEqual('package.json', 'app/package.mongodb.yaml.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.app.json', 'app/tsconfig.app.json')
