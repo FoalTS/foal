@@ -1,6 +1,6 @@
 {
   "name": "foal-srcs",
-  "description": "Elegant and complete Node.Js web framework based on TypeScript.",
+  "description": "Full-featured Node.js framework, with no complexity",
   "directories": {
     "doc": "docs"
   },

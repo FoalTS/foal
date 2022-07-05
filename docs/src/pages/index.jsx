@@ -40,11 +40,11 @@ function Home() {
   const context = useDocusaurusContext();
   return (
     <Layout  
-      description="Elegant and complete Node.Js web framework based on TypeScript.">
+      description="Full-featured Node.js framework, with no complexity">
         <header className={styles.masthead}>
           <div className={styles.content}>
-            <h1>The elegant NodeJS framework</h1>
-            <h3>Build prototypes in hours, full applications in days.</h3>
+            <h1>Full-featured Node.js framework</h1>
+            <h3>Simple and easy to use - TypeScript-based - Well-documented</h3>
             <div>
               <Link
                 className={styles.btn}
