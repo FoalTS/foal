@@ -1085,7 +1085,7 @@ npm install mongodb@4
 > The `MongoDBStore` requires version 4 of the [mongodb](https://www.npmjs.com/package/mongodb) package. If you are using TypeORM with MongoDB, which requires version 3, you can have both versions coexist in your `package.json` as follows:
 > ```json
 > {
->   "mongodb": "~3.6.6",
+>   "mongodb": "~3.7.3",
 >   "mongodb4": "npm:mongodb@~4.3.1",
 > }
 > ```

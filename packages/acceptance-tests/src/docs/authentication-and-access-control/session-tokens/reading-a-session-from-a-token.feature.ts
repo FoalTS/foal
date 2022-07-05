@@ -31,7 +31,7 @@ describe('Feature: Reading a session from a token', () => {
   });
 
   it('Example: Simple example.', async () => {
-    const store = await createService(Store);
+    const store = createService(Store);
 
     async function getFoo(token: string): Promise<any> {
       /* ======================= DOCUMENTATION BEGIN ======================= */

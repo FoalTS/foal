@@ -161,9 +161,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
     for (const codeName of args.permissions) {
       const permission = await Permission.findOneBy({ codeName });
       if (!permission) {
-        console.log(
-          `No permission with the code name "${codeName}" was found.`
-        );
+        console.log(`No permission with the code name "${codeName}" was found.`);
         return;
       }
       group.permissions.push(permission);
