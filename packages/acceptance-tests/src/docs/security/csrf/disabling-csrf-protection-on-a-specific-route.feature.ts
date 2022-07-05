@@ -3,7 +3,7 @@ import { } from 'assert';
 
 // 3p
 import * as request from 'supertest';
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import { Config, controller, createApp, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
