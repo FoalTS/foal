@@ -8,7 +8,7 @@
     "noImplicitAny": false,
     "strictPropertyInitialization": false,
     "module": "commonjs",
-    "target": "es2017",
+    "target": "es2021",
     "rootDir": "src",
     "lib": [
       "es2017",
