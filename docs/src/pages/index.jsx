@@ -44,7 +44,13 @@ function Home() {
         <header className={styles.masthead}>
           <div className={styles.content}>
             <h1>Full-featured Node.js framework</h1>
-            <h3>Simple and easy to use - TypeScript-based - Well-documented</h3>
+            <h3>
+              <span>Simple and easy to use</span>
+              <span> - </span>
+              <span>TypeScript-based</span>
+              <span> - </span>
+              <span>Well-documented</span>
+            </h3>
             <div>
               <Link
                 className={styles.btn}
