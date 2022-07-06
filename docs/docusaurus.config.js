@@ -1,6 +1,6 @@
 module.exports = {
   title: 'FoalTS',
-  tagline: 'Elegant and complete web framework for NodeJS',
+  tagline: 'Full-featured Node.js framework, with no complexity',
   url: 'https://foalts.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
