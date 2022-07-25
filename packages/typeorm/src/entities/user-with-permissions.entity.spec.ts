@@ -264,6 +264,67 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 
     });
 
+    describe('has a static "findOneWithPermissionsBy" method that', () => {
+      let user: User;
+
+      beforeEach(async () => {
+        const permission1 = new Permission();
+        permission1.codeName = 'permission1';
+        permission1.name = '';
+        await permission1.save();
+
+        const permission2 = new Permission();
+        permission2.codeName = 'permission2';
+        permission2.name = '';
+        await permission2.save();
+
+        const group = new Group();
+        group.name = 'group1';
+        group.codeName = 'group1';
+        group.permissions = [permission1];
+        await group.save();
+
+        user = new User();
+        user.groups = [group];
+        user.userPermissions = [permission2];
+        await user.save();
+      });
+
+      it('should return the user fetched from the database.', async () => {
+        const actual = await User.findOneWithPermissionsBy({ id: user.id });
+        if (actual === null) {
+          throw new Error('The user should not be null.');
+        }
+        strictEqual(actual.id, user.id);
+      });
+
+      it('should return the user fetched from the database with their groups and permissions.', async () => {
+        const actual = await User.findOneWithPermissionsBy({ id: user.id });
+        if (actual === null) {
+          throw new Error('The user should not be null.');
+        }
+        strictEqual(actual.id, user.id);
+
+        ok(Array.isArray(actual.userPermissions), 'userPermissions is not an array');
+        strictEqual(actual.userPermissions.length, 1);
+        strictEqual(actual.userPermissions[0].codeName, 'permission2');
+
+        ok(Array.isArray(actual.groups), 'groups is not an array');
+        strictEqual(actual.groups.length, 1);
+        strictEqual(actual.groups[0].name, 'group1');
+
+        ok(Array.isArray(actual.groups[0].permissions), 'groups[0].permissions is not an array');
+        strictEqual(actual.groups[0].permissions.length, 1);
+        strictEqual(actual.groups[0].permissions[0].codeName, 'permission1');
+      });
+
+      it('should return null if no user is found in the database.', async () => {
+        const actual = await User.findOneWithPermissionsBy({ id: 56 });
+        strictEqual(actual, null);
+      });
+
+    });
+
   });
 
 }
