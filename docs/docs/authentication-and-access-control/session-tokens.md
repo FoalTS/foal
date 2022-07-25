@@ -1098,7 +1098,7 @@ npm install mongodb@4
 ```typescript
 import { createApp, ServiceManager } from '@foal/core';
 import { MongoDBStore } from '@foal/mongodb';
-import { MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb'; // or from 'mongodb4';
 
 async function main() {
   const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db');
