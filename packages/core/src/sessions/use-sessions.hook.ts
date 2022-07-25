@@ -20,6 +20,7 @@ import {
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { createSession } from './create-session';
 import { FetchUser } from './fetch-user.interface';
+import { getSessionIdFromRequest, RequestValidationError } from './http/get-session-id-from-request';
 import { readSession } from './read-session';
 import { removeSessionCookie } from './remove-session-cookie';
 import { SessionStore } from './session-store';
@@ -83,42 +84,23 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     /* Validate the request */
 
-    let sessionID: string;
+    let sessionID: string|undefined;
 
-    if (options.cookie) {
-      const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
-      const content = ctx.request.cookies[cookieName] as string|undefined;
-
-      if (!content) {
-        if (!options.required) {
-          if (options.create ?? true) {
-            ctx.session = await createSession(store);
-          }
-          return postFunction;
-        }
-        return badRequestOrRedirect('Session cookie not found.');
+    try {
+      sessionID = getSessionIdFromRequest(ctx.request, options.cookie ? 'token-in-cookie' : 'token-in-header', !!options.required);
+    } catch (error) {
+      if (error instanceof RequestValidationError) {
+        return badRequestOrRedirect(error.message);
       }
+      // TODO: test this.
+      throw error;
+    }
 
-      sessionID = content;
-    } else {
-      const authorizationHeader = ctx.request.get('Authorization') || '';
-
-      if (!authorizationHeader) {
-        if (!options.required) {
-          if (options.create) {
-            ctx.session = await createSession(store);
-          }
-          return postFunction;
-        }
-        return badRequestOrRedirect('Authorization header not found.');
+    if (!sessionID) {
+      if (options.create ?? options.cookie) {
+        ctx.session = await createSession(store);
       }
-
-      const content = authorizationHeader.split('Bearer ')[1] as string|undefined;
-      if (!content) {
-        return badRequestOrRedirect('Expected a bearer token. Scheme is Authorization: Bearer <token>.');
-      }
-
-      sessionID = content;
+      return postFunction;
     }
 
     /* Verify the session ID */
