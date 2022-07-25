@@ -52,10 +52,10 @@
     "@foal/storage": "^2.9.0",
     "@foal/swagger": "^2.9.0",
     "@foal/typeorm": "^2.9.0",
-    "better-sqlite3": "~7.5.1",
+    "better-sqlite3": "~7.6.2",
     "graphql": "~15.8.0",
     "source-map-support": "~0.5.21",
-    "typeorm": "~0.3.6",
+    "typeorm": "~0.3.7",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
