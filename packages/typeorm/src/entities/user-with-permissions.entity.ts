@@ -50,6 +50,22 @@ export abstract class UserWithPermissions extends BaseEntity {
       .getMany();
   }
 
+  static async findOneWithPermissionsBy<T extends UserWithPermissions>(this: (new () => T) & typeof BaseEntity, { id }: { id: number }): Promise<T|null> {
+    return (await this
+      .getRepository<UserWithPermissions>()
+      .findOne(
+        {
+          where: { id },
+          relations: {
+            userPermissions: true,
+            groups: {
+              permissions: true,
+            }
+          }
+        }
+      )) as T|null;
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
