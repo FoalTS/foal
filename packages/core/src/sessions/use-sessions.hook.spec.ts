@@ -737,6 +737,19 @@ describe('UseSessions', () => {
           hook = getHookFunction(UseSessions({ store: Store, user: fetchUser }));
         });
 
+        it('should validate the user ID type.', async () => {
+          hook = getHookFunction(UseSessions({
+            store: Store,
+            user: async () => null,
+            userIdType: 'string'
+          }));
+
+          await rejects(
+            async () => hook(ctx, services),
+            new Error('Invalid user ID type: number')
+          );
+        })
+
         it('and should call options.user with the service manager.', async () => {
           await hook(ctx, services);
 
