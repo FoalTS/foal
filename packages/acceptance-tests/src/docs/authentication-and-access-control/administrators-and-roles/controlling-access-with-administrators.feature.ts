@@ -11,7 +11,7 @@ import {
   dependency, Get, Hook, HttpResponseForbidden, HttpResponseOK,
   HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
-import { DatabaseSession, fetchUser } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with administrators', () => {
@@ -69,7 +69,7 @@ describe('Feature: Controlling access with administrators', () => {
     /* ======================= DOCUMENTATION END ========================= */
 
     @UseSessions({
-      user: fetchUser(User),
+      user: (id: number) => User.findOneBy({ id }),
     })
     class AppController implements IAppController {
       @dependency

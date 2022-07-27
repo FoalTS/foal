@@ -111,14 +111,13 @@ npm run migrations
 *src/app/app.controller.ts*
 ```typescript
 import { controller, dependency, IAppController, Store, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
 
 import { User } from './entities';
 import { ApiController, AuthController } from './controllers';
 
 @UseSessions({
   cookie: true,
-  user: fetchUser(User)
+  user: (id: number) => User.findOneBy({ id }),
 })
 export class AppController implements IAppController {
   // This line is required.
@@ -492,14 +491,13 @@ export class AuthController {
 *src/app/controllers/api.controller.ts*
 ```typescript
 import { Get, HttpResponseOK, UserRequired, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
 
 import { User } from '../entities';
 
 // The `request` option returns a pretty message if the Authorization header is not here.
 @UseSessions({
   required: true,
-  user: fetchUser(User)
+  user: (id: number) => User.findOneBy({ id }),
 })
 @UserRequired()
 export class ApiController {
@@ -700,14 +698,13 @@ npm run migrations
 *src/app/app.controller.ts*
 ```typescript
 import { Context, controller, dependency, Get, IAppController, render, Store, UserRequired, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
 
 import { ApiController, AuthController } from './controllers';
 import { User } from './entities';
 
 @UseSessions({
   cookie: true,
-  user: fetchUser(User)
+  user: (id: number) => User.findOneBy({ id }),
 })
 export class AppController implements IAppController {
   // This line is required.

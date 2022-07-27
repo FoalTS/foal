@@ -21,7 +21,7 @@ import {
   ValidateBody,
   verifyPassword
 } from '@foal/core';
-import { DatabaseSession, fetchUser } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Authenticating users in a stateful SPA using cookies', () => {
@@ -109,7 +109,7 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
 
   @UseSessions({
     cookie: true,
-    user: fetchUser(User)
+    user: (id: number) => User.findOneBy({ id }),
   })
   class AppController implements IAppController {
     // This line is required.

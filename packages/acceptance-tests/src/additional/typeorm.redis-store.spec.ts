@@ -25,7 +25,6 @@ import { createClient } from 'redis';
 import * as request from 'supertest';
 
 // FoalTS
-import { fetchMongoDBUser } from '@foal/typeorm';
 import {
   BaseEntity,
   Column,
@@ -65,7 +64,12 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     });
   }
 
-  @UseSessions({ user: fetchMongoDBUser(User), store: RedisStore, required: true, })
+  @UseSessions({
+    user: id => User.findOneBy({ id: new ObjectID(id) }),
+    userIdType: 'string',
+    store: RedisStore,
+    required: true,
+  })
   class MyController {
     @Get('/foo')
     foo() {

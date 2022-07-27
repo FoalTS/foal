@@ -67,7 +67,12 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     });
   }
 
-  @UseSessions({ user: fetchMongoDBUser(User), store: MongoDBStore, required: true })
+  @UseSessions({
+    user: id => User.findOneBy({ id: new ObjectID(id) }),
+    userIdType: 'string',
+    store: MongoDBStore,
+    required: true
+  })
   class MyController {
     @Get('/foo')
     foo() {
