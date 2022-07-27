@@ -30,6 +30,7 @@
     "typeorm": "0.2.26"
   },
   "devDependencies": {
+    "@foal/cli": "^2.9.0",
     "@types/mocha": "7.0.2",
     "@types/node": "10.17.24",
     "concurrently": "~5.3.0",
