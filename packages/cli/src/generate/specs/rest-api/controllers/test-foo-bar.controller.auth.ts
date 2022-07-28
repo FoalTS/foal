@@ -140,7 +140,7 @@ export class TestFooBarController {
       return new HttpResponseNotFound();
     }
 
-    await TestFooBar.delete(ctx.request.params.testFooBarId);
+    await TestFooBar.delete({ id: ctx.request.params.testFooBarId });
 
     return new HttpResponseNoContent();
   }

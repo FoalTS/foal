@@ -9,6 +9,6 @@ export const schema = {
   type: 'object',
 };
 
-export async function main() {
+export async function main(args: any) {
 
 }

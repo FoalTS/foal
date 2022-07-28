@@ -92,7 +92,43 @@ export class User {
 
 Running the `create-user` script will result in an error since we do not provide an email and a password as arguments.
 
-Go to `src/scripts/create-user.ts` and uncomment the lines mentionning the emails and passwords.
+Go to `src/scripts/create-user.ts` and replace its content with the following lines:
+
+```typescript
+// 3p
+import { hashPassword } from '@foal/core';
+
+// App
+import { User } from '../app/entities';
+import { dataSource } from '../db';
+
+export const schema = {
+  additionalProperties: false,
+  properties: {
+    email: { type: 'string', format: 'email' },
+    password: { type: 'string' },
+  },
+  required: [ 'email', 'password' ],
+  type: 'object',
+};
+
+export async function main(args) {
+  await dataSource.initialize();
+
+  try {
+    const user = new User();
+    user.email = args.email;
+    user.password = await hashPassword(args.password);
+
+    console.log(await user.save());
+  } catch (error: any) {
+    console.error(error.message);
+  } finally {
+    await dataSource.destroy();
+  }
+}
+
+```
 
 > To get it work, you will also need to install the `password` package: `npm install --save @foal/password`. The `isCommon` util helps you to detect if a password is too common (ex: 12345) and thus prevents the script from creating a new user with an unsecured password.
 

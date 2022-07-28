@@ -48,7 +48,7 @@ export class StoriesController {
   @UserRequired()
   async deleteStory(ctx: Context<User>, { storyId }: { storyId: number }) {
     // Only retrieve stories whose author is the current user.
-    const story = await Story.findOneBy({ id: storyId, author: ctx.user });
+    const story = await Story.findOneBy({ id: storyId, author: { id: ctx.user.id } });
 
     if (!story) {
       return new HttpResponseNotFound();

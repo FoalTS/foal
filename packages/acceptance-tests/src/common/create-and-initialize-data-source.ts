@@ -1,5 +1,5 @@
 // 3p
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import { Class } from '@foal/core';

@@ -1,6 +1,6 @@
 // 3p
 import * as request from 'supertest';
-import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';

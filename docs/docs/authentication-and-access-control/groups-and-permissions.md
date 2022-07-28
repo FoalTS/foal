@@ -50,7 +50,7 @@ Replace the content of the new created file `src/scripts/create-perm.ts` with th
 import { Permission } from '@foal/typeorm';
 
 // App
-import { createDataSource } from '../db';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -67,7 +67,6 @@ export async function main(args: { codeName: string, name: string }) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  const dataSource = createDataSource();
   await dataSource.initialize();
 
   try {
@@ -135,7 +134,7 @@ Replace the content of the new created file `src/scripts/create-group.ts` with t
 import { Group, Permission } from '@foal/typeorm';
 
 // App
-import { createDataSource } from '../db';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -154,16 +153,13 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  const dataSource = createDataSource();
   await dataSource.initialize();
 
   try {
     for (const codeName of args.permissions) {
       const permission = await Permission.findOneBy({ codeName });
       if (!permission) {
-        console.log(
-          `No permission with the code name "${codeName}" was found.`
-        );
+        console.log(`No permission with the code name "${codeName}" was found.`);
         return;
       }
       group.permissions.push(permission);
@@ -232,7 +228,7 @@ import { Group, Permission } from '@foal/typeorm';
 
 // App
 import { User } from '../app/entities';
-import { createDataSource } from '../db';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -253,7 +249,6 @@ export async function main(args) {
   user.email = args.email;
   user.password = await hashPassword(args.password);
 
-  const dataSource = createDataSource();
   await dataSource.initialize();
 
   for (const codeName of args.userPermissions as string[]) {

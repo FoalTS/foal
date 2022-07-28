@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { decode, sign } from 'jsonwebtoken';
 
 // FoalTS

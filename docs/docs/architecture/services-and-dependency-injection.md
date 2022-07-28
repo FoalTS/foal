@@ -246,7 +246,7 @@ class ApiController {
   dataSource: DataSource;
 
   @Get('/products')
-  async readProducts() {
+  async readProducts() {
     const products = await this.dataSource.getRepository(Product).find();
     return new HttpResponseOK(products);
   }

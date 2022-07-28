@@ -90,7 +90,9 @@ export class User extends BaseEntity {
 
 *Example*
 ```typescript
-const user = await User.findOne('xxxx');
+import { ObjectId } from 'mongodb';
+
+const user = await User.findOneBy({ _id: new ObjectId('xxxx') });
 ```
 
 ## Authentication

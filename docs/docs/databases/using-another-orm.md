@@ -116,7 +116,15 @@ Generate the TypeScript interfaces.
 npx prisma generate
 ```
 
-Update your `src/index.ts` to create the prisma connection and pass it to the service manager.
+Update your `src/app/db.ts` to create the prisma connection:
+
+```typescript
+import { PrismaClient } from '@prisma/client';
+
+export const prisma = new PrismaClient();
+```
+
+Then update your `src/index.ts` to inject it into the service manager.
 
 *src/index.ts*
 ```typescript
@@ -126,12 +134,11 @@ import { PrismaClient } from '@prisma/client';
 
 // App
 import { AppController } from './app/app.controller';
-
-const prisma = new PrismaClient();
+import { prisma } from './app/db';
 
 async function main() {
-  const serviceManager = new ServiceManager();
-  serviceManager.set(PrismaClient, prisma);
+  const serviceManager = new ServiceManager()
+    .set(PrismaClient, prisma);
   const app = await createApp(AppController, { serviceManager });
 
   // ...
