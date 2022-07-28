@@ -301,10 +301,9 @@ If you want the `hasPerm` method to work on the context `user` property, you mus
 ```typescript
 import { Context, Get } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
-import { fetchUserWithPermissions } from '@foal/typeorm';
 
 @JWTRequired({
-  user: fetchUserWithPermissions(User)
+  user: (id: number) => User.findOneWithPermissionsBy({ id })
 })
 export class ProductController {
   @Get('/products')
@@ -363,10 +362,10 @@ export class ProductController {
 *Example*
 ```typescript
 import { Context, Get } from '@foal/core';
-import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
+import { PermissionRequired } from '@foal/typeorm';
 import { JWTRequired } from '@foal/jwt';
 
-@JWTRequired({ user: fetchUserWithPermissions(User) })
+@JWTRequired({ user: (id: number) => User.findOneWithPermissionsBy({ id }) })
 export class ProductController {
   @Get('/products')
   @PermissionRequired('read-products')

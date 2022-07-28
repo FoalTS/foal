@@ -324,12 +324,11 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
   ```typescript
   import { Context, Get } from '@foal/core';
   import { JWTRequired } from '@foal/jwt';
-  import { fetchUser } from '@foal/typeorm';
 
   import { User } from '../entities';
 
   // fetchUser fetches the user from the database using the entity User. It returns an instance of User.
-  @JWTRequired({ user: fetchUser(User) })
+  @JWTRequired({ user: (id: number) => User.findOneBy({ id }) })
   export class ApiController {
     @Get('/do-something')
     get(ctx: Context) {
@@ -369,8 +368,8 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
     { id: 2, email: 'john@foalts.org', isAdmin: false },
   ];
 
-  function getUserById(id: string) {
-    return users.find(user => user.id.toString() === id);
+  function getUserById(id: number) {
+    return users.find(user => user.id === id);
   }
 
   @JWTRequired({ user: getUserById })
