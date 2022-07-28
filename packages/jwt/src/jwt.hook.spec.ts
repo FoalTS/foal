@@ -96,7 +96,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   const fetchUser: FetchUser = async (id, services) => {
     actualServices = services;
-    return id === '1' ? user : null;
+    return id === 1 ? user : null;
   };
 
   let ctx: Context;
@@ -490,7 +490,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       let csrfToken: string;
 
       beforeEach(() => {
-        sub = 'subX';
+        sub = '678';
         token = sign({ foo: 'bar' }, secret, { subject: sub });
         csrfToken = sign({ foo2: 'bar' }, secret, { subject: sub });
 
@@ -853,6 +853,21 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
           'error="invalid_token", error_description="The token must include a subject which is the id of the user."'
         );
       });
+
+      it('and should validate the user ID type and convert it if necessary.', async () => {
+        const jwt = sign({}, secret, { subject: 'not-a-number' });
+        ctx = createContext({ Authorization: `Bearer ${jwt}` });
+
+        hook = getHookFunction(JWT({
+          user: async () => null, 
+          userIdType: 'number'
+        }));
+
+        await rejects(
+          async () => hook(ctx, services),
+          new Error('Suspicious operation: invalid user ID type.')
+        );
+      })
 
       it('and should call options.user with the service manager.', async () => {
         const jwt = sign({}, secret, { subject: user.id.toString() });
