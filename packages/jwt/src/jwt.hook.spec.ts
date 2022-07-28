@@ -7,7 +7,6 @@ import {
   Context,
   convertBase64ToBase64url,
   convertBase64urlToBase64,
-  FetchUser,
   getApiComponents,
   getApiParameters,
   getApiResponses,

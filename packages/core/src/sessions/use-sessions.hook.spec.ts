@@ -29,7 +29,6 @@ import {
   SESSION_DEFAULT_INACTIVITY_TIMEOUT,
   SESSION_USER_COOKIE_NAME
 } from './constants';
-import { FetchUser } from './fetch-user.interface';
 import { readSession } from './read-session';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
