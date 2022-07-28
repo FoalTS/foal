@@ -327,12 +327,11 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
 
   import { User } from '../entities';
 
-  // fetchUser fetches the user from the database using the entity User. It returns an instance of User.
   @JWTRequired({ user: (id: number) => User.findOneBy({ id }) })
   export class ApiController {
     @Get('/do-something')
     get(ctx: Context) {
-      // ctx.user is the instance returned by fetchUser.
+      // ctx.user is the instance returned by User.findOneBy.
       // ...
     }
   }

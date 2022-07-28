@@ -94,7 +94,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
   let actualServices: ServiceManager;
   const secret = 'my_secret';
 
-  const fetchUser: FetchUser = async (id, services) => {
+  const findUser = async (id: number, services: ServiceManager) => {
     actualServices = services;
     return id === 1 ? user : null;
   };
@@ -120,7 +120,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
   beforeEach(() => {
     ctx = createContext();
-    hook = getHookFunction(JWT({ user: fetchUser }));
+    hook = getHookFunction(JWT({ user: findUser }));
     services = new ServiceManager();
 
     Config.set('settings.jwt.secret', secret);
@@ -214,7 +214,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     it('and return an HttpResponseUnauthorized object if it is.', async () => {
       const hook = getHookFunction(JWT({
         blackList: token => token === 'revokedToken' ? true : false,
-        user: fetchUser,
+        user: findUser,
       }));
 
       ctx = createContext({ Authorization: 'Bearer revokedToken' });
@@ -440,7 +440,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('should return an HttpResponseUnauthorized object if the audience is not expected.', async () => {
-      const hook = getHookFunction(JWT({ user: fetchUser }, { audience: 'bar' }));
+      const hook = getHookFunction(JWT({ user: findUser }, { audience: 'bar' }));
 
       const token = sign({}, secret, { audience: 'foo' });
       ctx = createContext({ Authorization: `Bearer ${token}` });
@@ -460,7 +460,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
     });
 
     it('should return an HttpResponseUnauthorized object if the issuer is not expected.', async () => {
-      const hook = getHookFunction(JWT({ user: fetchUser }, { issuer: 'bar' }));
+      const hook = getHookFunction(JWT({ user: findUser }, { issuer: 'bar' }));
 
       const token = sign({}, secret, { issuer: 'foo' });
       ctx = createContext({ Authorization: `Bearer ${token}` });
