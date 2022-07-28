@@ -6,10 +6,6 @@ export function checkUserIdType(userId: number|string, userIdType?: 'string'|'nu
       }
       return userId;
     case 'number':
-      if (typeof userId !== 'number') {
-        throw new Error(`Invalid user ID type: ${typeof userId}`);
-      }
-      return userId;
     default:
       if (typeof userId !== 'number') {
         throw new Error(`Invalid user ID type: ${typeof userId}`);
