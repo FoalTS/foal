@@ -10,8 +10,7 @@ import {
 /**
  * Hook factory to check if a user can access a route based on their permissions.
  *
- * This function uses `UserWithPermissions.hasPerm` under the hood.  It is very likely
- * that you have to use the `fetchUserWithPermissions` function when using this hook.
+ * This function uses `User.hasPerm` under the hood.
  *
  * @export
  * @param {string} perm - The name of the permission.

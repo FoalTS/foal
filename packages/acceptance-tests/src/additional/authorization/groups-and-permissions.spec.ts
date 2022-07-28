@@ -13,7 +13,6 @@ import {
 } from '@foal/core';
 import {
   DatabaseSession,
-  fetchUserWithPermissions,
   Group,
   Permission,
   PermissionRequired,

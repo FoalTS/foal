@@ -14,7 +14,6 @@ export {
 } from './hooks';
 export {
   fetchMongoDBUser,
-  fetchUserWithPermissions,
 } from './utils';
 export {
   DatabaseSession,

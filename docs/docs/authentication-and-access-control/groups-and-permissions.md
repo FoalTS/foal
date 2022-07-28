@@ -295,7 +295,7 @@ foal run create-user userPermissions="[ \"my-first-perm\" ]" groups="[ \"my-grou
 
 ## Fetching a User with their Permissions
 
-If you want the `hasPerm` method to work on the context `user` property, you must use the `fetchUserWithPermissions` function in the authentication hook.
+If you want the `hasPerm` method to work on the context `user` property, you must use the `User.findOneWithPermissionsBy` method in the authentication hook.
 
 *Example with JSON Web Tokens*
 ```typescript
@@ -339,7 +339,7 @@ export class ProductController {
 
 ## The PermissionRequired Hook
 
-> This requires the use of `fetchUserWithPermissions`.
+> This requires the use of `User.findOneWithPermissionsBy`.
 
 ```typescript
 @PermissionRequired('perm')
