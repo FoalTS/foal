@@ -13,9 +13,6 @@ export {
   PermissionRequired,
 } from './hooks';
 export {
-  fetchMongoDBUser,
-} from './utils';
-export {
   DatabaseSession,
   TypeORMStore,
   TypeORMStore as ConcreteSessionStore,

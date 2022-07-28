@@ -95,8 +95,6 @@ const user = await User.findOne('xxxx');
 
 ## Authentication
 
-### The `fetchMongoDBUser` function
-
 *user.entity.ts*
 ```typescript
 import { BaseEntity, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
@@ -113,11 +111,14 @@ export class User extends BaseEntity {
 *Example with JSON Web Tokens*:
 ```typescript
 import { JWTRequired } from '@foal/jwt';
-import { fetchMongoDBUser } from '@foal/typeorm';
+import { ObjectID } from 'mongodb';
 
 import { User } from '../entities';
 
-@JWTRequired({ user: fetchMongoDBUser(User) })
+@JWTRequired({
+  userIdType: 'string',
+  user: id => User.findOneBy({ id: new ObjectID(id) })
+})
 class MyController {}
 ```
 

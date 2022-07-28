@@ -341,16 +341,18 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
   ```typescript
   import { Context, Get } from '@foal/core';
   import { JWTRequired } from '@foal/jwt';
-  import { fetchMongoDBUser } from '@foal/typeorm';
+  import { ObjectID } from 'mongodb';
 
   import { User } from '../entities';
 
-  // fetchMongoDBUser fetches the user from the database using the entity User. It returns an instance of User.
-  @JWTRequired({ user: fetchMongoDBUser(User) })
+  @JWTRequired({
+    userIdType: 'string',
+    user: (id: string) => User.findOneBy({ id: new ObjectID(id) }),
+  })
   export class ApiController {
     @Get('/do-something')
     get(ctx: Context) {
-      // ctx.user is the instance returned by fetchMongoDBUser.
+      // ctx.user is the instance returned by User.findOneBy.
       // ...
     }
   }

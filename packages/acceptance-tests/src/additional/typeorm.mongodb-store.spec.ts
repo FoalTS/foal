@@ -25,7 +25,6 @@ import { MongoClient } from 'mongodb';
 import * as request from 'supertest';
 
 // FoalTS
-import { fetchMongoDBUser } from '@foal/typeorm';
 import {
   BaseEntity,
   Column,
