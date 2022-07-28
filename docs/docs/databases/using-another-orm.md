@@ -138,9 +138,7 @@ export class AppController implements IAppController {
 }
 ```
 
-#### The `fetchUser` function
-
-In case your application uses the hooks `@UseSessions` or `@JWTRequired` and you want to assign a value to `ctx.user`, then you will need to create a `fetchUser` function.
+#### Authenticating users
 
 First, make sure your have a `User` model defined in `schema.prisma`.
 
@@ -161,33 +159,20 @@ npx prisma migrate dev --name add-user
 npx prisma generate
 ```
 
-Then create the `fetchPrismaUser` function.
+Then add the `user` option to your authentication hooks as follows:
+
 ```typescript
-import { ServiceManager } from '@foal/core';
-import { PrismaClient } from '@prisma/client';
-
-export async function fetchPrismaUser(id: number|string, services: ServiceManager) {
-  if (typeof id === 'string') {
-    throw new Error('The user ID must be a number.');
-  }
-
-  const user = await services.get(PrismaClient).user.findFirst({
+@JWTRequired({
+  user: (id: number, services: ServiceManager) => services.get(PrismaClient).user.findFirst({
     where: { id }
-  });
-
-  if (user === null) {
-    return undefined;
-  }
-  
-  return user;
-}
-```
-
-You're now ready to use it in your hooks.
-```typescript
-@JWTRequired({ user: fetchPrismaUser })
+  })
+})
 // OR
-@UseSessions({ user: fetchPrismaUser })
+@UseSessions({
+  user: (id: number, services: ServiceManager) => services.get(PrismaClient).user.findFirst({
+    where: { id }
+  })
+})
 ```
 
 ## Limitations
