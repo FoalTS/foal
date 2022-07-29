@@ -457,7 +457,7 @@ export class FileSystem {
 
   /**
    * Returns the dependencies of the project package.json.
-   * 
+   *
    * @returns {{ name: string, version: string }[]}
    */
   getProjectDependencies(): { name: string, version: string }[] {
@@ -473,7 +473,7 @@ export class FileSystem {
 
   /**
    * Returns the dev dependencies of the project package.json.
-   * 
+   *
    * @returns {{ name: string, version: string }[]}
    */
   getProjectDevDependencies(): { name: string, version: string }[] {

@@ -12,7 +12,7 @@ export function notifyUserIfUpdatesAreAvailable() {
   const projectDevDependencies = fs.getProjectDevDependencies();
 
   const notifier = updateNotifier({
-    pkg: getCoreDependency(projectDependencies), 
+    pkg: getCoreDependency(projectDependencies),
     // updateCheckInterval: 1000 * 60 * 60 * 24 * 7 * 2 // 2 weeks
   });
 
