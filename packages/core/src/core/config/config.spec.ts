@@ -224,6 +224,13 @@ describe('Config', () => {
           strictEqual(Config.get('a.b.c'), 2);
         });
 
+        it('and explicit undefined values should not override other defined values.', () => {
+          writeFileSync('config/default.js', 'module.exports = { a: "foobar" }');
+          writeFileSync('config/development.js', 'module.exports = { a: undefined }');
+
+          strictEqual(Config.get('a'), 'foobar');
+        })
+
       });
 
       it('should not delete configuration values (deep merge).', () => {
