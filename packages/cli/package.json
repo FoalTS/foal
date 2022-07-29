@@ -5,9 +5,11 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret && npm run test:rmdir && npm run test:fs",
+    "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret && npm run test:rmdir && npm run test:fs && npm run test:notifier",
     "test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/file-system.spec.ts\"",
     "dev:test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/file-system.spec.ts\"",
+    "test:notifier": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/update-notifier/**/*.spec.ts\"",
+    "dev:test:notifier": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/update-notifier/**/*.spec.ts\"",
     "test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/generators/**/*.spec.ts\"",
     "dev:test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/generators/**/*.spec.ts\"",
     "test:rmdir": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/rmdir/**/*.spec.ts\"",
@@ -60,7 +62,8 @@
     "ajv": "~6.12.0",
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
-    "commander": "~7.2.0"
+    "commander": "~7.2.0",
+    "update-notifier": "^6.0.2"
   },
   "devDependencies": {
     "@types/mocha": "7.0.2",

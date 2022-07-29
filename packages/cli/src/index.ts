@@ -23,6 +23,7 @@ import {
   createScript,
   createService,
   createVSCodeConfig,
+  notifyUserIfUpdatesAreAvailable,
 } from './generate';
 import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
@@ -130,6 +131,9 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
       displayError(`Argument "name" is required when creating a ${type}. Please provide one.`);
       return;
     }
+
+    notifyUserIfUpdatesAreAvailable();
+
     try {
       switch (type) {
         case 'controller':
