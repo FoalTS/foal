@@ -216,7 +216,7 @@ export class Config {
     for (const key in source) {
       if (isObject(target[key]) && isObject(source[key])) {
         this.mergeDeep(target[key], source[key]);
-      } else {
+      } else if (source[key] !== undefined) {
         target[key] = source[key];
       }
     }
