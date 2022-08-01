@@ -38,7 +38,8 @@ module.exports = {
     //     '👉 ... ✨',
     // },
     algolia: {
-      apiKey: '888cc664f8cdf532950f93fdd481eac1',
+      appId: 'VRIT2ZBVSX',
+      apiKey: '0e5ec5503a51d81abd83ed758f9e9c4e',
       indexName: 'foalts',
 
       // Optional: see doc section bellow
