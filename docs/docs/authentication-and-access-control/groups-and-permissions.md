@@ -221,6 +221,10 @@ The `hasPerm(permissionCodeName: string)` method of the `UserWithPermissions` cl
 - The user has the required permission.
 - The user belongs to a group that has the required permission.
 
+### The static `findOneWithPermissionsBy` Method
+
+This method takes an id as parameter and returns the corresponding user with its groups and permissions. If no user is found, the method returns `null`.
+
 ### Creating Users with Groups and Permissions with a Shell Script (CLI)
 
 Replace the content of the new created file `src/scripts/create-user.ts` with the following:
