@@ -18,11 +18,11 @@ import { Session } from '@foal/core';
  * @template ContextState
  */
 export class WebsocketContext<User = { [key: string]: any } | null, ContextState = { [key: string]: any }> {
-  socket: Socket;
+  readonly socket: Socket;
   session: Session | null;
 
   user: User;
-  state: ContextState;
+  readonly state: ContextState;
 
 
   /**

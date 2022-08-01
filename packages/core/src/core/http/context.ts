@@ -109,11 +109,11 @@ interface Request extends IncomingMessage {
  * @template User
  */
 export class Context<User = { [key: string]: any } | null, ContextState = { [key: string]: any }> {
-  request: Request;
+  readonly request: Request;
   session: Session | null;
 
   user: User;
-  state: ContextState;
+  readonly state: ContextState;
 
   /**
    * Creates an instance of Context.
