@@ -20,7 +20,7 @@ import {
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { createSession } from './create-session';
 import { checkUserIdType } from './http/check-user-id-type';
-import { getSessionIdFromRequest, RequestValidationError } from './http/get-session-id-from-request';
+import { getSessionIDFromRequest, RequestValidationError } from './http/get-session-id-from-request';
 import { readSession } from './read-session';
 import { removeSessionCookie } from './remove-session-cookie';
 import { SessionStore } from './session-store';
@@ -95,7 +95,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
     let sessionID: string|undefined;
 
     try {
-      sessionID = getSessionIdFromRequest(ctx.request, options.cookie ? 'token-in-cookie' : 'token-in-header', !!options.required);
+      sessionID = getSessionIDFromRequest(ctx.request, options.cookie ? 'token-in-cookie' : 'token-in-header', !!options.required);
     } catch (error) {
       if (error instanceof RequestValidationError) {
         return badRequestOrRedirect(error.message);
