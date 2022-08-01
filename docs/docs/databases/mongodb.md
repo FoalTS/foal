@@ -77,7 +77,7 @@ import { BaseEntity, Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
 export class User extends BaseEntity {
     
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
     
     @Column()
     firstName: string;
@@ -103,7 +103,7 @@ import { BaseEntity, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 export class User extends BaseEntity {
 
   @ObjectIdColumn()
-  id: ObjectID;
+  _id: ObjectID;
 
 }
 ```
@@ -111,13 +111,13 @@ export class User extends BaseEntity {
 *Example with JSON Web Tokens*:
 ```typescript
 import { JWTRequired } from '@foal/jwt';
-import { ObjectID } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 import { User } from '../entities';
 
 @JWTRequired({
   userIdType: 'string',
-  user: id => User.findOneBy({ id: new ObjectID(id) })
+  user: id => User.findOneBy({ _id: new ObjectId(id) })
 })
 class MyController {}
 ```

@@ -4,6 +4,6 @@ import { BaseEntity, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 export class User extends BaseEntity {
 
   @ObjectIdColumn()
-  id: ObjectID;
+  _id: ObjectID;
 
 }

@@ -21,7 +21,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { MongoDBStore } from '@foal/mongodb';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import * as request from 'supertest';
 
 // FoalTS
@@ -46,7 +46,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
   @Entity()
   class User extends BaseEntity {
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
 
     @Column({ unique: true })
     email: string;
@@ -67,7 +67,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
   }
 
   @UseSessions({
-    user: id => User.findOneBy({ id: new ObjectID(id) }),
+    user: id => User.findOneBy({ _id: new ObjectId(id) }),
     userIdType: 'string',
     store: MongoDBStore,
     required: true

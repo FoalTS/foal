@@ -341,13 +341,13 @@ In these cases, the two hooks `JWTRequired` and `JWTOptional` offer a `user` opt
   ```typescript
   import { Context, Get } from '@foal/core';
   import { JWTRequired } from '@foal/jwt';
-  import { ObjectID } from 'mongodb';
+  import { ObjectId } from 'mongodb';
 
   import { User } from '../entities';
 
   @JWTRequired({
     userIdType: 'string',
-    user: (id: string) => User.findOneBy({ id: new ObjectID(id) }),
+    user: (id: string) => User.findOneBy({ _id: new ObjectId(id) }),
   })
   export class ApiController {
     @Get('/do-something')
