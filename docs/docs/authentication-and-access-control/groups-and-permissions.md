@@ -319,10 +319,8 @@ export class ProductController {
 *Example with Sessions Tokens*
 ```typescript
 import { Context, Get, UseSessions } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
 
 @UseSessions({
-  store: TypeORMStore,
   required: true,
   user: (id: number) => User.findOneWithPermissionsBy({ id }),
 })
