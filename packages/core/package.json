@@ -1,7 +1,7 @@
 {
   "name": "@foal/core",
   "version": "2.9.0",
-  "description": "Elegant and complete Node.Js web framework based on TypeScript",
+  "description": "Full-featured Node.js framework, with no complexity",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {

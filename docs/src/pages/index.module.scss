@@ -32,12 +32,12 @@ $section-padding-x: 60px;
 
 $max-content-width: 1280px;
 
-@media (max-width: $medium-screen)  {
+@media (max-width: $medium-screen) {
   $section-padding-y: 50px;
   $small-section-padding-y: 40px;
 }
 
-@media (min-width: $large-screen)  {
+@media (min-width: $large-screen) {
   $section-padding-y: 100px;
   $small-section-padding-y: 70px;
 }
@@ -87,7 +87,7 @@ $max-content-width: 1280px;
 }
 
 
-@media (max-width: $small-screen)  {
+@media (max-width: $small-screen) {
   .btn {
     display: inline-block;
   }
@@ -100,7 +100,7 @@ $max-content-width: 1280px;
 .masthead {
   height: 500px;
 
-  @media (min-width: $large-screen)  {
+  @media (min-width: $large-screen) {
     height: 570px;
   }
 
@@ -112,18 +112,18 @@ $max-content-width: 1280px;
     padding-top: 90px;
 
     // Takes into account the line break of the title.
-    @media (max-width: 880px)  {
+    @media (max-width: 880px) {
       padding-top: 40px;
     }
 
-    @media (max-width: $small-screen)  {
+    @media (max-width: $small-screen) {
       padding-top: 40px;
     }
 
-    @media (min-width: $large-screen)  {
+    @media (min-width: $large-screen) {
       padding-top: 120px;
     }
-  
+
 
     text-align: center;
   }
@@ -137,7 +137,7 @@ $max-content-width: 1280px;
 
     margin-bottom: 20px;
 
-    @media (max-width: $small-screen)  {
+    @media (max-width: $small-screen) {
       font-size: 40px;
     }
   }
@@ -158,7 +158,7 @@ $max-content-width: 1280px;
   .githubBtns {
     margin-top: 40px;
 
-    > * {
+    >* {
       margin: 0 4px;
     }
   }
@@ -166,17 +166,17 @@ $max-content-width: 1280px;
 
 .screenshotContainer {
   text-align: center;
-  
+
   background: linear-gradient(rgb(171, 203, 243), 5%, $bg-white);
 
-  @media (max-width: 576px)  {
+  @media (max-width: 576px) {
     background: linear-gradient(rgb(171, 203, 243), 1%, $bg-white);
   }
 
   img {
     margin-top: -70px;
 
-    @media (min-width: $large-screen)  {
+    @media (min-width: $large-screen) {
       margin-top: -90px;
     }
 
@@ -184,7 +184,7 @@ $max-content-width: 1280px;
     @media (max-width: $small-screen) {
       display: none;
     }
-    
+
     width: 70%;
     max-width: $max-content-width;
     box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
@@ -195,7 +195,7 @@ $max-content-width: 1280px;
 @mixin section {
   padding: $section-padding-y $section-padding-x;
 
-  > div {
+  >div {
     max-width: $max-content-width;
     margin: auto;
   }
@@ -236,7 +236,7 @@ $max-content-width: 1280px;
   .featuresWrapper {
     margin-left: 40px;
 
-    $offset: $section-padding-y * 2 / 5;
+    $offset: calc($section-padding-y * 2 / 5);
 
     margin-top: - $offset;
     margin-bottom: - $offset;
@@ -253,8 +253,10 @@ $max-content-width: 1280px;
     background-color: $bg-white;
     border-radius: 5px;
 
-    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
-  
+    box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
+    rgba(17, 17, 26, 0.1) 0px 8px 24px,
+    rgba(17, 17, 26, 0.1) 0px 16px 56px;
+
     p {
       color: black;
     }
@@ -316,12 +318,12 @@ $max-content-width: 1280px;
   @media (max-width: $small-screen) {
     flex-direction: column;
 
-    > div {
+    >div {
       margin-bottom: 10px;
     }
   }
 
-  > div {
+  >div {
     display: flex;
     align-items: center;
 
@@ -354,7 +356,7 @@ $max-content-width: 1280px;
     line-height: 15px;
     font-size: 15px;
     margin-left: 10px;
-    
+
     @media (max-width: $medium-screen) {
       margin-left: 0;
     }
@@ -423,9 +425,10 @@ $max-content-width: 1280px;
       font-weight: normal;
       margin-bottom: 15px;
 
-      @media (min-width: $large-screen)  {
+      @media (min-width: $large-screen) {
         margin-bottom: 20px;
       }
+
       font-size: 1rem;
     }
 
@@ -434,7 +437,7 @@ $max-content-width: 1280px;
 
       margin-bottom: 30px;
 
-      @media (min-width: $large-screen)  {
+      @media (min-width: $large-screen) {
         margin-bottom: 40px;
       }
 
@@ -458,8 +461,7 @@ $max-content-width: 1280px;
 }
 
 .architectureWrapper,
-.typescriptWrapper
-{
+.typescriptWrapper {
   height: 100%;
 }
 
@@ -467,18 +469,18 @@ $max-content-width: 1280px;
   padding-left: 60px;
   padding-right: 30px;
   text-align: center;
-      
+
   @media (max-width: $medium-screen) {
     padding: 0;
     padding-top: 40px;
   }
 
-        
+
   @media (max-width: $small-screen) {
     display: none;
   }
 
-  > img {
+  >img {
     max-width: 75%;
   }
 }
@@ -488,15 +490,15 @@ $max-content-width: 1280px;
   display: flex;
   align-items: center;
   justify-content: center;
-      
+
   @media (max-width: $medium-screen) {
     padding: 0;
     padding-bottom: 40px;
   }
 
 
-  > div {
-    > strong {
+  >div {
+    >strong {
       color: $text-white;
       font-weight: 500;
       font-size: 6rem;
@@ -511,7 +513,7 @@ $max-content-width: 1280px;
     justify-content: center;
     align-items: center;
 
-    > svg {
+    >svg {
       height: 6rem;
       margin-right: 20px;
       fill: $text-white
@@ -599,8 +601,7 @@ $max-content-width: 1280px;
   .githubLink:before,
   .twitterLink:before,
   .youtubeLink:before,
-  .chatLink:before
-  {
+  .chatLink:before {
     content: '';
     width: 22px;
     height: 22px;
