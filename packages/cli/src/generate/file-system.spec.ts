@@ -1,5 +1,5 @@
 // std
-import { notStrictEqual, strictEqual } from 'assert';
+import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import { existsSync, mkdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
@@ -876,6 +876,87 @@ describe('FileSystem', () => {
 
     it('should not change the current working directory.', () => {
       fs.projectHasDependency('commander');
+      strictEqual(fs.currentDir, '');
+    });
+
+  });
+
+  describe('has a "getProjectDependencies" method that', () => {
+
+    let initialPkg: Buffer;
+
+    before(() => {
+      mkdir('test-generators');
+      mkdir('test-generators/subdir');
+      initialPkg = readFileSync('package.json');
+      writeFileSync('package.json', JSON.stringify({
+        dependencies: {
+          '@foal/core': '~1.0.1',
+          'bar': '~2.2.0'
+        }
+      }), 'utf8');
+    });
+
+    after(() => {
+      writeFileSync('package.json', initialPkg);
+      rmdir('test-generators/subdir');
+      rmdir('test-generators');
+    });
+
+    it('should return the project dependencies.', () => {
+      deepStrictEqual(
+        fs.getProjectDependencies(),
+        [
+          { name: '@foal/core', version: '~1.0.1' },
+          { name: 'bar', version: '~2.2.0' }
+        ]
+      );
+    });
+
+    it('should not change the current working directory.', () => {
+      fs.getProjectDependencies();
+      strictEqual(fs.currentDir, '');
+    });
+
+  });
+
+  describe('has a "getProjectDevDependencies" method that', () => {
+
+    let initialPkg: Buffer;
+
+    before(() => {
+      mkdir('test-generators');
+      mkdir('test-generators/subdir');
+      initialPkg = readFileSync('package.json');
+      writeFileSync('package.json', JSON.stringify({
+        dependencies: {
+          '@foal/core': '0.0.0',
+        },
+        devDependencies: {
+          '@foal/cli': '~1.0.1',
+          'bar': '~2.2.0'
+        }
+      }), 'utf8');
+    });
+
+    after(() => {
+      writeFileSync('package.json', initialPkg);
+      rmdir('test-generators/subdir');
+      rmdir('test-generators');
+    });
+
+    it('should return the project dev dependencies.', () => {
+      deepStrictEqual(
+        fs.getProjectDevDependencies(),
+        [
+          { name: '@foal/cli', version: '~1.0.1' },
+          { name: 'bar', version: '~2.2.0' }
+        ]
+      );
+    });
+
+    it('should not change the current working directory.', () => {
+      fs.getProjectDevDependencies();
       strictEqual(fs.currentDir, '');
     });
 
