@@ -858,7 +858,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
         ctx = createContext({ Authorization: `Bearer ${jwt}` });
 
         hook = getHookFunction(JWT({
-          user: async () => null, 
+          user: async () => null,
           userIdType: 'number'
         }));
 
