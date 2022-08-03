@@ -45,7 +45,7 @@
   ],
   "dependencies": {
     "@foal/core": "^2.9.0",
-    "busboy": "~1.4.0",
+    "busboy": "~1.6.0",
     "mime": "~3.0.0"
   },
   "devDependencies": {
