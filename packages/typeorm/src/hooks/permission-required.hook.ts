@@ -30,6 +30,9 @@ export function PermissionRequired(perm: string, options: { redirect?: string } 
       }
       return new HttpResponseUnauthorized();
     }
+    if (typeof ctx.user.hasPerm !== 'function') {
+      throw new Error('ctx.user does not have a "hasPerm" method. Are you sure it implements the IUserWithPermissions interface?')
+    }
     if (!ctx.user.hasPerm(perm)) {
       return new HttpResponseForbidden();
     }

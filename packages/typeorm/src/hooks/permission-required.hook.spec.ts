@@ -1,5 +1,5 @@
 // std
-import { ok, strictEqual } from 'assert';
+import { ok, strictEqual, throws } from 'assert';
 
 // 3p
 import {
@@ -47,6 +47,16 @@ describe('PermissionRequired', () => {
     const actual = preHook(ctx, new ServiceManager());
     ok(actual instanceof HttpResponseRedirect);
     strictEqual((actual as HttpResponseRedirect).path, '/login');
+  });
+
+  it('should throw an error if the user instance does NOT have a "hasPerm" method.', () => {
+    const ctx = new Context({});
+    ctx.user = {};
+
+    throws(
+      () => preHook(ctx, new ServiceManager()),
+      new Error('ctx.user does not have a "hasPerm" method. Are you sure it implements the IUserWithPermissions interface?')
+    );
   });
 
   it('should return an HttpResponseForbidden if the user does not have the required permission.', () => {
