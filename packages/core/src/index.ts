@@ -22,6 +22,8 @@ export {
   ValidateHeader,
   ValidatePathParam,
   ValidateQueryParam,
+  PermissionRequired,
+  IUserWithPermissions,
   controller,
   displayServerURL,
   convertBase64ToBase64url,

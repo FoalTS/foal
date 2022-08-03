@@ -338,6 +338,8 @@ export class ProductController {
 > This requires the use of `fetchUserWithPermissions`.
 
 ```typescript
+import { PermissionRequired } from '@foal/core';
+
 @PermissionRequired('perm')
 ```
 
@@ -347,6 +349,8 @@ export class ProductController {
 | `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
 
 ```typescript
+import { PermissionRequired } from '@foal/core';
+
 @PermissionRequired('perm', { redirect: '/login' })
 ```
 
@@ -357,8 +361,8 @@ export class ProductController {
 
 *Example*
 ```typescript
-import { Context, Get } from '@foal/core';
-import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
+import { Context, Get, PermissionRequired } from '@foal/core';
+import { fetchUserWithPermissions } from '@foal/typeorm';
 import { JWTRequired } from '@foal/jwt';
 
 @JWTRequired({ user: fetchUserWithPermissions(User) })

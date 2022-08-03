@@ -1,4 +1,5 @@
 // 3p
+import { IUserWithPermissions } from '@foal/core';
 import { BaseEntity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
@@ -15,7 +16,7 @@ import { Permission } from './permission.entity';
  * @abstract
  * @class UserWithPermissions
  */
-export abstract class UserWithPermissions extends BaseEntity {
+export abstract class UserWithPermissions extends BaseEntity implements IUserWithPermissions {
 
   /**
    * Get all users with a given permission.
