@@ -10,7 +10,7 @@
     "baseUrl": ".",
     // "declaration": true,
     "lib": [
-      "es2019",
+      "es2021",
       "dom",
       "ESNext.AsyncIterable"
     ]

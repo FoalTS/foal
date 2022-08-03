@@ -14,7 +14,7 @@
       "./typings"
     ],
     "lib": [
-      "es2019",
+      "es2021",
       "dom",
       "ESNext.AsyncIterable"
     ]

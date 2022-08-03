@@ -11,7 +11,7 @@
     "target": "es2021",
     "rootDir": "src",
     "lib": [
-      "es2019",
+      "es2021",
       "dom"
     ]
   },
