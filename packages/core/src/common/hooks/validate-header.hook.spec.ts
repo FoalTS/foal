@@ -32,11 +32,11 @@ describe('ValidateHeader', () => {
       deepStrictEqual(response.body, {
         headers: [
           {
-            dataPath: '',
+            instancePath: '',
             keyword: 'required',
-            message: 'should have required property \'.foo\'',
+            message: 'must have required property \'foo\'',
             params: {
-              missingProperty: '.foo'
+              missingProperty: 'foo'
             },
             schemaPath: '#/required'
           }
@@ -57,11 +57,11 @@ describe('ValidateHeader', () => {
       deepStrictEqual(response.body, {
         headers: [
           {
-            dataPath: '',
+            instancePath: '',
             keyword: 'required',
-            message: 'should have required property \'.foo\'',
+            message: 'must have required property \'foo\'',
             params: {
-              missingProperty: '.foo'
+              missingProperty: 'foo'
             },
             schemaPath: '#/required'
           }
@@ -92,9 +92,9 @@ describe('ValidateHeader', () => {
         deepStrictEqual(response.body, {
           headers: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -154,9 +154,9 @@ describe('ValidateHeader', () => {
         deepStrictEqual(actual.body, {
           headers: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: { type: 'integer' },
               schemaPath: '#/components/schemas/header/type',
             }
@@ -180,9 +180,9 @@ describe('ValidateHeader', () => {
         deepStrictEqual(response.body, {
           headers: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -246,9 +246,9 @@ describe('ValidateHeader', () => {
       deepStrictEqual(actual.body, {
         headers: [
           {
-            dataPath: '.foo',
+            instancePath: '/foo',
             keyword: 'type',
-            message: 'should be integer',
+            message: 'must be integer',
             params: { type: 'integer' },
             schemaPath: '#/components/schemas/header/type',
           }

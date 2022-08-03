@@ -3,7 +3,7 @@
     "outDir": "build",
     "sourceMap": true,
     "module": "commonjs",
-    "target": "es2019",
+    "target": "es2021",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strictNullChecks": true,

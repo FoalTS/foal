@@ -2,7 +2,7 @@
 import { notStrictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -26,10 +26,11 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Authenticating users in a stateful SPA using the `Authorization` header', () => {
 
+  let dataSource: DataSource;
   let app: any;
   let token: string;
 
@@ -81,7 +82,7 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
     @Post('/login')
     @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
-      const user = await User.findOne({ email: ctx.request.body.email });
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
@@ -129,10 +130,6 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
       controller('/api', ApiController),
     ];
 
-    async init() {
-      await createTestConnection([ User, DatabaseSession ]);
-    }
-
   }
 
   /* ======================= DOCUMENTATION END ========================= */
@@ -140,11 +137,14 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
     app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   function formatBearer(token: string) {

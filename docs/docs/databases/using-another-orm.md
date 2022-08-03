@@ -19,7 +19,7 @@ To do so, you will have to remove TypeORM and all its utilities and implement so
 
 3. Remove or replace the script `create-user` in `src/app/scripts`.
 
-4. In the file `app.controller.ts`, delete the connection creation call `createConnection`.
+4. In the file `app.controller.ts`, delete the connection creation called `dataSource.initialize()`.
 
 5. Finally, remove in `package.json` the scripts to manage migrations.
 
@@ -29,7 +29,7 @@ To do so, you will have to remove TypeORM and all its utilities and implement so
 
 If you wish to use the `user` option of `@JWTRequired` or `@UseSessions` to set the `ctx.user` property, then you will need to implement your own `fetchUser` function.
 
-This utility returns a function that takes an `id` as parameter which might be a `string` or a `number` and returns a promise. The promise value must be `undefined` is no user matches the given `id` and the *user object* otherwise.
+This utility returns a function that takes an `id` as parameter which might be a `string` or a `number` and returns a promise. The promise value must be `null` is no user matches the given `id` and the *user object* otherwise.
 
 *Example*
 ```typescript
@@ -40,10 +40,7 @@ export function fetchUser(userModel: any): FetchUser {
     if (typeof id === 'string') {
       throw new Error('The user ID must be a number.');
     }
-    const user = await userModel.findOne({ id });
-    if (user === null) {
-      return undefined;
-    }
+    const user = await userModel.findOneBy({ id });
     return user;
   };
 }
@@ -119,7 +116,15 @@ Generate the TypeScript interfaces.
 npx prisma generate
 ```
 
-Update your `src/index.ts` to create the prisma connection and pass it to the service manager.
+Update your `src/app/db.ts` to create the prisma connection:
+
+```typescript
+import { PrismaClient } from '@prisma/client';
+
+export const prisma = new PrismaClient();
+```
+
+Then update your `src/index.ts` to inject it into the service manager.
 
 *src/index.ts*
 ```typescript
@@ -129,12 +134,11 @@ import { PrismaClient } from '@prisma/client';
 
 // App
 import { AppController } from './app/app.controller';
-
-const prisma = new PrismaClient();
+import { prisma } from './app/db';
 
 async function main() {
-  const serviceManager = new ServiceManager();
-  serviceManager.set(PrismaClient, prisma);
+  const serviceManager = new ServiceManager()
+    .set(PrismaClient, prisma);
   const app = await createApp(AppController, { serviceManager });
 
   // ...

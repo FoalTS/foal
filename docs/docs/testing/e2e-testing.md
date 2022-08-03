@@ -37,20 +37,28 @@ You can use [the SuperTest library](https://github.com/visionmedia/supertest) to
 // 3p
 import { createApp } from '@foal/core';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
+import { createDataSource } from '../db';
 
 describe('The server', () => {
 
   let app;
+  let dataSource: DataSource;
 
   before(async () => {
     app = await createApp(AppController);
+    dataSource = createDataSource();
+    await dataSource.initialize();
   });
 
-  after(() => getConnection().close());
+  after(async () => {
+    if (dataSource) {
+      await dataSource.destroy();
+    }
+  });
 
   it('should return a 200 status on GET / requests.', () => {
     return request(app)
@@ -71,24 +79,32 @@ import { ok } from 'assert';
 // 3p
 import { createApp } from '@foal/core';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { AppController } from '../app/app.controller';
 import { User } from '../app/entities';
+import { createDataSource } from '../db';
 
 // Define a group of tests.
 describe('The server', () => {
 
+  let dataSource: DataSource;
   let app: any;
 
   // Create the application and the connection to the database before running all the tests.
   before(async () => {
     app = await createApp(AppController);
+    dataSource = createDataSource();
+    await dataSource.initialize();
   });
 
   // Close the database connection after running all the tests whether they succeed or failed.
-  after(() => getConnection().close());
+  after(async () => {
+    if (dataSource) {
+      await dataSource.destroy();
+    }
+  });
 
   // Define a nested group of tests.
   describe('on GET /api/todos requests', () => {
@@ -104,7 +120,7 @@ describe('The server', () => {
       const user = new User();
       user.email = 'john@foalts.org';
       await user.setPassword('john_password');
-      await getConnection().manager.save(user);
+      await user.save();
 
       // Log the user in.
       let cookie = '';

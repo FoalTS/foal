@@ -33,9 +33,9 @@ describe('ValidatePathParam', () => {
         deepStrictEqual(response.body, {
           pathParams: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -86,9 +86,9 @@ describe('ValidatePathParam', () => {
         deepStrictEqual(actual.body, {
           pathParams: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: { type: 'integer' },
               schemaPath: '#/components/schemas/param/type',
             }
@@ -112,9 +112,9 @@ describe('ValidatePathParam', () => {
         deepStrictEqual(response.body, {
           pathParams: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -168,9 +168,9 @@ describe('ValidatePathParam', () => {
         deepStrictEqual(actual.body, {
           pathParams: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: { type: 'integer' },
               schemaPath: '#/components/schemas/param/type',
             }

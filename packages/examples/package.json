@@ -1,7 +1,7 @@
 {
   "name": "@foal/examples",
   "private": true,
-  "version": "2.8.1",
+  "version": "2.9.0",
   "description": "FoalTs examples",
   "scripts": {
     "build": "tsc && copy-cli \"src/**/*.html\" build",
@@ -16,15 +16,15 @@
     "test": "npm run build:test && npm run start:test",
     "dev:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "makemigrations": "foal rmdir build && tsc -p tsconfig.app.json && npx typeorm migration:generate --name migration && tsc -p tsconfig.app.json",
-    "migrations": "npx typeorm migration:run",
-    "revertmigration": "npx typeorm migration:revert"
+    "makemigrations": "foal rmdir build && tsc -p tsconfig.json && npx typeorm migration:generate src/migrations/migration -d build/db -p && tsc -p tsconfig.json",
+    "migrations": "npx typeorm migration:run -d build/db",
+    "revertmigration": "npx typeorm migration:revert -d build/db"
   },
   "funding": {
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -44,28 +44,28 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/aws-s3": "^2.8.1",
-    "@foal/core": "^2.8.1",
-    "@foal/graphiql": "^2.8.1",
-    "@foal/graphql": "^2.8.1",
-    "@foal/social": "^2.8.1",
-    "@foal/storage": "^2.8.1",
-    "@foal/swagger": "^2.8.1",
-    "@foal/typeorm": "^2.8.1",
-    "better-sqlite3": "~7.5.0",
-    "graphql": "^15.5.0",
-    "source-map-support": "~0.5.19",
-    "typeorm": "~0.2.26",
+    "@foal/aws-s3": "^2.9.0",
+    "@foal/core": "^2.9.0",
+    "@foal/graphiql": "^2.9.0",
+    "@foal/graphql": "^2.9.0",
+    "@foal/social": "^2.9.0",
+    "@foal/storage": "^2.9.0",
+    "@foal/swagger": "^2.9.0",
+    "@foal/typeorm": "^2.9.0",
+    "better-sqlite3": "~7.6.2",
+    "graphql": "~15.8.0",
+    "source-map-support": "~0.5.21",
+    "typeorm": "~0.3.7",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
-    "@foal/cli": "^2.8.1",
-    "@types/mocha": "7.0.2",
-    "@types/node": "10.17.24",
-    "concurrently": "~5.3.0",
+    "@foal/cli": "^2.9.0",
+    "@types/mocha": "9.1.1",
+    "@types/node": "16.11.7",
+    "concurrently": "~7.2.2",
     "copy": "~0.3.2",
-    "mocha": "~8.3.0",
+    "mocha": "~10.0.0",
     "supervisor": "~0.12.0",
-    "typescript": "~4.5.4"
+    "typescript": "~4.7.4"
   }
 }

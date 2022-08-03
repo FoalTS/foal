@@ -1,6 +1,6 @@
 {
   "name": "@foal/jwks-rsa",
-  "version": "2.8.1",
+  "version": "2.9.0",
   "description": "Integration of the library jwks-rsa with FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -14,7 +14,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -44,19 +44,19 @@
     "lib/"
   ],
   "dependencies": {
-    "jwks-rsa": "~2.0.5"
+    "jwks-rsa": "~2.1.4"
   },
   "peerDependencies": {
     "@foal/jwt": "^2.0.0"
   },
   "devDependencies": {
-    "@foal/core": "^2.8.1",
-    "@foal/jwt": "^2.8.1",
-    "@types/mocha": "7.0.2",
-    "@types/node": "10.17.24",
-    "mocha": "~8.3.0",
-    "rimraf": "~2.6.2",
-    "ts-node": "~9.0.0",
-    "typescript": "~4.5.4"
+    "@foal/core": "^2.9.0",
+    "@foal/jwt": "^2.9.0",
+    "@types/mocha": "9.1.1",
+    "@types/node": "16.11.7",
+    "mocha": "~10.0.0",
+    "rimraf": "~3.0.2",
+    "ts-node": "~10.8.1",
+    "typescript": "~4.7.4"
   }
 }

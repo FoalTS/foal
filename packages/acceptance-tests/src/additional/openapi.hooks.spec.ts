@@ -99,9 +99,9 @@ describe('Foal', () => {
       .expect({
         body: [
           {
-            dataPath: '',
+            instancePath: '',
             keyword: 'required',
-            message: 'should have required property \'name\'',
+            message: 'must have required property \'name\'',
             params: {
               missingProperty: 'name'
             },

@@ -131,7 +131,7 @@ describe('UseSessions', () => {
 
     it('should throw an error if the configuration value settings.session.store is empty.', () => {
       return rejects(
-        () => hook(ctx, services),
+        async () => hook(ctx, services),
         new ConfigNotFoundError('settings.session.store')
       );
     });
@@ -139,7 +139,7 @@ describe('UseSessions', () => {
     it('should use the session store package provided in settings.session.store.', () => {
       Config.set('settings.session.store', '@foal/internal-test');
 
-      return doesNotReject(() => hook(ctx, services));
+      return doesNotReject(async () => hook(ctx, services));
     });
 
   });
@@ -158,18 +158,18 @@ describe('UseSessions', () => {
             strictEqual(isHttpResponse(response), false);
           });
 
-          it('should let ctx.user equal undefined.', async () => {
+          it('should let ctx.user equal null.', async () => {
             await hook(ctx, services);
 
-            strictEqual(ctx.user, undefined);
+            strictEqual(ctx.user, null);
           });
 
           context('given options.create is false or undefined', async () => {
 
-            it('should let ctx.session equal undefined.', async () => {
+            it('should let ctx.session equal null.', async () => {
               await hook(ctx, services);
 
-              strictEqual(ctx.session, undefined);
+              strictEqual(ctx.session, null);
             });
 
           });
@@ -284,10 +284,10 @@ describe('UseSessions', () => {
             strictEqual(isHttpResponse(response), false);
           });
 
-          it('should let ctx.user equal undefined.', async () => {
+          it('should let ctx.user equal null.', async () => {
             await hook(ctx, services);
 
-            strictEqual(ctx.user, undefined);
+            strictEqual(ctx.user, null);
           });
 
           context('given options.create is not defined', async () => {
@@ -306,10 +306,10 @@ describe('UseSessions', () => {
 
             beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, create: false })));
 
-            it('should let ctx.session equal undefined.', async () => {
+            it('should let ctx.session equal null.', async () => {
               await hook(ctx, services);
 
-              strictEqual(ctx.session, undefined);
+              strictEqual(ctx.session, null);
             });
 
           });
@@ -568,7 +568,7 @@ describe('UseSessions', () => {
             it('should throw an error if the session state has no CSRF token.', async () => {
               ctx = createContext({}, { [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID }, {}, method);
               return rejects(
-                () => hook(ctx, services),
+                async () => hook(ctx, services),
                 {
                   message: 'Unexpected error: the session content does not have a "csrfToken" field. '
                     + 'Are you sure you created the session with "createSession"?'
@@ -700,11 +700,11 @@ describe('UseSessions', () => {
 
       beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
 
-      it('with the undefined value.', async () => {
+      it('with the null value.', async () => {
         const response = await hook(ctx, services);
         strictEqual(isHttpResponse(response), false);
 
-        strictEqual(ctx.user, undefined);
+        strictEqual(ctx.user, null);
       });
 
     });
@@ -715,11 +715,11 @@ describe('UseSessions', () => {
 
       context('given options.user is not defined', () => {
 
-        it('with the undefined value.', async () => {
+        it('with the null value.', async () => {
           const response = await hook(ctx, services);
           strictEqual(isHttpResponse(response), false);
 
-          strictEqual(ctx.user, undefined);
+          strictEqual(ctx.user, null);
         });
 
       });
@@ -732,7 +732,7 @@ describe('UseSessions', () => {
         beforeEach(() => {
           const fetchUser: FetchUser = async (id, services) => {
             actualServices = services;
-            return id === userId ? user : undefined
+            return id === userId ? user : null
           };
           hook = getHookFunction(UseSessions({ store: Store, user: fetchUser }));
         });
@@ -750,16 +750,16 @@ describe('UseSessions', () => {
           strictEqual(ctx.user, user);
         });
 
-        context('given the function options.user returns undefined (session invalid)', () => {
+        context('given the function options.user returns null (session invalid)', () => {
 
-          const fetchUser: FetchUser = async id => undefined;
+          const fetchUser: FetchUser = async id => null;
 
           beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: fetchUser })));
 
-          it('with the undefined value and should destroy the session.', async () => {
+          it('with the null value and should destroy the session.', async () => {
             await hook(ctx, services);
 
-            strictEqual(ctx.user, undefined);
+            strictEqual(ctx.user, null);
             // tslint:disable-next-line
             strictEqual(ctx.session?.isDestroyed, true);
           });
@@ -767,7 +767,7 @@ describe('UseSessions', () => {
           context('given options.cookie is false or not defined', () => {
 
             it(
-              'with the undefined value and should not remove a session cookie in the response '
+              'with the null value and should not remove a session cookie in the response '
               + '(it can belongs to another application).',
               async () => {
                 const response = await hook(ctx, services);
@@ -775,7 +775,7 @@ describe('UseSessions', () => {
                   throw new Error('The hook should have returned an HttpResponse instance.');
                 }
 
-                strictEqual(ctx.user, undefined);
+                strictEqual(ctx.user, null);
 
                 deepStrictEqual(response.getCookies(), {});
               }
@@ -800,13 +800,13 @@ describe('UseSessions', () => {
               }
             });
 
-            it('with the undefined value and should remove the session cookie.', async () => {
+            it('with the null value and should remove the session cookie.', async () => {
               const response = await hook(ctx, services);
               if (!isHttpResponse(response)) {
                 throw new Error('The hook should have returned an HttpResponse instance.');
               }
 
-              strictEqual(ctx.user, undefined);
+              strictEqual(ctx.user, null);
 
               const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
               strictEqual(value, '');
@@ -830,7 +830,7 @@ describe('UseSessions', () => {
                   throw new Error('The hook should have returned an HttpResponse instance.');
                 }
 
-                strictEqual(ctx.user, undefined);
+                strictEqual(ctx.user, null);
 
                 const { value, options } = response.getCookie(SESSION_USER_COOKIE_NAME);
                 strictEqual(value, '');
@@ -847,7 +847,7 @@ describe('UseSessions', () => {
                   throw new Error('The hook should have returned an HttpResponse instance.');
                 }
 
-                strictEqual(ctx.user, undefined);
+                strictEqual(ctx.user, null);
 
                 const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
                 strictEqual(value, undefined);
@@ -859,10 +859,10 @@ describe('UseSessions', () => {
 
           context('given options.redirectTo is not defined', () => {
 
-            it('with the undefined value and should return an HttpResponseUnauthorized object.', async () => {
+            it('with the null value and should return an HttpResponseUnauthorized object.', async () => {
               const response = await hook(ctx, services);
 
-              strictEqual(ctx.user, undefined);
+              strictEqual(ctx.user, null);
 
               if (!isHttpResponseUnauthorized(response)) {
                 throw new Error('response should be instance of HttpResponseUnauthorized');
@@ -888,7 +888,7 @@ describe('UseSessions', () => {
             it('with the null value and should return an HttpResponseRedirect object.', async () => {
               const response = await hook(ctx, services);
 
-              strictEqual(ctx.user, undefined);
+              strictEqual(ctx.user, null);
 
               if (!isHttpResponseRedirect(response)) {
                 throw new Error('response should be instance of HttpResponseRedirect');
@@ -997,7 +997,7 @@ describe('UseSessions', () => {
 
             await ctx.session.destroy();
 
-            return doesNotReject(() => postHookFunction(new HttpResponseOK()));
+            return doesNotReject(async () => postHookFunction(new HttpResponseOK()));
           }
         );
 

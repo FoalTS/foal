@@ -3,7 +3,7 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 
 // 3p
-import * as Ajv from 'ajv';
+import Ajv from 'ajv';
 
 // FoalTS
 import { getCommandLineArguments } from './get-command-line-arguments.util';
@@ -33,7 +33,7 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
   if (schema) {
     const ajv = new Ajv({ useDefaults: true });
     if (!ajv.validate(schema, args)) {
-      (ajv.errors as Ajv.ErrorObject[]).forEach(err => {
+      ajv.errors!.forEach(err => {
         log(`Error: The command line arguments ${err.message}.`);
       });
       return;

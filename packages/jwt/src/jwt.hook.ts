@@ -20,6 +20,7 @@ import { decode, verify } from 'jsonwebtoken';
 // FoalTS
 import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
 import { getSecretOrPublicKey } from './get-secret-or-public-key.util';
+import { getJwtFromRequest, RequestValidationError } from './http/get-jwt-from-request';
 import { isInvalidTokenError } from './invalid-token.error';
 
 class InvalidTokenResponse extends HttpResponseUnauthorized {
@@ -88,35 +89,20 @@ export interface VerifyOptions {
  */
 export function JWT(required: boolean, options: JWTOptions, verifyOptions: VerifyOptions): HookDecorator {
   async function hook(ctx: Context, services: ServiceManager) {
-    let token: string;
-    if (options.cookie) {
-      const cookieName = Config.get('settings.jwt.cookie.name', 'string', JWT_DEFAULT_COOKIE_NAME);
-      const content = ctx.request.cookies[cookieName] as string|undefined;
+    let token: string|undefined;
 
-      if (!content) {
-        if (!required) {
-          return;
-        }
-        return new InvalidRequestResponse('Auth cookie not found.');
+    try {
+      token = getJwtFromRequest(ctx.request, options.cookie ? 'token-in-cookie' : 'token-in-header', required);
+    } catch (error) {
+      if (error instanceof RequestValidationError) {
+        return new InvalidRequestResponse(error.message);
       }
+      // TODO: test this.
+      throw error;
+    }
 
-      token = content;
-    } else {
-      const authorizationHeader = ctx.request.get('Authorization') || '';
-
-      if (!authorizationHeader) {
-        if (!required) {
-          return;
-        }
-        return new InvalidRequestResponse('Authorization header not found.');
-      }
-
-      const content = authorizationHeader.split('Bearer ')[1] as string|undefined;
-      if (!content) {
-        return new InvalidRequestResponse('Expected a bearer token. Scheme is Authorization: Bearer <token>.');
-      }
-
-      token = content;
+    if (!token) {
+      return;
     }
 
     if (options.blackList && await options.blackList(token)) {

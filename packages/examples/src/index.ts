@@ -6,24 +6,20 @@
 
 import 'source-map-support/register';
 
-// std
-import * as http from 'http';
-
 // 3p
 import { Config, createApp, displayServerURL } from '@foal/core';
-import { createConnection } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { AppController } from './app/app.controller';
+import { dataSource } from './db';
 
 async function main() {
-  await createConnection(require('../ormconfig.json'));
+  await dataSource.initialize();
 
   const app = await createApp(AppController);
 
-  const httpServer = http.createServer(app);
   const port = Config.get('port', 'number', 3001);
-  httpServer.listen(port, () => displayServerURL(port));
+  app.listen(port, () => displayServerURL(port));
 }
 
 main()

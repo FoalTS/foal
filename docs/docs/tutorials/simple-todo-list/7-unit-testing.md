@@ -17,17 +17,19 @@ import { ok, strictEqual } from 'assert';
 
 // 3p
 import { createController, getHttpMethod, getPath, isHttpResponseOK } from '@foal/core';
-import { Connection, createConnection } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { Todo } from '../entities';
 import { ApiController } from './api.controller';
+import { createDataSource } from '../../db';
 
 // Define a group of tests.
 describe('ApiController', () => {
 
+  let dataSource: DataSource;
   let controller: ApiController;
-  let connection: Connection;
+  let dataSource: DataSource;
 
   // Create a connection to the database before running all the tests.
   before(async () => {
@@ -36,11 +38,16 @@ describe('ApiController', () => {
     //  "database": "./test_db.sqlite3" -> Use a different database for running the tests.
     // "synchronize": true ->  Auto create the database schema when the connection is established.
     // "dropSchema": true -> Drop the schema when the connection is established (empty the database).
-    connection = await createConnection();
+    dataSource = createDataSource();
+    await dataSource.initialize();
   });
 
   // Close the database connection after running all the tests whether they succeed or failed.
-  after(() => connection.close());
+  after(async () => {
+    if (dataSource) {
+      await dataSource.close();
+    }
+  });
 
   // Create or re-create the controller before each test.
   beforeEach(() => controller = createController(ApiController));
@@ -66,7 +73,7 @@ describe('ApiController', () => {
       todo2.text = 'Todo 2';
 
       // Save the todos.
-      await connection.manager.save([ todo1, todo2 ]);
+      await Todo.save([ todo1, todo2 ]);
 
       const response = await controller.getTodos();
       ok(isHttpResponseOK(response), 'response should be an instance of HttpResponseOK.');

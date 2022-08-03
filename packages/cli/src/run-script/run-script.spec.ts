@@ -88,7 +88,7 @@ describe('runScript', () => {
 
     strictEqual(
       msg,
-      'Error: The command line arguments should NOT have additional properties.'
+      'Error: The command line arguments must NOT have additional properties.'
     );
   });
 

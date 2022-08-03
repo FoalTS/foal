@@ -4,6 +4,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import {
@@ -21,17 +22,21 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Destroying the session', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple log out', async () => {
@@ -57,14 +62,11 @@ describe('Feature: Destroying the session', () => {
       subControllers = [
         controller('', AuthController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

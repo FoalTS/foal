@@ -2,7 +2,7 @@
 import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -23,22 +23,26 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple authentication', async () => {
 
-    let user: User|undefined;
+    let user: User|null = null;
 
     @Entity()
     class User extends BaseEntity {
@@ -64,7 +68,7 @@ describe('Feature: Adding authentication and access control', () => {
         // Check the user credentials...
         // const user = ...
         // Not in the documentation
-        const user = await User.findOneOrFail(ctx.request.query.id);
+        const user = await User.findOneByOrFail({ id: ctx.request.query.id });
 
         ctx.session = await createSession(this.store);
 
@@ -77,7 +81,7 @@ describe('Feature: Adding authentication and access control', () => {
       }
 
       @Get('/products')
-      readProducts(ctx: Context) {
+      readProducts(ctx: Context<User>) {
         // If the ctx.session is defined and the session is attached to a user
         // then ctx.user is an instance of User. Otherwise it is undefined.
         // Not in the documentation
@@ -93,32 +97,29 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession, User ]);
-      }
     }
 
     const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession, User ]);
 
     const user2 = new User();
     await user2.save();
 
-    strictEqual(user, undefined);
+    strictEqual(user, null);
 
     await request(app)
       .get('/api/products')
       .expect(200)
       .expect([]);
 
-    strictEqual(user, undefined);
+    strictEqual(user, null);
 
     const response = await request(app)
       .post(`/api/login?id=${user2.id}`)
       .send({})
       .expect(200);
 
-    strictEqual(user, undefined);
+    strictEqual(user, null);
 
     const token: undefined|string = response.body.token;
     if (token === undefined) {
@@ -131,7 +132,7 @@ describe('Feature: Adding authentication and access control', () => {
       .expect(200)
       .expect([]);
 
-    notStrictEqual(user, undefined);
+    notStrictEqual(user, null);
     strictEqual((user as unknown as User).id, user2.id);
 
   });
@@ -166,14 +167,11 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession, User ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession, User ]);
 
     const user = new User();
     await user.save();
@@ -230,14 +228,11 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession, User ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession, User ]);
 
     const user = new User();
     await user.save();
@@ -288,7 +283,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    function userToJSON(user: User|undefined) {
+    function userToJSON(user: User|null) {
       if (!user) {
         return 'null';
       }
@@ -302,14 +297,14 @@ describe('Feature: Adding authentication and access control', () => {
     @UseSessions({
       cookie: true,
       user: fetchUser(User),
-      userCookie: (ctx, services) => userToJSON(ctx.user)
+      userCookie: (ctx, services) => userToJSON(ctx.user as User|null)
     })
     class ApiController {
 
       @Get('/products')
       @UserRequired()
-      async readProducts(ctx: Context) {
-        const products = await Product.find({ owner: ctx.user });
+      async readProducts(ctx: Context<User>) {
+        const products = await Product.findBy({ owner: { id: ctx.user.id } });
         return new HttpResponseOK(products);
       }
 
@@ -321,14 +316,11 @@ describe('Feature: Adding authentication and access control', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession, User, Product ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession, User, Product ]);
 
     const user = new User();
     user.email = 'foo@foalts.org';

@@ -110,11 +110,12 @@ interface Request extends IncomingMessage {
  * @class Context
  * @template User
  */
-export class Context<User = any, ContextSession = Session | undefined, ContextState = any> {
-  readonly state: ContextState = {} as ContextState;
-  user: User;
-  session: ContextSession;
+export class Context<User = { [key: string]: any } | null, ContextState = { [key: string]: any }> {
   readonly request: Request;
+  session: Session | null;
+
+  user: User;
+  readonly state: ContextState;
   readonly files: FileList;
 
   /**
@@ -124,6 +125,10 @@ export class Context<User = any, ContextSession = Session | undefined, ContextSt
    */
   constructor(request: any) {
     this.request = request;
+    this.session = null;
+
+    this.user = null as any;
+    this.state = {} as any;
     this.files = new FileList();
   }
 }

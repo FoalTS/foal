@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -19,7 +19,6 @@ import {
   IAppController,
   Post,
   render,
-  Session,
   Store,
   UserRequired,
   UseSessions,
@@ -27,10 +26,11 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Authenticating users in a statefull SSR application using cookies', () => {
 
+  let dataSource: DataSource;
   let app: any;
   let token: string;
   let response: request.Response|undefined;
@@ -64,42 +64,42 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
-    async signup(ctx: Context<any, Session>) {
+    async signup(ctx: Context) {
       const user = new User();
       user.email = ctx.request.body.email;
       user.password = await hashPassword(ctx.request.body.password);
       await user.save();
 
-      ctx.session.setUser(user);
-      await ctx.session.regenerateID();
+      ctx.session!.setUser(user);
+      await ctx.session!.regenerateID();
 
       return new HttpResponseRedirect('/');
     }
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
-    async login(ctx: Context<any, Session>) {
-      const user = await User.findOne({ email: ctx.request.body.email });
+    async login(ctx: Context) {
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
-        ctx.session.set('errorMessage', 'Unknown email.', { flash: true });
+        ctx.session!.set('errorMessage', 'Unknown email.', { flash: true });
         return new HttpResponseRedirect('/login');
       }
 
       if (!await verifyPassword(ctx.request.body.password, user.password)) {
-        ctx.session.set('errorMessage', 'Invalid password.', { flash: true });
+        ctx.session!.set('errorMessage', 'Invalid password.', { flash: true });
         return new HttpResponseRedirect('/login');
       }
 
-      ctx.session.setUser(user);
-      await ctx.session.regenerateID();
+      ctx.session!.setUser(user);
+      await ctx.session!.regenerateID();
 
       return new HttpResponseRedirect('/');
     }
 
     @Post('/logout')
-    async logout(ctx: Context<any, Session>) {
-      await ctx.session.destroy();
+    async logout(ctx: Context) {
+      await ctx.session!.destroy();
 
       return new HttpResponseRedirect('/login');
     }
@@ -127,10 +127,6 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
       controller('/api', ApiController),
     ];
 
-    async init() {
-      await createTestConnection([ User, DatabaseSession ]);
-    }
-
     @Get('/')
     @UserRequired({ redirectTo: '/login' })
     index() {
@@ -139,10 +135,10 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
     }
 
     @Get('/login')
-    login(ctx: Context<any, Session>) {
+    login(ctx: Context) {
       // Not in the documentation: __dirname
       return render('./templates/login.html', {
-        errorMessage: ctx.session.get<string>('errorMessage', '')
+        errorMessage: ctx.session!.get<string>('errorMessage', '')
       }, __dirname);
     }
 
@@ -153,11 +149,14 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
     app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   function setCookieInBrowser(response: request.Response): void {

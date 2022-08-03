@@ -1,3 +1,3 @@
-import { ServiceManager } from '../core';
+import { Context, ServiceManager } from '../core';
 
-export type FetchUser = (id: string|number, services: ServiceManager) => Promise<any>;
+export type FetchUser = (id: string|number, services: ServiceManager) => Promise<Context['user']>;

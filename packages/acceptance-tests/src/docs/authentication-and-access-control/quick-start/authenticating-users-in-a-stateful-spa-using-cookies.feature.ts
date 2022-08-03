@@ -1,5 +1,5 @@
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -15,7 +15,6 @@ import {
   HttpResponseUnauthorized,
   IAppController,
   Post,
-  Session,
   Store,
   UserRequired,
   UseSessions,
@@ -23,10 +22,11 @@ import {
   verifyPassword
 } from '@foal/core';
 import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Authenticating users in a stateful SPA using cookies', () => {
 
+  let dataSource: DataSource;
   let app: any;
   let token: string;
   let response: request.Response|undefined;
@@ -60,22 +60,22 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
-    async signup(ctx: Context<any, Session>) {
+    async signup(ctx: Context) {
       const user = new User();
       user.email = ctx.request.body.email;
       user.password = await hashPassword(ctx.request.body.password);
       await user.save();
 
-      ctx.session.setUser(user);
-      await ctx.session.regenerateID();
+      ctx.session!.setUser(user);
+      await ctx.session!.regenerateID();
 
       return new HttpResponseOK();
     }
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
-    async login(ctx: Context<any, Session>) {
-      const user = await User.findOne({ email: ctx.request.body.email });
+    async login(ctx: Context) {
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
@@ -85,15 +85,15 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
         return new HttpResponseUnauthorized();
       }
 
-      ctx.session.setUser(user);
-      await ctx.session.regenerateID();
+      ctx.session!.setUser(user);
+      await ctx.session!.regenerateID();
 
       return new HttpResponseOK();
     }
 
     @Post('/logout')
-    async logout(ctx: Context<any, Session>) {
-      await ctx.session.destroy();
+    async logout(ctx: Context) {
+      await ctx.session!.destroy();
 
       return new HttpResponseOK();
     }
@@ -121,10 +121,6 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
       controller('/api', ApiController),
     ];
 
-    async init() {
-      await createTestConnection([ User, DatabaseSession ]);
-    }
-
   }
 
   /* ======================= DOCUMENTATION END ========================= */
@@ -132,11 +128,14 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
   before(async () => {
     Config.set('settings.session.store', getTypeORMStorePath());
     app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   function setCookieInBrowser(response: request.Response): void {

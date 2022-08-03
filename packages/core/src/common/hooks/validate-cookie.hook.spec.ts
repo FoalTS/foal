@@ -32,11 +32,11 @@ describe('ValidateCookie', () => {
       deepStrictEqual(response.body, {
         cookies: [
           {
-            dataPath: '',
+            instancePath: '',
             keyword: 'required',
-            message: 'should have required property \'.foo\'',
+            message: 'must have required property \'foo\'',
             params: {
-              missingProperty: '.foo'
+              missingProperty: 'foo'
             },
             schemaPath: '#/required'
           }
@@ -57,11 +57,11 @@ describe('ValidateCookie', () => {
       deepStrictEqual(response.body, {
         cookies: [
           {
-            dataPath: '',
+            instancePath: '',
             keyword: 'required',
-            message: 'should have required property \'.foo\'',
+            message: 'must have required property \'foo\'',
             params: {
-              missingProperty: '.foo'
+              missingProperty: 'foo'
             },
             schemaPath: '#/required'
           }
@@ -92,9 +92,9 @@ describe('ValidateCookie', () => {
         deepStrictEqual(response.body, {
           cookies: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -145,9 +145,9 @@ describe('ValidateCookie', () => {
         deepStrictEqual(actual.body, {
           cookies: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: { type: 'integer' },
               schemaPath: '#/components/schemas/cookie/type',
             }
@@ -171,9 +171,9 @@ describe('ValidateCookie', () => {
         deepStrictEqual(response.body, {
           cookies: [
             {
-              dataPath: '.foo',
+              instancePath: '/foo',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -237,9 +237,9 @@ describe('ValidateCookie', () => {
       deepStrictEqual(actual.body, {
         cookies: [
           {
-            dataPath: '.foo',
+            instancePath: '/foo',
             keyword: 'type',
-            message: 'should be integer',
+            message: 'must be integer',
             params: { type: 'integer' },
             schemaPath: '#/components/schemas/cookie/type',
           }

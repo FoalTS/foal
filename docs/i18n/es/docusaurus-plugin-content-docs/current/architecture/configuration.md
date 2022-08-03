@@ -284,8 +284,6 @@ Just like the configuration files in the `config/` directory, the `.env` files c
 
 ### Using `*.local` files
 
-> *This feature is available from version 2.3 onwards.*
-
 In case you want to have two `.env` files, one to define the default env vars needed by the application and another to override these values on your local machine, you can use a `.env.local` file.
 
 If a variable is defined in both files, the value in the `.env.local` file will take precedence.

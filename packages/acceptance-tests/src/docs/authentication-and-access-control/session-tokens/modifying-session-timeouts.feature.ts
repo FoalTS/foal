@@ -1,5 +1,6 @@
 // 3p
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import {
@@ -11,24 +12,27 @@ import {
   HttpResponseOK,
   IAppController,
   ServiceManager,
-  Session,
   Store,
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Modifying session timeouts', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
     Config.set('settings.session.expirationTimeouts.inactivity', 1);
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.session.expirationTimeouts.inactivity');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple authentication', async () => {
@@ -36,12 +40,8 @@ describe('Feature: Modifying session timeouts', () => {
     @UseSessions({ required: true })
     class AppController implements IAppController {
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
-
       @Get('/')
-      index(ctx: Context<undefined, Session>) {
+      index(ctx: Context) {
         return new HttpResponseOK();
       }
 
@@ -49,6 +49,7 @@ describe('Feature: Modifying session timeouts', () => {
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

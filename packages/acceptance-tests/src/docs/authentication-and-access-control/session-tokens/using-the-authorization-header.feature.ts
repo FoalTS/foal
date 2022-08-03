@@ -3,6 +3,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import {
@@ -21,22 +22,26 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Using the Authorization header', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple usage with optional bearer tokens', async () => {
 
-    let session: Session|undefined;
+    let session: Session|null = null;
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
@@ -77,29 +82,26 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     await request(app)
       .get('/api/products')
       .expect(200)
       .expect([]);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const response = await request(app)
       .post('/api/login')
       .send({})
       .expect(200);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const token: undefined|string = response.body.token;
     if (token === undefined) {
@@ -112,14 +114,14 @@ describe('Feature: Using the Authorization header', () => {
       .expect(200)
       .expect([]);
 
-    notStrictEqual(session, undefined);
+    notStrictEqual(session, null);
     strictEqual((session as unknown as Session).getToken(), token);
 
   });
 
   it('Example: Usage with required bearer tokens', async () => {
 
-    let session: Session|undefined;
+    let session: Session|null = null;
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
@@ -160,15 +162,12 @@ describe('Feature: Using the Authorization header', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     await request(app)
       .get('/api/products')
@@ -178,14 +177,14 @@ describe('Feature: Using the Authorization header', () => {
         description: 'Authorization header not found.'
       });
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const response = await request(app)
       .post('/api/login')
       .send({})
       .expect(200);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const token: undefined|string = response.body.token;
     if (token === undefined) {
@@ -198,7 +197,7 @@ describe('Feature: Using the Authorization header', () => {
       .expect(200)
       .expect([]);
 
-    notStrictEqual(session, undefined);
+    notStrictEqual(session, null);
     strictEqual((session as unknown as Session).getToken(), token);
   });
 

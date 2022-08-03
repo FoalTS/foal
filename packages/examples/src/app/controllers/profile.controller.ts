@@ -2,7 +2,6 @@ import {
   ApiInfo, ApiServer, Context, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Post, render
 } from '@foal/core';
 import { Disk, ParseAndValidateFiles } from '@foal/storage';
-import { getRepository } from '@foal/typeorm/node_modules/typeorm';
 
 import { User } from '../entities';
 
@@ -18,7 +17,7 @@ export class ProfileController {
   disk: Disk;
 
   @Post('/image')
-  @Hook(async ctx => { ctx.user = await getRepository(User).findOne({ email: 'john@foalts.org' }); })
+  @Hook(async ctx => { ctx.user = await User.findOneBy({ email: 'john@foalts.org' }); })
   @ParseAndValidateFiles({
     profile: { required: true, saveTo: 'images/profiles' }
   })
@@ -33,13 +32,13 @@ export class ProfileController {
     }
 
     user.profile = ctx.files.get('profile')[0].path;
-    await getRepository(User).save(user);
+    await user.save();
 
     return new HttpResponseRedirect('/profile');
   }
 
   @Get('/image')
-  @Hook(async ctx => { ctx.user = await getRepository(User).findOne({ email: 'john@foalts.org' }); })
+  @Hook(async ctx => { ctx.user = await User.findOneBy({ email: 'john@foalts.org' }); })
   async downloadProfilePicture(ctx: Context<User>) {
     const { profile } = ctx.user;
 

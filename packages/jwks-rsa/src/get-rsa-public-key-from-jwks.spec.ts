@@ -104,7 +104,7 @@ describe('getRSAPublicKeyFromJWKS', () => {
 
       return rejects(
         () => fn({ alg: 'RS256', kid: '345' }, {}),
-        new Error('connect ECONNREFUSED 127.0.0.1:3000')
+        (err: any) => err.code === 'ECONNREFUSED',
       );
     });
 

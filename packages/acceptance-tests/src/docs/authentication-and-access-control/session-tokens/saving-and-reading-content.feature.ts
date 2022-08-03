@@ -1,5 +1,6 @@
 // 3p
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import {
@@ -14,22 +15,25 @@ import {
   IAppController,
   Post,
   ServiceManager,
-  Session,
   Store,
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Saving and reading content', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Usage with premium and free plans', async () => {
@@ -40,16 +44,16 @@ describe('Feature: Saving and reading content', () => {
     class ApiController {
 
       @Post('/subscribe')
-      suscribe(ctx: Context<any, Session>) {
-        const plan = ctx.session.get<string>('plan', 'free');
+      subscribe(ctx: Context) {
+        const plan = ctx.session!.get<string>('plan', 'free');
         // ...
         // Not in the documentation
         return new HttpResponseOK(plan);
       }
 
       @Post('/choose-premium-plan')
-      choosePremimumPlan(ctx: Context<any, Session>) {
-        ctx.session.set('plan', 'premium');
+      choosePremimumPlan(ctx: Context) {
+        ctx.session!.set('plan', 'premium');
         return new HttpResponseNoContent();
       }
     }
@@ -60,14 +64,11 @@ describe('Feature: Saving and reading content', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);
@@ -99,29 +100,26 @@ describe('Feature: Saving and reading content', () => {
     @UseSessions({ required: true })
     class AppController implements IAppController {
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
-
       @Post('/add-flash-content')
-      addFlashContent(ctx: Context<undefined, Session>) {
+      addFlashContent(ctx: Context) {
         /* ======================= DOCUMENTATION BEGIN ======================= */
-        ctx.session.set('error', 'Incorrect email or password', { flash: true });
+        ctx.session!.set('error', 'Incorrect email or password', { flash: true });
         /* ======================= DOCUMENTATION END ========================= */
 
         return new HttpResponseOK();
       }
 
       @Get('/read-flash-content')
-      readFlashContent(ctx: Context<undefined, Session>) {
+      readFlashContent(ctx: Context) {
         return new HttpResponseOK(
-          ctx.session.get<string>('error', 'No error')
+          ctx.session!.get<string>('error', 'No error')
         );
       }
     }
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
     const session = await createSession(store);

@@ -1,9 +1,9 @@
 // std
-import { ServiceManager } from '@foal/core';
-import { notStrictEqual, ok, strictEqual } from 'assert';
+import { ok, rejects, strictEqual } from 'assert';
 
 // 3p
-import { createConnection, Entity, getConnection, getManager } from 'typeorm';
+import { ServiceManager } from '@foal/core';
+import { DataSource, Entity } from 'typeorm';
 
 // FoalTS
 import { Group, Permission, UserWithPermissions } from '../entities';
@@ -16,6 +16,8 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     @Entity()
     class User extends UserWithPermissions { }
 
+    let dataSource: DataSource;
+
     let user: User;
 
     before(async function() {
@@ -24,7 +26,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         case 'mariadb':
           // Increase timeout to make the test pass on Github Actions VM.
           this.timeout(6000);
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -36,7 +38,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           });
           break;
         case 'postgres':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -48,7 +50,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           break;
         case 'sqlite':
         case 'better-sqlite3':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -59,43 +61,65 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         default:
           break;
       }
+      await dataSource.initialize();
+
       const permission1 = new Permission();
       permission1.codeName = 'permission1';
       permission1.name = '';
+      await permission1.save();
 
       const permission2 = new Permission();
       permission2.codeName = 'permission2';
       permission2.name = '';
+      await permission2.save();
 
       const group = new Group();
       group.name = 'group1';
       group.codeName = 'group1';
       group.permissions = [permission1];
+      await group.save();
 
       user = new User();
       user.groups = [group];
       user.userPermissions = [permission2];
-      await getManager().save([ permission1, permission2, group, user]);
+      await user.save();
     });
 
-    after(() => getConnection().close());
+    after(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     it('should return the user fetched from the database (id: number).', async () => {
       const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
-      notStrictEqual(actual, undefined);
-      strictEqual((actual as User).id, user.id);
+      if (actual === null) {
+        throw new Error('The user should not be null.');
+      }
+      strictEqual(actual.id, user.id);
+    });
+
+    it('should throw an error if the ID is a string and connot be parsed to a number.', async () => {
+      await rejects(
+        () => fetchUserWithPermissions(User)('xxxxx', new ServiceManager()),
+        new Error('Suspicious operation: the provided ID cannot be parsed to a number.'),
+      );
     });
 
     it('should return the user fetched from the database (id: string).', async () => {
       const actual = await fetchUserWithPermissions(User)(user.id.toString(), new ServiceManager());
-      notStrictEqual(actual, undefined);
-      strictEqual((actual as User).id, user.id);
+      if (actual === null) {
+        throw new Error('The user should not be null.');
+      }
+      strictEqual(actual.id, user.id);
     });
 
     it('should return the user fetched from the database with their groups and permissions.', async () => {
       const actual = await fetchUserWithPermissions(User)(user.id, new ServiceManager());
-      notStrictEqual(actual, undefined);
-      strictEqual((actual as User).id, user.id);
+      if (actual === null) {
+        throw new Error('The user should not be null.');
+      }
+      strictEqual(actual.id, user.id);
 
       ok(Array.isArray(actual.userPermissions), 'userPermissions is not an array');
       strictEqual(actual.userPermissions.length, 1);
@@ -110,9 +134,9 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       strictEqual(actual.groups[0].permissions[0].codeName, 'permission1');
     });
 
-    it('should return undefined if no user is found in the database.', async () => {
+    it('should return null if no user is found in the database.', async () => {
       const actual = await fetchUserWithPermissions(User)(56, new ServiceManager());
-      strictEqual(actual, undefined);
+      strictEqual(actual, null);
     });
 
   });

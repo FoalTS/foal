@@ -3,8 +3,6 @@ title: Real-Time Communication
 sidebar_label: WebSockets
 ---
 
-> *This feature is available from version 2.8 onwards.*
-
 Foal allows you to establish two-way interactive communication between your server(s) and your clients. For this, it uses the [socket.io v4](https://socket.io/) library which is primarily based on the **WebSocket** protocol. It supports disconnection detection and automatic reconnection and works with proxies and load balancers.
 
 ## Get Started
@@ -46,16 +44,17 @@ export class WebsocketController extends SocketIOController {
 ```typescript
 // ...
 
+import * as http from 'http';
+
 async function main() {
   const serviceManager = new ServiceManager();
 
   const app = await createApp(AppController, { serviceManager });
-  const httpServer = http.createServer(app);
 
+  const httpServer = http.createServer(app);
   // Instanciate, init and connect websocket controllers.
   await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
-
-  // ...
+  httpServer.listen(port, () => displayServerURL(port));
 }
 
 ```

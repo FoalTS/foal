@@ -102,7 +102,7 @@ module.exports = {
         'frontend-integration/jsx-server-side-rendering',
         'frontend-integration/nuxt.js',
       ]),
-      category('File System', [
+      category('File Storage', [
         'file-system/local-and-cloud-storage',
         'file-system/upload-and-download-files',
       ]),
@@ -136,7 +136,8 @@ module.exports = {
       ])
     ]),
     expandedCategory('Upgrading', [
-      'upgrade-to-v2/README',
+      'upgrade-to-v3/README',
+      link('To v2', 'https://foalts.org/docs/2.x/upgrade-to-v2/'),
       link('To v1', 'https://github.com/FoalTS/foal/releases/tag/v1.0.0'),
     ]),
     expandedCategory('Community', [

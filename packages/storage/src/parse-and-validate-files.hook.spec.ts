@@ -122,7 +122,52 @@ describe('ParseAndValidateFiles', () => {
 
   describe('when the fields are not validated against the given schema', () => {
 
-    it('should return an HttpResponseBadRequest.', async () => {
+    beforeEach(() => {
+      Config.set('settings.disk.local.directory', 'uploaded');
+
+      mkdirSync('uploaded');
+      mkdirSync('uploaded/images');
+    });
+
+    afterEach(() => {
+      Config.remove('settings.disk.local.directory');
+
+      const contents = readdirSync('uploaded/images');
+      for (const content of contents) {
+        unlinkSync(join('uploaded/images', content));
+      }
+      rmdirSync('uploaded/images');
+      rmdirSync('uploaded');
+    });
+
+    it('should return an HttpResponseBadRequest (invalid values).', async () => {
+      const app = await createAppWithHook({
+        fields: {
+          name: { type: 'boolean' }
+        },
+        files: {}
+      }, { body: null });
+
+      await request(app)
+        .post('/')
+        .field('name', 'hello')
+        .expect(400)
+        .expect({
+          body: [
+            {
+              instancePath: '/name',
+              keyword: 'type',
+              message: 'must be boolean',
+              params: {
+                type: 'boolean'
+              },
+              schemaPath: '#/properties/name/type',
+            }
+          ]
+        });
+    });
+
+    it('should return an HttpResponseBadRequest (missing values).', async () => {
       const app = await createAppWithHook({
         fields: {
           type: 'object',
@@ -142,9 +187,9 @@ describe('ParseAndValidateFiles', () => {
         .expect({
           body: [
             {
-              dataPath: '',
+              instancePath: '',
               keyword: 'required',
-              message: 'should have required property \'name2\'',
+              message: 'must have required property \'name2\'',
               params: {
                 missingProperty: 'name2'
               },

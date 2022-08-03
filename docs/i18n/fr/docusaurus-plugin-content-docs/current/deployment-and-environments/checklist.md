@@ -74,6 +74,8 @@ tsconfig.app.json
 
 Then you will need to run `npm install` and `npm run build`.
 
+> If you get an error such as `Foal not found error`, it is probably because the dev dependencies (which include the `@foal/cli` package) have not been installed. To force the installation of these dependencies, you can use the following command: `npm install --production=false`.
+
 If you install dependencies and build the app on your local host directly, then you should upload these files:
 
 ```sh

@@ -11,11 +11,11 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [14, 16]
+        node-version: [16, 18]
     
     services:
       mongodb:
-        image: mongo:3.4.1
+        image: mongo:4.0.18
         ports:
           - 27017:27017
     

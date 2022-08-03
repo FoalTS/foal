@@ -1,5 +1,5 @@
 import { Config, SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
-import { MongoClient } from 'mongodb';
+import { Collection, MongoClient } from 'mongodb';
 
 interface DatabaseSession {
   sessionID: string;
@@ -15,10 +15,10 @@ interface DatabaseSession {
  */
 export class MongoDBStore extends SessionStore {
 
-  private mongoDBClient: any;
-  private collection: any;
+  private mongoDBClient: MongoClient;
+  private collection: Collection<DatabaseSession>;
 
-  setMongoDBClient(mongoDBClient: any) {
+  setMongoDBClient(mongoDBClient: MongoClient): void {
     this.mongoDBClient = mongoDBClient;
   }
 
@@ -29,9 +29,9 @@ export class MongoDBStore extends SessionStore {
         'string',
         'You must provide the URI of your database when using MongoDBStore.'
       );
-      this.mongoDBClient = await MongoClient.connect(mongoDBURI, { useNewUrlParser: true, useUnifiedTopology: true });
+      this.mongoDBClient = await MongoClient.connect(mongoDBURI);
     }
-    this.collection = this.mongoDBClient.db().collection('sessions');
+    this.collection = this.mongoDBClient.db().collection<DatabaseSession>('sessions');
     this.collection.createIndex({ sessionID: 1 }, { unique: true });
   }
 

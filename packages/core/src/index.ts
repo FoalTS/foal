@@ -6,10 +6,10 @@
 
 try {
   const version = process.versions.node;
-  const NODE_MAJOR_VERSION = parseInt(version.split('.')[0], 10);
-  const NODE_MINIMUM_VERSION_REQUIRED = 14;
-  if (NODE_MAJOR_VERSION < NODE_MINIMUM_VERSION_REQUIRED) {
-    console.warn(`[Warning] You are using version ${version} of Node. FoalTS requires at least version ${NODE_MINIMUM_VERSION_REQUIRED}.`);
+  const NODE_CURRENT_MAJOR_VERSION = parseInt(version.split('.')[0], 10);
+  const NODE_MINIMUM_MAJOR_VERSION = 16;
+  if (NODE_CURRENT_MAJOR_VERSION < NODE_MINIMUM_MAJOR_VERSION) {
+    console.warn(`[Warning] You are using version ${version} of Node. FoalTS requires at least version ${NODE_MINIMUM_MAJOR_VERSION}.`);
   }
 } finally {}
 
@@ -24,6 +24,8 @@ export {
   ValidateHeader,
   ValidatePathParam,
   ValidateQueryParam,
+  PermissionRequired,
+  IUserWithPermissions,
   controller,
   displayServerURL,
   convertBase64ToBase64url,

@@ -2,10 +2,12 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual } from 'assert';
 import { Server } from 'http';
 import { URLSearchParams } from 'url';
+import * as crypto from 'crypto'
 
 // 3p
 import {
   Config,
+  ConfigNotFoundError,
   Context,
   createApp,
   createService,
@@ -19,12 +21,14 @@ import {
 import {
   AbstractProvider,
   AuthorizationError,
+  CodeVerifierNotFound,
   InvalidStateError,
   SocialTokens,
   TokenError
 } from './abstract-provider.service';
 
 const STATE_COOKIE_NAME = 'oauth2-state';
+const CODE_VERIFIER_COOKIE_NAME = 'oauth2-code-verifier';
 
 describe('InvalidStateError', () => {
 
@@ -40,6 +44,24 @@ describe('InvalidStateError', () => {
     const error = new InvalidStateError();
 
     strictEqual(error.name, 'InvalidStateError');
+  });
+
+});
+
+describe('CodeVerifierNotFound', () => {
+
+  it('should have a "message" property.', () => {
+    const error = new CodeVerifierNotFound();
+
+    strictEqual(
+      error.message,
+      'Suspicious operation: encrypted code verifier not found in cookie.');
+  });
+
+  it('should have a "name" property.', () => {
+    const error = new CodeVerifierNotFound();
+
+    strictEqual(error.name, 'CodeVerifierNotFound');
   });
 
 });
@@ -281,6 +303,16 @@ describe('AbstractProvider', () => {
         strictEqual(searchParams.get('foo'), 'bar2');
       });
 
+      it('with a redirect path that do NOT contain PKCE parameters.', async () => {
+        provider = createService(ConcreteProvider);
+
+        const response = await provider.redirect();
+        const searchParams = new URLSearchParams(response.path);
+
+        strictEqual(searchParams.get('code_challenge'), null);
+        strictEqual(searchParams.get('code_challenge_method'), null);
+      });
+
     });
 
   });
@@ -338,43 +370,106 @@ describe('AbstractProvider', () => {
       }
     });
 
-    it('should send a request which contains a grant type, a code, a redirect URI,'
-      + 'a client ID and a client secret and return the response body.', async () => {
-      class AppController {
-        @Post('/token')
-        token(ctx: Context) {
-          strictEqual(ctx.request.headers.accept, 'application/json');
-          const { grant_type, code, redirect_uri, client_id, client_secret } = ctx.request.body;
-          strictEqual(grant_type, 'authorization_code');
-          strictEqual(code, 'an_authorization_code');
-          strictEqual(redirect_uri, redirectUri);
-          strictEqual(client_id, clientId);
-          strictEqual(client_secret, clientSecret);
-          return new HttpResponseOK({
-            access_token: 'an_access_token',
-            token_type: 'bearer'
-          });
+    context('given the useAuthorizationHeaderForTokenEndpoint property is false', () => {
+      it('should send a request which contains a grant type, a code, a redirect URI,'
+          + 'a client ID and a client secret but no auth header and return the response body.', async () => {
+        class AppController {
+          @Post('/token')
+          token(ctx: Context) {
+            strictEqual(ctx.request.get('Accept'), 'application/json');
+            strictEqual(ctx.request.get('Content-Type'), 'application/x-www-form-urlencoded');
+            strictEqual(ctx.request.get('Authorization'), undefined);
+
+            const { grant_type, code, redirect_uri, client_id, client_secret } = ctx.request.body;
+            strictEqual(grant_type, 'authorization_code');
+            strictEqual(code, 'an_authorization_code');
+            strictEqual(redirect_uri, redirectUri);
+            strictEqual(client_id, clientId);
+            strictEqual(client_secret, clientSecret);
+            return new HttpResponseOK({
+              access_token: 'an_access_token',
+              token_type: 'bearer'
+            });
+          }
         }
-      }
 
-      server = (await createApp(AppController)).listen(3000);
+        server = (await createApp(AppController)).listen(3000);
 
-      const ctx = new Context({
-        cookies: {
-          [STATE_COOKIE_NAME]: 'xxx'
-        },
-        query: {
-          code: 'an_authorization_code',
-          state: 'xxx',
-        },
+        const ctx = new Context({
+          cookies: {
+            [STATE_COOKIE_NAME]: 'xxx'
+          },
+          query: {
+            code: 'an_authorization_code',
+            state: 'xxx',
+          },
+        });
+
+        const actual = await provider.getTokens(ctx);
+        const expected: SocialTokens = {
+          access_token: 'an_access_token',
+          token_type: 'bearer'
+        };
+        deepStrictEqual(actual, expected);
       });
+    });
 
-      const actual = await provider.getTokens(ctx);
-      const expected: SocialTokens = {
-        access_token: 'an_access_token',
-        token_type: 'bearer'
-      };
-      deepStrictEqual(actual, expected);
+    context('given the useAuthorizationHeaderForTokenEndpoint property is true', () => {
+      it('should send a request which contains a grant type, a code, a redirect URI,'
+          + 'and an auth header and return the response body.', async () => {
+        // Example taken from https://datatracker.ietf.org/doc/html/rfc2617#section-2
+        const clientId = 'Aladdin';
+        const clientSecret = 'open sesame';
+        const authHeader = 'Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==';
+
+        Config.set('settings.social.example.clientId', clientId);
+        Config.set('settings.social.example.clientSecret', clientSecret);
+
+        class ConcreteProvider2 extends ConcreteProvider {
+          useAuthorizationHeaderForTokenEndpoint = true;
+        }
+
+        provider = new ConcreteProvider2();
+
+        class AppController {
+          @Post('/token')
+          token(ctx: Context) {
+            strictEqual(ctx.request.headers.accept, 'application/json');
+            strictEqual(ctx.request.get('Content-Type'), 'application/x-www-form-urlencoded');
+            strictEqual(ctx.request.get('Authorization'), authHeader);
+
+            const { grant_type, code, redirect_uri, client_id, client_secret } = ctx.request.body;
+            strictEqual(grant_type, 'authorization_code');
+            strictEqual(code, 'an_authorization_code');
+            strictEqual(redirect_uri, redirectUri);
+            strictEqual(client_id, undefined);
+            strictEqual(client_secret, undefined);
+            return new HttpResponseOK({
+              access_token: 'an_access_token',
+              token_type: 'bearer'
+            });
+          }
+        }
+
+        server = (await createApp(AppController)).listen(3000);
+
+        const ctx = new Context({
+          cookies: {
+            [STATE_COOKIE_NAME]: 'xxx'
+          },
+          query: {
+            code: 'an_authorization_code',
+            state: 'xxx',
+          },
+        });
+
+        const actual = await provider.getTokens(ctx);
+        const expected: SocialTokens = {
+          access_token: 'an_access_token',
+          token_type: 'bearer'
+        };
+        deepStrictEqual(actual, expected);
+      });
     });
 
     it('should throw a TokenError if the token endpoint returns an error.', async () => {
@@ -547,3 +642,253 @@ describe('AbstractProvider', () => {
   });
 
 });
+
+describe('Abstract Provider With PKCE', () => {
+
+  class ConcreteProvider extends AbstractProvider<any, any> {
+    protected configPaths = {
+      clientId: 'settings.social.example.clientId',
+      clientSecret: 'settings.social.example.clientSecret',
+      redirectUri: 'settings.social.example.redirectUri'
+    };
+    protected usePKCE: boolean = true;
+    protected authEndpoint = 'https://example2.com/auth';
+    protected tokenEndpoint = 'http://localhost:3000/token';
+    getUserInfoFromTokens(tokens: SocialTokens) {
+      throw new Error('Method not implemented.');
+    }
+  }
+
+  let provider: ConcreteProvider;
+  const clientId = 'clientIdXXX';
+  const clientSecret = 'clientSecretYYY';
+  const redirectUri = 'https://example.com/callback';
+
+  beforeEach(() => {
+    Config.set('settings.social.example.clientId', clientId);
+    Config.set('settings.social.example.clientSecret', clientSecret);
+    Config.set('settings.social.example.redirectUri', redirectUri);
+    Config.set('settings.loggerFormat', 'none');
+
+    provider = createService(ConcreteProvider);
+  });
+
+  afterEach(() => {
+    Config.remove('settings.social.example.clientId');
+    Config.remove('settings.social.example.clientSecret');
+    Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.social.cookie.secure');
+  });
+
+  describe('has a "redirect" method that', () => {
+
+    it('should fail if secret is not configured', async () => {
+      try {
+        await provider.redirect();
+      } catch(error) {
+        if(!(error instanceof ConfigNotFoundError)){
+          throw error;
+        }
+      }
+    });
+
+    describe('should return an HttpResponseRedirect object', () => {
+
+      beforeEach(() => {
+        Config.set('settings.social.secret.codeVerifierSecret', 'SECRET');
+      });
+
+      afterEach(() => {
+        Config.remove('settings.social.secret.codeVerifierSecret');
+      });
+
+      it('with a redirect path which contains a client ID, a response type, a redirect URI, code_challenge and code_challenge_method (S256) if pkce enabled.', async () => {
+        const response = await provider.redirect();
+        ok(response.path.startsWith(
+          'https://example2.com/auth?'
+          + 'response_type=code&'
+          + 'client_id=clientIdXXX&'
+          + 'redirect_uri=https%3A%2F%2Fexample.com%2Fcallback'
+        ));
+        const searchParams = new URLSearchParams(response.path);
+        ok(searchParams.get('code_challenge'));
+        strictEqual(searchParams.get('code_challenge_method'), 'S256');
+      });
+    });
+
+    describe('has a "getTokens" method that', () => {
+
+      let server: Server;
+      const secret: string = 'SECRETCODE';
+
+      afterEach(() => {
+        if (server) {
+          server.close();
+        }
+        Config.remove('settings.social.secret.codeVerifierSecret');
+      });
+
+      beforeEach(() => {
+        Config.set('settings.social.secret.codeVerifierSecret', secret);
+      });
+
+      it('should send a request which contains a grant type, a code, a redirect URI,'
+        + 'a client ID, a client secret and code_verifier and return the response body.', async () => {
+
+        const codeVerifier = 'code verifier';
+
+        class AppController {
+          @Post('/token')
+          token(ctx: Context) {
+            strictEqual(ctx.request.headers.accept, 'application/json');
+            strictEqual(ctx.request.get('Content-Type'), 'application/x-www-form-urlencoded');
+            const { grant_type, code, redirect_uri, client_id, client_secret, code_verifier } = ctx.request.body;
+            strictEqual(grant_type, 'authorization_code');
+            strictEqual(code, 'an_authorization_code');
+            strictEqual(redirect_uri, redirectUri);
+            strictEqual(client_id, clientId);
+            strictEqual(client_secret, clientSecret);
+            strictEqual(code_verifier, codeVerifier)
+            return new HttpResponseOK({
+              access_token: 'an_access_token',
+              token_type: 'bearer'
+            });
+          }
+        }
+
+        server = (await createApp(AppController)).listen(3000);
+
+        const iv = crypto.randomBytes(16); // temporary for testing purpose
+
+        const ctx = new Context({
+          cookies: {
+            [STATE_COOKIE_NAME]: 'xxx',
+            [CODE_VERIFIER_COOKIE_NAME]: encryptHelper(codeVerifier, iv, secret)
+          },
+          query: {
+            code: 'an_authorization_code',
+            state: 'xxx',
+          },
+        });
+
+        const actual = await provider.getTokens(ctx);
+        const expected: SocialTokens = {
+          access_token: 'an_access_token',
+          token_type: 'bearer'
+        };
+        deepStrictEqual(actual, expected);
+      });
+
+      it('should throw a CodeVerifierNotFound if Code Verifier not exists or is not valid', async () => {
+        class AppController {
+          @Post('/token')
+          token() {
+            return new HttpResponseBadRequest({
+              error: 'bad request'
+            });
+          }
+        }
+
+        server = (await createApp(AppController)).listen(3000);
+
+        const ctx = new Context({
+          cookies: {
+            [STATE_COOKIE_NAME]: 'xxx'
+          },
+          query: {
+            code: 'an_authorization_code',
+            state: 'xxx',
+          },
+        });
+
+        try {
+          await provider.getTokens(ctx);
+          throw new Error('getTokens should have thrown a CodeVerifierNotFound.');
+        } catch (error) {
+          if (!(error instanceof CodeVerifierNotFound)) {
+            throw error;
+          }
+        }
+      })
+    });
+  });
+
+});
+
+describe('Abstract Provider With PKCE and Plain Method', () => {
+  class ConcreteProvider extends AbstractProvider<any, any> {
+    protected configPaths = {
+      clientId: 'settings.social.example.clientId',
+      clientSecret: 'settings.social.example.clientSecret',
+      redirectUri: 'settings.social.example.redirectUri'
+    };
+    protected usePKCE: boolean = true;
+    protected useCodeVerifierAsCodeChallenge = true;
+    protected authEndpoint = 'https://example2.com/auth';
+    protected tokenEndpoint = 'http://localhost:3000/token';
+    getUserInfoFromTokens(tokens: SocialTokens) {
+      throw new Error('Method not implemented.');
+    }
+  }
+
+  let provider: ConcreteProvider;
+  const clientId = 'clientIdXXX';
+  const clientSecret = 'clientSecretYYY';
+  const redirectUri = 'https://example.com/callback';
+
+  beforeEach(() => {
+    Config.set('settings.social.example.clientId', clientId);
+    Config.set('settings.social.example.clientSecret', clientSecret);
+    Config.set('settings.social.example.redirectUri', redirectUri);
+    Config.set('settings.loggerFormat', 'none');
+
+    provider = createService(ConcreteProvider);
+  });
+
+  afterEach(() => {
+    Config.remove('settings.social.example.clientId');
+    Config.remove('settings.social.example.clientSecret');
+    Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.social.cookie.secure');
+  });
+
+  describe('has a "redirect" method that', () => {
+    describe('should return an HttpResponseRedirect object', () => {
+
+      beforeEach(() => {
+        Config.set('settings.social.secret.codeVerifierSecret', 'SECRET');
+      });
+
+      afterEach(() => {
+        Config.remove('settings.social.secret.codeVerifierSecret');
+      });
+
+      it('with a redirect path which contains a client ID, a response type, a redirect URI, code_challenge and code_challenge_method (plain) if pkce enabled.', async () => {
+        const response = await provider.redirect();
+        ok(response.path.startsWith(
+          'https://example2.com/auth?'
+          + 'response_type=code&'
+          + 'client_id=clientIdXXX&'
+          + 'redirect_uri=https%3A%2F%2Fexample.com%2Fcallback'
+        ));
+        const searchParams = new URLSearchParams(response.path);
+        ok(searchParams.get('code_challenge'));
+        strictEqual(searchParams.get('code_challenge_method'), 'plain');
+      });
+    });
+  });
+});
+
+function encryptHelper(message: string, iv: Buffer, secret: string): string {
+  // Hash secret
+  const hashedSecret = crypto.createHash('sha256').update(secret).digest();
+
+  // Create cipher
+  const cipher = crypto.createCipheriv('aes-256-ctr', hashedSecret, iv); // aes-256-ctr is default
+
+  // Encrypt data, concat final
+  const data = cipher.update(Buffer.from(message));
+  const encryptedMessage = Buffer.concat([data, cipher.final()])
+
+  return `${iv.toString('base64')}${encryptedMessage.toString('base64')}`
+}

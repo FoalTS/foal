@@ -13,8 +13,8 @@ describe('Context', () => {
 
     strictEqual(actual.request, request);
     deepStrictEqual(actual.state, {});
-    strictEqual(actual.user, undefined);
-    strictEqual(actual.session, undefined);
+    strictEqual(actual.user, null);
+    strictEqual(actual.session, null);
     strictEqual(actual.files instanceof FileList, true);
   });
 

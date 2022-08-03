@@ -16,7 +16,7 @@ describe('GraphQLController', () => {
 
   let controller: GraphQLController;
   class ConcreteController extends GraphQLController {
-    schema = {};
+    schema = buildSchema('type Query { hello: String }');
   }
 
   beforeEach(() => controller = createController(ConcreteController));
@@ -41,9 +41,9 @@ describe('GraphQLController', () => {
         }
 
         deepStrictEqual(response.body, [{
-          dataPath: '',
+          instancePath: '',
           keyword: 'required',
-          message: 'should have required property \'query\'',
+          message: 'must have required property \'query\'',
           params: {
             missingProperty: 'query'
           },
@@ -64,9 +64,9 @@ describe('GraphQLController', () => {
         }
 
         deepStrictEqual(response.body, [{
-          dataPath: '.query',
+          instancePath: '/query',
           keyword: 'type',
-          message: 'should be string',
+          message: 'must be string',
           params: {
             type: 'string'
           },
@@ -88,9 +88,9 @@ describe('GraphQLController', () => {
         }
 
         deepStrictEqual(response.body, [{
-          dataPath: '.operationName',
+          instancePath: '/operationName',
           keyword: 'type',
-          message: 'should be string',
+          message: 'must be string',
           params: {
             type: 'string'
           },
@@ -112,9 +112,9 @@ describe('GraphQLController', () => {
         }
 
         deepStrictEqual(response.body, [{
-          dataPath: '.variables',
+          instancePath: '/variables',
           keyword: 'type',
-          message: 'should be string',
+          message: 'must be string',
           params: {
             type: 'string'
           },
@@ -422,9 +422,9 @@ describe('GraphQLController', () => {
           }
 
           deepStrictEqual(response.body, [{
-            dataPath: '.query',
+            instancePath: '/query',
             keyword: 'type',
-            message: 'should be string',
+            message: 'must be string',
             params: {
               type: 'string'
             },
@@ -446,9 +446,9 @@ describe('GraphQLController', () => {
           }
 
           deepStrictEqual(response.body, [{
-            dataPath: '.operationName',
+            instancePath: '/operationName',
             keyword: 'type',
-            message: 'should be string',
+            message: 'must be string',
             params: {
               type: 'string'
             },
@@ -470,9 +470,9 @@ describe('GraphQLController', () => {
           }
 
           deepStrictEqual(response.body, [{
-            dataPath: '.variables',
+            instancePath: '/variables',
             keyword: 'type',
-            message: 'should be string',
+            message: 'must be string',
             params: {
               type: 'string'
             },
@@ -755,9 +755,9 @@ describe('GraphQLController', () => {
           }
 
           deepStrictEqual(response.body, [{
-            dataPath: '',
+            instancePath: '',
             keyword: 'required',
-            message: 'should have required property \'query\'',
+            message: 'must have required property \'query\'',
             params: {
               missingProperty: 'query'
             },
@@ -780,9 +780,9 @@ describe('GraphQLController', () => {
           }
 
           deepStrictEqual(response.body, [{
-            dataPath: '.query',
+            instancePath: '/query',
             keyword: 'type',
-            message: 'should be string',
+            message: 'must be string',
             params: {
               type: 'string'
             },
@@ -806,9 +806,9 @@ describe('GraphQLController', () => {
           }
 
           deepStrictEqual(response.body, [{
-            dataPath: '.operationName',
+            instancePath: '/operationName',
             keyword: 'type',
-            message: 'should be string',
+            message: 'must be string',
             params: {
               type: 'string'
             },
@@ -832,11 +832,11 @@ describe('GraphQLController', () => {
           }
 
           deepStrictEqual(response.body, [{
-            dataPath: '.variables',
+            instancePath: '/variables',
             keyword: 'type',
-            message: 'should be object,null',
+            message: 'must be object,null',
             params: {
-              type: 'object,null'
+              type: ['object', 'null']
             },
             schemaPath: '#/properties/variables/type'
           }]);
@@ -1154,9 +1154,9 @@ describe('GraphQLController', () => {
           }
 
           deepStrictEqual(response.body, [{
-            dataPath: '',
+            instancePath: '',
             keyword: 'type',
-            message: 'should be string',
+            message: 'must be string',
             params: {
               type: 'string'
             },

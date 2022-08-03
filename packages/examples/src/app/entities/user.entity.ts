@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { hashPassword } from '@foal/core';
 import { UserWithPermissions } from '@foal/typeorm';
@@ -24,4 +24,4 @@ export class User extends UserWithPermissions {
 
 }
 
-export { Group, Permission } from '@foal/typeorm';
+export { Group, Permission, DatabaseSession } from '@foal/typeorm';

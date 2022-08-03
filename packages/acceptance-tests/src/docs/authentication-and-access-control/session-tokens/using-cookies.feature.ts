@@ -3,6 +3,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from 'typeorm'
 
 // FoalTS
 import {
@@ -22,22 +23,26 @@ import {
   UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Using cookies', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple usage with cookies', async () => {
 
-    let session: Session|undefined;
+    let session: Session|null = null;
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
@@ -73,17 +78,14 @@ describe('Feature: Using cookies', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const cookieName = 'sessionID';
 
     const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
-    strictEqual(session, undefined);
+    strictEqual(session, null);
 
     const response = await request(app)
       .get('/api/products')
@@ -91,7 +93,7 @@ describe('Feature: Using cookies', () => {
 
     const token = readCookie(response.get('Set-Cookie'), cookieName).value;
 
-    notStrictEqual(session, undefined);
+    notStrictEqual(session, null);
     strictEqual((session as unknown as Session).getToken(), token);
 
     const response2 = await request(app)
@@ -129,16 +131,13 @@ describe('Feature: Using cookies', () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const cookieName = 'sessionID';
 
     const services = new ServiceManager();
     const app = await createApp(AppController, { serviceManager: services });
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     const response = await request(app)
       .get('/api/products')

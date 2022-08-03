@@ -71,10 +71,10 @@ module.exports = {
 The definition of entities and columns is the same as in relational databases, except that the ID type must be an `ObjectID` and the column decorator must be `@ObjectIdColumn`.
 
 ```typescript
-import { Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
+import { BaseEntity, Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
     
     @ObjectIdColumn()
     id: ObjectID;
@@ -90,9 +90,9 @@ export class User {
 
 *Example*
 ```typescript
-import { getMongoRepository } from 'typeorm';
+import { ObjectId } from 'mongodb';
 
-const user = await getMongoRepository(User).findOne('xxxx');
+const user = await User.findOneBy({ _id: new ObjectId('xxxx') });
 ```
 
 ## Authentication
@@ -101,10 +101,10 @@ const user = await getMongoRepository(User).findOne('xxxx');
 
 *user.entity.ts*
 ```typescript
-import { Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { BaseEntity, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
   @ObjectIdColumn()
   id: ObjectID;

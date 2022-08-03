@@ -33,7 +33,7 @@ import { Context, Hook, HttpResponseForbidden, HttpResponseUnauthorized } from '
 import { User } from '../entities';
 
 export function AdminRequired() {
-  return Hook((ctx: Context<User>) => {
+  return Hook((ctx: Context<User|null>) => {
     if (!ctx.user) {
       return new HttpResponseUnauthorized();
     }
@@ -63,7 +63,7 @@ export class ApiController {
 
 ### Static Roles
 
-If it exists more than two categories and/or a user can belong to several categories then defining a `roles` property can also be a solution.
+If there exists more than two categories and/or a user can belong to several categories then defining a `roles` property can also be a solution.
 
 *entities/user.entity.ts*
 ```typescript
@@ -88,7 +88,7 @@ import { Context, Hook, HttpResponseForbidden, HttpResponseUnauthorized } from '
 import { User } from '../entities';
 
 export function RoleRequired(role: string) {
-  return Hook((ctx: Context<User>) => {
+  return Hook((ctx: Context<User|null>) => {
     if (!ctx.user) {
       return new HttpResponseUnauthorized();
     }

@@ -1,13 +1,16 @@
 // 3p
 import * as request from 'supertest';
-import { BaseEntity, Column, createConnection, Entity, getConnection, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
 import { IsNumber, IsString } from '@foal/typestack/node_modules/class-validator';
+import { createAndInitializeDataSource } from '../common';
 
 describe('ValidateBody hook', () => {
+
+  let dataSource: DataSource;
 
   @Entity()
   class Product extends BaseEntity {
@@ -23,15 +26,15 @@ describe('ValidateBody hook', () => {
     price: number;
   }
 
-  before(() => createConnection({
-    database: 'e2e_db.sqlite',
-    dropSchema: true,
-    entities: [Product],
-    synchronize: true,
-    type: 'better-sqlite3',
-  }));
+  before(async () => {
+    dataSource = await createAndInitializeDataSource([ Product ]);
+  });
 
-  after(() => getConnection().close());
+  after(async () => {
+    if (dataSource) {
+      await dataSource.destroy();
+    }
+  });
 
   it('should unserialize and validate HTTP request bodies', async () => {
     class AppController {
@@ -59,7 +62,7 @@ describe('ValidateBody hook', () => {
         },
         {
           children: [],
-          constraints: { isNumber: 'price must be a number' },
+          constraints: { isNumber: 'price must be a number conforming to the specified constraints' },
           property: 'price',
           target: {},
         }

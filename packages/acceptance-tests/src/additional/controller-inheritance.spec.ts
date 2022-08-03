@@ -3,13 +3,12 @@ import { deepStrictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
-import { getRepository } from 'typeorm';
+import { BaseEntity } from 'typeorm';
 
 // FoalTs
 import {
   ApiInfo,
   ApiParameter,
-  Class,
   Context,
   createApp,
   createOpenApiDocument,
@@ -41,10 +40,10 @@ describe('FoalTS', () => {
 
     abstract class BaseController {
       abstract service: CRUDService;
-      entity: Class;
+      entity: typeof BaseEntity;
       schema: IApiSchema;
 
-      constructor(entity: Class, schema: IApiSchema) {
+      constructor(entity: typeof BaseEntity, schema: IApiSchema) {
         this.entity = entity;
         this.schema = schema;
       }
@@ -58,8 +57,7 @@ describe('FoalTS', () => {
 
       @Get('/')
       async findAll(): Promise<HttpResponse> {
-        const repository = await getRepository(this.entity);
-        const result = await repository.find();
+        const result = await this.entity.find();
         return new HttpResponseCreated(result);
       }
 
@@ -122,7 +120,7 @@ describe('FoalTS', () => {
       type: 'object',
     };
 
-    class SomeEntity {
+    class SomeEntity extends BaseEntity {
 
     }
 
@@ -240,9 +238,9 @@ describe('FoalTS', () => {
       .expect({
         body: [
           {
-            dataPath: '',
+            instancePath: '',
             keyword: 'required',
-            message: 'should have required property \'name\'',
+            message: 'must have required property \'name\'',
             params: {
               missingProperty: 'name'
             },

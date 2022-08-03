@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "lib/",
     "module": "commonjs",
-    "target": "es2019",
+    "target": "es2021",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strict": true,
@@ -13,7 +13,10 @@
       "es2019",
       "dom"
     ],
-    "types": [ "node", "mocha" ]
+    "types": [
+      "node",
+      "mocha"
+    ]
   },
   "include": [
     "./src/**/*.ts"

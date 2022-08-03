@@ -2,28 +2,22 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import * as Ajv from 'ajv';
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import Ajv from 'ajv';
 
 // FoalTS
 import { Group, Permission } from '@foal/typeorm';
 import { main as createGroup, schema } from './create-group';
+import { createAndInitializeDataSource } from '../../common';
 
 describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
-    const connection = await createConnection({
-      database: './e2e_db.sqlite',
-      dropSchema: true,
-      entities: [ Permission, Group ],
-      synchronize: true,
-      type: 'better-sqlite3',
-    });
-    await getRepository(Permission).save({
+    const dataSource = await createAndInitializeDataSource([ Permission, Group ]);
+    await Permission.save({
       codeName: 'delete-users',
       name: 'Permission to delete users',
     });
-    await connection.close();
+    await dataSource.destroy();
   });
 
   it('should work as expected.', async () => {
@@ -36,30 +30,29 @@ describe('[Shell scripts] create-perm', () => {
 
     const ajv = new Ajv({ useDefaults: true });
     if (!ajv.validate(schema, args)) {
-      (ajv.errors as Ajv.ErrorObject[]).forEach(err => {
+      ajv.errors!.forEach(err => {
         throw new Error(`Error: The command line arguments ${err.message}.`);
       });
     }
 
     await createGroup(args);
 
-    await createConnection({
-      database: './e2e_db.sqlite',
-      entities: [ Permission, Group ],
-      type: 'better-sqlite3',
-    });
+    const dataSource = await createAndInitializeDataSource([ Permission, Group ], { dropSchema: false });
 
     try {
-      const group = await getRepository(Group).findOneOrFail({
-        codeName: 'admin',
-        name: 'Administrators',
-      }, { relations: ['permissions'] });
+      const group = await Group.findOneOrFail({
+        where: {
+          codeName: 'admin',
+          name: 'Administrators',
+        },
+        relations: { permissions: true }
+      });
       strictEqual(group.permissions.length, 1);
       strictEqual(group.permissions[0].codeName, 'delete-users');
     } catch (error: any) {
       throw error;
     } finally {
-      await getConnection().close();
+      await dataSource.destroy();
     }
   });
 });

@@ -159,7 +159,7 @@ export class AuthController {
     required: false,
   })
   async login(ctx: Context) {
-    const user = await User.findOne({ email: ctx.request.body.email });
+    const user = await User.findOneBy({ email: ctx.request.body.email });
 
     if (!user) {
       return new HttpResponseUnauthorized();
@@ -262,7 +262,7 @@ export class AuthController {
   @Post('/login')
   @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
-    const user = await User.findOne({ email: ctx.request.body.email });
+    const user = await User.findOneBy({ email: ctx.request.body.email });
 
     if (!user) {
       return new HttpResponseUnauthorized();
@@ -349,7 +349,7 @@ export class AuthController {
     required: false,
   })
   async login(ctx: Context) {
-    const user = await User.findOne({ email: ctx.request.body.email });
+    const user = await User.findOneBy({ email: ctx.request.body.email });
 
     if (!user) {
       return new HttpResponseRedirect('/login');
@@ -374,12 +374,9 @@ import {
   dependency,
   Get,
   render,
-  Session,
   Store,
   UseSessions,
 } from '@foal/core';
-
-import { User } from '../entities';
 
 export class ViewController {
   @dependency
@@ -396,10 +393,10 @@ export class ViewController {
     required: true,
     redirectTo: '/login'
   })
-  async index(ctx: Context<User, Session>) {
+  async index(ctx: Context) {
     return render(
       './templates/products.html',
-      { csrfToken: ctx.session.get('csrfToken') },
+      { csrfToken: ctx.session!.get('csrfToken') },
     );
   }
 }
@@ -528,8 +525,6 @@ module.exports = {
 </Tabs>
 
 ### Disable CSRF protection on a specific route
-
-> *This feature is available from version 2.1 onwards.*
 
 In case the CSRF protection is enabled globally and you want to disable it for a specific route, you can use the `csrf` option for that.
 

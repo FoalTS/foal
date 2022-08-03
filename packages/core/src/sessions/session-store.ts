@@ -20,8 +20,8 @@ export class SessionAlreadyExists extends Error {
  */
 export abstract class Store {
 
-  static concreteClassConfigPath = 'settings.session.store';
-  static concreteClassName = 'ConcreteSessionStore';
+  static readonly concreteClassConfigPath = 'settings.session.store';
+  static readonly concreteClassName = 'ConcreteSessionStore';
 
   /**
    * Saves the session for the first time.

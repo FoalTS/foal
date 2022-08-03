@@ -53,9 +53,9 @@ export function isFileDoesNotExist(obj: any): obj is FileDoesNotExist {
  */
 export abstract class Disk {
 
-  static concreteClassConfigPath = 'settings.disk.driver';
-  static concreteClassName = 'ConcreteDisk';
-  static defaultConcreteClassPath = join(__dirname, './local-disk.service');
+  static readonly concreteClassConfigPath = 'settings.disk.driver';
+  static readonly concreteClassName = 'ConcreteDisk';
+  static readonly defaultConcreteClassPath = join(__dirname, './local-disk.service');
 
   /**
    * Asynchronously write a file. If the file already exists, it is replaced.

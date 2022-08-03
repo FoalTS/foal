@@ -74,7 +74,7 @@ module.exports = {
 npm install typeorm @foal/typeorm
 ```
 
-This store uses the default TypeORM connection whose configuration is usually specified in `ormconfig.{json|yml|js}`.
+This store uses the default TypeORM connection whose configuration is usually specified in `config/default.{json|yml|js}`.
 
 Session states are saved in the `databasesession` table of your SQL database. In order to create it, you need to add and run migrations. For this purpose, you can export the `DatabaseSession` entity in your user file and execute the following commands.
 
@@ -166,6 +166,8 @@ module.exports = {
 ```
 npm install @foal/mongodb
 ```
+
+> This package uses the [mongodb Node.JS driver](https://www.npmjs.com/package/mongodb) which uses the [@types/node](https://www.npmjs.com/package/@types/node) package under the hood. If you get type compilation errors, try to upgrade this dependency.
 
 This store saves your session states in a MongoDB database (using the collection `sessions`). In order to use it, you must provide the MongoDB URI in the configuration.
 
@@ -396,9 +398,9 @@ export class ApiController {
   }
 
   @Get('/products')
-  readProducts(ctx: Context) {
+  readProducts(ctx: Context<User>) {
     // If the ctx.session is defined and the session is attached to a user
-    // then ctx.user is an instance of User. Otherwise it is undefined.
+    // then ctx.user is an instance of User. Otherwise it is null.
     return new HttpResponseOK([]);
   }
 
@@ -478,8 +480,6 @@ export class AuthController {
 
 ## Reading User Information on the Client (cookies)
 
-> *This feature is available from version 2.2 onwards.*
-
 When building a SPA with cookie-based authentication, it can sometimes be difficult to know if the user is logged in or to obtain certain information about the user (`isAdmin`, etc).
 
 Since the authentication token is stored in a cookie with the `httpOnly` directive set to `true` (to mitigate XSS attacks), the front-end application has no way of knowing if a user is logged in, except by making an additional request to the server.
@@ -491,7 +491,7 @@ In the following example, the `user` cookie is empty if no user is logged in or 
 *Server-side code*
 
 ```typescript
-function userToJSON(user: User|undefined) {
+function userToJSON(user: User|null) {
   if (!user) {
     return 'null';
   }
@@ -505,14 +505,14 @@ function userToJSON(user: User|undefined) {
 @UseSessions({
   cookie: true,
   user: fetchUser(User),
-  userCookie: (ctx, services) => userToJSON(ctx.user)
+  userCookie: (ctx, services) => userToJSON(ctx.user as User|null)
 })
 export class ApiController {
 
   @Get('/products')
   @UserRequired()
-  async readProducts(ctx: Context) {
-    const products = await Product.find({ owner: ctx.user });
+  async readProducts(ctx: Context<User>) {
+    const products = await Product.findBy({ owner: { id: ctx.user.id } });
     return new HttpResponseOK(products);
   }
 
@@ -535,20 +535,20 @@ const user = JSON.parse(decodeURIComponent(/* cookie value */));
 You can access and modify the session content with the `set` and `get` methods.
 
 ```typescript
-import { Context, HttpResponseNoContent, Post, Session, UseSessions } from '@foal/core';
+import { Context, HttpResponseNoContent, Post, UseSessions } from '@foal/core';
 
 @UseSessions(/* ... */)
 export class ApiController {
 
   @Post('/subscribe')
-  suscribe(ctx: Context<any, Session>) {
-    const plan = ctx.session.get<string>('plan', 'free');
+  subscribe(ctx: Context) {
+    const plan = ctx.session!.get<string>('plan', 'free');
     // ...
   }
 
   @Post('/choose-premium-plan')
-  choosePremimumPlan(ctx: Context<any, Session>) {
-    ctx.session.set('plan', 'premium');
+  choosePremimumPlan(ctx: Context) {
+    ctx.session!.set('plan', 'premium');
     return new HttpResponseNoContent();
   }
 }
@@ -645,7 +645,8 @@ Open `scripts/revoke-session.ts` and update its content.
 
 ```typescript
 import { createService, readSession, Store } from '@foal/core';
-import { createConnection } from 'typeorm';
+
+import { dataSource } from '../db';
 
 export const schema = {
   type: 'object',
@@ -656,7 +657,7 @@ export const schema = {
 }
 
 export async function main({ token }: { token: string }) {
-  await createConnection();
+  await dataSource.initialize();
 
   const store = createService(Store);
   await store.boot();
@@ -690,10 +691,11 @@ Open `scripts/revoke-all-sessions.ts` and update its content.
 
 ```typescript
 import { createService, Store } from '@foal/core';
-import { createConnection } from 'typeorm';
+
+import { dataSource } from '../db';
 
 export async function main() {
-  await createConnection();
+  await dataSource.initialize();
 
   const store = createService(Store);
   await store.boot();
@@ -897,10 +899,10 @@ interface SessionState {
 The function `fetchUser` from the package `@foal/typeorm` takes an `@Entity()` class as parameter and returns a function with this signature:
 
 ```typescript
-type FetchUser = (id: string|number, services: ServiceManager) => Promise<any>
+type FetchUser = (id: string|number, services: ServiceManager) => Promise<Context['user']>
 ```
 
-If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `undefined`.
+If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `null`.
 
 If needed you can implement your own `fetchUser` function with this exact signature.
 
@@ -1044,49 +1046,9 @@ await session.commit();
 
 ### Provide A Custom Client to Use in the Stores
 
-By default, the `MongoDBStore` and `RedisStore` create a new client to connect to their respective databases. The `TypeORMStore` uses the default TypeORM connection.
+By default, the `MongoDBStore` and `RedisStore` create a new client to connect to their respective databases.
 
 This behavior can be overridden by providing a custom client to the stores at initialization.
-
-#### `TypeORMStore`
-
-*First example*
-```typescript
-import { dependency } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
-import { createConnection } from 'typeorm';
-
-export class AppController {
-  @dependency
-  store: TypeORMStore;
-
-  // ...
-
-  async init() {
-    const connection = await createConnection('connection2');
-    this.store.setConnection(connection);
-  }
-}
-```
-
-*Second example*
-
-```typescript
-import { createApp, ServiceManager } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
-import { createConnection } from 'typeorm';
-
-async function main() {
-  const connection = await createConnection('connection2');
-
-  const serviceManager = new ServiceManager();
-  serviceManager.get(TypeORMStore).setConnection(connection);
-
-  const app = await createApp(AppController, { serviceManager });
-
-  // ...
-}
-```
 
 #### `RedisStore`
 
@@ -1117,20 +1079,29 @@ async function main() {
 #### `MongoDBStore`
 
 ```
-npm install mongodb@3
+npm install mongodb@4
 ```
+
+> The `MongoDBStore` requires version 4 of the [mongodb](https://www.npmjs.com/package/mongodb) package. If you are using TypeORM with MongoDB, which requires version 3, you can have both versions coexist in your `package.json` as follows:
+> ```json
+> {
+>   "mongodb": "~3.7.3",
+>   "mongodb4": "npm:mongodb@~4.3.1",
+> }
+> ```
+>
+> ```typescript
+> import { MongoClient } from 'mongodb4';
+> ```
 
 *index.ts*
 ```typescript
 import { createApp, ServiceManager } from '@foal/core';
 import { MongoDBStore } from '@foal/mongodb';
-import { MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb'; // or from 'mongodb4';
 
 async function main() {
-  const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db');
 
   const serviceManager = new ServiceManager();
   serviceManager.get(MongoDBStore).setMongoDBClient(mongoDBClient);

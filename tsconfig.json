@@ -3,7 +3,7 @@
     "outDir": "./lib/",
     "baseUrl": ".",
     "module": "commonjs",
-    "target": "es2019",
+    "target": "es2021",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strict": true,

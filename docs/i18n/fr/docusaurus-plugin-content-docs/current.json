@@ -1,6 +1,6 @@
 {
   "version.label": {
-    "message": "2.8.1 (latest)",
+    "message": "2.9.0 (latest)",
     "description": "The label for version current"
   },
   "sidebar.someSidebar.category.TUTORIALS": {
@@ -43,9 +43,9 @@
     "message": "Intégration du Frontend",
     "description": "The label for category Frontend Integration in sidebar someSidebar"
   },
-  "sidebar.someSidebar.category.File System": {
-    "message": "Système de Fichiers",
-    "description": "The label for category File System in sidebar someSidebar"
+  "sidebar.someSidebar.category.File Storage": {
+    "message": "Stockage de Fichiers",
+    "description": "The label for category File Storage in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.Dev Tools": {
     "message": "Outils de Développement",

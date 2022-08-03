@@ -455,6 +455,38 @@ export class FileSystem {
     return pkg.dependencies.hasOwnProperty(name);
   }
 
+  /**
+   * Returns the dependencies of the project package.json.
+   *
+   * @returns {{ name: string, version: string }[]}
+   */
+  getProjectDependencies(): { name: string, version: string }[] {
+    const initialCurrentDir = this.currentDir;
+
+    this.cdProjectRootDir();
+    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+
+    this.currentDir = initialCurrentDir;
+    return Object.keys(pkg.dependencies)
+      .map(name => ({ name, version: pkg.dependencies[name] }));
+  }
+
+  /**
+   * Returns the dev dependencies of the project package.json.
+   *
+   * @returns {{ name: string, version: string }[]}
+   */
+  getProjectDevDependencies(): { name: string, version: string }[] {
+    const initialCurrentDir = this.currentDir;
+
+    this.cdProjectRootDir();
+    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+
+    this.currentDir = initialCurrentDir;
+    return Object.keys(pkg.devDependencies)
+      .map(name => ({ name, version: pkg.devDependencies[name] }));
+  }
+
   /************************
       Testing Methods
   ************************/
