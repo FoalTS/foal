@@ -6,7 +6,7 @@ import {
   HttpResponseForbidden,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-} from '@foal/core';
+} from '../../core';
 import { IUserWithPermissions } from './user-with-permissions.interface';
 
 /**

@@ -1,7 +1,7 @@
 // std
 import { ok, strictEqual, throws } from 'assert';
 
-// 3p
+// FoalTS
 import {
   Context,
   getHookFunction,
@@ -11,9 +11,7 @@ import {
   HttpResponseRedirect,
   HttpResponseUnauthorized,
   ServiceManager,
-} from '@foal/core';
-
-// FoalTS
+} from '../../core';
 import { PermissionRequired } from './permission-required.hook';
 import { IUserWithPermissions } from './user-with-permissions.interface';
 

@@ -1,6 +1,6 @@
 // 3p
+import { IUserWithPermissions } from '@foal/core';
 import { BaseEntity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { IUserWithPermissions } from '../hooks';
 
 // FoalTS
 import { Group } from './group.entity';
