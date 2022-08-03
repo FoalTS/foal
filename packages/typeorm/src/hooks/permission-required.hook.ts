@@ -1,11 +1,13 @@
 // 3p
 import {
+  Context,
   Hook,
   HookDecorator,
   HttpResponseForbidden,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
 } from '@foal/core';
+import { IUserWithPermissions } from './user-with-permissions.interface';
 
 /**
  * Hook factory to check if a user can access a route based on their permissions.
@@ -21,7 +23,7 @@ import {
  * @returns {HookDecorator} - The hook.
  */
 export function PermissionRequired(perm: string, options: { redirect?: string } = {}): HookDecorator {
-  return Hook(ctx => {
+  return Hook((ctx: Context<IUserWithPermissions|null>) => {
     if (!ctx.user) {
       if (options.redirect) {
         return new HttpResponseRedirect(options.redirect);

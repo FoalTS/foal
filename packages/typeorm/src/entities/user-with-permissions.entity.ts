@@ -1,5 +1,6 @@
 // 3p
 import { BaseEntity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { IUserWithPermissions } from '../hooks';
 
 // FoalTS
 import { Group } from './group.entity';
@@ -15,7 +16,7 @@ import { Permission } from './permission.entity';
  * @abstract
  * @class UserWithPermissions
  */
-export abstract class UserWithPermissions extends BaseEntity {
+export abstract class UserWithPermissions extends BaseEntity implements IUserWithPermissions {
 
   /**
    * Get all users with a given permission.
