@@ -12,8 +12,7 @@ import { IUserWithPermissions } from './user-with-permissions.interface';
 /**
  * Hook factory to check if a user can access a route based on their permissions.
  *
- * This function uses `UserWithPermissions.hasPerm` under the hood.  It is very likely
- * that you have to use the `fetchUserWithPermissions` function when using this hook.
+ * The `ctx.user` object must implement the `IUserWithPermissions` interface.
  *
  * @export
  * @param {string} perm - The name of the permission.
