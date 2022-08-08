@@ -1,3 +1,4 @@
+export * from './auth';
 export * from './encoding';
 export * from './hooks';
 export * from './tokens';
