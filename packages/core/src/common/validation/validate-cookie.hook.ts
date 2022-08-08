@@ -1,5 +1,7 @@
-// FoalTS
+// 3p
 import { ValidateFunction } from 'ajv';
+
+// FoalTS
 import {
   ApiParameter,
   ApiResponse,
@@ -7,33 +9,32 @@ import {
   Hook,
   HookDecorator,
   HttpResponseBadRequest,
-  IApiHeaderParameter,
+  IApiCookieParameter,
   OpenApi,
-  ServiceManager
+  ServiceManager,
 } from '../../core';
 import { getAjvInstance } from '../utils';
-import { isFunction } from './is-function.util';
+import { isFunction } from './helpers';
 
 /**
- * Hook - Validate a specific header against an AJV schema.
+ * Hook - Validate a specific cookie against an AJV schema.
  *
  * @export
- * @param {string} name - Header name.
+ * @param {string} name - Cookie name.
  * @param {(object | ((controller: any) => object))} [schema={ type: 'string' }] - Schema used to
- * validate the header.
+ * validate the cookie.
  * @param {{ openapi?: boolean, required?: boolean }} [options={}] - Options.
  * @param {boolean} [options.openapi] - Add OpenApi metadata.
- * @param {boolean} [options.required] - Specify is the header is optional.
+ * @param {boolean} [options.required] - Specify is the cookie is optional.
  * @returns {HookDecorator} The hook.
  */
-export function ValidateHeader(
+export function ValidateCookie(
   name: string,
-  schema: object | ((controller: any) => object) = { type: 'string' },
+  schema: object | ((controller: any) => object) = { type: 'string' } ,
   options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
   // tslint:disable-next-line
   const required = options.required ?? true;
-  name = name.toLowerCase();
 
   let validateSchema: ValidateFunction|undefined;
 
@@ -51,12 +52,13 @@ export function ValidateHeader(
         type: 'object',
       });
     }
-    if (!validateSchema(ctx.request.headers)) {
-      return new HttpResponseBadRequest({ headers: validateSchema.errors });
+
+    if (!validateSchema(ctx.request.cookies)) {
+      return new HttpResponseBadRequest({ cookies: validateSchema.errors });
     }
   }
 
-  const param: IApiHeaderParameter = { in: 'header', name };
+  const param: IApiCookieParameter = { in: 'cookie', name };
   if (required) {
     param.required = required;
   }

@@ -13,7 +13,7 @@ import {
   ServiceManager
 } from '../../core';
 import { getAjvInstance } from '../utils';
-import { isFunction } from './is-function.util';
+import { isFunction } from './helpers';
 
 /**
  * Hook factory validating the body of the request against a AJV schema.

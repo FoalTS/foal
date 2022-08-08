@@ -13,7 +13,7 @@ import {
   ServiceManager
 } from '../../core';
 import { getAjvInstance } from '../utils';
-import { isFunction } from './is-function.util';
+import { isFunction } from './helpers';
 
 /**
  * Hook - Validate a specific path parameter against an AJV schema.
