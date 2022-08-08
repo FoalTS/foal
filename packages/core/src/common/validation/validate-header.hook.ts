@@ -11,7 +11,7 @@ import {
   OpenApi,
   ServiceManager
 } from '../../core';
-import { getAjvInstance } from '../utils';
+import { getAjvInstance } from './get-ajv-instance';
 import { isFunction } from './helpers';
 
 /**

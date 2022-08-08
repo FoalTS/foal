@@ -1,3 +1,4 @@
+export { getAjvInstance } from './get-ajv-instance';
 export { ValidateBody } from './validate-body.hook';
 export { ValidateCookie } from './validate-cookie.hook';
 export { ValidateHeader } from './validate-header.hook';
