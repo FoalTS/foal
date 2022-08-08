@@ -14,7 +14,7 @@ import {
   ServiceManager
 } from '../../core';
 import { getAjvInstance } from './get-ajv-instance';
-import { isFunction } from '../helpers';
+import { isFunction } from './helpers';
 
 /**
  * Hook - Validate a specific query parameter against an AJV schema.
