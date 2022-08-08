@@ -5,7 +5,7 @@ import { promisify } from 'util';
 
 // FoalTS
 import { Config, Context, HttpResponseInternalServerError } from '../../core';
-import { renderToString } from './render.util';
+import { renderToString } from './render';
 
 /**
  * Renders the default HTML page when an error is thrown or rejected in the application.

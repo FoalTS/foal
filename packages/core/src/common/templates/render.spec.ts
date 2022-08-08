@@ -5,7 +5,7 @@ import { join } from 'path';
 
 // FoalTS
 import { Config, HttpResponseOK } from '../../core';
-import { render, renderToString } from './render.util';
+import { render, renderToString } from './render';
 
 const ejsTemplate = 'Hello <%= name %>! How are you?';
 const twigTemplate = '{% for user in users %} {{ user.name }} {% endfor %}';
