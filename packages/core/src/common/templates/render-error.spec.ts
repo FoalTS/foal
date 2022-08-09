@@ -70,7 +70,7 @@ describe('renderError', () => {
         const response = await renderError(error, ctx);
 
         const text: string = response.body;
-        strictEqual(text.includes('<span>render-error.util.spec.ts</span>'), true);
+        strictEqual(text.includes('<span>render-error.spec.ts</span>'), true);
       });
 
       it('should contain the line and the column where the error was thrown.', async () => {
