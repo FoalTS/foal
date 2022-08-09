@@ -6,7 +6,7 @@ import {
   HttpResponseForbidden,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
-} from '../../core';
+} from '../../../core';
 import { IUserWithPermissions } from './user-with-permissions.interface';
 
 /**

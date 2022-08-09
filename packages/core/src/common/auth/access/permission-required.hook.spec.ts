@@ -11,7 +11,7 @@ import {
   HttpResponseRedirect,
   HttpResponseUnauthorized,
   ServiceManager,
-} from '../../core';
+} from '../../../core';
 import { PermissionRequired } from './permission-required.hook';
 import { IUserWithPermissions } from './user-with-permissions.interface';
 
