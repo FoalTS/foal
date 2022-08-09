@@ -1,4 +1,4 @@
-// std
+// 3p
 import { ValidateFunction } from 'ajv';
 
 // FoalTS
@@ -9,28 +9,28 @@ import {
   Hook,
   HookDecorator,
   HttpResponseBadRequest,
-  IApiQueryParameter,
+  IApiCookieParameter,
   OpenApi,
-  ServiceManager
+  ServiceManager,
 } from '../../core';
-import { getAjvInstance } from '../utils';
-import { isFunction } from './is-function.util';
+import { getAjvInstance } from './get-ajv-instance';
+import { isFunction } from './helpers';
 
 /**
- * Hook - Validate a specific query parameter against an AJV schema.
+ * Hook - Validate a specific cookie against an AJV schema.
  *
  * @export
- * @param {string} name - Query parameter name.
+ * @param {string} name - Cookie name.
  * @param {(object | ((controller: any) => object))} [schema={ type: 'string' }] - Schema used to
- * validate the query parameter.
+ * validate the cookie.
  * @param {{ openapi?: boolean, required?: boolean }} [options={}] - Options.
  * @param {boolean} [options.openapi] - Add OpenApi metadata.
- * @param {boolean} [options.required] - Specify is the query is optional.
+ * @param {boolean} [options.required] - Specify is the cookie is optional.
  * @returns {HookDecorator} The hook.
  */
-export function ValidateQueryParam(
+export function ValidateCookie(
   name: string,
-  schema: object | ((controller: any) => object) = { type: 'string' },
+  schema: object | ((controller: any) => object) = { type: 'string' } ,
   options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
   // tslint:disable-next-line
@@ -53,12 +53,12 @@ export function ValidateQueryParam(
       });
     }
 
-    if (!validateSchema(ctx.request.query)) {
-      return new HttpResponseBadRequest({ query: validateSchema.errors });
+    if (!validateSchema(ctx.request.cookies)) {
+      return new HttpResponseBadRequest({ cookies: validateSchema.errors });
     }
   }
 
-  const param: IApiQueryParameter = { in: 'query', name };
+  const param: IApiCookieParameter = { in: 'cookie', name };
   if (required) {
     param.required = required;
   }
