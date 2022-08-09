@@ -43,7 +43,7 @@ export abstract class HttpResponse<T = any> {
    * @type {number}
    * @memberof HttpResponse
    */
-  abstract statusCode: number;
+  abstract readonly statusCode: number;
   /**
    * Status message of the response. It must follow the HTTP conventions
    * and be consistent with the statusCode property.
@@ -52,7 +52,7 @@ export abstract class HttpResponse<T = any> {
    * @type {string}
    * @memberof HttpResponse
    */
-  abstract statusMessage: string;
+  abstract readonly statusMessage: string;
   /**
    * Specify if the body property is a stream.
    *
@@ -238,8 +238,8 @@ export class HttpResponseOK<T = any> extends HttpResponseSuccess<T> {
    * @memberof HttpResponseOK
    */
   readonly isHttpResponseOK = true;
-  statusCode = 200;
-  statusMessage = 'OK';
+  readonly statusCode = 200;
+  readonly statusMessage = 'OK';
 
   /**
    * Create an instance of HttpResponseOK.
@@ -283,8 +283,8 @@ export class HttpResponseCreated<T = any> extends HttpResponseSuccess<T> {
    * @memberof HttpResponseCreated
    */
   readonly isHttpResponseCreated = true;
-  statusCode = 201;
-  statusMessage = 'CREATED';
+  readonly statusCode = 201;
+  readonly statusMessage = 'CREATED';
 
   /**
    * Create an instance of HttpResponseCreated.
@@ -328,8 +328,8 @@ export class HttpResponseNoContent extends HttpResponseSuccess {
    * @memberof HttpResponseNoContent
    */
   readonly isHttpResponseNoContent = true;
-  statusCode = 204;
-  statusMessage = 'NO CONTENT';
+  readonly statusCode = 204;
+  readonly statusMessage = 'NO CONTENT';
 
   /**
    * Create an instance of HttpResponseNoContent.
@@ -465,8 +465,8 @@ export class HttpResponseRedirect<T = any> extends HttpResponseRedirection<T> {
    * @memberof HttpResponseRedirect
    */
   readonly isHttpResponseRedirect = true;
-  statusCode = 302;
-  statusMessage = 'FOUND';
+  readonly statusCode = 302;
+  readonly statusMessage = 'FOUND';
 
   /**
    * Create an instance of HttpResponseRedirect.
@@ -558,8 +558,8 @@ export class HttpResponseBadRequest<T = any> extends HttpResponseClientError<T> 
    * @memberof HttpResponseBadRequest
    */
   readonly isHttpResponseBadRequest = true;
-  statusCode = 400;
-  statusMessage = 'BAD REQUEST';
+  readonly statusCode = 400;
+  readonly statusMessage = 'BAD REQUEST';
 
   /**
    * Create an instance of HttpResponseBadRequest.
@@ -604,8 +604,8 @@ export class HttpResponseUnauthorized<T = any> extends HttpResponseClientError<T
    * @memberof HttpResponseUnauthorized
    */
   readonly isHttpResponseUnauthorized = true;
-  statusCode = 401;
-  statusMessage = 'UNAUTHORIZED';
+  readonly statusCode = 401;
+  readonly statusMessage = 'UNAUTHORIZED';
 
   /**
    * Create an instance of HttpResponseUnauthorized.
@@ -651,8 +651,8 @@ export class HttpResponseForbidden<T = any> extends HttpResponseClientError<T> {
    * @memberof HttpResponseForbidden
    */
   readonly isHttpResponseForbidden = true;
-  statusCode = 403;
-  statusMessage = 'FORBIDDEN';
+  readonly statusCode = 403;
+  readonly statusMessage = 'FORBIDDEN';
 
   /**
    * Create an instance of HttpResponseForbidden.
@@ -696,8 +696,8 @@ export class HttpResponseNotFound<T = any> extends HttpResponseClientError<T> {
    * @memberof HttpResponseNotFound
    */
   readonly isHttpResponseNotFound = true;
-  statusCode = 404;
-  statusMessage = 'NOT FOUND';
+  readonly statusCode = 404;
+  readonly statusMessage = 'NOT FOUND';
 
   /**
    * Create an instance of HttpResponseNotFound.
@@ -741,8 +741,8 @@ export class HttpResponseMethodNotAllowed<T = any> extends HttpResponseClientErr
    * @memberof HttpResponseMethodNotAllowed
    */
   readonly isHttpResponseMethodNotAllowed = true;
-  statusCode = 405;
-  statusMessage = 'METHOD NOT ALLOWED';
+  readonly statusCode = 405;
+  readonly statusMessage = 'METHOD NOT ALLOWED';
 
   /**
    * Create an instance of HttpResponseMethodNotAllowed.
@@ -787,8 +787,8 @@ export class HttpResponseConflict<T = any> extends HttpResponseClientError<T> {
    * @memberof HttpResponseConflict
    */
   readonly isHttpResponseConflict = true;
-  statusCode = 409;
-  statusMessage = 'CONFLICT';
+  readonly statusCode = 409;
+  readonly statusMessage = 'CONFLICT';
 
   /**
    * Create an instance of HttpResponseConflict.
@@ -832,8 +832,8 @@ export class HttpResponseTooManyRequests<T = any> extends HttpResponseClientErro
    * @memberof HttpResponseTooManyRequests
    */
   readonly isHttpResponseTooManyRequests = true;
-  statusCode = 429;
-  statusMessage = 'TOO MANY REQUESTS';
+  readonly statusCode = 429;
+  readonly statusMessage = 'TOO MANY REQUESTS';
 
   /**
    * Create an instance of HttpResponseTooManyRequests.
@@ -921,8 +921,8 @@ export class HttpResponseInternalServerError<T = any> extends HttpResponseServer
   readonly isHttpResponseInternalServerError = true;
   readonly error?: Error;
   readonly ctx?: Context;
-  statusCode = 500;
-  statusMessage = 'INTERNAL SERVER ERROR';
+  readonly statusCode = 500;
+  readonly statusMessage = 'INTERNAL SERVER ERROR';
 
   /**
    * Create an instance of HttpResponseInternalServerError.
@@ -969,8 +969,8 @@ export class HttpResponseNotImplemented<T = any> extends HttpResponseServerError
    * @memberof HttpResponseNotImplemented
    */
   readonly isHttpResponseNotImplemented = true;
-  statusCode = 501;
-  statusMessage = 'NOT IMPLEMENTED';
+  readonly statusCode = 501;
+  readonly statusMessage = 'NOT IMPLEMENTED';
 
   /**
    * Create an instance of HttpResponseNotImplemented.

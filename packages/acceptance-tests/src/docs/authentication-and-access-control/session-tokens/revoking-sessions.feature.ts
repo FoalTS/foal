@@ -2,7 +2,7 @@
 import { notStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import { Config, createService, createSession, readSession, Store } from '@foal/core';

@@ -1,6 +1,6 @@
 module.exports = {
   title: 'FoalTS',
-  tagline: 'Elegant and complete web framework for NodeJS',
+  tagline: 'Full-featured Node.js framework, with no complexity',
   url: 'https://foalts.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -32,13 +32,14 @@ module.exports = {
   ],
   themeConfig: {
     image: 'img/meta-image.png',
-    announcementBar: {
-      id: 'survey-summer-2022',
-      content:
-        '👉 Don\'t forget to participate to <a href="https://forms.gle/3HAzQboxSBXvpJbB6">FoalTS 2022 survey</a>! Deadline is June 31. ✨',
-    },
+    // announcementBar: {
+    //   id: '...',
+    //   content:
+    //     '👉 ... ✨',
+    // },
     algolia: {
-      apiKey: '888cc664f8cdf532950f93fdd481eac1',
+      appId: 'VRIT2ZBVSX',
+      apiKey: '0e5ec5503a51d81abd83ed758f9e9c4e',
       indexName: 'foalts',
 
       // Optional: see doc section bellow

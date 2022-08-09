@@ -32,7 +32,7 @@ import {
   Entity,
   ObjectID,
   ObjectIdColumn
-} from '@foal/typeorm/node_modules/typeorm';
+} from 'typeorm';
 import { createAndInitializeDataSource } from '../common';
 
 describe('[Sample] MongoDB & Redis Store', async () => {

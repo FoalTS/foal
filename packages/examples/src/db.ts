@@ -1,4 +1,4 @@
-import { DataSource } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from 'typeorm';
 
 export function createDataSource(): DataSource {
   return new DataSource({

@@ -3,7 +3,7 @@ import { deepStrictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
-import { BaseEntity } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity } from 'typeorm';
 
 // FoalTs
 import {

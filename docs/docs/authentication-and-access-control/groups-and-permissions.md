@@ -50,7 +50,7 @@ Replace the content of the new created file `src/scripts/create-perm.ts` with th
 import { Permission } from '@foal/typeorm';
 
 // App
-import { createDataSource } from '../db';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -67,7 +67,6 @@ export async function main(args: { codeName: string, name: string }) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  const dataSource = createDataSource();
   await dataSource.initialize();
 
   try {
@@ -135,7 +134,7 @@ Replace the content of the new created file `src/scripts/create-group.ts` with t
 import { Group, Permission } from '@foal/typeorm';
 
 // App
-import { createDataSource } from '../db';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -154,16 +153,13 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  const dataSource = createDataSource();
   await dataSource.initialize();
 
   try {
     for (const codeName of args.permissions) {
       const permission = await Permission.findOneBy({ codeName });
       if (!permission) {
-        console.log(
-          `No permission with the code name "${codeName}" was found.`
-        );
+        console.log(`No permission with the code name "${codeName}" was found.`);
         return;
       }
       group.permissions.push(permission);
@@ -232,7 +228,7 @@ import { Group, Permission } from '@foal/typeorm';
 
 // App
 import { User } from '../app/entities';
-import { createDataSource } from '../db';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -253,7 +249,6 @@ export async function main(args) {
   user.email = args.email;
   user.password = await hashPassword(args.password);
 
-  const dataSource = createDataSource();
   await dataSource.initialize();
 
   for (const codeName of args.userPermissions as string[]) {
@@ -343,6 +338,8 @@ export class ProductController {
 > This requires the use of `fetchUserWithPermissions`.
 
 ```typescript
+import { PermissionRequired } from '@foal/core';
+
 @PermissionRequired('perm')
 ```
 
@@ -352,6 +349,8 @@ export class ProductController {
 | `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
 
 ```typescript
+import { PermissionRequired } from '@foal/core';
+
 @PermissionRequired('perm', { redirect: '/login' })
 ```
 
@@ -362,8 +361,8 @@ export class ProductController {
 
 *Example*
 ```typescript
-import { Context, Get } from '@foal/core';
-import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
+import { Context, Get, PermissionRequired } from '@foal/core';
+import { fetchUserWithPermissions } from '@foal/typeorm';
 import { JWTRequired } from '@foal/jwt';
 
 @JWTRequired({ user: fetchUserWithPermissions(User) })

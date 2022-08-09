@@ -21,7 +21,7 @@ export async function main() {
 
     console.log(await user.save());
   } catch (error: any) {
-    console.log(error.message);
+    console.error(error.message);
   } finally {
     await dataSource.destroy();
   }

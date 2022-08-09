@@ -123,7 +123,7 @@ export class /* upperFirstCamelName */Controller {
       return new HttpResponseNotFound();
     }
 
-    await /* upperFirstCamelName */.delete(ctx.request.params./* camelName */Id);
+    await /* upperFirstCamelName */.delete({ id: ctx.request.params./* camelName */Id });
 
     return new HttpResponseNoContent();
   }

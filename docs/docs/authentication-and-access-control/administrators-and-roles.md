@@ -63,7 +63,7 @@ export class ApiController {
 
 ### Static Roles
 
-If it exists more than two categories and/or a user can belong to several categories then defining a `roles` property can also be a solution.
+If there exists more than two categories and/or a user can belong to several categories then defining a `roles` property can also be a solution.
 
 *entities/user.entity.ts*
 ```typescript

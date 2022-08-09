@@ -1,5 +1,5 @@
 // 3p
-import { Entity, DataSource } from '@foal/typeorm/node_modules/typeorm';
+import { Entity, DataSource } from 'typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -9,6 +9,7 @@ import {
   createSession,
   Get,
   HttpResponseNoContent,
+  PermissionRequired,
   UseSessions,
 } from '@foal/core';
 import {
@@ -16,7 +17,6 @@ import {
   fetchUserWithPermissions,
   Group,
   Permission,
-  PermissionRequired,
   TypeORMStore,
   UserWithPermissions
 } from '@foal/typeorm';
