@@ -217,6 +217,10 @@ The `hasPerm(permissionCodeName: string)` method of the `UserWithPermissions` cl
 - The user has the required permission.
 - The user belongs to a group that has the required permission.
 
+### The static `findOneWithPermissionsBy` Method
+
+This method takes an id as parameter and returns the corresponding user with its groups and permissions. If no user is found, the method returns `null`.
+
 ### Creating Users with Groups and Permissions with a Shell Script (CLI)
 
 Replace the content of the new created file `src/scripts/create-user.ts` with the following:
@@ -290,16 +294,15 @@ foal run create-user userPermissions="[ \"my-first-perm\" ]" groups="[ \"my-grou
 
 ## Fetching a User with their Permissions
 
-If you want the `hasPerm` method to work on the context `user` property, you must use the `fetchUserWithPermissions` function in the authentication hook.
+If you want the `hasPerm` method to work on the context `user` property, you must use the `User.findOneWithPermissionsBy` method in the authentication hook.
 
 *Example with JSON Web Tokens*
 ```typescript
 import { Context, Get } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
-import { fetchUserWithPermissions } from '@foal/typeorm';
 
 @JWTRequired({
-  user: fetchUserWithPermissions(User)
+  user: (id: number) => User.findOneWithPermissionsBy({ id })
 })
 export class ProductController {
   @Get('/products')
@@ -315,10 +318,8 @@ export class ProductController {
 *Example with Sessions Tokens*
 ```typescript
 import { Context, Get, UseSessions } from '@foal/core';
-import { TypeORMStore } from '@foal/typeorm';
 
 @UseSessions({
-  store: TypeORMStore,
   required: true,
   user: (id: number) => User.findOneWithPermissionsBy({ id }),
 })
@@ -335,7 +336,7 @@ export class ProductController {
 
 ## The PermissionRequired Hook
 
-> This requires the use of `fetchUserWithPermissions`.
+> This requires the use of `User.findOneWithPermissionsBy`.
 
 ```typescript
 import { PermissionRequired } from '@foal/core';
@@ -362,10 +363,9 @@ import { PermissionRequired } from '@foal/core';
 *Example*
 ```typescript
 import { Context, Get, PermissionRequired } from '@foal/core';
-import { fetchUserWithPermissions } from '@foal/typeorm';
 import { JWTRequired } from '@foal/jwt';
 
-@JWTRequired({ user: fetchUserWithPermissions(User) })
+@JWTRequired({ user: (id: number) => User.findOneWithPermissionsBy({ id }) })
 export class ProductController {
   @Get('/products')
   @PermissionRequired('read-products')

@@ -5,6 +5,6 @@ import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 export class /* upperFirstCamelName */ extends BaseEntity {
 
   @ObjectIdColumn()
-  id: ObjectID;
+  _id: ObjectID;
 
 }

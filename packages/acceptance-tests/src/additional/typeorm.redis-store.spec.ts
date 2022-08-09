@@ -23,6 +23,7 @@ import {
 import { RedisStore } from '@foal/redis';
 import { createClient } from 'redis';
 import * as request from 'supertest';
+import { ObjectId } from 'mongodb';
 
 // FoalTS
 import {
@@ -44,7 +45,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
   @Entity()
   class User extends BaseEntity {
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
 
     @Column({ unique: true })
     email: string;
@@ -65,7 +66,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
   }
 
   @UseSessions({
-    user: id => User.findOneBy({ id: new ObjectID(id) }),
+    user: id => User.findOneBy({ _id: new ObjectId(id) }),
     userIdType: 'string',
     store: RedisStore,
     required: true,

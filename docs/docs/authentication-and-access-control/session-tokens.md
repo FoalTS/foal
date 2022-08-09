@@ -363,7 +363,7 @@ export class ApiController {
 
 > This section explains how to associate a specific user to a session and how to use `ctx.user`.
 
-Sessions can be used to authenticate users. To do this, you can use the `Session.setUser` method and the `fetchUser` function.
+Sessions can be used to authenticate users. To do this, you can use the `Session.setUser` method and the `user` option of `@UseSessions`.
 
 ```typescript
 import { Context, createSession, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
@@ -890,18 +890,6 @@ interface SessionState {
   createdAt: number;
 }
 ```
-
-### Create a `fetchUser` function
-
-The function `fetchUser` from the package `@foal/typeorm` takes an `@Entity()` class as parameter and returns a function with this signature:
-
-```typescript
-type FetchUser = (id: string|number, services: ServiceManager) => Promise<Context['user']>
-```
-
-If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `null`.
-
-If needed you can implement your own `fetchUser` function with this exact signature.
 
 ### Usage with Cookies
 

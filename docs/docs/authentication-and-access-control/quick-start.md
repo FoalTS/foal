@@ -374,7 +374,7 @@ import { User } from './entities';
   cookie: true,
   // Add the line below if you prefer ctx.user
   // to be an instance of User instead of the JWT payload.
-  // user: fetchUser(User)
+  // user: (id: number) => User.findOneBy({ id })
 })
 export class ApiController {
   @Get('/products')
@@ -670,7 +670,7 @@ import { User } from '../entities';
 @JWTRequired({
   // Add the line below if you prefer ctx.user
   // to be an instance of User instead of the JWT payload.
-  // user: fetchUser(User)
+  // user: (id: number) => User.findOneBy({ id })
 })
 export class ApiController {
   @Get('/products')

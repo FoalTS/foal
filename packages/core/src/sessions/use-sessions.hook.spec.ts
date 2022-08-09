@@ -29,7 +29,6 @@ import {
   SESSION_DEFAULT_INACTIVITY_TIMEOUT,
   SESSION_USER_COOKIE_NAME
 } from './constants';
-import { FetchUser } from './fetch-user.interface';
 import { readSession } from './read-session';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
@@ -730,11 +729,11 @@ describe('UseSessions', () => {
         let actualServices: ServiceManager;
 
         beforeEach(() => {
-          const fetchUser: FetchUser = async (id, services) => {
+          const findUser = async (id: number, services: ServiceManager) => {
             actualServices = services;
             return id === userId ? user : null
           };
-          hook = getHookFunction(UseSessions({ store: Store, user: fetchUser }));
+          hook = getHookFunction(UseSessions({ store: Store, user: findUser }));
         });
 
         it('should validate the user ID type.', async () => {
@@ -765,9 +764,9 @@ describe('UseSessions', () => {
 
         context('given the function options.user returns null (session invalid)', () => {
 
-          const fetchUser: FetchUser = async id => null;
+          const findUser = async (id: number) => null;
 
-          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: fetchUser })));
+          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: findUser })));
 
           it('with the null value and should destroy the session.', async () => {
             await hook(ctx, services);
@@ -799,7 +798,7 @@ describe('UseSessions', () => {
           context('given options.cookie is true', () => {
 
             beforeEach(() => {
-              hook = getHookFunction(UseSessions({ store: Store, user: fetchUser, cookie: true }));
+              hook = getHookFunction(UseSessions({ store: Store, user: findUser, cookie: true }));
               const token = ctx.request.get('Authorization');
               if (token) {
                 ctx = createContext(
@@ -832,7 +831,7 @@ describe('UseSessions', () => {
                 hook = getHookFunction(UseSessions({
                   cookie: true,
                   store: Store,
-                  user: fetchUser,
+                  user: findUser,
                   userCookie: () => '',
                 }));
               });
@@ -895,7 +894,7 @@ describe('UseSessions', () => {
           context('given options.redirectTo is defined', () => {
 
             beforeEach(() => {
-              hook = getHookFunction(UseSessions({ store: Store, user: fetchUser, redirectTo: '/foo' }));
+              hook = getHookFunction(UseSessions({ store: Store, user: findUser, redirectTo: '/foo' }));
             });
 
             it('with the null value and should return an HttpResponseRedirect object.', async () => {

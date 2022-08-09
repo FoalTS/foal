@@ -3,7 +3,7 @@ import { SESSION_DEFAULT_COOKIE_NAME } from '../constants';
 
 export class RequestValidationError extends Error {}
 
-export function getSessionIdFromRequest(request: Context['request'], location: 'token-in-header'|'token-in-cookie', required: boolean): string|undefined {
+export function getSessionIDFromRequest(request: Context['request'], location: 'token-in-header'|'token-in-cookie', required: boolean): string|undefined {
   let token: string|undefined;
 
   switch (location) {
