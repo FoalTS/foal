@@ -1,4 +1,4 @@
-import { ApiResponse, Context, Hook, HookDecorator, HttpResponseRedirect, HttpResponseUnauthorized } from '../../core';
+import { ApiResponse, Context, Hook, HookDecorator, HttpResponseRedirect, HttpResponseUnauthorized } from '../../../core';
 
 export function UserRequired(options: { redirectTo?: string, openapi?: boolean } = {}): HookDecorator {
   function hook(ctx: Context) {

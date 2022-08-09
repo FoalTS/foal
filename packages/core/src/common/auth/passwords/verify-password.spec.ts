@@ -3,8 +3,8 @@ import { fail, ok, strictEqual } from 'assert';
 import { pbkdf2Sync } from 'crypto';
 
 // FoalTS
-import { hashPassword } from './hash-password.util';
-import { verifyPassword } from './verify-password.util';
+import { hashPassword } from './hash-password';
+import { verifyPassword } from './verify-password';
 
 describe('verifyPassword', () => {
 

@@ -1,4 +1,4 @@
-// 3p
+// std
 import { ValidateFunction } from 'ajv';
 
 // FoalTS
@@ -9,28 +9,28 @@ import {
   Hook,
   HookDecorator,
   HttpResponseBadRequest,
-  IApiCookieParameter,
+  IApiQueryParameter,
   OpenApi,
-  ServiceManager,
+  ServiceManager
 } from '../../core';
-import { getAjvInstance } from '../utils';
-import { isFunction } from './is-function.util';
+import { getAjvInstance } from './get-ajv-instance';
+import { isFunction } from './helpers';
 
 /**
- * Hook - Validate a specific cookie against an AJV schema.
+ * Hook - Validate a specific query parameter against an AJV schema.
  *
  * @export
- * @param {string} name - Cookie name.
+ * @param {string} name - Query parameter name.
  * @param {(object | ((controller: any) => object))} [schema={ type: 'string' }] - Schema used to
- * validate the cookie.
+ * validate the query parameter.
  * @param {{ openapi?: boolean, required?: boolean }} [options={}] - Options.
  * @param {boolean} [options.openapi] - Add OpenApi metadata.
- * @param {boolean} [options.required] - Specify is the cookie is optional.
+ * @param {boolean} [options.required] - Specify is the query is optional.
  * @returns {HookDecorator} The hook.
  */
-export function ValidateCookie(
+export function ValidateQueryParam(
   name: string,
-  schema: object | ((controller: any) => object) = { type: 'string' } ,
+  schema: object | ((controller: any) => object) = { type: 'string' },
   options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
   // tslint:disable-next-line
@@ -53,12 +53,12 @@ export function ValidateCookie(
       });
     }
 
-    if (!validateSchema(ctx.request.cookies)) {
-      return new HttpResponseBadRequest({ cookies: validateSchema.errors });
+    if (!validateSchema(ctx.request.query)) {
+      return new HttpResponseBadRequest({ query: validateSchema.errors });
     }
   }
 
-  const param: IApiCookieParameter = { in: 'cookie', name };
+  const param: IApiQueryParameter = { in: 'query', name };
   if (required) {
     param.required = required;
   }
