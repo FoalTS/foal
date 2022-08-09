@@ -62,8 +62,6 @@ jobs:
       run: cd packages/jwt && npm run test
     - name: Run unit tests of @foal/mongodb
       run: cd packages/mongodb && npm run test
-    - name: Run unit tests of @foal/password
-      run: cd packages/password && npm run test
     - name: Run unit tests of @foal/redis
       run: cd packages/redis && npm run test
     - name: Run unit tests of @foal/social
