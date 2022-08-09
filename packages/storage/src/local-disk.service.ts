@@ -73,7 +73,7 @@ export class LocalDisk extends Disk {
           .on('error', () => {}) as any,
         size
       };
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'ENOENT') {
         throw new FileDoesNotExist(path);
       }
@@ -87,7 +87,7 @@ export class LocalDisk extends Disk {
     try {
       const { size } = await promisify(stat)(this.getPath(path));
       return size;
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'ENOENT') {
         throw new FileDoesNotExist(path);
       }
@@ -100,7 +100,7 @@ export class LocalDisk extends Disk {
   async delete(path: string): Promise<void> {
     try {
       await promisify(unlink)(this.getPath(path));
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === 'ENOENT') {
         throw new FileDoesNotExist(path);
       }

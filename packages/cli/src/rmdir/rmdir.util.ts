@@ -14,7 +14,7 @@ export async function rmdir(path: string): Promise<void> {
   let contents: string[];
   try {
     contents = await promisify(readdir)(path);
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'ENOENT') {
       return;
     }

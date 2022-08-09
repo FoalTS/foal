@@ -211,7 +211,7 @@ describe('getAjvInstance', () => {
 
       try {
         getAjvInstance().validate({}, {});
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigTypeError)) {
           throw new Error('A ConfigTypeError should have been thrown');
         }
@@ -229,7 +229,7 @@ describe('getAjvInstance', () => {
 
       try {
         getAjvInstance().validate({}, {});
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigTypeError)) {
           throw new Error('A ConfigTypeError should have been thrown');
         }
@@ -247,7 +247,7 @@ describe('getAjvInstance', () => {
 
       try {
         getAjvInstance().validate({}, {});
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigTypeError)) {
           throw new Error('A ConfigTypeError should have been thrown');
         }
@@ -265,7 +265,7 @@ describe('getAjvInstance', () => {
 
       try {
         getAjvInstance().validate({}, {});
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof ConfigTypeError)) {
           throw new Error('A ConfigTypeError should have been thrown');
         }

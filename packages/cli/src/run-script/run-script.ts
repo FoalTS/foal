@@ -42,7 +42,7 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
 
   try {
     await main(args);
-  } catch (error) {
+  } catch (error: any) {
     log(error);
   }
 }

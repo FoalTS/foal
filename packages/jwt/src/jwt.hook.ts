@@ -132,7 +132,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     let decoded: null | { header: any, payload: any };
     try {
       decoded = decode(token, { complete: true }) as null | { header: any, payload: any };
-    } catch (error) {
+    } catch (error: any) {
       return new InvalidTokenResponse(error.message);
     }
     if (!decoded) {
@@ -143,7 +143,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     if (options.secretOrPublicKey) {
       try {
         secretOrPublicKey = await options.secretOrPublicKey(decoded.header, decoded.payload);
-      } catch (error) {
+      } catch (error: any) {
         if (isInvalidTokenError(error)) {
           return new InvalidTokenResponse(error.message);
         }
@@ -160,7 +160,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
           if (err) { reject(err); } else { resolve(value); }
         });
       });
-    } catch (error) {
+    } catch (error: any) {
       return new InvalidTokenResponse(error.message);
     }
 

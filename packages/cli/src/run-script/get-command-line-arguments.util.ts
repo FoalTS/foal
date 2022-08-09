@@ -11,7 +11,7 @@ export function getCommandLineArguments(argv: string[]) {
 
     try {
       result[key] = JSON.parse(value);
-    } catch (error) {
+    } catch (error: any) {
       result[key] = value;
     }
   });

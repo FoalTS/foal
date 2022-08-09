@@ -224,7 +224,7 @@ export class ServiceManager {
     let pkg: any;
     try {
       pkg = require(concreteClassPath);
-    } catch (err) {
+    } catch (err: any) {
       // TODO: test this line.
       if (err.code !== 'MODULE_NOT_FOUND') {
         throw err;
