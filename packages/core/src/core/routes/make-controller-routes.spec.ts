@@ -1108,7 +1108,7 @@ describe('makeControllerRoutes', () => {
       try {
         Array.from(makeControllerRoutes(AppController, services));
         done(new Error('The function should have thrown an Error.'));
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(
           error.message,
           '[OpenAPI] Templated paths with the same hierarchy but different '

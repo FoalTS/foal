@@ -24,7 +24,7 @@ export async function main(/*args*/) {
     // user.password = await hashPassword(args.password);
 
     console.log(await user.save());
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message);
   } finally {
     await connection.close();

@@ -11,7 +11,7 @@ import {
   isHttpResponseRedirect,
   isHttpResponseUnauthorized,
   ServiceManager
-} from '../../core';
+} from '../../../core';
 import { UserRequired } from './user-required.hook';
 
 describe('UserRequired', () => {

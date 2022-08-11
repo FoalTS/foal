@@ -41,7 +41,7 @@ export class GoogleProvider extends AbstractProvider<GoogleAuthParams, never> {
       const decodedPayload = Buffer.from(convertBase64urlToBase64(encodedPayload), 'base64')
         .toString('utf8');
       return JSON.parse(decodedPayload);
-    } catch (error) {
+    } catch (error: any) {
       throw new InvalidJWTError(`The ID token returned by Google is not a valid JWT: ${error.message}.`);
     }
   }

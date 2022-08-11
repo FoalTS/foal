@@ -338,7 +338,7 @@ describe('AbstractProvider', () => {
       try {
         await provider.getTokens(ctx);
         throw new Error('getTokens should have thrown an InvalidStateError.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof InvalidStateError)) {
           throw error;
         }
@@ -360,7 +360,7 @@ describe('AbstractProvider', () => {
       try {
         await provider.getTokens(ctx);
         throw new Error('getTokens should have thrown an AuthorizationError.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof AuthorizationError)) {
           throw error;
         }
@@ -497,7 +497,7 @@ describe('AbstractProvider', () => {
       try {
         await provider.getTokens(ctx);
         throw new Error('getTokens should have thrown a TokenError.');
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof TokenError)) {
           throw error;
         }
@@ -804,7 +804,7 @@ describe('Abstract Provider With PKCE', () => {
         try {
           await provider.getTokens(ctx);
           throw new Error('getTokens should have thrown a CodeVerifierNotFound.');
-        } catch (error) {
+        } catch (error: any) {
           if (!(error instanceof CodeVerifierNotFound)) {
             throw error;
           }

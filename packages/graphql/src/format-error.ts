@@ -18,7 +18,7 @@ export function formatError<F extends (...args: any[]) => any>(
   return async (...args) => {
     try {
       return await resolver(...args);
-    } catch (error) {
+    } catch (error: any) {
       throw await formatFunction(error);
     }
   };

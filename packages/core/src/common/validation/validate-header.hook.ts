@@ -11,8 +11,8 @@ import {
   OpenApi,
   ServiceManager
 } from '../../core';
-import { getAjvInstance } from '../utils';
-import { isFunction } from './is-function.util';
+import { getAjvInstance } from './get-ajv-instance';
+import { isFunction } from './helpers';
 
 /**
  * Hook - Validate a specific header against an AJV schema.

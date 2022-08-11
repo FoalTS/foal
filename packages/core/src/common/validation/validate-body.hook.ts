@@ -12,8 +12,8 @@ import {
   OpenApi,
   ServiceManager
 } from '../../core';
-import { getAjvInstance } from '../utils';
-import { isFunction } from './is-function.util';
+import { getAjvInstance } from './get-ajv-instance';
+import { isFunction } from './helpers';
 
 /**
  * Hook factory validating the body of the request against a AJV schema.

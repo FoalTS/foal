@@ -33,7 +33,7 @@ export interface MultipartFormDataSchema {
 async function convertRejectedPromise(fn: () => Promise<void>, errCallback: () => void): Promise<{ error?: any }> {
   try {
     await fn();
-  } catch (error) {
+  } catch (error: any) {
     errCallback();
     return { error };
   }
@@ -65,7 +65,7 @@ export function ValidateMultipartFormDataBody(
             files: fileNumberLimit
           }
         });
-      } catch (error) {
+      } catch (error: any) {
         return resolve(new HttpResponseBadRequest({
           headers: {
             error: 'INVALID_MULTIPART_FORM_DATA_REQUEST',

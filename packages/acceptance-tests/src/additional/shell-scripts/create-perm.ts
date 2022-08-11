@@ -27,7 +27,7 @@ export async function main(args: { codeName: string, name: string }) {
     console.log(
       await getManager().save(permission)
     );
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message);
   } finally {
     await getConnection().close();

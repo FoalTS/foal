@@ -30,7 +30,7 @@ export async function main(/*args*/) {
     console.log(
       await getMongoManager().save(user)
     );
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message);
   } finally {
     await getConnection().close();

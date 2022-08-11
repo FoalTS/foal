@@ -5,7 +5,7 @@ import { join } from 'path';
 
 // FoalTS
 import { Config, HttpResponseOK } from '../../core';
-import { render, renderToString } from './render.util';
+import { render, renderToString } from './render';
 
 const ejsTemplate = 'Hello <%= name %>! How are you?';
 const twigTemplate = '{% for user in users %} {{ user.name }} {% endfor %}';
@@ -72,7 +72,7 @@ describe('render', () => {
     try {
       await render('foobar.html', {}, __dirname);
       throw new Error('An error should have been thrown');
-    } catch (error) {
+    } catch (error: any) {
       strictEqual(
         error.message.startsWith('ENOENT: no such file or directory, open'),
         true
@@ -102,7 +102,7 @@ describe('render', () => {
       try {
         await render('./templates/template.default.html', {}, __dirname);
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(
           error.message,
           'rimraf is not a template engine compatible with FoalTS.'
@@ -136,7 +136,7 @@ describe('render', () => {
       try {
         await render('./templates/template.ejs.html', {}, __dirname);
         throw new Error('An error should have been thrown');
-      } catch (error) {
+      } catch (error: any) {
         strictEqual(error.message.includes('name is not defined'), true);
       }
     });

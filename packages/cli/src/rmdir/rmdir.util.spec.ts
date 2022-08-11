@@ -35,7 +35,7 @@ describe('rmdir', () => {
     try {
       await rmdir('package.json');
       throw new Error('rmdir should have thrown an Error.');
-    } catch (error) {
+    } catch (error: any) {
       strictEqual(error.code, 'ENOTDIR');
     }
   });

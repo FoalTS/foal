@@ -238,7 +238,7 @@ describe('ServiceManager', () => {
         try {
           await serviceManager.boot();
           throw new Error('An error should have been thrown');
-        } catch (error) {
+        } catch (error: any) {
           strictEqual(error.message, 'rejected');
         }
       });
@@ -293,7 +293,7 @@ describe('ServiceManager', () => {
         try {
           await serviceManager.boot('foobar');
           throw new Error('An error should have been thrown');
-        } catch (error) {
+        } catch (error: any) {
           strictEqual(error.message, 'No service was found with the identifier "foobar".');
         }
       });
@@ -333,7 +333,7 @@ describe('ServiceManager', () => {
         try {
           await serviceManager.boot(Foobar);
           throw new Error('An error should have been thrown');
-        } catch (error) {
+        } catch (error: any) {
           strictEqual(error.message, 'rejected');
         }
       });
@@ -422,7 +422,7 @@ describe('ServiceManager', () => {
         try {
           serviceManager.get('foobar');
           throw new Error('An error should have been thrown.');
-        } catch (error) {
+        } catch (error: any) {
           strictEqual(error.message, 'No service was found with the identifier "foobar".');
         }
       });
@@ -699,7 +699,7 @@ describe('ServiceManager', () => {
               try {
                 serviceManager.get(Foobar);
                 throw new Error('An error should have been thrown');
-              } catch (error) {
+              } catch (error: any) {
                 if (!(error instanceof ConfigNotFoundError)) {
                   throw new Error('A ConfigNotFoundError should have been thrown.');
                 }

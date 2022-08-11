@@ -232,7 +232,7 @@ export class Config {
 
     try {
       this.yaml = require('yamljs');
-    } catch (err) {
+    } catch (err: any) {
       if (err.code !== 'MODULE_NOT_FOUND') {
         throw err;
       }

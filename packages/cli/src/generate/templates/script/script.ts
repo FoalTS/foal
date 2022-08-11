@@ -16,7 +16,7 @@ export async function main(args: any) {
   try {
     // Do something.
 
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
   } finally {
     await connection.close();

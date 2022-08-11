@@ -43,7 +43,7 @@ describe('[Shell scripts] create-perm', () => {
 
     try {
       await getRepository(Permission).findOneOrFail(args);
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     } finally {
       await getConnection().close();

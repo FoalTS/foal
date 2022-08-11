@@ -14,9 +14,6 @@ npm install express express-rate-limit
 
 *src/index.ts*
 ```typescript
-// std
-import * as http from 'http';
-
 // 3p
 import { Config, createApp, displayServerURL } from '@foal/core';
 import * as express from 'express';
@@ -46,10 +43,9 @@ async function main() {
   }));
     
   const app = await createApp(AppController, { expressInstance: expressApp });
-    
-  const httpServer = http.createServer(app);
+
   const port = Config.get('port', 'number', 3001);
-  httpServer.listen(port, () => displayServerURL(port));
+  app.listen(port, () => displayServerURL(port));
 }
 
 main()
