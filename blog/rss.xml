@@ -4,10 +4,19 @@
         <title>FoalTS Blog</title>
         <link>https://foalts.org/blog</link>
         <description>FoalTS Blog</description>
-        <lastBuildDate>Mon, 13 Jun 2022 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 11 Aug 2022 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[Version 2.10 release notes]]></title>
+            <link>https://foalts.org/blog/2022/08/11/version-2.10-release-notes</link>
+            <guid>/2022/08/11/version-2.10-release-notes</guid>
+            <pubDate>Thu, 11 Aug 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[Banner]]></description>
+            <content:encoded><![CDATA[<p><img loading="lazy" alt="Banner" src="/assets/images/banner-4c20b5db4c52edad7d643bb82a652723.png" width="914" height="315" class="img_ev3q"></p><p>Version 2.10 of <a href="https://foalts.org/" target="_blank" rel="noopener noreferrer">Foal</a> is out! This small release brings some tiny improvements.</p><h2 class="anchor anchorWithHideOnScrollNavbar_WYt5" id="foalcli-package-included-by-default-as-dev-dependency"><code>@foal/cli</code> package included by default as dev dependency<a class="hash-link" href="#foalcli-package-included-by-default-as-dev-dependency" title="Direct link to heading">​</a></h2><p>Issue: <a href="https://github.com/FoalTS/foal/issues/1097" target="_blank" rel="noopener noreferrer">#1097</a></p><p>The <code>@foal/cli</code> package is now installed by default as dev dependency. In this way, all commands of <code>package.json</code> still work when deploying the application to a Cloud provider that does not have the CLI installed globally.</p><h2 class="anchor anchorWithHideOnScrollNavbar_WYt5" id="preventing-the-npm-run-develop-command-to-get-stuck-on-some-os">Preventing the <code>npm run develop</code> command to get stuck on some OS<a class="hash-link" href="#preventing-the-npm-run-develop-command-to-get-stuck-on-some-os" title="Direct link to heading">​</a></h2><p>Issues: <a href="https://github.com/FoalTS/foal/issues/1022" target="_blank" rel="noopener noreferrer">#1022</a>, <a href="https://github.com/FoalTS/foal/issues/1115" target="_blank" rel="noopener noreferrer">#1115</a></p><p>The <code>npm run develop</code> was getting stuck on some OS based on the configuration of the app. This issue is now fixed in new projects. For current applications, you will need to add a <code>-r</code> flag to the <code>package.json</code> commands using <code>concurrently</code>.</p><h2 class="anchor anchorWithHideOnScrollNavbar_WYt5" id="smaller-main-function">Smaller <code>main</code> function<a class="hash-link" href="#smaller-main-function" title="Direct link to heading">​</a></h2><p>The <code>main</code> function that bootstraps the application is now smaller in new projects.</p>]]></content:encoded>
+            <category>release</category>
+        </item>
         <item>
             <title><![CDATA[FoalTS 2022 survey is open!]]></title>
             <link>https://foalts.org/blog/2022/06/13/FoalTS-2022-survey-is-open</link>
