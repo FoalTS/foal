@@ -804,7 +804,7 @@ describe('Abstract Provider With PKCE', () => {
         try {
           await provider.getTokens(ctx);
           throw new Error('getTokens should have thrown a CodeVerifierNotFound.');
-        } catch (error) {
+        } catch (error: any) {
           if (!(error instanceof CodeVerifierNotFound)) {
             throw error;
           }
