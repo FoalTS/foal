@@ -2,11 +2,9 @@
 title: Nuxt.js
 ---
 
-
-
 [Nuxt.js](https://nuxtjs.org/) is a frontend framework based on [Vue.JS](http://vuejs.org).
 
-This document explains how to use it in conjunction with FoalTS. A sample source code can be found on [Github](https://github.com/FoalTS/foal/tree/master/samples/nuxt.js).
+This document explains how to use it in conjunction with FoalTS.
 
 ## Installation
 
@@ -17,36 +15,36 @@ foal createapp backend
 npx create-nuxt-app frontend
 ```
 
-When the CLI asks which server framework to choose, select *None*.
-
 ## Set Up
 
-1. Go to your server directory and install `nuxt`.
+1. Open the file `nuxt.config.js` in the `frontend/` directory, move it to your `backend/` directory and update its first lines as follows:
+
+    ```typescript
+    module.exports = {
+      srcDir: '../frontend',
+      // ...
+    }
+    ```
+
+2. Go to your server directory and install `nuxt`.
     
     ```
     npm install nuxt
     ```
 
-2. Then update your `src/index.ts` file as follows:
+3. Then update your `src/index.ts` file as follows:
 
     ```typescript
-    import { Builder, Nuxt } from 'nuxt';
+    import { loadNuxt, build } from 'nuxt';
     // ...
 
-    // Import and Set Nuxt.js options
-    const config = require('../../frontend/nuxt.config.js');
-    config.dev = Config.get('settings.debug', 'boolean', true);
-
     async function main() {
-      // Init Nuxt.js
-      const nuxt = new Nuxt(config);
+      const isDev = process.env.NODE_ENV !== 'production';
+      // We get Nuxt instance
+      const nuxt = await loadNuxt(isDev ? 'dev' : 'start');
 
-      // Build only in dev mode
-      if (config.dev) {
-        const builder = new Builder(nuxt);
-        await builder.build();
-      } else {
-        await nuxt.ready();
+      if (isDev) {
+        build(nuxt)
       }
     
       // ...
@@ -64,14 +62,4 @@ When the CLI asks which server framework to choose, select *None*.
 
     ```
     
-3. Delete the file `index.html` in `backend/public`.
-
-4. Open the file `nuxt.config.js` in the `frontend/` directory and update its first lines as follows:
-
-    ```typescript
-    module.exports = {
-      srcDir: '../frontend',
-      // ...
-    }
-    ```
-
+4. Finally, delete the file `index.html` in `backend/public`.

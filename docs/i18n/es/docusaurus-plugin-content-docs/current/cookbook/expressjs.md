@@ -2,7 +2,6 @@
 title: ExpressJS
 ---
 
-
 FoalTS applications are created with the `createApp` function in the `src/index.ts` file. This function takes the root controller class (known as `AppController`) as parameter.
 
 ```typescript
@@ -54,7 +53,33 @@ Pre-middlewares are executed before Foal's controllers and hooks and before the 
 
 ## Migrating from Express to FoalTS
 
-In case your are migrating your ExpressJS application to FoalTS, you can access FoalTS service manager using `app.foal.services`.
+### Integrating Foal with an existing Express application
+
+In your `tsconfig.json`, set the following two options to `true`.
+
+```json
+{
+  "compilerOptions": {
+    // ...
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+  }
+}
+```
+
+Then, in your existing code, create the FoalTS application and use it as if it were a simple Express router.
+
+```typescript
+const app = await createApp(AppController);
+
+const expressApp = express();
+expressApp.use('/api', app);
+expressApp.listen(3000, () => console.log('Listening on port 3000...'));
+```
+
+### Calling services from outside the Foal application
+
+In case your are migrating your ExpressJS application to FoalTS, you can also access FoalTS service manager using `app.foal.services`.
 
 ```typescript
 import { createApp } from '@foal/core';

@@ -370,7 +370,7 @@ async function maskAndLogError(err: any): Promise<any> {
 
   try {
     await reportErrorTo3rdPartyService(err);
-  } catch (error) {}
+  } catch (error: any) {}
 
   if (err instanceof MyCustomError) {
     return err;

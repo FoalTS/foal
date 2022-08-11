@@ -71,7 +71,7 @@ export async function main(args: { codeName: string, name: string }) {
     console.log(
       await permission.save()
     );
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message);
   } finally {
     await getConnection().close();
@@ -165,7 +165,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
     console.log(
       await group.save()
     );
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message);
   } finally {
     await connection.close();
@@ -270,7 +270,7 @@ export async function main(args) {
     console.log(
       await getManager().save(user)
     );
-  } catch (error) {
+  } catch (error: any) {
     console.log(error.message);
   } finally {
     await getConnection().close();
