@@ -1,5 +1,5 @@
 import {
-  ApiInfo, ApiServer, Context, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Post, render
+  ApiInfo, ApiServer, Context, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Post, render, UserRequired
 } from '@foal/core';
 import { Disk, ParseAndValidateFiles } from '@foal/storage';
 
@@ -18,6 +18,7 @@ export class ProfileController {
 
   @Post('/image')
   @Hook(async ctx => { ctx.user = await User.findOneBy({ email: 'john@foalts.org' }); })
+  @UserRequired()
   @ParseAndValidateFiles({
     profile: { required: true, saveTo: 'images/profiles' }
   })
@@ -39,6 +40,7 @@ export class ProfileController {
 
   @Get('/image')
   @Hook(async ctx => { ctx.user = await User.findOneBy({ email: 'john@foalts.org' }); })
+  @UserRequired()
   async downloadProfilePicture(ctx: Context<User>) {
     const { profile } = ctx.user;
 
