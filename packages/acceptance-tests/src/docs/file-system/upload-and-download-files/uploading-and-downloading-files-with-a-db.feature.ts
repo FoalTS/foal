@@ -5,14 +5,16 @@ import { mkdirSync, readdirSync, unlinkSync, rmdirSync, readFileSync } from 'fs'
 
 // 3p
 import * as request from 'supertest';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, getConnection } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, Post, render, Config, createApp, Hook } from '@foal/core';
 import { Disk, ParseAndValidateFiles } from '@foal/storage';
-import { createTestConnection } from '../../../common';
+import { createAndInitializeDataSource } from '../../../common';
 
 describe('Feature: Uploading and downloading files with a database.', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.disk.driver', 'local');
@@ -27,6 +29,10 @@ describe('Feature: Uploading and downloading files with a database.', () => {
     Config.remove('settings.disk.driver');
     Config.remove('settings.disk.local.directory');
 
+    if (dataSource) {
+      await dataSource.destroy();
+    }
+
     const contents = readdirSync('uploaded/images/profiles');
     for (const content of contents) {
       unlinkSync(join('uploaded/images/profiles', content));
@@ -34,9 +40,7 @@ describe('Feature: Uploading and downloading files with a database.', () => {
     rmdirSync('uploaded/images/profiles');
     rmdirSync('uploaded/images');
     rmdirSync('uploaded');
-
-    await getConnection().close();
-  })
+  });
 
   it('Example: A simple example.', async () => {
 
@@ -56,7 +60,7 @@ describe('Feature: Uploading and downloading files with a database.', () => {
     }
 
     @Hook(async (ctx: Context<User>) => {
-      ctx.user = await User.findOneOrFail(user.id);
+      ctx.user = await User.findOneByOrFail({ id: user.id });
     })
     class AppController {
 
@@ -99,7 +103,7 @@ describe('Feature: Uploading and downloading files with a database.', () => {
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    await createTestConnection([ User ]);
+    dataSource = await createAndInitializeDataSource([ User ]);
 
     user = new User();
     await user.save();
