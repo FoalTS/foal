@@ -50,7 +50,7 @@ Abra el nuevo archivo y añada dos nuevas rutas.
 
 ```typescript
 import { Context, dependency, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
-import { File, Disk, ParseAndValidateFiles } from '@foal/storage';
+import { File, Disk, ValidateMultipartFormDataBody } from '@foal/storage';
 import { User } from '../../entities';
 
 export class ProfileController {
@@ -76,7 +76,7 @@ export class ProfileController {
 
   @Post()
   @UserRequired()
-  @ParseAndValidateFiles({
+  @ValidateMultipartFormDataBody({
     files: {
       avatar: { required: false, saveTo: 'images/profiles/uploaded' }
     },

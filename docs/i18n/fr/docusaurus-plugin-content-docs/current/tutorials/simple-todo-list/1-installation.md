@@ -8,7 +8,7 @@ Dans ce tutoriel, vous apprendrez comment créer une application web de base ave
 
 > **Configuration requise:**
 >
-> [Node.js](https://nodejs.org/en/) 14 ou supérieur
+> [Node.js](https://nodejs.org/en/) 10 ou supérieur
 
 ## Créer un Nouveau Projet
 
