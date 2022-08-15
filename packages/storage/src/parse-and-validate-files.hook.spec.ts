@@ -122,38 +122,7 @@ describe('ParseAndValidateFiles', () => {
 
   describe('when the fields are not validated against the given schema', () => {
 
-    it('should return an HttpResponseBadRequest (invalid values).', async () => {
-      const app = await createAppWithHook({
-        fields: {
-          type: 'object',
-          properties: {
-            name: { type: 'boolean' }
-          },
-          required: ['name'],
-        },
-        files: {}
-      }, { body: null });
-
-      await request(app)
-        .post('/')
-        .field('name', 'hello')
-        .expect(400)
-        .expect({
-          body: [
-            {
-              instancePath: '/name',
-              keyword: 'type',
-              message: 'must be boolean',
-              params: {
-                type: 'boolean'
-              },
-              schemaPath: '#/properties/name/type',
-            }
-          ]
-        });
-    });
-
-    it('should return an HttpResponseBadRequest (missing values).', async () => {
+    it('should return an HttpResponseBadRequest.', async () => {
       const app = await createAppWithHook({
         fields: {
           type: 'object',
