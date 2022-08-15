@@ -108,7 +108,7 @@ export function ParseAndValidateFiles(
     await promisify(finished)(busboy);
 
     async function deleteUploadedFiles() {
-      await Promise.all(ctx.files.getAll().map(({ path }) => path && disk.delete(path)));
+      await Promise.allSettled(ctx.files.getAll().map(({ path }) => path && disk.delete(path)));
     }
 
     // Wait for all saves to finish.
