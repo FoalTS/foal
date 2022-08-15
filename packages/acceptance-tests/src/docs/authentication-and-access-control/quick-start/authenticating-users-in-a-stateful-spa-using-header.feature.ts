@@ -25,7 +25,7 @@ import {
   ValidateBody,
   verifyPassword
 } from '@foal/core';
-import { DatabaseSession, fetchUser } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Authenticating users in a stateful SPA using the `Authorization` header', () => {
@@ -113,7 +113,7 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
   // The `request` option returns a pretty message if the Authorization header is not here.
   @UseSessions({
     required: true,
-    user: fetchUser(User)
+    user: (id: number) => User.findOneBy({ id }),
   })
   @UserRequired()
   class ApiController {
