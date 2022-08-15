@@ -122,28 +122,14 @@ describe('ParseAndValidateFiles', () => {
 
   describe('when the fields are not validated against the given schema', () => {
 
-    beforeEach(() => {
-      Config.set('settings.disk.local.directory', 'uploaded');
-
-      mkdirSync('uploaded');
-      mkdirSync('uploaded/images');
-    });
-
-    afterEach(() => {
-      Config.remove('settings.disk.local.directory');
-
-      const contents = readdirSync('uploaded/images');
-      for (const content of contents) {
-        unlinkSync(join('uploaded/images', content));
-      }
-      rmdirSync('uploaded/images');
-      rmdirSync('uploaded');
-    });
-
     it('should return an HttpResponseBadRequest (invalid values).', async () => {
       const app = await createAppWithHook({
         fields: {
-          name: { type: 'boolean' }
+          type: 'object',
+          properties: {
+            name: { type: 'boolean' }
+          },
+          required: ['name'],
         },
         files: {}
       }, { body: null });
