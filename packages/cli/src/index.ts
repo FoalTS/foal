@@ -22,7 +22,6 @@ import {
   createRestApi,
   createScript,
   createService,
-  createVSCodeConfig,
 } from './generate';
 import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
@@ -106,15 +105,15 @@ Available frameworks:
     }
   });
 
-type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'script'|'service'|'vscode-config';
+type GenerateType = 'controller'|'entity'|'rest-api'|'hook'|'script'|'service';
 const generateTypes: GenerateType[] = [
-  'controller', 'entity', 'rest-api', 'hook', 'script', 'service', 'vscode-config'
+  'controller', 'entity', 'rest-api', 'hook', 'script', 'service'
 ];
 
 program
   .command('generate')
   .argument('<type>', 'Type of the file to generate')
-  .argument('[name]', 'Name of the file to generate')
+  .argument('<name>', 'Name of the file to generate')
   .description('Generate and/or modify files.')
   .option(
     '-r, --register',
@@ -132,10 +131,6 @@ Available types:
 ${generateTypes.map(t => `  - ${t}`).join('\n')}
   `)
   .action(async (type: GenerateType, name: string, options: { register: boolean, auth: boolean }) => {
-    if (!name && type !== 'vscode-config') {
-      displayError(`Argument "name" is required when creating a ${type}. Please provide one.`);
-      return;
-    }
     try {
       switch (type) {
         case 'controller':
@@ -155,9 +150,6 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
           break;
         case 'service':
           createService({ name });
-          break;
-        case 'vscode-config':
-          createVSCodeConfig();
           break;
         default:
           displayError(

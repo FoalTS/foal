@@ -105,7 +105,7 @@ describe('Feature: Authenticating users in a stateless SPA using the `Authorizat
   @JWTRequired({
     // Add the line below if you prefer ctx.user
     // to be an instance of User instead of the JWT payload.
-    // user: fetchUser(User)
+    // user: (id: number) => User.findOneBy({ id })
   })
   class ApiController {
     @Get('/products')

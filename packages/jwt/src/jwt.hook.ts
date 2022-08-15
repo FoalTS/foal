@@ -6,7 +6,6 @@ import {
   ApiSecurityRequirement,
   Config,
   Context,
-  FetchUser,
   Hook,
   HookDecorator,
   HttpResponseBadRequest,
@@ -20,6 +19,7 @@ import { decode, verify } from 'jsonwebtoken';
 // FoalTS
 import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
 import { getSecretOrPublicKey } from './get-secret-or-public-key.util';
+import { checkAndConvertUserIdType } from './http/check-and-convert-user-id-type';
 import { getJwtFromRequest, RequestValidationError } from './http/get-jwt-from-request';
 import { isInvalidTokenError } from './invalid-token.error';
 
@@ -49,8 +49,7 @@ class InvalidRequestResponse extends HttpResponseBadRequest {
  * @export
  * @interface JWTOptions
  */
-export interface JWTOptions {
-  user?: FetchUser;
+export type JWTOptions = {
   secretOrPublicKey?: (header: any, payload: any) => Promise<string>;
   blackList?: (token: string) => boolean|Promise<boolean>;
   cookie?: boolean;
@@ -62,7 +61,16 @@ export interface JWTOptions {
    * @memberof JWTOptions
    */
   openapi?: boolean;
-}
+} & (
+  {
+    userIdType: 'string';
+    user?: (id: string, services: ServiceManager) => Promise<Context['user']>;
+  } |
+  {
+    userIdType?: 'number';
+    user?: (id: number, services: ServiceManager) => Promise<Context['user']>;
+  }
+);
 
 export interface VerifyOptions {
   algorithms?: string[];
@@ -196,7 +204,8 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
       return new InvalidTokenResponse('The token must include a subject which is the id of the user.');
     }
 
-    const user = await options.user(payload.sub, services);
+    const userId = checkAndConvertUserIdType(payload.sub, options.userIdType);
+    const user = await options.user(userId as never, services);
     if (!user) {
       return new InvalidTokenResponse('The token subject does not match any user.');
     }

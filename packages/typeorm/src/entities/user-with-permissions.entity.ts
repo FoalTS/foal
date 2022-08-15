@@ -51,7 +51,7 @@ export abstract class UserWithPermissions extends BaseEntity implements IUserWit
       .getMany();
   }
 
-  static async findOneWithPermissionsBy<T extends UserWithPermissions>(this: (new () => T) & typeof BaseEntity, { id }: { id: number }): Promise<T|null> {
+  static async findOneWithPermissionsBy<T extends UserWithPermissions>(this: (new () => T) & typeof UserWithPermissions, { id }: { id: number }): Promise<T|null> {
     return (await this
       .getRepository<UserWithPermissions>()
       .findOne(

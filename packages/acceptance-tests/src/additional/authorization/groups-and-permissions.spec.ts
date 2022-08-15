@@ -14,7 +14,6 @@ import {
 } from '@foal/core';
 import {
   DatabaseSession,
-  fetchUserWithPermissions,
   Group,
   Permission,
   TypeORMStore,
@@ -32,7 +31,11 @@ describe('[Authorization|permissions] Users', () => {
   @Entity()
   class User extends UserWithPermissions {}
 
-  @UseSessions({ user: fetchUserWithPermissions(User), store: TypeORMStore, required: true })
+  @UseSessions({
+    user: (id: number) => User.findOneWithPermissionsBy({ id }),
+    store: TypeORMStore,
+    required: true
+  })
   class AppController {
     @Get('/bar')
     @PermissionRequired('access-bar')

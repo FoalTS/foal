@@ -22,7 +22,7 @@ import {
   UserRequired,
   UseSessions
 } from '@foal/core';
-import { DatabaseSession, fetchUser } from '@foal/typeorm';
+import { DatabaseSession } from '@foal/typeorm';
 import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Adding authentication and access control', () => {
@@ -54,9 +54,9 @@ describe('Feature: Adding authentication and access control', () => {
 
     @UseSessions({
       // If the session is attached to a user,
-      // then use "fetchUser" to retrieve the user from the database
+      // then retrieve the user from the database
       // and assign it to ctx.user
-      user: fetchUser(User)
+      user: (id: number) => User.findOneBy({ id }),
     })
     class ApiController {
 
@@ -148,7 +148,7 @@ describe('Feature: Adding authentication and access control', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     @UseSessions({
-      user: fetchUser(User)
+      user: (id: number) => User.findOneBy({ id }),
     })
     class ApiController {
 
@@ -207,7 +207,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     @UseSessions({
       redirectTo: '/login',
-      user: fetchUser(User)
+      user: (id: number) => User.findOneBy({ id }),
     })
     class ApiController {
 
@@ -296,7 +296,7 @@ describe('Feature: Adding authentication and access control', () => {
 
     @UseSessions({
       cookie: true,
-      user: fetchUser(User),
+      user: (id: number) => User.findOneBy({ id }),
       userCookie: (ctx, services) => userToJSON(ctx.user as User|null)
     })
     class ApiController {

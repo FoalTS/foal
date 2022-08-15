@@ -14,7 +14,6 @@ Open the file `api.controller.ts` and add the `@UseSessions` hook at the top of 
 
 ```typescript
 import { ApiInfo, ApiServer, controller, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
 import { User } from '../entities';
 import { StoriesController } from './api';
 
@@ -27,7 +26,7 @@ import { StoriesController } from './api';
 })
 @UseSessions({
   cookie: true,
-  user: fetchUser(User),
+  user: (id: number) => User.findOneBy({ id }),
 })
 export class ApiController {
 

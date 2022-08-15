@@ -390,7 +390,6 @@ async function maskAndLogError(err: any): Promise<any> {
 ```typescript
 import { GraphQLController } from '@foal/graphql';
 import { JWTRequired } from '@foal/jwt';
-import { fetchUser } from '@foal/typeorm';
 import { buildSchema } from 'graphql';
 
 import { User } from '../entities';
@@ -410,7 +409,7 @@ const root = {
   },
 };
 
-@JWTRequired({ user: fetchUser(User) })
+@JWTRequired({ user: (id: number) => User.findOneBy({ id }) })
 export class ApiController extends GraphQLController {
   schema = schema;
   resolvers = root;

@@ -130,8 +130,6 @@ export async function main(args) {
 
 ```
 
-> To get it work, you will also need to install the `password` package: `npm install --save @foal/password`. The `isCommon` util helps you to detect if a password is too common (ex: 12345) and thus prevents the script from creating a new user with an unsecured password.
-
 You can now create a new user with these commands:
 
 ```sh

@@ -226,5 +226,4 @@ export {
   UseSessions,
   createSession,
   readSession,
-  FetchUser,
 } from './sessions';

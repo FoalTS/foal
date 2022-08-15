@@ -363,19 +363,18 @@ export class ApiController {
 
 > This section explains how to associate a specific user to a session and how to use `ctx.user`.
 
-Sessions can be used to authenticate users. To do this, you can use the `Session.setUser` method and the `fetchUser` function.
+Sessions can be used to authenticate users. To do this, you can use the `Session.setUser` method and the `user` option of `@UseSessions`.
 
 ```typescript
 import { Context, createSession, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
 
 import { User } from '../entities';
 
 @UseSessions({
   // If the session is attached to a user,
-  // then use "fetchUser" to retrieve the user from the database
+  // then retrieve the user from the database
   // and assign it to ctx.user
-  user: fetchUser(User)
+  user: (id: number) => User.findOneBy({ id }),
 })
 export class ApiController {
 
@@ -411,12 +410,11 @@ If you want to restrict certain routes to authenticated users, you can use the `
 
 ```typescript
 import { Context, Get, HttpResponseOK, UserRequired, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
 
 import { User } from '../entities';
 
 @UseSessions({
-  user: fetchUser(User)
+  user: (id: number) => User.findOneBy({ id }),
 })
 export class ApiController {
 
@@ -434,13 +432,12 @@ If the user is not authenticated, the hook returns a 401 error. If you want to r
 
 ```typescript
 import { Context, Get, HttpResponseOK, UserRequired, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
 
 import { User } from '../entities';
 
 @UseSessions({
   redirectTo: '/login',
-  user: fetchUser(User)
+  user: (id: number) => User.findOneBy({ id }),
 })
 export class ApiController {
 
@@ -504,7 +501,7 @@ function userToJSON(user: User|null) {
 
 @UseSessions({
   cookie: true,
-  user: fetchUser(User),
+  user: (id: number) => User.findOneBy({ id }),
   userCookie: (ctx, services) => userToJSON(ctx.user as User|null)
 })
 export class ApiController {
@@ -893,18 +890,6 @@ interface SessionState {
   createdAt: number;
 }
 ```
-
-### Create a `fetchUser` function
-
-The function `fetchUser` from the package `@foal/typeorm` takes an `@Entity()` class as parameter and returns a function with this signature:
-
-```typescript
-type FetchUser = (id: string|number, services: ServiceManager) => Promise<Context['user']>
-```
-
-If the ID matches a user, then an instance of the class is returned. Otherwise, the function returns `null`.
-
-If needed you can implement your own `fetchUser` function with this exact signature.
 
 ### Usage with Cookies
 
