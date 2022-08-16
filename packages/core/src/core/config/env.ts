@@ -24,11 +24,11 @@ export class Env {
       this.loadEnv(`.env.${this.getEnvironmentName()}.local`);
     }
 
-    if (this.dotEnv[key] !== undefined) {
-      return this.dotEnv[key];
+    if (process.env[key] !== undefined) {
+      return process.env[key];
     }
 
-    return process.env[key];
+    return this.dotEnv[key];
   }
 
   private static dotEnv: { [key: string]: any }|null = null;
