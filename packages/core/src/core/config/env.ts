@@ -19,7 +19,7 @@ export class Env {
     if (process.env[key] !== undefined) {
       return process.env[key];
     }
-    
+
     if (this.dotEnv === null) {
       this.dotEnv = {};
       this.loadEnv('.env');
