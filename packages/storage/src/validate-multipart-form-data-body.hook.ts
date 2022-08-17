@@ -80,7 +80,7 @@ export function ValidateMultipartFormDataBody(
 
       busboy.on('field', (name: string, value: string) => fields[name] = value);
       // tslint:disable-next-line: max-line-length
-      busboy.on('file', (name: string, stream: NodeJS.ReadableStream, filename: string, encoding: string, mimeType: string) => {
+      busboy.on('file', (name: string, stream: NodeJS.ReadableStream, filename: string|undefined, encoding: string, mimeType: string) => {
         latestFileHasBeenUploaded = convertRejectedPromise(async () => {
           stream.on('limit', () => sizeLimitReached = name);
 
@@ -94,7 +94,7 @@ export function ValidateMultipartFormDataBody(
           }
           const options = schema.files[name];
 
-          const extension = extname(filename).replace('.', '');
+          const extension = extname(filename || '').replace('.', '');
 
           let path: string | undefined;
           let buffer: Buffer | undefined;
