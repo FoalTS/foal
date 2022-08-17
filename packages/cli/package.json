@@ -1,6 +1,6 @@
 {
   "name": "@foal/cli",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

@@ -211,7 +211,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   if (!autoInstall) {
     logCommand('npm install');
   }
-  logCommand('npm run develop');
+  logCommand('npm run dev');
 
   log();
 }

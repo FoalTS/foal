@@ -68,7 +68,7 @@ Let's verify that the FoalTS project works. Run the following commands:
 
 ```
 cd my-app
-npm run develop
+npm run dev
 ```
 
 You've started the development server.

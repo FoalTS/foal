@@ -43,7 +43,7 @@ describe('runScript', () => {
     strictEqual(
       msg,
       'The script "my-script" does not exist in build/scripts/. But it exists in src/scripts/.'
-        + ' Please build your script by running the command "npm run build" or using "npm run develop".'
+        + ' Please build your script by running the command "npm run build" or using "npm run dev".'
     );
   });
 

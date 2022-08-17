@@ -61,7 +61,7 @@ If you return to [http://localhost:3001/login](http://localhost:3001/login) and 
 
 ## Building the Foal app
 
-Now, if you want to build the backend application so that you don't use the `npm run develop` option, you can run this command:
+Now, if you want to build the backend application so that you don't use the `npm run dev` option, you can run this command:
 
 ```bash
 npm run build

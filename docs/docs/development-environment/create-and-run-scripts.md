@@ -61,4 +61,4 @@ foal run my-script # or foal run-script my-script
 
 > You can also provide additionnal arguments to your script (for example: `foal run my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.
 
-> If you want your script to recompile each time you save the file, you can run `npm run develop` in a separate terminal.
+> If you want your script to recompile each time you save the file, you can run `npm run dev` in a separate terminal.
