@@ -43,7 +43,7 @@ Great attention is paid to the stability of the product. You can find out more b
 > npm install -g @foal/cli
 > foal createapp my-app
 > cd my-app
-> npm run develop
+> npm run dev
 ```
 
 The development server is started! Go to `http://localhost:3001` and find our welcoming page!
