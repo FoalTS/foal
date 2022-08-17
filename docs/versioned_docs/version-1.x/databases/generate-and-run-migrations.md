@@ -2,6 +2,10 @@
 title: Generate & Run Migrations
 ---
 
+<head>
+  <meta name="robots" content="noindex" />
+</head>
+
 Database migrations are a way of propagating changes you make to your entities into your database schema. The changes you make to your models (adding a field, deleting an entity, etc.) do not automatically modify your database. You have to do it yourself.
 
 You have two options: update the database schema manually (using database software, for example) or run migrations.
