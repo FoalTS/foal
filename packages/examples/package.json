@@ -8,7 +8,7 @@
     "build:w": "tsc -w",
     "start": "node ./build/index.js",
     "start:w": "supervisor -w ./build --no-restart-on error ./build/index.js",
-    "develop": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
+    "dev": "npm run build && concurrently \"npm run build:w\" \"npm run start:w\"",
     "build:test": "tsc && copy-cli \"src/**/*.html\" build",
     "build:test:w": "tsc -w",
     "start:test": "mocha \"./build/**/*.spec.js\"",

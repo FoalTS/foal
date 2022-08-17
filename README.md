@@ -74,7 +74,7 @@ First install [Node.Js and npm](https://nodejs.org/en/download/).
 $ npm install -g @foal/cli
 $ foal createapp my-app
 $ cd my-app
-$ npm run develop
+$ npm run dev
 ```
 
 The development server is started! Go to `http://localhost:3001` and find our welcoming page!
