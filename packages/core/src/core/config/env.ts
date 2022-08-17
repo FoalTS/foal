@@ -16,16 +16,16 @@ export class Env {
   }
 
   static get(key: string): string|undefined {
+    if (process.env[key] !== undefined) {
+      return process.env[key];
+    }
+    
     if (this.dotEnv === null) {
       this.dotEnv = {};
       this.loadEnv('.env');
       this.loadEnv('.env.local');
       this.loadEnv(`.env.${this.getEnvironmentName()}`);
       this.loadEnv(`.env.${this.getEnvironmentName()}.local`);
-    }
-
-    if (process.env[key] !== undefined) {
-      return process.env[key];
     }
 
     return this.dotEnv[key];
