@@ -335,6 +335,26 @@ describe('ValidateMultipartFormDataBody', () => {
     deepStrictEqual(actual.body.files.foobar, undefined);
   });
 
+  describe('when a file is uploaded but with no filename', () => {
+
+    it('should not throw an error.', async () => {
+      const actual: { body: any } = { body: null };
+      const app = await createAppWithHook({
+        files: {
+          foobar: { required: false }
+        }
+      }, actual);
+
+      const buffer = readFileSync('src/image.test.png');
+
+      await request(app)
+        .post('/')
+        .attach('foobar', buffer)
+        .expect(200);
+    });
+
+  });
+
   describe('when a file is not uploaded and it is not required', () => {
 
     it('should set ctx.request.body.files with a "null" value if the option "multiple" is not defined.', async () => {

@@ -135,6 +135,10 @@ module.exports = {
         'deployment-and-environments/checklist',
       ])
     ]),
+    expandedCategory('Comparison with Other Frameworks', [
+      'comparison-with-other-frameworks/express-fastify',
+      // 'comparison-with-other-frameworks/nest',
+    ]),
     expandedCategory('Upgrading', [
       'upgrade-to-v3/README',
       link('To v2', 'https://foalts.org/docs/2.x/upgrade-to-v2/'),
