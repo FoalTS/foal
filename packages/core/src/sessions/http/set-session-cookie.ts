@@ -8,7 +8,7 @@ import {
   SESSION_DEFAULT_SAME_SITE_ON_CSRF_ENABLED,
   SESSION_USER_COOKIE_NAME,
 } from '../constants';
-import { Session } from '../session';
+import { Session } from '../core/session';
 
 /**
  * Sends the session token in a cookie.

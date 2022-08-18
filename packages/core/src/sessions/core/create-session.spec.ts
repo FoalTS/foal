@@ -4,7 +4,7 @@ import { notStrictEqual, ok, strictEqual } from 'assert';
 // FoalTS
 import { createService } from '../../core';
 import { createSession } from './create-session';
-import { Session } from '../session';
+import { Session } from './session';
 import { SessionState } from '../session-state.interface';
 import { SessionStore } from '../session-store';
 

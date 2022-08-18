@@ -1,5 +1,5 @@
 import { generateToken } from '../../common';
-import { Session } from '../session';
+import { Session } from './session';
 import { SessionState } from '../session-state.interface';
 import { SessionStore } from '../session-store';
 
