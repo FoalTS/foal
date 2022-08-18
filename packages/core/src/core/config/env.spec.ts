@@ -77,7 +77,7 @@ describe('Env', () => {
         strictEqual(Env.get('FOO_BAR'), 'hello');
       });
 
-      context('and a variable exists in a .env file with the given name ', () => {
+      context('and a variable exists in a .env file with the given name', () => {
 
         beforeEach(() => process.env.HELLO = 'there');
 
@@ -86,7 +86,7 @@ describe('Env', () => {
           removeFile('.env');
         });
 
-        it ('the environment variable should be returned.', () => {
+        it('should return the value of the environment variable.', () => {
           writeFileSync('.env', dotEnvContent);
 
           strictEqual(Env.get('HELLO'), 'there');
