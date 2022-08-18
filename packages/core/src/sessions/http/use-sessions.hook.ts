@@ -16,15 +16,15 @@ import {
   IApiSecurityScheme,
   isHttpResponseInternalServerError,
   ServiceManager
-} from '../core';
-import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
-import { createSession } from './core/create-session';
-import { checkUserIdType } from './http/check-user-id-type';
-import { getSessionIDFromRequest, RequestValidationError } from './http/get-session-id-from-request';
-import { readSession } from './core/read-session';
-import { removeSessionCookie } from './http/remove-session-cookie';
-import { SessionStore } from './core/session-store';
-import { setSessionCookie } from './http/set-session-cookie';
+} from '../../core';
+import { SESSION_DEFAULT_COOKIE_NAME } from '../constants';
+import { createSession } from '../core/create-session';
+import { checkUserIdType } from './check-user-id-type';
+import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';
+import { readSession } from '../core/read-session';
+import { removeSessionCookie } from './remove-session-cookie';
+import { SessionStore } from '../core/session-store';
+import { setSessionCookie } from './set-session-cookie';
 
 export type UseSessionOptions = {
   store?: Class<SessionStore>;
