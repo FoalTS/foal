@@ -1,5 +1,5 @@
 // FoalTS
-import { Config, CookieOptions, HttpResponse } from '../core';
+import { Config, CookieOptions, HttpResponse } from '../../core';
 import {
   SESSION_DEFAULT_COOKIE_HTTP_ONLY,
   SESSION_DEFAULT_COOKIE_NAME,

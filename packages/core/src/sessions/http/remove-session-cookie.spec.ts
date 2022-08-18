@@ -1,5 +1,8 @@
+// std
 import { strictEqual } from 'assert';
-import { Config, HttpResponse, HttpResponseOK } from '../core';
+
+// FoalTS
+import { Config, HttpResponse, HttpResponseOK } from '../../core';
 import {
   SESSION_DEFAULT_COOKIE_HTTP_ONLY,
   SESSION_DEFAULT_COOKIE_NAME,

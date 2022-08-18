@@ -1,5 +1,8 @@
+// std
 import { deepStrictEqual, strictEqual } from 'assert';
-import { Config, HttpResponse, HttpResponseOK } from '../core';
+
+// FoalTS
+import { Config, HttpResponse, HttpResponseOK } from '../../core';
 import {
   SESSION_DEFAULT_COOKIE_HTTP_ONLY,
   SESSION_DEFAULT_COOKIE_NAME,
@@ -8,7 +11,7 @@ import {
   SESSION_DEFAULT_SAME_SITE_ON_CSRF_ENABLED,
   SESSION_USER_COOKIE_NAME,
 } from './constants';
-import { Session } from './session';
+import { Session } from '../core/session';
 import { setSessionCookie } from './set-session-cookie';
 
 describe('setSessionCookie', () => {

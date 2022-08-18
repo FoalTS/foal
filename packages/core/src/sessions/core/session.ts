@@ -1,6 +1,6 @@
 // FoalTS
-import { generateToken } from '../common';
-import { Config } from '../core';
+import { generateToken } from '../../common';
+import { Config } from '../../core';
 import {
   SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
   SESSION_DEFAULT_GARBAGE_COLLECTOR_PERIODICITY,

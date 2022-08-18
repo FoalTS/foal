@@ -22,17 +22,19 @@ import {
   isHttpResponseRedirect,
   isHttpResponseUnauthorized,
   ServiceManager
-} from '../core';
+} from '../../core';
 import {
-  SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
   SESSION_DEFAULT_COOKIE_NAME,
-  SESSION_DEFAULT_INACTIVITY_TIMEOUT,
   SESSION_USER_COOKIE_NAME
 } from './constants';
-import { readSession } from './read-session';
-import { Session } from './session';
-import { SessionState } from './session-state.interface';
-import { SessionStore } from './session-store';
+import {
+  SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
+  SESSION_DEFAULT_INACTIVITY_TIMEOUT,
+} from '../core/constants'
+import { readSession } from '../core/read-session';
+import { Session } from '../core/session';
+import { SessionState } from '../core/session-state.interface';
+import { SessionStore } from '../core/session-store';
 import { UseSessions } from './use-sessions.hook';
 
 describe('UseSessions', () => {

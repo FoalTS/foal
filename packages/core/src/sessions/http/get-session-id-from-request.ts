@@ -1,5 +1,5 @@
 import { Config, Context } from '../../core';
-import { SESSION_DEFAULT_COOKIE_NAME } from '../constants';
+import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 
 export class RequestValidationError extends Error {}
 
