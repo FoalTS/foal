@@ -13,7 +13,7 @@ export {
 export {
   InvalidTokenError,
   isInvalidTokenError,
-} from './invalid-token.error';
+} from './core/invalid-token.error';
 export {
   JWTOptional,
 } from './http/jwt-optional.hook';

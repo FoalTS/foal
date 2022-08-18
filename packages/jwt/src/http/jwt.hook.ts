@@ -22,7 +22,7 @@ import { getSecretOrPublicKey } from '../core/get-secret-or-public-key.util';
 import { checkAndConvertUserIdType } from './check-and-convert-user-id-type';
 import { getCsrfTokenFromRequest } from './get-csrf-token-from-request';
 import { getJwtFromRequest, RequestValidationError } from './get-jwt-from-request';
-import { isInvalidTokenError } from '../invalid-token.error';
+import { isInvalidTokenError } from '../core/invalid-token.error';
 
 class InvalidTokenResponse extends HttpResponseUnauthorized {
 
