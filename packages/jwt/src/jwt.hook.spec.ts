@@ -663,21 +663,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
               });
             }
 
-            context('given a CSRF token is sent in the request body field "_csrf"', () => {
-
-              testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
-                {},
-                {
-                  [JWT_DEFAULT_COOKIE_NAME]: token,
-                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
-                },
-                { _csrf: requestCsrfToken },
-                method,
-              ));
-
-            });
-
-            context('given a CSRF token is sent in the request header "X-CSRF-Token"', () => {
+            context('given a CSRF token is sent in the request', () => {
 
               testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
                 { 'X-CSRF-Token': requestCsrfToken },
@@ -691,21 +677,8 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
             });
 
-            context('given a CSRF token is sent in the request header "X-XSRF-Token"', () => {
-
-              testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
-                { 'X-XSRF-Token': requestCsrfToken },
-                {
-                  [JWT_DEFAULT_COOKIE_NAME]: token,
-                  [JWT_DEFAULT_CSRF_COOKIE_NAME]: cookieCsrfToken,
-                },
-                {},
-                method,
-              ));
-
-            });
             context(
-              'given a CSRF token is sent in the request header "X-XSRF-Token" and the csrf cookie name is customized',
+              'given a CSRF token is sent in the request and the csrf cookie name is customized',
               () => {
 
                 const csrfCookieName = JWT_DEFAULT_CSRF_COOKIE_NAME + '2';
