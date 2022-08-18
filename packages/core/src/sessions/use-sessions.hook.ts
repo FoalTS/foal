@@ -21,7 +21,7 @@ import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { createSession } from './core/create-session';
 import { checkUserIdType } from './http/check-user-id-type';
 import { getSessionIDFromRequest, RequestValidationError } from './http/get-session-id-from-request';
-import { readSession } from './read-session';
+import { readSession } from './core/read-session';
 import { removeSessionCookie } from './http/remove-session-cookie';
 import { SessionStore } from './session-store';
 import { setSessionCookie } from './http/set-session-cookie';
