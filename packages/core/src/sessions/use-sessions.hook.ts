@@ -24,7 +24,7 @@ import { getSessionIDFromRequest, RequestValidationError } from './http/get-sess
 import { readSession } from './read-session';
 import { removeSessionCookie } from './http/remove-session-cookie';
 import { SessionStore } from './session-store';
-import { setSessionCookie } from './set-session-cookie';
+import { setSessionCookie } from './http/set-session-cookie';
 
 export type UseSessionOptions = {
   store?: Class<SessionStore>;
