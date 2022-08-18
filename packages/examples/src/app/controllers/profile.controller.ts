@@ -1,7 +1,7 @@
 import {
-  ApiInfo, ApiServer, Context, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Post, render
+  ApiInfo, ApiServer, Context, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Post, render, UserRequired
 } from '@foal/core';
-import { Disk, ValidateMultipartFormDataBody } from '@foal/storage';
+import { Disk, ParseAndValidateFiles } from '@foal/storage';
 
 import { User } from '../entities';
 
@@ -18,10 +18,9 @@ export class ProfileController {
 
   @Post('/image')
   @Hook(async ctx => { ctx.user = await User.findOneBy({ email: 'john@foalts.org' }); })
-  @ValidateMultipartFormDataBody({
-    files: {
-      profile: { required: true, saveTo: 'images/profiles' }
-    }
+  @UserRequired()
+  @ParseAndValidateFiles({
+    profile: { required: true, saveTo: 'images/profiles' }
   })
   async uploadProfilePicture(ctx: Context<User>) {
     const user = ctx.user;
@@ -33,7 +32,7 @@ export class ProfileController {
       }
     }
 
-    user.profile = ctx.request.body.files.profile.path;
+    user.profile = ctx.files.get('profile')[0].path;
     await user.save();
 
     return new HttpResponseRedirect('/profile');
@@ -41,6 +40,7 @@ export class ProfileController {
 
   @Get('/image')
   @Hook(async ctx => { ctx.user = await User.findOneBy({ email: 'john@foalts.org' }); })
+  @UserRequired()
   async downloadProfilePicture(ctx: Context<User>) {
     const { profile } = ctx.user;
 

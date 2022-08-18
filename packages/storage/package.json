@@ -45,8 +45,8 @@
   ],
   "dependencies": {
     "@foal/core": "^2.10.1",
-    "busboy": "~0.3.1",
-    "mime": "~2.4.4"
+    "busboy": "~1.6.0",
+    "mime": "~3.0.0"
   },
   "devDependencies": {
     "@foal/internal-test": "^2.10.1",

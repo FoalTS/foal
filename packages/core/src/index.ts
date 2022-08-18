@@ -14,6 +14,8 @@ try {
 } finally {}
 
 export {
+  File,
+  FileList,
   Log,
   LogOptions,
   UserRequired,

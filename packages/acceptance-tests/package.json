@@ -22,6 +22,7 @@
     "@foal/redis": "^2.10.1",
     "@foal/social": "^2.10.1",
     "@foal/socket.io": "^2.10.1",
+    "@foal/storage": "^2.10.1",
     "@foal/typeorm": "^2.10.1",
     "@foal/typestack": "^2.10.1",
     "@grpc/grpc-js": "~1.6.7",

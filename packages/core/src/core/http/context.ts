@@ -1,3 +1,4 @@
+import { FileList } from '../../common/file';
 import { Session } from '../../sessions';
 
 interface Readable {
@@ -102,6 +103,7 @@ interface Request extends IncomingMessage {
  * - the express request object,
  * - the user object if available,
  * - the session object if available,
+ * - a file list object,
  * - and a `state` object that can be used to pass data across several hooks.
  *
  * @export
@@ -114,6 +116,7 @@ export class Context<User = { [key: string]: any } | null, ContextState = { [key
 
   user: User;
   readonly state: ContextState;
+  readonly files: FileList;
 
   /**
    * Creates an instance of Context.
@@ -126,5 +129,6 @@ export class Context<User = { [key: string]: any } | null, ContextState = { [key
 
     this.user = null as any;
     this.state = {} as any;
+    this.files = new FileList();
   }
 }
