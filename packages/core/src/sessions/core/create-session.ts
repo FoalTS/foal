@@ -1,7 +1,7 @@
-import { generateToken } from '../common';
-import { Session } from './session';
-import { SessionState } from './session-state.interface';
-import { SessionStore } from './session-store';
+import { generateToken } from '../../common';
+import { Session } from '../session';
+import { SessionState } from '../session-state.interface';
+import { SessionStore } from '../session-store';
 
 export async function createSession(store: SessionStore): Promise<Session> {
   const date = Math.floor(Date.now() / 1000);

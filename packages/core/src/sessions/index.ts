@@ -1,4 +1,4 @@
-export { createSession } from './create-session';
+export { createSession } from './core/create-session';
 export { readSession } from './read-session';
 export { Store, SessionStore, SessionAlreadyExists } from './session-store';
 export { Session } from './session';
