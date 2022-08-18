@@ -18,7 +18,7 @@ import { decode, verify } from 'jsonwebtoken';
 
 // FoalTS
 import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
-import { getSecretOrPublicKey } from './get-secret-or-public-key.util';
+import { getSecretOrPublicKey } from './core/get-secret-or-public-key.util';
 import { checkAndConvertUserIdType } from './http/check-and-convert-user-id-type';
 import { getCsrfTokenFromRequest } from './http/get-csrf-token-from-request';
 import { getJwtFromRequest, RequestValidationError } from './http/get-jwt-from-request';
