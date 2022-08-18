@@ -16,16 +16,16 @@ export {
 } from './invalid-token.error';
 export {
   JWTOptional,
-} from './jwt-optional.hook';
+} from './http/jwt-optional.hook';
 export {
   JWTRequired,
-} from './jwt-required.hook';
+} from './http/jwt-required.hook';
 export {
   JWTOptions, VerifyOptions,
-} from './jwt.hook';
+} from './http/jwt.hook';
 export {
   removeAuthCookie,
-} from './remove-auth-cookie';
+} from './http/remove-auth-cookie';
 export {
   setAuthCookie,
-} from './set-auth-cookie';
+} from './http/set-auth-cookie';
