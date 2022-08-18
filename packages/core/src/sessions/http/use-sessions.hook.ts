@@ -17,7 +17,7 @@ import {
   isHttpResponseInternalServerError,
   ServiceManager
 } from '../../core';
-import { SESSION_DEFAULT_COOKIE_NAME } from '../constants';
+import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { createSession } from '../core/create-session';
 import { checkUserIdType } from './check-user-id-type';
 import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';

@@ -3,7 +3,7 @@ import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
 
 // FoalTS
 import { Config, ConfigTypeError, createService } from '../../core';
-import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from '../constants';
+import { SESSION_DEFAULT_ABSOLUTE_TIMEOUT, SESSION_DEFAULT_INACTIVITY_TIMEOUT } from './constants';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';
 import {  SessionStore } from './session-store';

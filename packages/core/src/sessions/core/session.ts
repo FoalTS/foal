@@ -5,7 +5,7 @@ import {
   SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
   SESSION_DEFAULT_GARBAGE_COLLECTOR_PERIODICITY,
   SESSION_DEFAULT_INACTIVITY_TIMEOUT,
-} from '../constants';
+} from './constants';
 import { SessionState } from './session-state.interface';
 import { SessionStore } from './session-store';
 
