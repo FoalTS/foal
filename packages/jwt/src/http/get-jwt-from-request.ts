@@ -1,6 +1,6 @@
 import { Config, Context } from '@foal/core';
 
-import { JWT_DEFAULT_COOKIE_NAME } from '../constants';
+import { JWT_DEFAULT_COOKIE_NAME } from './constants';
 
 export class RequestValidationError extends Error {}
 
