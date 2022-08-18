@@ -6,8 +6,8 @@ import {
   SESSION_DEFAULT_GARBAGE_COLLECTOR_PERIODICITY,
   SESSION_DEFAULT_INACTIVITY_TIMEOUT,
 } from '../constants';
-import { SessionState } from '../session-state.interface';
-import { SessionStore } from '../session-store';
+import { SessionState } from './session-state.interface';
+import { SessionStore } from './session-store';
 
 /**
  * Representation of a server/database/file session.

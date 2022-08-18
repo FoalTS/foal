@@ -23,7 +23,7 @@ import { checkUserIdType } from './http/check-user-id-type';
 import { getSessionIDFromRequest, RequestValidationError } from './http/get-session-id-from-request';
 import { readSession } from './core/read-session';
 import { removeSessionCookie } from './http/remove-session-cookie';
-import { SessionStore } from './session-store';
+import { SessionStore } from './core/session-store';
 import { setSessionCookie } from './http/set-session-cookie';
 
 export type UseSessionOptions = {

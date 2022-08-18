@@ -31,8 +31,8 @@ import {
 } from './constants';
 import { readSession } from './core/read-session';
 import { Session } from './core/session';
-import { SessionState } from './session-state.interface';
-import { SessionStore } from './session-store';
+import { SessionState } from './core/session-state.interface';
+import { SessionStore } from './core/session-store';
 import { UseSessions } from './use-sessions.hook';
 
 describe('UseSessions', () => {

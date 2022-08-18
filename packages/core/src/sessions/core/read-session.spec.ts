@@ -4,8 +4,8 @@ import { deepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 // FoalTS
 import { createService } from '../../core';
 import { readSession } from './read-session';
-import { SessionState } from '../session-state.interface';
-import { SessionStore } from '../session-store';
+import { SessionState } from './session-state.interface';
+import { SessionStore } from './session-store';
 
 describe('readSession', () => {
 

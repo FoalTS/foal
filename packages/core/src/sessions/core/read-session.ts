@@ -1,5 +1,5 @@
 import { Session } from './session';
-import { SessionStore } from '../session-store';
+import { SessionStore } from './session-store';
 
 export async function readSession(store: SessionStore, id: string): Promise<Session | null> {
   const state = await store.read(id);
