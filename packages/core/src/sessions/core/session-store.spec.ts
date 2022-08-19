@@ -1,6 +1,6 @@
 // std
 import { strictEqual } from 'assert';
-import { createService } from '../core';
+import { createService } from '../../core';
 
 // FoalTS
 import { SessionState } from './session-state.interface';

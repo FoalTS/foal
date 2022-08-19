@@ -22,18 +22,20 @@ import {
   isHttpResponseRedirect,
   isHttpResponseUnauthorized,
   ServiceManager
-} from '../core';
+} from '../../core';
 import {
-  SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
   SESSION_DEFAULT_COOKIE_NAME,
-  SESSION_DEFAULT_INACTIVITY_TIMEOUT,
   SESSION_USER_COOKIE_NAME
 } from './constants';
 import { FetchUser } from './fetch-user.interface';
-import { readSession } from './read-session';
-import { Session } from './session';
-import { SessionState } from './session-state.interface';
-import { SessionStore } from './session-store';
+import {
+  SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
+  SESSION_DEFAULT_INACTIVITY_TIMEOUT,
+  readSession,
+  Session,
+  SessionState,
+  SessionStore,
+} from '../core';
 import { UseSessions } from './use-sessions.hook';
 
 describe('UseSessions', () => {

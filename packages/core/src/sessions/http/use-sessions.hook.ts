@@ -16,13 +16,11 @@ import {
   IApiSecurityScheme,
   isHttpResponseInternalServerError,
   ServiceManager
-} from '../core';
+} from '../../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
-import { createSession } from './create-session';
+import { createSession, readSession, SessionStore } from '../core';
 import { FetchUser } from './fetch-user.interface';
-import { readSession } from './read-session';
 import { removeSessionCookie } from './remove-session-cookie';
-import { SessionStore } from './session-store';
 import { setSessionCookie } from './set-session-cookie';
 
 export interface UseSessionOptions {
