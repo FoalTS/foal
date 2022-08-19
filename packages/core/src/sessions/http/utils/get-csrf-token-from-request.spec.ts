@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // FoalTS
-import { Context } from '../../core';
+import { Context } from '../../../core';
 import { getCsrfTokenFromRequest } from './get-csrf-token-from-request';
 
 function createRequest(body: { [name: string]: any }, headers: { [name: string ]: string}): Context['request'] {
