@@ -201,7 +201,7 @@ describe('shouldVerifyCsrfToken', () => {
         const expected = false;
 
         strictEqual(actual, expected);
-      }).timeout(5000);
+      });
     });
   });
 });
