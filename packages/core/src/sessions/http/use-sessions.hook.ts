@@ -20,10 +20,7 @@ import {
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { createSession, readSession, SessionStore } from '../core';
 import { FetchUser } from './fetch-user.interface';
-import { removeSessionCookie } from './remove-session-cookie';
-import { setSessionCookie } from './set-session-cookie';
-import { getCsrfTokenFromRequest } from './get-csrf-token-from-request';
-import { shouldVerifyCsrfToken } from './utils';
+import { getCsrfTokenFromRequest, removeSessionCookie, setSessionCookie, shouldVerifyCsrfToken } from './utils';
 
 export interface UseSessionOptions {
   user?: FetchUser;
