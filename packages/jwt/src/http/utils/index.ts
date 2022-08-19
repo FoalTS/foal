@@ -1,0 +1,1 @@
+export { getCsrfTokenFromCookie } from './get-csrf-token-from-cookie';

@@ -678,28 +678,6 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
 
             });
 
-            context(
-              'given a CSRF token is sent in the request and the csrf cookie name is customized',
-              () => {
-
-                const csrfCookieName = JWT_DEFAULT_CSRF_COOKIE_NAME + '2';
-
-                beforeEach(() => Config.set('settings.jwt.csrf.cookie.name', csrfCookieName));
-
-                afterEach(() => Config.remove('settings.jwt.csrf.cookie.name'));
-
-                testCsrkToken((requestCsrfToken, cookieCsrfToken) => createContext(
-                  { 'X-XSRF-Token': requestCsrfToken },
-                  {
-                    [JWT_DEFAULT_COOKIE_NAME]: token,
-                    [csrfCookieName]: cookieCsrfToken,
-                  },
-                  {},
-                  method,
-                ));
-
-              }
-          );
           }
 
           context('given the request HTTP method is "POST"', () => {
