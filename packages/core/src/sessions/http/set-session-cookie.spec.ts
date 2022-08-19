@@ -11,7 +11,7 @@ import {
   SESSION_DEFAULT_SAME_SITE_ON_CSRF_ENABLED,
   SESSION_USER_COOKIE_NAME,
 } from './constants';
-import { Session } from '../core/session';
+import { Session } from '../core';
 import { setSessionCookie } from './set-session-cookie';
 
 describe('setSessionCookie', () => {

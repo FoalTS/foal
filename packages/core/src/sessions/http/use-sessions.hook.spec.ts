@@ -30,11 +30,11 @@ import {
 import {
   SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
   SESSION_DEFAULT_INACTIVITY_TIMEOUT,
-} from '../core/constants'
-import { readSession } from '../core/read-session';
-import { Session } from '../core/session';
-import { SessionState } from '../core/session-state.interface';
-import { SessionStore } from '../core/session-store';
+  readSession,
+  Session,
+  SessionState,
+  SessionStore,
+} from '../core';
 import { UseSessions } from './use-sessions.hook';
 
 describe('UseSessions', () => {
@@ -578,7 +578,6 @@ describe('UseSessions', () => {
             });
 
             context('given a CSRF token is sent in the request', () => {
-
               it('should return an HttpResponseForbidden instance if the CSRF token is incorrect.', async () => {
                 ctx = createContext(
                   { 'X-CSRF-Token': incorrectCsrfToken },

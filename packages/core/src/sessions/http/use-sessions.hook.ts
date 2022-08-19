@@ -18,12 +18,10 @@ import {
   ServiceManager
 } from '../../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
-import { createSession } from '../core/create-session';
 import { checkUserIdType } from './check-user-id-type';
 import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';
-import { readSession } from '../core/read-session';
+import { createSession, readSession, SessionStore } from '../core';
 import { removeSessionCookie } from './remove-session-cookie';
-import { SessionStore } from '../core/session-store';
 import { setSessionCookie } from './set-session-cookie';
 import { getCsrfTokenFromRequest } from './get-csrf-token-from-request';
 
