@@ -26,7 +26,7 @@ import { sign } from 'jsonwebtoken';
 
 // FoalTS
 import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
-import { InvalidTokenError } from '../core/invalid-token.error';
+import { InvalidTokenError } from './invalid-token.error';
 import { JWTOptional } from './jwt-optional.hook';
 import { JWTRequired } from './jwt-required.hook';
 
