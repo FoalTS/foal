@@ -1,8 +1,8 @@
 // std
-import { strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
-import { Config, HttpResponse, HttpResponseOK } from '../../core';
+import { Config, HttpResponse, HttpResponseOK } from '../../../core';
 import {
   SESSION_DEFAULT_COOKIE_HTTP_ONLY,
   SESSION_DEFAULT_COOKIE_NAME,
@@ -10,24 +10,46 @@ import {
   SESSION_DEFAULT_CSRF_COOKIE_NAME,
   SESSION_DEFAULT_SAME_SITE_ON_CSRF_ENABLED,
   SESSION_USER_COOKIE_NAME,
-} from './constants';
-import { removeSessionCookie } from './remove-session-cookie';
+} from '../constants';
+import { Session } from '../../core';
+import { setSessionCookie } from './set-session-cookie';
 
-describe('removeSessionCookie', () => {
+describe('setSessionCookie', () => {
 
+  let token: string;
+  let csrfToken: string;
+  let session: Session;
   let response: HttpResponse;
 
-  beforeEach(() => response = new HttpResponseOK());
+  beforeEach(() => {
+    response = new HttpResponseOK();
+    token = 'xxx';
+    csrfToken = 'yyy',
+    session = new Session(
+      {} as any,
+      {
+        content: {
+          csrfToken,
+        },
+        createdAt: Math.trunc(Date.now() / 1000),
+        flash: {},
+        id: token,
+        updatedAt: Math.trunc(Date.now() / 1000),
+        userId: null,
+      },
+      { exists: true },
+    );
+  });
 
   describe('should set a session cookie in the response', () => {
 
     context('given no configuration option is provided', () => {
 
-      beforeEach(() => removeSessionCookie(response));
+      beforeEach(() => setSessionCookie(response, session));
 
       it('with the proper default name and value.', () => {
         const { value } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
-        strictEqual(value, '');
+        strictEqual(value, token);
       });
 
       it('with the proper default "domain" directive.', () => {
@@ -55,9 +77,9 @@ describe('removeSessionCookie', () => {
         strictEqual(options.secure, undefined);
       });
 
-      it('with the proper "maxAge" directive.', () => {
+      it('with the proper "expires" directive.', () => {
         const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
-        strictEqual(options.maxAge, 0);
+        deepStrictEqual(options.expires, new Date(session.expirationTime * 1000));
       });
 
     });
@@ -73,7 +95,7 @@ describe('removeSessionCookie', () => {
         Config.set('settings.session.cookie.path', '/foo');
         Config.set('settings.session.cookie.sameSite', 'strict');
         Config.set('settings.session.cookie.secure', true);
-        removeSessionCookie(response);
+        setSessionCookie(response, session);
       });
 
       afterEach(() => {
@@ -87,7 +109,7 @@ describe('removeSessionCookie', () => {
 
       it('with the proper default name and value.', () => {
         const { value } = response.getCookie(cookieName);
-        strictEqual(value, '');
+        strictEqual(value, token);
       });
 
       it('with the proper default "domain" directive.', () => {
@@ -115,9 +137,9 @@ describe('removeSessionCookie', () => {
         strictEqual(options.secure, true);
       });
 
-      it('with the proper "maxAge" directive.', () => {
+      it('with the proper "expires" directive.', () => {
         const { options } = response.getCookie(cookieName);
-        strictEqual(options.maxAge, 0);
+        deepStrictEqual(options.expires, new Date(session.expirationTime * 1000));
       });
 
     });
@@ -134,7 +156,7 @@ describe('removeSessionCookie', () => {
 
       context('given no configuration option is provided', () => {
 
-        beforeEach(() => removeSessionCookie(response));
+        beforeEach(() => setSessionCookie(response, session));
 
         it('with the proper default "sameSite" directive.', () => {
           const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
@@ -147,10 +169,12 @@ describe('removeSessionCookie', () => {
 
         beforeEach(() => {
           Config.set('settings.session.cookie.sameSite', 'strict');
-          removeSessionCookie(response);
+          setSessionCookie(response, session);
         });
 
-        afterEach(() => Config.remove('settings.session.cookie.sameSite'));
+        afterEach(() => {
+          Config.remove('settings.session.cookie.sameSite');
+        });
 
         it('with the proper default "sameSite" directive.', () => {
           const { options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
@@ -165,11 +189,11 @@ describe('removeSessionCookie', () => {
 
       context('given no configuration option is provided', () => {
 
-        beforeEach(() => removeSessionCookie(response));
+        beforeEach(() => setSessionCookie(response, session));
 
         it('with the proper default name and value.', () => {
           const { value } = response.getCookie(SESSION_DEFAULT_CSRF_COOKIE_NAME);
-          strictEqual(value, '');
+          strictEqual(value, csrfToken);
         });
 
         it('with the proper default "domain" directive.', () => {
@@ -197,9 +221,9 @@ describe('removeSessionCookie', () => {
           strictEqual(options.secure, undefined);
         });
 
-        it('with the proper "maxAge" directive.', () => {
+        it('with the proper "expires" directive.', () => {
           const { options } = response.getCookie(SESSION_DEFAULT_CSRF_COOKIE_NAME);
-          strictEqual(options.maxAge, 0);
+          deepStrictEqual(options.expires, new Date(session.expirationTime * 1000));
         });
 
       });
@@ -214,8 +238,8 @@ describe('removeSessionCookie', () => {
           Config.set('settings.session.cookie.httpOnly', true);
           Config.set('settings.session.cookie.path', '/foo');
           Config.set('settings.session.cookie.sameSite', 'strict');
-          Config.set('settings.session.cookie.secure', 'true');
-          removeSessionCookie(response);
+          Config.set('settings.session.cookie.secure', true);
+          setSessionCookie(response, session);
         });
 
         afterEach(() => {
@@ -229,7 +253,7 @@ describe('removeSessionCookie', () => {
 
         it('with the proper default name and value.', () => {
           const { value } = response.getCookie(csrfCookieName);
-          strictEqual(value, '');
+          strictEqual(value, csrfToken);
         });
 
         it('with the proper default "domain" directive.', () => {
@@ -257,9 +281,9 @@ describe('removeSessionCookie', () => {
           strictEqual(options.secure, true);
         });
 
-        it('with the proper "maxAge" directive.', () => {
+        it('with the proper "expires" directive.', () => {
           const { options } = response.getCookie(csrfCookieName);
-          strictEqual(options.maxAge, 0);
+          deepStrictEqual(options.expires, new Date(session.expirationTime * 1000));
         });
 
       });
@@ -270,7 +294,7 @@ describe('removeSessionCookie', () => {
 
   context('given the CSRF protection is disabled in the config', () => {
 
-    beforeEach(() => removeSessionCookie(response));
+    beforeEach(() => setSessionCookie(response, session));
 
     it('should not set a CSRF cookie in the response.', () => {
       const { value } = response.getCookie(SESSION_DEFAULT_CSRF_COOKIE_NAME);
@@ -279,17 +303,19 @@ describe('removeSessionCookie', () => {
 
   });
 
-  context('given the "user" argument is true', () => {
+  context('given the "user" argument is defined', () => {
 
     describe('should set a "user" cookie in the response', () => {
 
+      const user = 'foo';
+
       context('given no configuration option is provided', () => {
 
-        beforeEach(() => removeSessionCookie(response, true));
+        beforeEach(() => setSessionCookie(response, session, user));
 
         it('with the proper default name and value.', () => {
           const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
-          strictEqual(value, '');
+          strictEqual(value, user);
         });
 
         it('with the proper default "domain" directive.', () => {
@@ -318,9 +344,9 @@ describe('removeSessionCookie', () => {
           strictEqual(options.secure, undefined);
         });
 
-        it('with the proper "maxAge" directive.', () => {
+        it('with the proper "expires" directive.', () => {
           const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
-          strictEqual(options.maxAge, 0);
+          deepStrictEqual(options.expires, new Date(session.expirationTime * 1000));
         });
 
       });
@@ -332,8 +358,8 @@ describe('removeSessionCookie', () => {
           Config.set('settings.session.cookie.httpOnly', true);
           Config.set('settings.session.cookie.path', '/foo');
           Config.set('settings.session.cookie.sameSite', 'strict');
-          Config.set('settings.session.cookie.secure', 'true');
-          removeSessionCookie(response, true);
+          Config.set('settings.session.cookie.secure', true);
+          setSessionCookie(response, session, user);
         });
 
         afterEach(() => {
@@ -346,7 +372,7 @@ describe('removeSessionCookie', () => {
 
         it('with the proper default name and value.', () => {
           const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
-          strictEqual(value, '');
+          strictEqual(value, user);
         });
 
         it('with the proper default "domain" directive.', () => {
@@ -375,9 +401,9 @@ describe('removeSessionCookie', () => {
           strictEqual(options.secure, true);
         });
 
-        it('with the proper "maxAge" directive.', () => {
+        it('with the proper "expires" directive.', () => {
           const { options } = response.getCookie(SESSION_USER_COOKIE_NAME);
-          strictEqual(options.maxAge, 0);
+          deepStrictEqual(options.expires, new Date(session.expirationTime * 1000));
         });
 
       });
@@ -386,11 +412,11 @@ describe('removeSessionCookie', () => {
 
   });
 
-  context('given the "user" argument is false or undefined', () => {
+  context('given the "user" argument is empty or not defined', () => {
 
-    beforeEach(() => removeSessionCookie(response));
+    beforeEach(() => setSessionCookie(response, session));
 
-    it('should not set a "user" cookie in the response.', () => {
+    it('should not set a CSRF cookie in the response.', () => {
       const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
       strictEqual(value, undefined);
     });

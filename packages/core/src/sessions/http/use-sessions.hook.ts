@@ -21,9 +21,7 @@ import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { checkUserIdType } from './check-user-id-type';
 import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';
 import { createSession, readSession, SessionStore } from '../core';
-import { removeSessionCookie } from './remove-session-cookie';
-import { setSessionCookie } from './set-session-cookie';
-import { getCsrfTokenFromRequest } from './get-csrf-token-from-request';
+import { getCsrfTokenFromRequest, removeSessionCookie, setSessionCookie, shouldVerifyCsrfToken } from './utils';
 
 export type UseSessionOptions = {
   store?: Class<SessionStore>;
@@ -124,11 +122,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     /* Verify CSRF token */
 
-    if (
-      options.cookie &&
-      (options.csrf ?? Config.get('settings.session.csrf.enabled', 'boolean', false)) &&
-      ![ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)
-    ) {
+    if (shouldVerifyCsrfToken(ctx.request, options)) {
       const expectedCsrftoken = session.get<string|undefined>('csrfToken');
       if (!expectedCsrftoken) {
         throw new Error(
