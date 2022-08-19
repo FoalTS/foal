@@ -23,6 +23,7 @@ import { FetchUser } from './fetch-user.interface';
 import { removeSessionCookie } from './remove-session-cookie';
 import { setSessionCookie } from './set-session-cookie';
 import { getCsrfTokenFromRequest } from './get-csrf-token-from-request';
+import { shouldVerifyCsrfToken } from './utils';
 
 export interface UseSessionOptions {
   user?: FetchUser;
@@ -134,11 +135,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     /* Verify CSRF token */
 
-    if (
-      options.cookie &&
-      (options.csrf ?? Config.get('settings.session.csrf.enabled', 'boolean', false)) &&
-      ![ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)
-    ) {
+    if (shouldVerifyCsrfToken(ctx.request, options)) {
       const expectedCsrftoken = session.get<string|undefined>('csrfToken');
       if (!expectedCsrftoken) {
         throw new Error(
