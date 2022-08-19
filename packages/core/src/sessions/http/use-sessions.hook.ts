@@ -22,6 +22,7 @@ import { createSession, readSession, SessionStore } from '../core';
 import { FetchUser } from './fetch-user.interface';
 import { removeSessionCookie } from './remove-session-cookie';
 import { setSessionCookie } from './set-session-cookie';
+import { getCsrfTokenFromRequest } from './get-csrf-token-from-request';
 
 export interface UseSessionOptions {
   user?: FetchUser;
@@ -145,9 +146,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
           + 'Are you sure you created the session with "createSession"?'
         );
       }
-      const actualCsrfToken = ctx.request.body._csrf ||
-        ctx.request.get('X-CSRF-Token') ||
-        ctx.request.get('X-XSRF-Token');
+      const actualCsrfToken = getCsrfTokenFromRequest(ctx.request);
       if (actualCsrfToken !== expectedCsrftoken) {
         return new HttpResponseForbidden('CSRF token missing or incorrect.');
       }

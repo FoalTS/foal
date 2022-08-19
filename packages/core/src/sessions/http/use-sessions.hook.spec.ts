@@ -578,9 +578,14 @@ describe('UseSessions', () => {
               );
             });
 
-            function testCsrkToken(getContext: (token: string) => Context) {
+            context('given a CSRF token is sent in the request', () => {
               it('should return an HttpResponseForbidden instance if the CSRF token is incorrect.', async () => {
-                ctx = getContext(incorrectCsrfToken);
+                ctx = createContext(
+                  { 'X-CSRF-Token': incorrectCsrfToken },
+                  { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
+                  {},
+                  method,
+                );
 
                 const response = await hook(ctx, services);
                 if (!isHttpResponseForbidden(response)) {
@@ -591,45 +596,18 @@ describe('UseSessions', () => {
               });
 
               it('should not return an HttpResponseForbidden instance if the CSRF token is correct.', async () => {
-                ctx = getContext(csrfToken);
+                ctx = createContext(
+                  { 'X-CSRF-Token': csrfToken },
+                  { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
+                  {},
+                  method,
+                );
 
                 const response = await hook(ctx, services);
                 if (isHttpResponseForbidden(response)) {
                   throw new Error('The hook should NOT have returned a HttpResponseForbidden instance.');
                 }
               });
-            }
-
-            context('given a CSRF token is sent in the request body field "_csrf"', () => {
-
-              testCsrkToken(token => createContext(
-                {},
-                { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
-                { _csrf: token },
-                method,
-              ));
-
-            });
-
-            context('given a CSRF token is sent in the request header "X-CSRF-Token"', () => {
-
-              testCsrkToken(token => createContext(
-                { 'X-CSRF-Token': token },
-                { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
-                {},
-                method,
-              ));
-
-            });
-
-            context('given a CSRF token is sent in the request header "X-XSRF-Token"', () => {
-
-              testCsrkToken(token => createContext(
-                { 'X-XSRF-Token': token },
-                { [SESSION_DEFAULT_COOKIE_NAME]: csrfSessionID },
-                {},
-                method,
-              ));
 
             });
           }

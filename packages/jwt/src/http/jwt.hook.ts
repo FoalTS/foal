@@ -20,6 +20,7 @@ import { decode, verify } from 'jsonwebtoken';
 // FoalTS
 import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
 import { getSecretOrPublicKey } from '../core';
+import { getCsrfTokenFromRequest } from './get-csrf-token-from-request';
 import { isInvalidTokenError } from './invalid-token.error';
 
 class InvalidTokenResponse extends HttpResponseUnauthorized {
@@ -190,10 +191,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         return new HttpResponseForbidden('CSRF token missing or incorrect.');
       }
 
-      const actualCsrfToken =
-        ctx.request.body._csrf ||
-        ctx.request.get('X-CSRF-Token') ||
-        ctx.request.get('X-XSRF-Token');
+      const actualCsrfToken = getCsrfTokenFromRequest(ctx.request);
       if (actualCsrfToken !== expectedCsrftoken) {
         return new HttpResponseForbidden('CSRF token missing or incorrect.');
       }
