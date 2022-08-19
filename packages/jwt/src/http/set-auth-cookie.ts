@@ -9,7 +9,7 @@ import {
   JWT_DEFAULT_CSRF_COOKIE_NAME,
   JWT_DEFAULT_SAME_SITE_ON_CSRF_ENABLED
 } from './constants';
-import { getSecretOrPrivateKey } from './get-secret-or-private-key.util';
+import { getSecretOrPrivateKey } from '../core';
 
 export async function setAuthCookie(response: HttpResponse, token: string): Promise<void> {
   const cookieName = Config.get('settings.jwt.cookie.name', 'string', JWT_DEFAULT_COOKIE_NAME);
