@@ -1,5 +1,8 @@
+// std
 import { notStrictEqual, ok, strictEqual } from 'assert';
-import { createService } from '../core';
+
+// FoalTS
+import { createService } from '../../core';
 import { createSession } from './create-session';
 import { Session } from './session';
 import { SessionState } from './session-state.interface';

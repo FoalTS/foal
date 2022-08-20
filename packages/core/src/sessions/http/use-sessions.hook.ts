@@ -16,14 +16,11 @@ import {
   IApiSecurityScheme,
   isHttpResponseInternalServerError,
   ServiceManager
-} from '../core';
+} from '../../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
-import { createSession } from './create-session';
+import { createSession, readSession, SessionStore } from '../core';
 import { FetchUser } from './fetch-user.interface';
-import { readSession } from './read-session';
-import { removeSessionCookie } from './remove-session-cookie';
-import { SessionStore } from './session-store';
-import { setSessionCookie } from './set-session-cookie';
+import { getCsrfTokenFromRequest, removeSessionCookie, setSessionCookie, shouldVerifyCsrfToken } from './utils';
 
 export interface UseSessionOptions {
   user?: FetchUser;
@@ -135,11 +132,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     /* Verify CSRF token */
 
-    if (
-      options.cookie &&
-      (options.csrf ?? Config.get('settings.session.csrf.enabled', 'boolean', false)) &&
-      ![ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)
-    ) {
+    if (shouldVerifyCsrfToken(ctx.request, options)) {
       const expectedCsrftoken = session.get<string|undefined>('csrfToken');
       if (!expectedCsrftoken) {
         throw new Error(
@@ -147,9 +140,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
           + 'Are you sure you created the session with "createSession"?'
         );
       }
-      const actualCsrfToken = ctx.request.body._csrf ||
-        ctx.request.get('X-CSRF-Token') ||
-        ctx.request.get('X-XSRF-Token');
+      const actualCsrfToken = getCsrfTokenFromRequest(ctx.request);
       if (actualCsrfToken !== expectedCsrftoken) {
         return new HttpResponseForbidden('CSRF token missing or incorrect.');
       }

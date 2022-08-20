@@ -19,8 +19,9 @@ import { decode, verify } from 'jsonwebtoken';
 
 // FoalTS
 import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
-import { getSecretOrPublicKey } from './get-secret-or-public-key.util';
+import { getSecretOrPublicKey } from '../core';
 import { isInvalidTokenError } from './invalid-token.error';
+import { getCsrfTokenFromCookie, getCsrfTokenFromRequest, shouldVerifyCsrfToken } from './utils';
 
 class InvalidTokenResponse extends HttpResponseUnauthorized {
 
@@ -166,13 +167,8 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
 
     /* Verify CSRF token */
 
-    if (
-      options.cookie &&
-      (options.csrf ?? Config.get('settings.jwt.csrf.enabled', 'boolean', false)) &&
-      ![ 'GET', 'HEAD', 'OPTIONS' ].includes(ctx.request.method)
-    ) {
-      const csrfCookieName = Config.get('settings.jwt.csrf.cookie.name', 'string', JWT_DEFAULT_CSRF_COOKIE_NAME);
-      const expectedCsrftoken: string|undefined = ctx.request.cookies[csrfCookieName];
+    if (shouldVerifyCsrfToken(ctx.request, options)) {
+      const expectedCsrftoken = getCsrfTokenFromCookie(ctx.request);
       if (!expectedCsrftoken) {
         return new HttpResponseForbidden('CSRF token missing or incorrect.');
       }
@@ -190,10 +186,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
         return new HttpResponseForbidden('CSRF token missing or incorrect.');
       }
 
-      const actualCsrfToken =
-        ctx.request.body._csrf ||
-        ctx.request.get('X-CSRF-Token') ||
-        ctx.request.get('X-XSRF-Token');
+      const actualCsrfToken = getCsrfTokenFromRequest(ctx.request);
       if (actualCsrfToken !== expectedCsrftoken) {
         return new HttpResponseForbidden('CSRF token missing or incorrect.');
       }
