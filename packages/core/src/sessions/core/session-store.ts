@@ -1,4 +1,5 @@
 // FoalTS
+import { Session } from './session';
 import { SessionState } from './session-state.interface';
 
 export class SessionAlreadyExists extends Error {
@@ -22,6 +23,21 @@ export abstract class Store {
 
   static readonly concreteClassConfigPath = 'settings.session.store';
   static readonly concreteClassName = 'ConcreteSessionStore';
+
+  async readSession(id: string): Promise<Session | null> {
+    const state = await this.read(id);
+    if (state === null) {
+      return null;
+    }
+
+    const session = new Session(this, state, { exists: true });
+    if (session.isExpired) {
+      await session.destroy();
+      return null;
+    }
+
+    return session;
+  }
 
   /**
    * Saves the session for the first time.
