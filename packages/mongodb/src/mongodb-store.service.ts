@@ -99,13 +99,21 @@ export class MongoDBStore extends SessionStore {
     await this.mongoDBClient.close();
   }
 
+  /**
+   * Returns all sessions of a user.
+   *
+   * @param user
+   */
   async getSessionsOf(user: { id: string }): Promise<DatabaseSession[]> {
-    // TODO: Clear expired Sessions?
     return await this.collection.find({
       'state.userId': user.id.toString()
     }).toArray()
   }
 
+  /**
+   * Returns all session id's of a user.
+   * @param user
+   */
   async getSessionIDsOf(user:{ id: string }): Promise<string[]> {
     const sessions = await this.getSessionsOf(user)
     return sessions.map((dbSession: { sessionID: string; }) => dbSession.sessionID)
