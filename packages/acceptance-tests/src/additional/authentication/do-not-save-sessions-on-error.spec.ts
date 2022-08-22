@@ -3,7 +3,7 @@ import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 
 // FoalTS
-import { Config, Context, createApp, createSession, dependency, Get, Hook, HttpResponseOK, Store, UseSessions } from '@foal/core';
+import { Config, Context, createApp, dependency, Get, Hook, HttpResponseOK, Store, UseSessions } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
 import { createAndInitializeDataSource, getTypeORMStorePath } from '../../common';
 
@@ -39,7 +39,7 @@ describe('Sessions should not be saved when an error has been thrown', () => {
 
     @Get('/new-session')
     async createNewSession(ctx: Context) {
-      ctx.session = await createSession(this.store);
+      ctx.session = await this.store.createSession();
       return new HttpResponseOK({ token: ctx.session.getToken() });
     }
 

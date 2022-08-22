@@ -9,7 +9,6 @@ import {
   Config,
   Context,
   createController,
-  createSession,
   dependency,
   Get,
   HttpResponseRedirect,
@@ -23,6 +22,27 @@ import { DatabaseSession } from '@foal/typeorm';
 describe('Feature: Using social auth with sessions', () => {
 
   let dataSource: DataSource;
+
+  class ConcreteStore extends Store {
+    save(state: SessionState, maxInactivity: number): Promise<void> {
+      throw new Error('Method not implemented.');
+    }
+    read(id: string): Promise<SessionState | null> {
+      throw new Error('Method not implemented.');
+    }
+    update(state: SessionState, maxInactivity: number): Promise<void> {
+      throw new Error('Method not implemented.');
+    }
+    destroy(id: string): Promise<void> {
+      throw new Error('Method not implemented.');
+    }
+    clear(): Promise<void> {
+      throw new Error('Method not implemented.');
+    }
+    cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
+      throw new Error('Method not implemented.');
+    }
+  }
 
   before(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
@@ -121,7 +141,7 @@ describe('Feature: Using social auth with sessions', () => {
         code: 'known_user'
       }
     });
-    ctx.session = await createSession({} as any);
+    ctx.session = await new ConcreteStore().createSession();
 
     strictEqual(ctx.session.userId, null);
 
@@ -135,7 +155,7 @@ describe('Feature: Using social auth with sessions', () => {
         code: 'unknown_user'
       }
     });
-    ctx2.session = await createSession({} as any);
+    ctx2.session = await new ConcreteStore().createSession();
 
     strictEqual(ctx2.session.userId, null);
     strictEqual(await User.findOneBy({ email: 'unknown@foalts.org' }), null);

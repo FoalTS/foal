@@ -1,5 +1,4 @@
 export {
-  createSession,
   Store,
   SessionStore,
   SessionAlreadyExists,

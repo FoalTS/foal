@@ -4,7 +4,7 @@ import { createClient } from 'redis';
 import { MongoClient } from 'mongodb4';
 
 // FoalTS
-import { createApp, createSession, dependency, Get, HttpResponseInternalServerError, HttpResponseOK, ServiceManager } from '@foal/core';
+import { createApp, dependency, Get, HttpResponseInternalServerError, HttpResponseOK, ServiceManager } from '@foal/core';
 import { RedisStore } from '@foal/redis';
 import { MongoDBStore } from '@foal/mongodb';
 
@@ -20,7 +20,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
 
       @Get('/')
       async index() {
-        const session = await createSession(this.store);
+        const session = await this.store.createSession();
         try {
           await session.commit();
         } catch (error: any) {
@@ -69,7 +69,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
 
       @Get('/')
       async index() {
-        const session = await createSession(this.store);
+        const session = await this.store.createSession();
         try {
           await session.commit();
         } catch (error: any) {

@@ -18,7 +18,7 @@ import {
   ServiceManager
 } from '../../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
-import { createSession, SessionStore } from '../core';
+import { SessionStore } from '../core';
 import {
   checkUserIdType,
   getCsrfTokenFromRequest,
@@ -109,7 +109,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     if (!sessionID) {
       if (options.create ?? options.cookie) {
-        ctx.session = await createSession(store);
+        ctx.session = await store.createSession();
       }
       return postFunction;
     }
@@ -133,7 +133,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
       if (!expectedCsrftoken) {
         throw new Error(
           'Unexpected error: the session content does not have a "csrfToken" field. '
-          + 'Are you sure you created the session with "createSession"?'
+          + 'Are you sure you created the session with "Store.createSession"?'
         );
       }
       const actualCsrfToken = getCsrfTokenFromRequest(ctx.request);

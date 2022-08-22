@@ -8,7 +8,6 @@ import { DataSource } from 'typeorm';
 import {
   Config,
   createService,
-  createSession,
   Store,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
@@ -48,7 +47,7 @@ describe('Feature: Reading a session from a token', () => {
 
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
-    const session = await createSession(store);
+    const session = await store.createSession();
     session.set('foo', 'bar');
     await session.commit();
 

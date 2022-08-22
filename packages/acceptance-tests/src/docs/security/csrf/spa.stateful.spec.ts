@@ -11,7 +11,6 @@ import {
   Context,
   controller,
   createApp,
-  createSession,
   dependency,
   HttpResponseCreated,
   HttpResponseNoContent,
@@ -53,7 +52,7 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
         return new HttpResponseUnauthorized();
       }
 
-      ctx.session = ctx.session || await createSession(this.store);
+      ctx.session = ctx.session || await this.store.createSession();
       ctx.session.setUser(user);
 
       return new HttpResponseNoContent();

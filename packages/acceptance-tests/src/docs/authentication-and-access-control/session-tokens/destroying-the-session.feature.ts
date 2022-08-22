@@ -12,7 +12,6 @@ import {
   Context,
   controller,
   createApp,
-  createSession,
   HttpResponseNoContent,
   IAppController,
   Post,
@@ -68,7 +67,7 @@ describe('Feature: Destroying the session', () => {
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
-    const session = await createSession(store);
+    const session = await store.createSession();
     await session.commit();
 
     notStrictEqual(await store.readSession(session.getToken()), null);

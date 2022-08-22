@@ -515,7 +515,7 @@ describe('UseSessions', () => {
           async () => hook(ctx, services),
           {
             message: 'Unexpected error: the session content does not have a "csrfToken" field. '
-              + 'Are you sure you created the session with "createSession"?'
+              + 'Are you sure you created the session with "Store.createSession"?'
           }
         );
       });
