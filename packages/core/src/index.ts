@@ -225,5 +225,4 @@ export {
   Store,
   UseSessions,
   createSession,
-  readSession,
 } from './sessions';

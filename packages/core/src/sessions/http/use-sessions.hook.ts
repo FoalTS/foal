@@ -18,7 +18,7 @@ import {
   ServiceManager
 } from '../../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
-import { createSession, readSession, SessionStore } from '../core';
+import { createSession, SessionStore } from '../core';
 import {
   checkUserIdType,
   getCsrfTokenFromRequest,
@@ -116,7 +116,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     /* Verify the session ID */
 
-    const session = await readSession(store, sessionID);
+    const session = await store.readSession(sessionID);
 
     if (!session) {
       const response = unauthorizedOrRedirect('token invalid or expired');

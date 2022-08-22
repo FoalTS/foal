@@ -641,7 +641,7 @@ foal g script revoke-session
 Open `scripts/revoke-session.ts` and update its content.
 
 ```typescript
-import { createService, readSession, Store } from '@foal/core';
+import { createService, Store } from '@foal/core';
 
 import { dataSource } from '../db';
 
@@ -659,7 +659,7 @@ export async function main({ token }: { token: string }) {
   const store = createService(Store);
   await store.boot();
 
-  const session = await readSession(store, token);
+  const session = await store.readSession(token);
   if (session) {
     await session.destroy();
   }
@@ -1009,12 +1009,10 @@ export class ApiController {
 
 ### Read a Session From a Token
 
-The `@UseSessions` hook automatically retrieves the session state on each request. If you need to manually read a session (for example in a shell script), you can do it with the `readSession` function.
+The `@UseSessions` hook automatically retrieves the session state on each request. If you need to manually read a session (for example in a shell script), you can do it with the `readSession` method.
 
 ```typescript
-import { readSession } from '@foal/core';
-
-const session = await readSession(store, token);
+const session = await store.readSession(token);
 if (!session) {
   throw new Error('Session does not exist or has expired.')
 }

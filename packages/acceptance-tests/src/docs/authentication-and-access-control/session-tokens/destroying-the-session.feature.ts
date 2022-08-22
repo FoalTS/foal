@@ -16,7 +16,6 @@ import {
   HttpResponseNoContent,
   IAppController,
   Post,
-  readSession,
   ServiceManager,
   Store,
   UseSessions
@@ -72,7 +71,7 @@ describe('Feature: Destroying the session', () => {
     const session = await createSession(store);
     await session.commit();
 
-    notStrictEqual(await readSession(store, session.getToken()), null);
+    notStrictEqual(await store.readSession(session.getToken()), null);
 
     await request(app)
       .post('/logout')
@@ -85,7 +84,7 @@ describe('Feature: Destroying the session', () => {
       .send()
       .expect(204);
 
-    strictEqual(await readSession(store, session.getToken()), null);
+    strictEqual(await store.readSession(session.getToken()), null);
   });
 
 });
