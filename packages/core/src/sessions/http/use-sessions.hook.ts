@@ -18,10 +18,16 @@ import {
   ServiceManager
 } from '../../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
-import { checkUserIdType } from './check-user-id-type';
-import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';
 import { createSession, readSession, SessionStore } from '../core';
-import { getCsrfTokenFromRequest, removeSessionCookie, setSessionCookie, shouldVerifyCsrfToken } from './utils';
+import {
+  checkUserIdType,
+  getCsrfTokenFromRequest,
+  getSessionIDFromRequest,
+  RequestValidationError,
+  removeSessionCookie,
+  setSessionCookie,
+  shouldVerifyCsrfToken,
+} from './utils';
 
 export type UseSessionOptions = {
   store?: Class<SessionStore>;

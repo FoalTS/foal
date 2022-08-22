@@ -1,6 +1,6 @@
 import { strictEqual, throws } from 'assert';
 import { Config, Context } from '@foal/core';
-import { JWT_DEFAULT_COOKIE_NAME } from './constants';
+import { JWT_DEFAULT_COOKIE_NAME } from '../constants';
 import { getJwtFromRequest, RequestValidationError } from './get-jwt-from-request';
 
 function createEmptyRequest(): Context['request'] {
