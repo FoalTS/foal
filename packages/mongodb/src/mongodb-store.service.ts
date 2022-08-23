@@ -129,4 +129,13 @@ export class MongoDBStore extends SessionStore {
     return sessions.map((dbSession: { sessionID: string; }) => dbSession.sessionID);
   }
 
+  /**
+   * Returns all distinct session user id's.
+   */
+  async getAuthenticatedUserIds(): Promise<string[]> {
+    return await this.collection.distinct('state.userId', {
+      'state.userId': { $ne: null }
+    });
+  }
+
 }

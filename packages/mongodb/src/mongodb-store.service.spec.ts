@@ -161,6 +161,33 @@ describe('MongoDBStore', () => {
       return session;
     }
 
+    async function createSessionTestData(): Promise<void> {
+      const states: SessionState[] = [
+        {
+          ...createState(),
+          id: 'xxx',
+          userId: '1234'
+        },
+        {
+          ...createState(),
+          id: 'yyy',
+          userId: 'asdf'
+        },
+        {
+          ...createState(),
+          id: 'zzz',
+          userId: 'asdf'
+        },
+      ];
+
+      for (const state of states) {
+        await insertSessionIntoDB({
+          sessionID: state.id,
+          state,
+        });
+      }
+    }
+
     it('should support sessions IDs of length 44.', async () => {
       const session = await createSession({} as any);
       const id = session.getToken();
@@ -430,111 +457,79 @@ describe('MongoDBStore', () => {
     describe('has a "getSessionsOf" method that', () => {
 
       beforeEach(async () => {
-
-        const states: SessionState[] = [
-          {
-            ...createState(),
-            id: 'xxx',
-            userId: '1234'
-          },
-          {
-            ...createState(),
-            id: 'yyy',
-            userId: 'asdf'
-          },
-          {
-            ...createState(),
-            id: 'zzz',
-            userId: 'asdf'
-          },
-        ];
-
-        for (const state of states) {
-          await insertSessionIntoDB({
-            sessionID: state.id,
-            state,
-          });
-        }
+        await createSessionTestData();
       });
 
       it('should return all sessions of first user', async () => {
-        const user = { id: 'asdf' }
+        const user = { id: 'asdf' };
         const sessions = await store.getSessionsOf(user);
 
-        strictEqual(sessions.length, 2)
-        strictEqual(sessions[0].sessionID, 'yyy')
-        strictEqual(sessions[1].sessionID, 'zzz')
+        strictEqual(sessions.length, 2);
+        strictEqual(sessions[0].sessionID, 'yyy');
+        strictEqual(sessions[1].sessionID, 'zzz');
       });
 
       it('should return all sessions of second user', async () => {
-        const user = { id: '1234' }
+        const user = { id: '1234' };
         const sessions = await store.getSessionsOf(user);
 
-        strictEqual(sessions.length, 1)
-        strictEqual(sessions[0].sessionID, 'xxx')
+        strictEqual(sessions.length, 1);
+        strictEqual(sessions[0].sessionID, 'xxx');
       });
 
       it('should return no sessions for not existing id', async () => {
-        const user = { id: '1234567890' }
+        const user = { id: '1234567890' };
         const sessions = await store.getSessionsOf(user);
 
-        strictEqual(sessions.length, 0)
+        strictEqual(sessions.length, 0);
       });
 
     });
 
-    describe('has a "getSessionIDsOf" method that',  () => {
+    describe('has a "getSessionIDsOf" method that', () => {
 
       beforeEach(async () => {
-
-        const states: SessionState[] = [
-          {
-            ...createState(),
-            id: 'xxx',
-            userId: '1234'
-          },
-          {
-            ...createState(),
-            id: 'yyy',
-            userId: 'asdf'
-          },
-          {
-            ...createState(),
-            id: 'zzz',
-            userId: 'asdf'
-          },
-        ];
-
-        for (const state of states) {
-          await insertSessionIntoDB({
-            sessionID: state.id,
-            state,
-          });
-        }
+        await createSessionTestData();
       });
 
       it('should return all session ids of first user', async () => {
-        const user = { id: 'asdf' }
+        const user = { id: 'asdf' };
         const sessions = await store.getSessionIDsOf(user);
 
-        strictEqual(sessions.length, 2)
-        strictEqual(sessions[0], 'yyy')
-        strictEqual(sessions[1], 'zzz')
+        strictEqual(sessions.length, 2);
+        strictEqual(sessions[0], 'yyy');
+        strictEqual(sessions[1], 'zzz');
       });
 
       it('should return all session ids of second user', async () => {
-        const user = { id: '1234' }
+        const user = { id: '1234' };
         const sessions = await store.getSessionIDsOf(user);
 
-        strictEqual(sessions.length, 1)
-        strictEqual(sessions[0], 'xxx')
+        strictEqual(sessions.length, 1);
+        strictEqual(sessions[0], 'xxx');
       });
 
       it('should return no session ids for not existing id', async () => {
         const user = { id: '1234567890' }
         const sessions = await store.getSessionIDsOf(user);
 
-        strictEqual(sessions.length, 0)
+        strictEqual(sessions.length, 0);
+      });
+
+    });
+
+    describe('has a "getAuthenticatedUserIds" method that', () => {
+
+      beforeEach(async () => {
+        await createSessionTestData();
+      });
+
+      it('should return all distinct user ids', async () => {
+        const sessions = await store.getAuthenticatedUserIds();
+
+        strictEqual(sessions.length, 2);
+        strictEqual(sessions[0], '1234');
+        strictEqual(sessions[1], 'asdf');
       });
 
     });
