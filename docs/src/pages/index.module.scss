@@ -205,13 +205,6 @@ $max-content-width: 1280px;
   padding: $small-section-padding-y $section-padding-x;
 }
 
-.metricsSection {
-  @include section();
-  @include smallSection();
-
-  background-color: $bg-white;
-}
-
 .allInOneSection {
   @include section();
 
@@ -301,61 +294,6 @@ $max-content-width: 1280px;
   background-color: $bg-white;
   // background-image: url('../img/bg5.svg');
   // background-size: cover;
-}
-
-.metrics {
-  display: flex;
-  justify-content: space-around;
-  color: $black;
-
-
-  @media (max-width: $small-screen) {
-    flex-direction: column;
-
-    >div {
-      margin-bottom: 10px;
-    }
-  }
-
-  >div {
-    display: flex;
-    align-items: center;
-
-    @media (max-width: $medium-screen) {
-      flex-direction: column;
-    }
-
-    @media (max-width: $small-screen) {
-      padding-bottom: 20px;
-    }
-
-  }
-
-  .number {
-    @include title();
-
-    font-size: 30px;
-    font-family: arial;
-    font-weight: bold;
-    color: $medium-blue;
-
-    .plus {
-      margin-left: 2px;
-    }
-  }
-
-  .caption {
-    @include paragraph();
-
-    line-height: 15px;
-    font-size: 15px;
-    margin-left: 10px;
-
-    @media (max-width: $medium-screen) {
-      margin-left: 0;
-    }
-
-  }
 }
 
 .feature {

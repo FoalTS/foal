@@ -70,22 +70,6 @@ function Home() {
         <div className={styles.screenshotContainer}>
           <img src={useBaseUrl('img/home/screenshot.png')} alt="" />
         </div>
-        <div className={styles.metricsSection}>
-          <div className={styles.metrics}>
-            <div>
-              <div className={styles.number}>2,100<span className={styles.plus}>+</span></div>
-              <div className={styles.caption}>acceptance <br /> and unit tests</div>
-            </div>
-            <div>
-              <div className={styles.number}>11,000<span className={styles.plus}>+</span></div>
-              <div className={styles.caption}>lines of <br />documentation</div>
-            </div>
-            <div>
-              <div className={styles.number}>4 years</div>
-              <div className={styles.caption}>of active <br />development</div>
-            </div>
-          </div>
-        </div>
         <div className={styles.allInOneSection}>
           <div className={styles.feature}>
             <div className={styles.col1}>
