@@ -294,12 +294,6 @@ $max-content-width: 1280px;
   }
 }
 
-.testimonialsSection {
-  @include section();
-
-  background-color: $bg-white;
-}
-
 .getStartedSection {
   @include section();
   @include smallSection();
@@ -528,58 +522,6 @@ $max-content-width: 1280px;
   padding: 10px;
   padding-bottom: 12px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
-.testimonials {
-  h2 {
-    text-align: center;
-    font-family: Arial;
-    color: $light-blue;
-    margin-bottom: 0;
-  }
-
-  .content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-  }
-
-  .card {
-    padding: 20px;
-    border-radius: 10px;
-    width: 320px;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    margin-top: 60px;
-
-    display: flex;
-    flex-direction: column;
-
-    .title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: $medium-blue2;
-      margin-bottom: 25px;
-    }
-
-    .testimonial {
-      font-family: Arial;
-      font-style: italic;
-      margin-bottom: 20px;
-      flex: 1;
-    }
-
-    .author {
-      font-weight: bold;
-      font-family: Arial;
-      font-size: 0.9rem;
-      color: $medium-blue2;
-
-      .job {
-        font-weight: normal;
-      }
-    }
-
-  }
 }
 
 .getStarted {
