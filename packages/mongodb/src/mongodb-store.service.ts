@@ -51,7 +51,7 @@ export class MongoDBStore extends SessionStore {
   }
 
   async read(id: string): Promise<SessionState | null> {
-    const session: DatabaseSession | null = await this.collection.findOne({ sessionID: id });
+    const session: DatabaseSession|null = await this.collection.findOne({ sessionID: id });
     if (session === null) {
       return session;
     }
