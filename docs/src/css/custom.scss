@@ -7,6 +7,10 @@
 
  @import './carbonads.css';
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-primary: #176edb;
