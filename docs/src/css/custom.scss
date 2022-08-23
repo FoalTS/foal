@@ -5,7 +5,7 @@
  * work well for content-centric websites.
  */
 
- @import './carbonads.css';
+@import './carbonads.css';
 
 @tailwind base;
 @tailwind components;
@@ -27,8 +27,8 @@ main {
   padding-top: calc(var(--ifm-spacing-horizontal)*2);
 }
 
-main > div {
-  max-width: calc( var(--ifm-container-width) - var(--doc-sidebar-width)) !important;
+main>div {
+  max-width: calc(var(--ifm-container-width) - var(--doc-sidebar-width)) !important;
 }
 
 .badge {
@@ -46,9 +46,9 @@ main > div {
   --docsearch-muted-color: rgb(164, 166, 168);
   --docsearch-container-background: rgba(47, 55, 69, 0.7);
 
-  --docsearch-key-gradient: linear-gradient(-26.5deg,#565872,#31355b);
-  --docsearch-key-shadow: inset 0 -2px 0 0 #282d55,inset 0 0 1px 1px #51577d,0 2px 2px 0 rgba(3,4,9,0.3);
-  
+  --docsearch-key-gradient: linear-gradient(-26.5deg, #565872, #31355b);
+  --docsearch-key-shadow: inset 0 -2px 0 0 #282d55, inset 0 0 1px 1px #51577d, 0 2px 2px 0 rgba(3, 4, 9, 0.3);
+
   --docsearch-searchbox-background: var(--ifm-background-color);
   --docsearch-searchbox-focus-background: var(--ifm-color-black);
 
@@ -60,15 +60,13 @@ main > div {
  */
 .header-github-link,
 .header-twitter-link,
-.header-discord-link
-{
+.header-discord-link {
   padding: 4px 6px;
 }
 
 .header-github-link:before,
 .header-twitter-link:before,
-.header-discord-link:before
-{
+.header-discord-link:before {
   content: '';
   width: 22px;
   height: 22px;
@@ -91,8 +89,7 @@ main > div {
 }
 
 .navbar__link:hover,
-.navbar__link--active
-{
+.navbar__link--active {
   color: var(--ifm-navbar-link-color);
   background-color: #166ad0;
   border-radius: 3px;
@@ -114,8 +111,7 @@ main > div {
 }
 
 .DocSearch-Button,
-.DocSearch-Button-Key
-{
+.DocSearch-Button-Key {
   color: var(--docsearch-text-color) !important;
 }
 
@@ -131,11 +127,11 @@ main > div {
   font-size: 0.85rem;
 }
 
-.menu > ul.menu__list > li.menu__list-item > div.menu__list-item-collapsible:hover {
+.menu>ul.menu__list>li.menu__list-item>div.menu__list-item-collapsible:hover {
   background: none;
 }
 
-.menu > ul.menu__list > li.menu__list-item > div.menu__list-item-collapsible> a.menu__link--sublist:first-child {
+.menu>ul.menu__list>li.menu__list-item>div.menu__list-item-collapsible>a.menu__link--sublist:first-child {
   cursor: default;
   margin-top: calc(var(--ifm-spacing-vertical) * 1.5);
   font-weight: bold;
