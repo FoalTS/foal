@@ -51,7 +51,7 @@ export class MongoDBStore extends SessionStore {
   }
 
   async read(id: string): Promise<SessionState | null> {
-    const session: DatabaseSession|null = await this.collection.findOne({ sessionID: id });
+    const session: DatabaseSession | null = await this.collection.findOne({ sessionID: id });
     if (session === null) {
       return session;
     }
@@ -91,12 +91,21 @@ export class MongoDBStore extends SessionStore {
   }
 
   /**
-   * Closes the connection to the database.
-   *
-   * @memberof MongoDBStore
+   * Returns all distinct session user id's.
    */
-  async close(): Promise<void> {
-    await this.mongoDBClient.close();
+  async getAuthenticatedUserIds(): Promise<string[]> {
+    return await this.collection.distinct('state.userId', {
+      'state.userId': { $ne: null }
+    });
+  }
+
+  /**
+   * Destroys all sessions of a user.
+   *
+   * @param user
+   */
+  async destroyAllSessionsOf(user: { id: string }): Promise<void> {
+    await this.collection.deleteMany({ 'state.userId': user.id.toString() });
   }
 
   /**
@@ -130,12 +139,12 @@ export class MongoDBStore extends SessionStore {
   }
 
   /**
-   * Returns all distinct session user id's.
+   * Closes the connection to the database.
+   *
+   * @memberof MongoDBStore
    */
-  async getAuthenticatedUserIds(): Promise<string[]> {
-    return await this.collection.distinct('state.userId', {
-      'state.userId': { $ne: null }
-    });
+  async close(): Promise<void> {
+    await this.mongoDBClient.close();
   }
 
 }

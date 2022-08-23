@@ -454,6 +454,59 @@ describe('MongoDBStore', () => {
 
     });
 
+    describe('has a "getAuthenticatedUserIds" method that', () => {
+
+      beforeEach(async () => {
+        await createSessionTestData();
+      });
+
+      it('should return all distinct user ids', async () => {
+        const sessions = await store.getAuthenticatedUserIds();
+
+        strictEqual(sessions.length, 2);
+        strictEqual(sessions[0], '1234');
+        strictEqual(sessions[1], 'asdf');
+      });
+
+    });
+
+    describe('has a "destroyAllSessionsOf" method that', () => {
+
+      beforeEach(async () => {
+        await createSessionTestData();
+      });
+
+      it('should destroy all sessions of a user', async () => {
+        const user = { id: 'asdf' };
+        await store.destroyAllSessionsOf(user);
+        const sessions = await store.getSessionsOf(user);
+
+        strictEqual(sessions.length, 0);
+
+        const user2 = { id: '1234' };
+        const sessions2 = await store.getSessionsOf(user2);
+
+        strictEqual(sessions2.length, 1);
+        strictEqual(sessions2[0].sessionID, 'xxx');
+      });
+
+      it('should destroy all sessions of another user', async () => {
+        const user = { id: '1234' };
+        await store.destroyAllSessionsOf(user);
+        const sessions = await store.getSessionsOf(user);
+
+        strictEqual(sessions.length, 0);
+
+        const user2 = { id: 'asdf' };
+        const sessions2 = await store.getSessionsOf(user2);
+
+        strictEqual(sessions2.length, 2);
+        strictEqual(sessions2[0].sessionID, 'yyy');
+        strictEqual(sessions2[1].sessionID, 'zzz');
+      });
+
+    });
+
     describe('has a "getSessionsOf" method that', () => {
 
       beforeEach(async () => {
@@ -514,22 +567,6 @@ describe('MongoDBStore', () => {
         const sessions = await store.getSessionIDsOf(user);
 
         strictEqual(sessions.length, 0);
-      });
-
-    });
-
-    describe('has a "getAuthenticatedUserIds" method that', () => {
-
-      beforeEach(async () => {
-        await createSessionTestData();
-      });
-
-      it('should return all distinct user ids', async () => {
-        const sessions = await store.getAuthenticatedUserIds();
-
-        strictEqual(sessions.length, 2);
-        strictEqual(sessions[0], '1234');
-        strictEqual(sessions[1], 'asdf');
       });
 
     });
