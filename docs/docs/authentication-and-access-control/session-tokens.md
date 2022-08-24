@@ -715,24 +715,29 @@ foal run revoke-all-sessions
 
 ### Query All Sessions of a User
 
-> *This feature is only available with the TypeORM store.*
+The `getSessionIDsOf` function returns an array of all session ID's of a user.
 
 ```typescript
 const user = { id: 1 };
 const ids = await store.getSessionIDsOf(user);
 ```
 
-### Query All Connected Users
+The `getSessionsOf` function returns an array of all complete session objects of a user.
 
-> *This feature is only available with the TypeORM store.*
+> *This feature is only available with the MongoDB store.*
+
+```typescript
+const user = { id: '507f1f77bcf86cd799439011' };
+const sessions = await store.getSessionsOf(user);
+```
+
+### Query All Connected Users
 
 ```typescript
 const ids = await store.getAuthenticatedUserIds();
 ```
 
 ### Force the Disconnection of a User
-
-> *This feature is only available with the TypeORM store.*
 
 ```typescript
 const user = { id: 1 };
