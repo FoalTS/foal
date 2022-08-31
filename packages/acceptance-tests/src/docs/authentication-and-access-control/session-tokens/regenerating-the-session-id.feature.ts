@@ -10,7 +10,6 @@ import {
   Config,
   Context,
   createApp,
-  createSession,
   dependency,
   Get,
   HttpResponseOK,
@@ -45,7 +44,7 @@ describe('Feature: Regenerating the session ID', () => {
 
       @Get('/new-session')
       async createSessionAndReturnToken(ctx: Context) {
-        ctx.session = await createSession(this.store);
+        ctx.session = await this.store.createSession();
         return new HttpResponseOK({ token: ctx.session.getToken() });
       }
 

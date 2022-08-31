@@ -421,7 +421,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, createSession, dependency, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, Store, UseSessions, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, dependency, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, Store, UseSessions, ValidateBody, verifyPassword } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -448,7 +448,7 @@ export class AuthController {
     user.password = await hashPassword(ctx.request.body.password);
     await user.save();
 
-    ctx.session = await createSession(this.store);
+    ctx.session = await this.store.createSession();
     ctx.session.setUser(user);
 
     return new HttpResponseOK({
@@ -469,7 +469,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    ctx.session = await createSession(this.store);
+    ctx.session = await this.store.createSession();
     ctx.session.setUser(user);
 
     return new HttpResponseOK({

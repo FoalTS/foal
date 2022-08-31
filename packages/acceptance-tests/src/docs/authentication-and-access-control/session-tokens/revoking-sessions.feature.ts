@@ -5,7 +5,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 import { DataSource } from 'typeorm';
 
 // FoalTS
-import { Config, createService, createSession, readSession, Store } from '@foal/core';
+import { Config, createService, Store } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
 import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
@@ -34,7 +34,7 @@ describe('Feature: Revoking sessions', () => {
       const store = createService(Store);
       await store.boot();
 
-      const session = await readSession(store, token);
+      const session = await store.readSession(token);
       if (session) {
         await session.destroy();
       }
@@ -46,14 +46,14 @@ describe('Feature: Revoking sessions', () => {
 
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
-    const session = await createSession(store);
+    const session = await store.createSession();
     await session.commit();
 
-    notStrictEqual(await readSession(store, session.getToken()), null);
+    notStrictEqual(await store.readSession(session.getToken()), null);
 
     await main({ token: session.getToken() });
 
-    strictEqual(await readSession(store, session.getToken()), null);
+    strictEqual(await store.readSession(session.getToken()), null);
 
   });
 
@@ -75,18 +75,18 @@ describe('Feature: Revoking sessions', () => {
 
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
-    const session = await createSession(store);
+    const session = await store.createSession();
     await session.commit();
-    const session2 = await createSession(store);
+    const session2 = await store.createSession();
     await session2.commit();
 
-    notStrictEqual(await readSession(store, session.getToken()), null);
-    notStrictEqual(await readSession(store, session2.getToken()), null);
+    notStrictEqual(await store.readSession(session.getToken()), null);
+    notStrictEqual(await store.readSession(session2.getToken()), null);
 
     await main();
 
-    strictEqual(await readSession(store, session.getToken()), null);
-    strictEqual(await readSession(store, session2.getToken()), null);
+    strictEqual(await store.readSession(session.getToken()), null);
+    strictEqual(await store.readSession(session2.getToken()), null);
 
   });
 

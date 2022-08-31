@@ -1,5 +1,5 @@
 // 3p
-import { Config, createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
+import { Config, createService, SessionAlreadyExists, SessionState, Store } from '@foal/core';
 import { createClient } from 'redis';
 
 // FoalTS
@@ -93,7 +93,27 @@ describe('RedisStore', () => {
     });
 
     it('should support sessions IDs of length 44.', async () => {
-      const session = await createSession({} as any);
+      class ConcreteStore extends Store {
+        save(state: SessionState, maxInactivity: number): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        read(id: string): Promise<SessionState | null> {
+          throw new Error('Method not implemented.');
+        }
+        update(state: SessionState, maxInactivity: number): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        destroy(id: string): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        clear(): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+      }
+      const session = await new ConcreteStore().createSession();
       const key = getKey(session.getToken());
       await redisClient.set(key, 'bar');
       strictEqual(await redisClient.exists(key), 1);

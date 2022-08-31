@@ -11,7 +11,6 @@ import {
   Context,
   controller,
   createApp,
-  createSession,
   dependency,
   Get,
   HttpResponseOK,
@@ -55,7 +54,7 @@ describe('Feature: Using the Authorization header', () => {
       async login(ctx: Context) {
         // Check the user credentials...
 
-        ctx.session = await createSession(this.store);
+        ctx.session = await this.store.createSession();
 
         // See the "authentication" section below
         // to see how to associate a user to the session.
@@ -135,7 +134,7 @@ describe('Feature: Using the Authorization header', () => {
       async login(ctx: Context) {
         // Check the user credentials...
 
-        ctx.session = await createSession(this.store);
+        ctx.session = await this.store.createSession();
 
         // See the "authentication" section below
         // to see how to associate a user to the session.

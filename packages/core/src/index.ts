@@ -224,6 +224,4 @@ export {
   SessionStore,
   Store,
   UseSessions,
-  createSession,
-  readSession,
 } from './sessions';

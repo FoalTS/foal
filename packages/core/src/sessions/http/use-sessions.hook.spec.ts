@@ -30,7 +30,6 @@ import {
 import {
   SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
   SESSION_DEFAULT_INACTIVITY_TIMEOUT,
-  readSession,
   Session,
   SessionState,
   SessionStore,
@@ -513,10 +512,10 @@ describe('UseSessions', () => {
       it('should throw an error if the session state has no CSRF token.', async () => {
         ctx = createContextWithPostMethod({}, { [SESSION_DEFAULT_COOKIE_NAME]: anonymousSessionID });
         return rejects(
-          () => hook(ctx, services),
+          async () => hook(ctx, services),
           {
             message: 'Unexpected error: the session content does not have a "csrfToken" field. '
-              + 'Are you sure you created the session with "createSession"?'
+              + 'Are you sure you created the session with "Store.createSession"?'
           }
         );
       });
@@ -873,7 +872,7 @@ describe('UseSessions', () => {
 
       beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
 
-      postHookTestHook(async () => readSession(services.get(Store), authenticatedSessionID));
+      postHookTestHook(async () => services.get(Store).readSession(authenticatedSessionID));
 
     });
 
@@ -883,7 +882,7 @@ describe('UseSessions', () => {
 
         beforeEach(() => ctx = createContext());
 
-        postHookTestHook(async () => readSession(services.get(Store), authenticatedSessionID));
+        postHookTestHook(async () => services.get(Store).readSession(authenticatedSessionID));
 
       });
 

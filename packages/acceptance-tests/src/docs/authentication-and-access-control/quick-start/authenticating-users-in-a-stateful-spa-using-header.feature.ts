@@ -11,7 +11,6 @@ import {
   Context,
   controller,
   createApp,
-  createSession,
   dependency,
   Get,
   hashPassword,
@@ -71,7 +70,7 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
       user.password = await hashPassword(ctx.request.body.password);
       await user.save();
 
-      ctx.session = await createSession(this.store);
+      ctx.session = await this.store.createSession();
       ctx.session.setUser(user);
 
       return new HttpResponseOK({
@@ -92,7 +91,7 @@ describe('Feature: Authenticating users in a stateful SPA using the `Authorizati
         return new HttpResponseUnauthorized();
       }
 
-      ctx.session = await createSession(this.store);
+      ctx.session = await this.store.createSession();
       ctx.session.setUser(user);
 
       return new HttpResponseOK({

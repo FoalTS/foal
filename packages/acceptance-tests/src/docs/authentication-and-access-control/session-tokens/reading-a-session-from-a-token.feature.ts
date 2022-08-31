@@ -8,8 +8,6 @@ import { DataSource } from 'typeorm';
 import {
   Config,
   createService,
-  createSession,
-  readSession,
   Store,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
@@ -36,7 +34,7 @@ describe('Feature: Reading a session from a token', () => {
     async function getFoo(token: string): Promise<any> {
       /* ======================= DOCUMENTATION BEGIN ======================= */
 
-      const session = await readSession(store, token);
+      const session = await store.readSession(token);
       if (!session) {
         throw new Error('Session does not exist or has expired.');
       }
@@ -49,7 +47,7 @@ describe('Feature: Reading a session from a token', () => {
 
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
-    const session = await createSession(store);
+    const session = await store.createSession();
     session.set('foo', 'bar');
     await session.commit();
 

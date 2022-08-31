@@ -7,7 +7,6 @@ import {
   Config,
   Context,
   createApp,
-  createSession,
   dependency,
   Get,
   HttpResponseInternalServerError,
@@ -44,7 +43,7 @@ describe('Sessions should be isolated from each other.', () => {
 
     @Get('/create-new-session')
     async createNewSession(ctx: Context) {
-      ctx.session = await createSession(this.store);
+      ctx.session = await this.store.createSession();
       return new HttpResponseOK({ token: ctx.session.getToken() });
     }
 

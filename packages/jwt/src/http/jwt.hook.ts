@@ -18,11 +18,16 @@ import { decode, verify } from 'jsonwebtoken';
 
 // FoalTS
 import { JWT_DEFAULT_COOKIE_NAME, JWT_DEFAULT_CSRF_COOKIE_NAME } from './constants';
-import { checkAndConvertUserIdType } from './check-and-convert-user-id-type';
-import { getJwtFromRequest, RequestValidationError } from './get-jwt-from-request';
 import { getSecretOrPublicKey } from '../core';
 import { isInvalidTokenError } from './invalid-token.error';
-import { getCsrfTokenFromCookie, getCsrfTokenFromRequest, shouldVerifyCsrfToken } from './utils';
+import {
+  checkAndConvertUserIdType,
+  getJwtFromRequest,
+  RequestValidationError,
+  getCsrfTokenFromCookie,
+  getCsrfTokenFromRequest,
+  shouldVerifyCsrfToken
+} from './utils';
 
 class InvalidTokenResponse extends HttpResponseUnauthorized {
 

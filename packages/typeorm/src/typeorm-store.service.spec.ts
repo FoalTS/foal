@@ -5,7 +5,7 @@ import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 import { DataSource } from 'typeorm';
 
 // FoalTS
-import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
+import { createService, SessionAlreadyExists, SessionState, Store } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3';
@@ -104,7 +104,27 @@ function entityTestSuite(type: DBType) {
     });
 
     it('should support sessions IDs of length 44.', async () => {
-      const session = await createSession({} as any);
+      class ConcreteStore extends Store {
+        save(state: SessionState, maxInactivity: number): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        read(id: string): Promise<SessionState | null> {
+          throw new Error('Method not implemented.');
+        }
+        update(state: SessionState, maxInactivity: number): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        destroy(id: string): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        clear(): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+        cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
+          throw new Error('Method not implemented.');
+        }
+      }
+      const session = await new ConcreteStore().createSession();
       const id = session.getToken();
 
       const dbSession = dataSource.getRepository(DatabaseSession).create({
