@@ -5,7 +5,7 @@ import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 import { DataSource } from 'typeorm';
 
 // FoalTS
-import { createService, SessionAlreadyExists, SessionState } from '@foal/core';
+import { createService, SessionAlreadyExists, SessionState, Store } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3';
