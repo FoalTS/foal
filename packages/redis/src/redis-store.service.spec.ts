@@ -1,5 +1,5 @@
 // 3p
-import { Config, createService, SessionAlreadyExists, SessionState } from '@foal/core';
+import { Config, createService, SessionAlreadyExists, SessionState, Store } from '@foal/core';
 import { createClient } from 'redis';
 
 // FoalTS
