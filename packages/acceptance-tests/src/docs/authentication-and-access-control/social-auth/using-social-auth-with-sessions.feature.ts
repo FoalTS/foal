@@ -12,6 +12,7 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
+  SessionState,
   Store,
   UseSessions,
 } from '@foal/core';
