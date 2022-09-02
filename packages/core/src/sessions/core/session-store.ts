@@ -1,6 +1,4 @@
 // FoalTS
-import { generateToken } from '../../common';
-import { Session } from './session';
 import { SessionState } from './session-state.interface';
 
 export class SessionAlreadyExists extends Error {
@@ -24,40 +22,6 @@ export abstract class Store {
 
   static readonly concreteClassConfigPath = 'settings.session.store';
   static readonly concreteClassName = 'ConcreteSessionStore';
-
-  async createSession(): Promise<Session> {
-    const date = Math.floor(Date.now() / 1000);
-
-    const state: SessionState = {
-      content: {
-        csrfToken: await generateToken(),
-      },
-      createdAt: date,
-      // The below line cannot be tested because of the encapsulation of Session.
-      flash: {},
-      id: await generateToken(),
-      // Any value here is fine. updatedAt is set by Session.commit().
-      updatedAt: date,
-      userId: null,
-    };
-
-    return new Session(this, state, { exists: false });
-  }
-
-  async readSession(id: string): Promise<Session | null> {
-    const state = await this.read(id);
-    if (state === null) {
-      return null;
-    }
-
-    const session = new Session(this, state, { exists: true });
-    if (session.isExpired) {
-      await session.destroy();
-      return null;
-    }
-
-    return session;
-  }
 
   /**
    * Saves the session for the first time.

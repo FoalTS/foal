@@ -8,6 +8,7 @@ import {
   Context,
   controller,
   createApp,
+  createSession,
   Get,
   HttpResponseNoContent,
   HttpResponseOK,
@@ -70,7 +71,7 @@ describe('Feature: Saving and reading content', () => {
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
-    const session = await store.createSession();
+    const session = await createSession(store);
     await session.commit();
 
     await request(app)
@@ -121,7 +122,7 @@ describe('Feature: Saving and reading content', () => {
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
-    const session = await store.createSession();
+    const session = await createSession(store);
     await session.commit();
 
     await request(app)

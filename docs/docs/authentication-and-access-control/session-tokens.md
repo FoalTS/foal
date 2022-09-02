@@ -236,7 +236,7 @@ The mechanism is as follows:
 2. On subsequent requests, send the token in the `Authorization` header with this scheme: `Authorization: Bearer <token>`.
 
 ```typescript
-import { Context, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
+import { Context, createSession, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
 
 @UseSessions()
 export class ApiController {
@@ -248,7 +248,7 @@ export class ApiController {
   async login(ctx: Context) {
     // Check the user credentials...
 
-    ctx.session = await this.store.createSession();
+    ctx.session = await createSession(this.store);
 
     // See the "authentication" section below
     // to see how to associate a user to the session.
@@ -273,7 +273,7 @@ export class ApiController {
 If you want to make sure that `ctx.session` is set and get a 400 error if no `Authorization` header is provided, you can use the `required` option for this.
 
 ```typescript
-import { Context, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
+import { Context, createSession, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
 
 export class ApiController {
 
@@ -285,7 +285,7 @@ export class ApiController {
   async login(ctx: Context) {
     // Check the user credentials...
 
-    ctx.session = await this.store.createSession();
+    ctx.session = await createSession(this.store);
 
     // See the "authentication" section below
     // to see how to associate a user to the session.
@@ -366,7 +366,7 @@ export class ApiController {
 Sessions can be used to authenticate users. To do this, you can use the `Session.setUser` method and the `user` option of `@UseSessions`.
 
 ```typescript
-import { Context, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
+import { Context, createSession, dependency, Get, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -386,7 +386,7 @@ export class ApiController {
     // Check the user credentials...
     // const user = ...
 
-    ctx.session = await this.store.createSession();
+    ctx.session = await createSession(this.store);
 
     // Attach the user to the session.
     ctx.session.setUser(user);
@@ -641,7 +641,7 @@ foal g script revoke-session
 Open `scripts/revoke-session.ts` and update its content.
 
 ```typescript
-import { createService, Store } from '@foal/core';
+import { createService, readSession, Store } from '@foal/core';
 
 import { dataSource } from '../db';
 
@@ -659,7 +659,7 @@ export async function main({ token }: { token: string }) {
   const store = createService(Store);
   await store.boot();
 
-  const session = await store.readSession(token);
+  const session = await readSession(store, token);
   if (session) {
     await session.destroy();
   }
@@ -753,7 +753,7 @@ await ctx.session.regenerateID();
 By default, the `@UseSessions` hook and the `Store` service retrieve the store to use from the configuration. This behavior can be override by importing the store directly into the code.
 
 ```typescript
-import { Context, dependency, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
+import { Context, createSession, dependency, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
 import { RedisStore } from '@foal/redis';
 
 @UseSessions({ store: RedisStore })
@@ -766,7 +766,7 @@ export class ApiController {
   async login(ctx: Context) {
     // Check the user credentials...
 
-    ctx.session = await this.store.createSession();
+    ctx.session = await createSession(this.store);
 
     return new HttpResponseOK({
       token: ctx.session.getToken()
@@ -898,7 +898,7 @@ interface SessionState {
 By default, when the `cookie` option is set to true, the `@UseSessions` hook automatically creates a session if it does not already exist. This can be disabled with the `create` option.
 
 ```typescript
-import { Context, dependency, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
+import { Context, createSession, dependency, HttpResponseOK, Post, Store, UseSessions } from '@foal/core';
 
 export class ApiController {
   @dependency
@@ -911,7 +911,7 @@ export class ApiController {
 
     // ctx.session is potentially undefined
     if (!ctx.session) {
-      ctx.session = await this.store.createSession();
+      ctx.session = await createSession(this.store);
     }
 
     return new HttpResponseOK();
@@ -1009,10 +1009,12 @@ export class ApiController {
 
 ### Read a Session From a Token
 
-The `@UseSessions` hook automatically retrieves the session state on each request. If you need to manually read a session (for example in a shell script), you can do it with the `readSession` method.
+The `@UseSessions` hook automatically retrieves the session state on each request. If you need to manually read a session (for example in a shell script), you can do it with the `readSession` function.
 
 ```typescript
-const session = await store.readSession(token);
+import { readSession } from '@foal/core';
+
+const session = await readSession(store, token);
 if (!session) {
   throw new Error('Session does not exist or has expired.')
 }

@@ -18,16 +18,10 @@ import {
   ServiceManager
 } from '../../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
-import { SessionStore } from '../core';
-import {
-  checkUserIdType,
-  getCsrfTokenFromRequest,
-  getSessionIDFromRequest,
-  RequestValidationError,
-  removeSessionCookie,
-  setSessionCookie,
-  shouldVerifyCsrfToken,
-} from './utils';
+import { checkUserIdType } from './check-user-id-type';
+import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';
+import { createSession, readSession, SessionStore } from '../core';
+import { getCsrfTokenFromRequest, removeSessionCookie, setSessionCookie, shouldVerifyCsrfToken } from './utils';
 
 export type UseSessionOptions = {
   store?: Class<SessionStore>;
@@ -109,14 +103,14 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     if (!sessionID) {
       if (options.create ?? options.cookie) {
-        ctx.session = await store.createSession();
+        ctx.session = await createSession(store);
       }
       return postFunction;
     }
 
     /* Verify the session ID */
 
-    const session = await store.readSession(sessionID);
+    const session = await readSession(store, sessionID);
 
     if (!session) {
       const response = unauthorizedOrRedirect('token invalid or expired');
@@ -133,7 +127,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
       if (!expectedCsrftoken) {
         throw new Error(
           'Unexpected error: the session content does not have a "csrfToken" field. '
-          + 'Are you sure you created the session with "Store.createSession"?'
+          + 'Are you sure you created the session with "createSession"?'
         );
       }
       const actualCsrfToken = getCsrfTokenFromRequest(ctx.request);

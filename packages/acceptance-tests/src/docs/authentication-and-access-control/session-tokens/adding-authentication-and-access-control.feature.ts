@@ -11,6 +11,7 @@ import {
   Context,
   controller,
   createApp,
+  createSession,
   dependency,
   Get,
   HttpResponseOK,
@@ -69,7 +70,7 @@ describe('Feature: Adding authentication and access control', () => {
         // Not in the documentation
         const user = await User.findOneByOrFail({ id: ctx.request.query.id });
 
-        ctx.session = await this.store.createSession();
+        ctx.session = await createSession(this.store);
 
         // Attach the user to the session.
         ctx.session.setUser(user);
@@ -175,10 +176,10 @@ describe('Feature: Adding authentication and access control', () => {
     const user = new User();
     await user.save();
 
-    const session = await services.get(Store).createSession();
+    const session = await createSession(services.get(Store));
     await session.commit();
 
-    const session2 = await services.get(Store).createSession();
+    const session2 = await createSession(services.get(Store));
     session2.setUser(user);
     await session2.commit();
 
@@ -236,10 +237,10 @@ describe('Feature: Adding authentication and access control', () => {
     const user = new User();
     await user.save();
 
-    const session = await services.get(Store).createSession();
+    const session = await createSession(services.get(Store));
     await session.commit();
 
-    const session2 = await services.get(Store).createSession();
+    const session2 = await createSession(services.get(Store));
     session2.setUser(user);
     await session2.commit();
 
@@ -333,10 +334,10 @@ describe('Feature: Adding authentication and access control', () => {
     product2.owner = user;
     await product2.save();
 
-    const session = await services.get(Store).createSession();
+    const session = await createSession(services.get(Store));
     await session.commit();
 
-    const session2 = await services.get(Store).createSession();
+    const session2 = await createSession(services.get(Store));
     session2.setUser(user);
     await session2.commit();
 

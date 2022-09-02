@@ -7,6 +7,7 @@ import {
   Config,
   Context,
   createApp,
+  createSession,
   Get,
   HttpResponseOK,
   IAppController,
@@ -51,7 +52,7 @@ describe('Feature: Modifying session timeouts', () => {
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
     const store = services.get(Store);
 
-    const session = await store.createSession();
+    const session = await createSession(store);
     await session.commit();
 
     await request(app)

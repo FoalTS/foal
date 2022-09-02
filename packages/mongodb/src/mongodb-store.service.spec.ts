@@ -6,9 +6,9 @@ import {
   Config,
   ConfigNotFoundError,
   createService,
+  createSession,
   SessionAlreadyExists,
-  SessionState,
-  Store
+  SessionState
 } from '@foal/core';
 import { MongoClient, MongoNotConnectedError } from 'mongodb';
 
@@ -167,27 +167,7 @@ describe('MongoDBStore', () => {
     }
 
     it('should support sessions IDs of length 44.', async () => {
-      class ConcreteStore extends Store {
-        save(state: SessionState, maxInactivity: number): Promise<void> {
-          throw new Error('Method not implemented.');
-        }
-        read(id: string): Promise<SessionState | null> {
-          throw new Error('Method not implemented.');
-        }
-        update(state: SessionState, maxInactivity: number): Promise<void> {
-          throw new Error('Method not implemented.');
-        }
-        destroy(id: string): Promise<void> {
-          throw new Error('Method not implemented.');
-        }
-        clear(): Promise<void> {
-          throw new Error('Method not implemented.');
-        }
-        cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
-          throw new Error('Method not implemented.');
-        }
-      }
-      const session = await new ConcreteStore().createSession();
+      const session = await createSession({} as any);
       const id = session.getToken();
       await insertSessionIntoDB({
         sessionID: id,

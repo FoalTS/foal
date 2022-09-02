@@ -16,6 +16,7 @@ import {
   HttpResponseOK,
   IAppController,
   Post,
+  readSession,
   ServiceManager,
   Session,
   Store,
@@ -149,7 +150,7 @@ describe('Feature: Using cookies', () => {
       .set('Cookie', writeCookie(cookieName, token))
       .expect(200);
 
-    const session = await services.get(Store).readSession(token);
+    const session = await readSession(services.get(Store), token);
     if (!session) {
       throw new Error('Session not found');
     }

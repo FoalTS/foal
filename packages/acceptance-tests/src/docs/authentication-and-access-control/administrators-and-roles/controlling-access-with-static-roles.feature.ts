@@ -7,7 +7,7 @@ import * as request from 'supertest';
 
 // FoalTS
 import {
-  Config, Context, controller, createApp,
+  Config, Context, controller, createApp, createSession,
   dependency, Get, Hook, HttpResponseForbidden, HttpResponseOK,
   HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
@@ -83,7 +83,7 @@ describe('Feature: Controlling access with static roles', () => {
       async loginAsUser(ctx: Context) {
         const user = await User.findOneByOrFail({ roles: 'user' });
 
-        ctx.session = await this.store.createSession();
+        ctx.session = await createSession(this.store);
         ctx.session.setUser(user);
 
         return new HttpResponseOK({ token: ctx.session.getToken() });
@@ -93,7 +93,7 @@ describe('Feature: Controlling access with static roles', () => {
       async loginAsAdmin(ctx: Context) {
         const user = await User.findOneByOrFail({ roles: 'admin' });
 
-        ctx.session = await this.store.createSession();
+        ctx.session = await createSession(this.store);
         ctx.session.setUser(user);
 
         return new HttpResponseOK({ token: ctx.session.getToken() });

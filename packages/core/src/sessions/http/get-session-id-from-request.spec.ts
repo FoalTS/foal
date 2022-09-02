@@ -1,6 +1,6 @@
 import { strictEqual, throws } from 'assert';
-import { Config, Context } from '../../../core';
-import { SESSION_DEFAULT_COOKIE_NAME } from '../constants';
+import { Config, Context } from '../../core';
+import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';
 
 function createEmptyRequest(): Context['request'] {

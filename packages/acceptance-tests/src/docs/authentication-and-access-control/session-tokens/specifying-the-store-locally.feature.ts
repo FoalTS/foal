@@ -10,6 +10,7 @@ import {
   Context,
   controller,
   createApp,
+  createSession,
   dependency,
   Get,
   HttpResponseOK,
@@ -52,7 +53,7 @@ describe('Feature: Specifying the store locally', () => {
       async login(ctx: Context) {
         // Check the user credentials...
 
-        ctx.session = await this.store.createSession();
+        ctx.session = await createSession(this.store);
 
         return new HttpResponseOK({
           token: ctx.session.getToken()
