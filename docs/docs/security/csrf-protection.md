@@ -133,6 +133,7 @@ module.exports = {
 ```typescript
 import {
   Context,
+  createSession,
   dependency,
   HttpResponseNoContent,
   HttpResponseUnauthorized,
@@ -168,7 +169,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    ctx.session = ctx.session || await this.store.createSession();
+    ctx.session = ctx.session || await createSession(this.store);
     ctx.session.setUser(user);
 
     return new HttpResponseNoContent();
@@ -323,6 +324,7 @@ Same as session tokens.
 ```typescript
 import {
   Context,
+  createSession,
   dependency,
   HttpResponseRedirect,
   Post,
@@ -357,7 +359,7 @@ export class AuthController {
       return new HttpResponseRedirect('/login');
     }
 
-    ctx.session = ctx.session || await this.store.createSession();
+    ctx.session = ctx.session || await createSession(this.store);
     ctx.session.setUser(user);
 
     return new HttpResponseRedirect('/products');

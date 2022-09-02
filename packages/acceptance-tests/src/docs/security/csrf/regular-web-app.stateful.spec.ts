@@ -11,6 +11,7 @@ import {
   Context,
   controller,
   createApp,
+  createSession,
   dependency,
   Get,
   HttpResponseOK,
@@ -53,7 +54,7 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
         return new HttpResponseRedirect('/login');
       }
 
-      ctx.session = ctx.session || await this.store.createSession();
+      ctx.session = ctx.session || await createSession(this.store);
       ctx.session.setUser(user);
 
       return new HttpResponseRedirect('/products');

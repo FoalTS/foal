@@ -6,6 +6,7 @@ import * as request from 'supertest';
 import {
   createApp,
   createService,
+  createSession,
   Get,
   HttpResponseNoContent,
   PermissionRequired,
@@ -73,12 +74,12 @@ describe('[Authorization|permissions] Users', () => {
 
     const store = createService(TypeORMStore);
 
-    const session1 = await store.createSession();
+    const session1 = await createSession(store);
     session1.setUser(user1);
     await session1.commit();
     tokenUser1 = session1.getToken();
 
-    const session2 = await store.createSession();
+    const session2 = await createSession(store);
     session2.setUser(user1);
     await session2.commit();
     tokenUser2 = session2.getToken();

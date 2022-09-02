@@ -6,6 +6,7 @@ import {
   Config,
   Context,
   createApp,
+  createSession,
   dependency,
   Get,
   hashPassword,
@@ -118,7 +119,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
         return new HttpResponseUnauthorized();
       }
 
-      const session = await this.store.createSession();
+      const session = await createSession(this.store);
       session.setUser(user);
       await session.commit();
 

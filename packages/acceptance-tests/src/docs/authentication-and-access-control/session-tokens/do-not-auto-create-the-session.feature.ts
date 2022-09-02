@@ -11,6 +11,7 @@ import {
   Context,
   controller,
   createApp,
+  createSession,
   dependency,
   HttpResponseOK,
   IAppController,
@@ -55,7 +56,7 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
         if (!ctx.session) {
           // Not in the documentation:
           alreadyExists = false;
-          ctx.session = await this.store.createSession();
+          ctx.session = await createSession(this.store);
         }
 
         return new HttpResponseOK();

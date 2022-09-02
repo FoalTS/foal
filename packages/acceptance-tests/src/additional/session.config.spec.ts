@@ -2,6 +2,7 @@ import {
   Config,
   Context,
   createApp,
+  createSession,
   dependency,
   Get,
   HttpResponseOK,
@@ -47,7 +48,7 @@ describe('The session store', () => {
 
       @Post('/login')
       async login(ctx: Context) {
-        const session = await this.store.createSession();
+        const session = await createSession(this.store);
         session.set('products', [
           { name: 'product 1' }
         ]);
