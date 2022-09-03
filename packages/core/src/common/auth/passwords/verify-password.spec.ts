@@ -1,5 +1,5 @@
 // std
-import { fail, ok, strictEqual } from 'assert';
+import { ok, strictEqual } from 'assert';
 import { pbkdf2Sync } from 'crypto';
 
 // FoalTS
