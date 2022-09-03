@@ -1,6 +1,8 @@
 import { pbkdf2, randomBytes } from 'crypto';
 import { promisify } from 'util';
 
+export const PASSWORD_ITERATIONS = 310000;
+
 /**
  * Hash a password using the PBKDF2 algorithm.
  *
@@ -17,7 +19,7 @@ import { promisify } from 'util';
  */
 export async function hashPassword(plainTextPassword: string): Promise<string> {
   const saltBuffer = await promisify(randomBytes)(16);
-  const iterations = 310000;
+  const iterations = PASSWORD_ITERATIONS;
   const keylen = 32;
   const digest = 'sha256';
   const derivedKeyBuffer = await promisify(pbkdf2)(plainTextPassword, saltBuffer, iterations, keylen, digest);
