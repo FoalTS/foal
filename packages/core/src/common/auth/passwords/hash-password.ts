@@ -8,7 +8,7 @@ import { promisify } from 'util';
  * The result is a 64 byte binary string.
  *
  * The random salt is 16 bytes long.
- * The number of iterations is 150000.
+ * The number of iterations is 310000.
  * The length key is 32 bytes long.
  *
  * @export
@@ -17,7 +17,7 @@ import { promisify } from 'util';
  */
 export async function hashPassword(plainTextPassword: string): Promise<string> {
   const saltBuffer = await promisify(randomBytes)(16);
-  const iterations = 150000;
+  const iterations = 310000;
   const keylen = 32;
   const digest = 'sha256';
   const derivedKeyBuffer = await promisify(pbkdf2)(plainTextPassword, saltBuffer, iterations, keylen, digest);
