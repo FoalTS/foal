@@ -2,7 +2,7 @@
 import { URL } from 'url';
 
 // 3p
-import axios from 'axios';
+import * as fetch from 'node-fetch';
 
 // FoalTS
 import { AbstractProvider, SocialTokens } from './abstract-provider.service';
@@ -44,12 +44,14 @@ export class FacebookProvider extends AbstractProvider<FacebookAuthParams, Faceb
     const fields = params && params.fields ? params.fields : this.fields;
     url.searchParams.set('fields', fields.join(','));
 
-    try {
-      const response = await axios.get(url.href);
-      return response.data;
-    } catch (error: any) {
-      throw new UserInfoError(error.response.data);
+    const response = await fetch(url.href);
+    const body = await response.json();
+
+    if (!response.ok) {
+      throw new UserInfoError(body);
     }
+
+    return body;
   }
 
 }

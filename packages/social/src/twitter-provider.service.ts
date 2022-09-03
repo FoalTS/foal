@@ -1,5 +1,5 @@
 // 3p
-import axios from 'axios';
+import * as fetch from 'node-fetch';
 
 // FoalTS
 import { AbstractProvider, SocialTokens } from './abstract-provider.service';
@@ -31,13 +31,15 @@ export class TwitterProvider extends AbstractProvider<TwitterAuthParameter, neve
   protected defaultScopes: string[] = [ 'users.read', 'tweet.read' ];
 
   async getUserInfoFromTokens(tokens: SocialTokens) {
-    try {
-      const response = await axios.get(this.userInfoEndpoint, {
-        headers: { Authorization: `${tokens.token_type} ${tokens.access_token}` }
-      });
-      return response.data;
-    } catch (error: any) {
-      throw new UserInfoError(error.response.data);
+    const response = await fetch(this.userInfoEndpoint, {
+      headers: { Authorization: `${tokens.token_type} ${tokens.access_token}` }
+    });
+    const body = await response.json();
+
+    if (!response.ok) {
+      throw new UserInfoError(body);
     }
+
+    return body;
   }
 }
