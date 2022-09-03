@@ -4,7 +4,7 @@ import * as crypto from 'crypto';
 
 // 3p
 import { Config, Context, generateToken, HttpResponseRedirect, convertBase64ToBase64url } from '@foal/core';
-import axios from 'axios';
+import * as fetch from 'node-fetch';
 
 /**
  * Tokens returned by an OAuth2 authorization server.
@@ -352,14 +352,18 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
       headers.Authorization = `Basic ${auth}`;
     }
 
-    try {
-      const response = await axios.post(this.tokenEndpoint, params, {
-        headers,
-      });
-      return response.data;
-    } catch (error: any) {
-      throw new TokenError(error.response.data);
+    const response = await fetch(this.tokenEndpoint, {
+      body: params,
+      headers,
+      method: 'POST',
+    });
+    const body = await response.json();
+
+    if (!response.ok) {
+      throw new TokenError(body);
     }
+
+    return body;
   }
 
   /**
