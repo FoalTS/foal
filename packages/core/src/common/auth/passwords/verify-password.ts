@@ -1,6 +1,6 @@
-import { strictEqual } from 'assert';
 import { pbkdf2, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
+import { decomposePbkdf2PasswordHash } from './utils';
 
 /**
  * Compare a plain text password and a hash to see if they match.
@@ -11,24 +11,14 @@ import { promisify } from 'util';
  * @returns {Promise<boolean>} True if the hash and the password match. False otherwise.
  */
 export async function verifyPassword(plainTextPassword: string, passwordHash: string): Promise<boolean> {
-  const [ algorithm, iterations, salt, derivedKey ] = passwordHash.split('$');
+  const { digestAlgorithm, iterations, salt, derivedKey, keyLength } = decomposePbkdf2PasswordHash(passwordHash);
 
-  strictEqual(algorithm, 'pbkdf2_sha256', 'Invalid algorithm.');
-
-  strictEqual(typeof iterations, 'string', 'Invalid password format.');
-  strictEqual(typeof salt, 'string', 'Invalid password format.');
-  strictEqual(typeof derivedKey, 'string', 'Invalid password format.');
-  strictEqual(isNaN(parseInt(iterations, 10)), false, 'Invalid password format.');
-
-  const saltBuffer = Buffer.from(salt, 'base64');
-  const derivedKeyBuffer = Buffer.from(derivedKey, 'base64');
-  const digest = 'sha256'; // TODO: depends on the algorthim var
   const password = await promisify(pbkdf2)(
     plainTextPassword,
-    saltBuffer,
-    parseInt(iterations, 10),
-    derivedKeyBuffer.length,
-    digest
+    salt,
+    iterations,
+    keyLength,
+    digestAlgorithm
   );
-  return timingSafeEqual(password, derivedKeyBuffer);
+  return timingSafeEqual(password, derivedKey);
 }
