@@ -36,34 +36,27 @@ To check that a password hash is using the latest recommended number of iteratio
 The example below shows how to perform this check during a login and how to upgrade the password hash if the number of iterations turns out to be too low.
 
 ```typescript
-class LoginController {
-  @Post('/login')
-  @ValidateBody(credentialsSchema)
-  async login(ctx: Context) {
-    const user = await User.findOne({ email: ctx.request.body.email });
+const { email, password } = ctx.request.body;
 
-    if (!user) {
-      return new HttpResponseUnauthorized();
-    }
+const user = await User.findOne({ email });
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
-      return new HttpResponseUnauthorized();
-    }
-
-    // highlight-start
-    // This line must be after the password verification.
-    if (passwordHashNeedsToBeRefreshed(user.password)) {
-      user.password = await hashPassword(ctx.request.body.password);
-      await user.save();
-    }
-    // highlight-end
-
-    ctx.session.setUser(user);
-    await ctx.session.regenerateID();
-
-    return new HttpResponseOK();
-  }
+if (!user) {
+  return new HttpResponseUnauthorized();
 }
+
+if (!await verifyPassword(password, user.password)) {
+  return new HttpResponseUnauthorized();
+}
+
+// highlight-start
+// This line must be after the password verification.
+if (passwordHashNeedsToBeRefreshed(user.password)) {
+  user.password = await hashPassword(password);
+  await user.save();
+}
+// highlight-end
+
+// Log the user in.
 ```
 
 ## Forbid Overly Common Passwords
