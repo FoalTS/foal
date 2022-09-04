@@ -1,0 +1,49 @@
+---
+title: Version 2.11 release notes
+author: Loïc Poullain
+author_title: Fullstack developer and creator of FoalTS
+author_url: https://github.com/LoicPoullain
+author_image_url: https://avatars1.githubusercontent.com/u/13604533?v=4
+image: blog/twitter-banners/version-2.11-release-notes.png
+tags: [release]
+---
+
+![Banner](./assets/version-2.11-is-here/banner.png)
+
+Version 2.11 of [Foal](https://foalts.org/) is out! Here are the improvements that it brings:
+
+<!--truncate-->
+
+## Number of Iterations on Password Hashing Has Been Increased
+
+The PBKDF2 algorithm (used for password hashing) uses a number of iterations to hash passwords. This work factor is deliberate and slows down potential attackers, making attacks against hashed passwords more difficult.
+
+As computing power increases, the number of iterations must also increase. This is why, starting with version 2.11, the number of iterations has been increased to 310,000.
+
+To check that a password hash is using the latest recommended number of iterations, you can use the `passwordHashNeedsToBeRefreshed` function.
+
+The example below shows how to perform this check during a login and how to upgrade the password hash if the number of iterations turns out to be too low.
+
+```typescript
+const { email, password } = ctx.request.body;
+
+const user = await User.findOne({ email });
+
+if (!user) {
+  return new HttpResponseUnauthorized();
+}
+
+if (!await verifyPassword(password, user.password)) {
+  return new HttpResponseUnauthorized();
+}
+
+// highlight-start
+// This line must be after the password verification.
+if (passwordHashNeedsToBeRefreshed(user.password)) {
+  user.password = await hashPassword(password);
+  await user.save();
+}
+// highlight-end
+
+// Log the user in.
+```

@@ -34,6 +34,7 @@ export {
   generateToken,
   getAjvInstance,
   hashPassword,
+  passwordHashNeedsToBeRefreshed,
   isInFile,
   render,
   renderToString,
