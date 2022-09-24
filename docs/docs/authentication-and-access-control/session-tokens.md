@@ -1038,7 +1038,7 @@ This behavior can be overridden by providing a custom client to the stores at in
 #### `RedisStore`
 
 ```
-npm install redis@3
+npm install redis@4
 ```
 
 *index.ts*
