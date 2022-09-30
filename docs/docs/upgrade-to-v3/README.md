@@ -68,6 +68,10 @@ First, upgrade to the latest minor release of version 2 and check that everythin
 
 - The `@foal/password` package has been removed: the `isCommon` feature was very specific to native English speakers and therefore not very useful for other speakers. The package was also not used by the community (between 30 and 67 downloads per week).
 
+### The `jwks-rsa` package
+
+- The interface of the `options` argument in the `getRSAPublicKeyFromJWKS` hook has changed. See the [`jwks-rsa` library version 2](https://www.npmjs.com/package/jwks-rsa) options for more information.
+
 ## Access control
 
 ### Permissions
