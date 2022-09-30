@@ -20,15 +20,17 @@ function FeatureCell(props) {
   );
 }
 
-function CompanyLogo({ imageSrc }) {
+function CompanyLogo({ imageSrc, href }) {
   return (
-    <div className="tw-col-span-1 tw-flex tw-justify-center tw-py-8 tw-px-8 tw-bg-gray-50">
-      <img
-        className="tw-max-h-12"
-        src={`${imageSrc}`}
-        alt="Workcation"
-      />
-    </div>
+    <a href={href}>
+      <div className="tw-col-span-1 tw-flex tw-justify-center tw-py-8 tw-px-8 tw-bg-gray-50">
+        <img
+          className="tw-max-h-12"
+          src={`${imageSrc}`}
+          alt="Workcation"
+        />
+      </div>
+    </a>
   );
 }
 
