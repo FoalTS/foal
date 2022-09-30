@@ -70,6 +70,14 @@ First, upgrade to the latest minor release of version 2 and check that everythin
 
 ## Access control
 
+### Permissions
+
+The `PermissionRequired` hook was closely tied to the TypeORM `UserWithPermissions` model making it difficult to use with another ORM.
+
+As of version 3:
+- The `PermissionRequired` hook has been moved to `@foal/core`.
+- It can be used with any `ctx.user` implementing the `IUserWithPermissions` interface (exported in `@foal/core`).
+
 ## GraphQL
 
 - `@foal/graphql` requires at least version `^15.8.0` of `graphql`.
