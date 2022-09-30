@@ -83,7 +83,7 @@ The development server is started! Go to `http://localhost:3001` and find our we
 
 ## Backers & Sponsors
 
-[![backers](./backers.png)](https://github.com/sponsors/LoicPoullain)
+[![backers and sponsors](./backers-and-sponsors.png)](https://github.com/sponsors/LoicPoullain)
 
 ## Community Chat
 
