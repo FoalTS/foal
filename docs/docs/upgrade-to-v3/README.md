@@ -40,7 +40,7 @@ First, upgrade to the latest minor release of version 2 and check that everythin
 | 16.x, 18.x | 4.7 |
 
  The framework requires at least version 4.7 of TypeScript. When upgrading from v4.0, there are usually two things to do:
- - Add an `any` type in the `catch(error)` (i.e they become `catch(error: any)`)
+ - Add an `any` type in all `catch(error)` (i.e they become `catch(error: any)`)
  - Add a returned type to the `new Promise`: `new Promise<void>(...)`.
 
 ## Configuration
@@ -49,6 +49,12 @@ First, upgrade to the latest minor release of version 2 and check that everythin
 - `undefined` values do not override other defined config values anymore. -> See https://github.com/FoalTS/foal/issues/1071
 
 ## CLI
+
+- In new projects, the `npm run develop` command has been renamed to `npm run dev` to be consistent with the JS ecosystem.
+- Generated entities extend `BaseEntity` by default to not use `connection.getRepository`.
+- REST generated files use `BaseEntity` methods to facilitate the use of other ORMs.
+- Generated scripts do not include TypeORM code to make it make it easier to use other ORM.
+- The `foal g vscode-config` has been removed to not make the framework code dependent on an IDE. Documentation on how to configure VSCode with Foal has been added though.
 
 ## Validation
 
