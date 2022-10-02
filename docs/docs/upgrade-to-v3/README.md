@@ -25,6 +25,7 @@ This guide will take you step by step through the upgrade to version 3. If somet
 Between version 2 and version 3, some parts of the framework have been improved and some new features have been added. Here are the notable improvements:
 - all dependencies that Foal relies on have been updated, including TypeORM,
 - the framework offers more advanced and secure typing,
+- some features have been simplified,
 - some bugs have been fixed,
 - packages are smaller in size,
 - and some parts of the framework are less tied to TypeORM to make it easier to use another ORM.
@@ -46,7 +47,7 @@ First, upgrade to the latest minor release of version 2 and check that everythin
 ## Configuration
 
 - If the same variable is provided both as environment variable and in the `.env` file, now the value of the environment variable is used.
-- `undefined` values do not override other defined config values anymore. -> See https://github.com/FoalTS/foal/issues/1071
+- `undefined` values do not override other defined config values anymore. See [issue #1071](https://github.com/FoalTS/foal/issues/1071).
 
 ## CLI
 
