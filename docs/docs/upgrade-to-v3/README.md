@@ -168,6 +168,41 @@ ctx.session!.set('foo', 'bar');
 
 - The default type of `ctx.state` is now `{ [key : string] : any }` and not `any`.
 
+### The `fetchUser` functions
+
+> These changes apply to the hooks `JWTRequired`, `JWTOptional` and `UseSessions`.
+
+- The `FetchUser` interface and all `fetchUser`, `fetchMongoDBUser` and `fetchUserWithPermissions` functions have been removed. They were convulated functions that could make difficult the understanding of the hooks behavior at first glance.
+- To be consistent with the type of `ctx.user`, if the user cannot be authenticated, the hook `user` option must be given the `null` value.
+
+```typescript
+// Before
+@UseSessions({ user: fetchUser(User) })
+
+// After
+@UseSessions({ user: (id: number) => User.findOneBy({ id }) })
+```
+
+```typescript
+// Before
+@UseSessions({ user: fetchUserWithPermissions(User) })
+
+// After
+@UseSessions({ user: (id: number) => User.findOneWithPermissionsBy({ id }) })
+```
+
+```typescript
+// Before
+@UseSessions({ user: fetchMongoDBUser(User) })
+
+// After
+import { ObjectId } from 'mongodb';
+@UseSessions({
+  user: (id: string) => User.findOneBy({ _id: new ObjectId(id) }),
+  userIdType: 'string'
+})
+```
+
 ### Passwords
 
 - The `@foal/password` package has been removed: the `isCommon` feature was very specific to native English speakers and therefore not very useful for other speakers. The package was also not used by the community (between 30 and 67 downloads per week).
@@ -196,3 +231,5 @@ As of version 3:
 
 - The functions `escape` et `escapeProp` have been removed. Modern frontend frameworks (React, Angular, Vue, etc) already take care of escaping characters and these functions are easy to implement on one's own one.
 - All Foal packages are compiled to `es2021` making packages smaller than before.
+- Most properties of `Context`, `WebsocketContext` and `HttpResponse` are read-only.
+- `DatabaseSession` now extends `BaseEntity`.
