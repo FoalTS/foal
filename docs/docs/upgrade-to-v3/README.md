@@ -130,6 +130,44 @@ import ajvErrors from 'ajv-errors';
 
 ## Authentication and contexts
 
+### The `ctx.user` property
+
+> These changes apply to both classes `Context` and `WebsocketContext`.
+
+- **When the user is not authenticated, the value of `ctx.user` is now `null` and not `undefined`.** The motivation behind this change is to be as close as possible to the semantics of JavaScript and to be consistent with the `findOne` functions of the major ORMs (TypeORM@0.3, Prisma, Mikro-ORM, Mongoose).
+- The default type of `ctx.user` is now `{ [key: string]: any } | null` and not `any`.
+
+### The `ctx.session` property
+
+> These changes apply to both classes `Context` and `WebsocketContext`.
+
+- **When there is no session, the value of `ctx.session` is now `null` and not `undefined`.** See `ctx.user` for information.
+- `ctx.session` is now always of type `Session | null`. As consequencies, the class `Context` takes only two generic type arguments: `User` and `ContextSession`.
+
+```typescript
+// Before
+let ctx: Context<User, ContextSession, ContextState>;
+
+// After
+let ctx: Context<User, ContextState>;
+```
+
+```typescript
+// Before
+let ctx: Context<any, Session>;
+ctx.session.set('foo', 'bar');
+
+// After
+let ctx: Context;
+ctx.session!.set('foo', 'bar');
+```
+
+### The `ctx.state` property
+
+> These changes apply to both classes `Context` and `WebsocketContext`.
+
+- The default type of `ctx.state` is now `{ [key : string] : any }` and not `any`.
+
 ### Passwords
 
 - The `@foal/password` package has been removed: the `isCommon` feature was very specific to native English speakers and therefore not very useful for other speakers. The package was also not used by the community (between 30 and 67 downloads per week).
