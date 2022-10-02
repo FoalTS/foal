@@ -59,6 +59,71 @@ First, upgrade to the latest minor release of version 2 and check that everythin
 
 ## Validation
 
+### Validation with JSON schemas
+
+[AJV](https://ajv.js.org/) dependency has been upgraded to version 8, which allows us to take advantage of its TypeScript types. In particular, it is now possible to link a JSON schema with an interface:
+
+```typescript
+import { JSONSchemaType } from 'ajv';
+
+interface MyData {
+  foo: number;
+  bar?: string
+}
+
+const schema: JSONSchemaType<MyData> = {
+  type: 'object',
+  properties: {
+    foo: { type: 'integer' },
+    bar: { type: 'string', nullable: true }
+  },
+  required: ['foo'],
+  additionalProperties: false
+}
+```
+
+As this is a major upgrade of the library, there are some breaking changes in the results returned by the validation function which is used by `ValidateQueryParam`, `ValidatePathParam`, `ValidateHeader`, `ValidateCookie`, `ValidateBody`, `ValidatePayload`, `GraphQLController` and `ValidateMultipartFormDataBody` (renamed to `ParseAndValidateFiles`).
+
+Here are the more notable payload changes:
+
+| AJV version 6 | AJV version 8 |
+| --- | --- |
+| ``"dataPath": ".price"`` | `"instancePath": "/price"` |
+| `"dataPath": "['a-number']"` | `"instancePath": "a-number"` |
+| `message: 'should have required property \'name\''` | `message: 'must have required property \'name\''` |
+
+
+Note also that:
+- The option `'settings.ajv.nullable'` does not exist anymore.
+- The configuration `'settings.ajv.useDefaults'` does not accept `'shared'` as allowed value anymore.
+- As of AJV v8, the [strict mode](https://ajv.js.org/strict-mode.html) is added to *reduce the mistakes in JSON schemas and unexpected validation results*.
+- More details can be found in [AJV migration guide](https://ajv.js.org/v6-to-v8-migration.html).
+
+:::info
+
+Note: `@ValidateXXX` hooks still take an `object` as argument. The typing of the parameter was difficult and AJV TS types are sometimes inconsistent with their corresponding JSON schemas. For example, a `foobar? : string` is converted to `{ type : 'string', nullable : true }` whereas `null` !== `undefined`. The choice was therefore made to let users use the `JSONSchemaType` themselves to type the argument if they wish.
+
+:::
+
+#### The `ajv-errors` plugin
+
+If you're using the [ajv-errors](https://www.npmjs.com/package/ajv-errors) plugin, you will need to upgrade its version and update your code as follows:
+
+```
+npm install ajv-errors@3 ajv@8
+```
+
+```typescript
+// Before
+import * as ajvErrors from 'ajv-errors';
+// After
+import ajvErrors from 'ajv-errors';
+```
+
+### Validation with classes
+
+- `@foal/typestack` require version `~0.5.1` of `class-transformer` and version `~0.13.2` of `class-validator`.
+
 ## File upload
 
 ## Database
