@@ -294,6 +294,17 @@ import { ObjectId } from 'mongodb';
 })
 ```
 
+### The `userCookie` auth hook option
+
+If you use the `userCookie` option, you may face type issues. Update your code as follows if necessary:
+
+```typescript
+// Before
+{ userCookie: (ctx: Context<User|undefined>, services) => userToJSON(ctx.user) }
+// After
+{ userCookie: (ctx, services) => userToJSON(ctx.user as User|null) }
+```
+
 ### Passwords
 
 - The `@foal/password` package has been removed: the `isCommon` feature was very specific to native English speakers and therefore not very useful for other speakers. The package was also not used by the community (between 30 and 67 downloads per week).
