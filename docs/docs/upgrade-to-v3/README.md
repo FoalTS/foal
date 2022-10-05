@@ -205,6 +205,20 @@ import ajvErrors from 'ajv-errors';
 | `connection.close()` | `dataSource.destroy()` |
 | `Foobar.findOneOrFail({}, { relations: ['permissions'] })` | `Foobar.findOneOrFail({}, { relations: { permissions: true } })` |
 
+### redis
+
+The `@foal/redis` package uses `redis@4` under the hood. If you used to pass a custom client to the redis store with `setRedisClient`, don't forget to update your dependency and call the new `.connect()` client method before injecting it.
+
+```typescript
+// Before
+redisClient = createClient(REDIS_URI)
+// After
+redisClient = createClient({ url: REDIS_URI });
+await redisClient.connect();
+```
+
+The same applies if you uses socket.io with redis (see Websockets documentation).
+
 ## Authentication and contexts
 
 ### The `ctx.user` property
