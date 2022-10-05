@@ -126,7 +126,84 @@ import ajvErrors from 'ajv-errors';
 
 ## File upload
 
-## Database
+## Databases
+
+### TypeORM (all databases)
+
+**Foal v3 now supports the latest version of TypeORM (v0.3)**. This version has some breaking changes with v0.2 which requires some changes to be made:
+
+- `createConnection` has been deprecated in favor of `new DataSource`. There is no more global connection and the `DataSource` instance must be passed everywhere (unless you extend your entities from `BaseEntity`).
+    ```typescript
+    // Before
+    const connection = await createConnection(opts);
+
+    // After
+    const dataSource = await DataSource(opts);
+    await dataSource.initialize();
+    ```
+- As if it was no longer supported in v0.3, the `ormconfig.js` file has been removed. It is replaced by a new `src/db.ts` file with the following content. Whether you need to access the data source instance or create a new one, use this file.
+    ```typescript
+    import { Config } from '@foal/core';
+    import { DataSource } from 'typeorm';
+
+    export function createDataSource(): DataSource {
+      return new DataSource({
+        type: Config.getOrThrow('database.type', 'string') as any,
+
+        url: Config.get('database.url', 'string'),
+        host: Config.get('database.host', 'string'),
+        port: Config.get('database.port', 'number'),
+        username: Config.get('database.username', 'string'),
+        password: Config.get('database.password', 'string'),
+        database: Config.get('database.database', 'string'),
+
+        dropSchema: Config.get('database.dropSchema', 'boolean', false),
+        synchronize: Config.get('database.synchronize', 'boolean', false),
+
+        entities: ['build/app/**/*.entity.js'],
+        migrations: ['build/migrations/*.js'],
+      });
+    }
+
+    export const dataSource = createDataSource();
+    ```
+- Migration commands have been updated accordingly:
+    ```json
+    {
+      "makemigrations": "foal rmdir build && tsc -p tsconfig.app.json && npx typeorm migration:generate src/migrations/migration -d build/db -p && tsc -p tsconfig.app.json",
+      "migrations": "npx typeorm migration:run -d build/db",
+      "revertmigration": "npx typeorm migration:revert -d build/db"
+    }
+    ```
+- In new projects (and in the documentation), the call of `createConnection` in in `app.controller.ts` has been replaced by a `dataSource.initilize()` in `src/index.ts`:
+    ```typescript
+    import { dataSource } from './db';
+
+    async function main() {
+      await dataSource.initialize();
+
+      const app = await createApp(AppController);
+
+      const port = Config.get('port', 'number', 3001);
+      app.listen(port, () => displayServerURL(port));
+    }
+    ```
+- If you need to create a connection in your tests (E2E or unit), import `createDataSource` from `db.ts` and initialize the connection. 
+- The complete migration guide to `typeorm@0.3` can be found [here](https://github.com/typeorm/typeorm/releases/tag/0.3.0).
+
+*Quick migration guide*
+
+| TypeORM v0.2 | TypeORM v0.3 |
+| --- | --- |
+| `findOneOrFail` | `findOneByOrFail` |
+| `findOne` | `findOneBy` |
+| `find` | `findBy` |
+| `undefined` (return value) | `null` |
+| `find({ owner: ctx.user })` | `findBy({ owner: { id: ctx.user.id } })` |
+| `findOne(1)` | `findOneBy({ id: 1 })` |
+| `await createConnection(opts)` | `const dataSource = new DataSource(opts); await dataSource.initialize()` |
+| `connection.close()` | `dataSource.destroy()` |
+| `Foobar.findOneOrFail({}, { relations: ['permissions'] })` | `Foobar.findOneOrFail({}, { relations: { permissions: true } })` |
 
 ## Authentication and contexts
 
