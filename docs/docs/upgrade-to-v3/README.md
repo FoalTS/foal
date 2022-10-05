@@ -219,6 +219,57 @@ await redisClient.connect();
 
 The same applies if you uses socket.io with redis (see Websockets documentation).
 
+### MongoDB
+
+The package `@foal/mongodb` and its Mongo store uses `mongodb@4`.
+- You might need to upgrade `@types/node`. It is used under the hood by the library and you might face compilation errors otherwise.
+- If you pass a custom Mongo client to the store, don't forget to upgrade your `mongodb` dependency to version 4.
+    ```typescript
+    // Before
+    const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    // After
+    const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db');
+    ```
+
+**Important notes on the use of MongoDB with TypeORM:**
+- TypeORM still requires `mongodb@3`. If you are using the MongoDB store, then you will have two connections established to the database. If you want to pass a custom client to the store, you can make the two versions coexist with the following code:
+    ```json
+    {
+      "mongodb": "~3.7.3",
+      "mongodb4": "npm:mongodb@~4.3.1",
+    }
+    ```
+    
+    ```typescript
+    import { MongoClient } from 'mongodb4';
+    ```
+- TypeORM v0.3 works very badly with using the name `id` in entities. Consider to use `_id` instead:
+  ```typescript
+  import { ObjectId } from 'mongodb';
+
+  @Entity()
+  class Foobar {
+      @ObjectIdColumn()
+      // DO NO use
+      id: ObjectID;
+      // Use
+      _id: ObjectID;
+  }
+  ```
+
+  ```typescript
+  // Before
+  import { getMongoRepository } from 'typeorm';
+  const user = await getMongoRepository(User).findOne('xxxx');
+
+  // After
+  import { ObjectId } from 'mongodb';
+  const user = await User.findOneBy({ _id: new ObjectId('xxxx') });
+  ```
+
 ## Authentication and contexts
 
 ### The `ctx.user` property
