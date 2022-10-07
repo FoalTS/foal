@@ -126,6 +126,56 @@ import ajvErrors from 'ajv-errors';
 
 ## File upload
 
+The hook for uploading files has been updated so as to:
+- support optional fields,
+- make its parameters less verbose,
+- remove the very large number of nested objects to access the files and fields from the `ctx`,
+- have a better and safer typing,
+- return an error to the client when multiple files are uploaded whereas we expect a single one,
+- and make the hook name more meaningful to people not knowing multipart requests.
+
+Here are the breaking changes and new features:
+- `ValidateMultipartFormDataBody` is renamed to `ParseAndValidateFiles`.
+- The interface of the hook has changed and accepts optional fields:
+    ```typescript
+    @ParseAndValidateFiles(
+      {
+        profile: { required: true }
+      },
+      // The second parameter is optional
+      // and is used to add fields. It expects an AJV object.
+      {
+        type: 'object',
+        properties: {
+          description: { type: 'string' }
+        },
+        required: ['description'],
+        additionalProperties: false
+      }
+    )
+    ```
+- `Context` has a new property `files` which has two methods `push` and `get`.
+- The access to the fields and files in the controller method has changed:
+    ```typescript
+    // Before
+    const name = ctx.request.body.fields.name;
+    const file = ctx.request.body.files.avatar as File;
+    const files = ctx.request.body.files.images as File[];
+
+    // After
+    const name = ctx.request.body.name;
+    const file = ctx.files.get('avatar')[0];
+    const files = ctx.files.get('images');
+    ```
+- Previously `saveTo: ''` was regarded as an upload with buffer and is saved as file in v3.
+- `File` is exported from `@foal/core` and not `@foal/storage` anymore.
+- New error `MULTIPLE_FILES_NOT_ALLOWED`.
+- All `Disk.write` methods take a `Readable` as parameter and not a `NodeJS.ReadableStream` anymore.
+
+### AWS S3
+
+- The AWS region must be provided to connect to S3. One way to achieve this is to use the configuration key `settings.aws.region`.
+
 ## Databases
 
 ### TypeORM (all databases)
