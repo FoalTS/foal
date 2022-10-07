@@ -46,6 +46,7 @@ First, upgrade to the latest minor release of version 2 and check that everythin
 
 ## Configuration
 
+- **If you upgrade to TypeORM@0.3, use Prisma or any other dependency that calls the `dotenv` library under the hood, you won't be able to use custom `.env` files such as `.env.production` and `.env.local`.**
 - If the same variable is provided both as environment variable and in the `.env` file, now the value of the environment variable is used.
 - `undefined` values do not override other defined config values anymore. See [issue #1071](https://github.com/FoalTS/foal/issues/1071).
 
@@ -365,6 +366,7 @@ ctx.session!.set('foo', 'bar');
 > These changes apply to the hooks `JWTRequired`, `JWTOptional` and `UseSessions`.
 
 - The `FetchUser` interface and all `fetchUser`, `fetchMongoDBUser` and `fetchUserWithPermissions` functions have been removed. They were convulated functions that could make difficult the understanding of the hooks behavior at first glance.
+- The `user` option in `@JWTxxx` and `@UseSessions` now expects a `(id: number) => Promise<{ [key: string]: any } | null>` by default. If the subject of a JWT (of type string) cannot be converted to a number, then an error is thrown. If the user ID must be a string then, you must add `userIdType: 'string'` to the options.
 - To be consistent with the type of `ctx.user`, if the user cannot be authenticated, the hook `user` option must be given the `null` value.
 
 ```typescript
@@ -436,3 +438,4 @@ As of version 3:
 - All Foal packages are compiled to `es2021` making packages smaller than before.
 - Most properties of `Context`, `WebsocketContext` and `HttpResponse` are read-only.
 - `DatabaseSession` now extends `BaseEntity`.
+- `TypeORMStore.setConnection` and `TypeORMStore.close` do not exist anymore. Instead, use a different datasource when registering the `DatabaseSession` entity.
