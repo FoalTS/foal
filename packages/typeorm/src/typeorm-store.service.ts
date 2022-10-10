@@ -144,15 +144,15 @@ export class TypeORMStore extends SessionStore {
     return sessions.map(({ user_id }) => user_id);
   }
 
-  async destroyAllSessionsOf(user: { id: number }): Promise<void> {
-    await this.repository.delete({ user_id: user.id });
+  async destroyAllSessionsOf(userId: number): Promise<void> {
+    await this.repository.delete({ user_id: userId });
   }
 
-  async getSessionIDsOf(user: { id: number }): Promise<string[]> {
+  async getSessionIDsOf(userId: number): Promise<string[]> {
     const databaseSessions = await this.repository.find({
       // Do not select unused fields.
       select: { id: true },
-      where: { user_id: user.id },
+      where: { user_id: userId },
     });
     return databaseSessions.map(dbSession => dbSession.id);
   }

@@ -240,6 +240,7 @@ Here are the breaking changes and new features:
     }
     ```
 - If you need to create a connection in your tests (E2E or unit), import `createDataSource` from `db.ts` and initialize the connection. 
+- If you use the methods `TypeORMStore.getSessionIDsOf` and `TypeORMStore.destroyAllSessionsOf`, they take the user ID as parameter and no longer the user object.
 - The complete migration guide to `typeorm@0.3` can be found [here](https://github.com/typeorm/typeorm/releases/tag/0.3.0).
 
 *Quick migration guide*

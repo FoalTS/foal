@@ -718,7 +718,7 @@ foal run revoke-all-sessions
 
 ```typescript
 const user = { id: 1 };
-const ids = await store.getSessionIDsOf(user);
+const ids = await store.getSessionIDsOf(user.id);
 ```
 
 ### Query All Connected Users
@@ -735,7 +735,7 @@ const ids = await store.getAuthenticatedUserIds();
 
 ```typescript
 const user = { id: 1 };
-await store.destroyAllSessionsOf(user);
+await store.destroyAllSessionsOf(user.id);
 ```
 
 ### Re-generate the Session ID

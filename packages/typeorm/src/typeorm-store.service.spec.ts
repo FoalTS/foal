@@ -609,7 +609,7 @@ function storeTestSuite(type: DBType) {
 
       it('destroy all the sessions of the given user.', async () => {
         const user = { id: 2 };
-        await store.destroyAllSessionsOf(user);
+        await store.destroyAllSessionsOf(user.id);
 
         const sessions = await dataSource.getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 2);
@@ -661,13 +661,13 @@ function storeTestSuite(type: DBType) {
 
       it('should return an empty array if the user ID does not match any users.', async () => {
         const user = { id: 0 };
-        const sessions = await store.getSessionIDsOf(user);
+        const sessions = await store.getSessionIDsOf(user.id);
         strictEqual(sessions.length, 0);
       });
 
       it('should return the IDs of the sessions associated with the given user.', async () => {
         const user = { id: 2 };
-        const sessions = await store.getSessionIDsOf(user);
+        const sessions = await store.getSessionIDsOf(user.id);
         strictEqual(sessions.length, 2);
 
         strictEqual(sessions[0], 'c');
