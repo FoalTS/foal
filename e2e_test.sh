@@ -151,17 +151,17 @@ npm run start:e2e
 npm run build
 
 # Test the application when it is started
-PORT=3001 pm2 start build/index.js
-sleep 1
-response=$(
-    curl http://localhost:3001 \
-        --write-out %{http_code} \
-        --silent \
-        --output /dev/null \
-)
-test "$response" -ge 200 && test "$response" -le 299
+# PORT=3001 pm2 start build/index.js
+# sleep 1
+# response=$(
+#     curl http://localhost:3001 \
+#         --write-out %{http_code} \
+#         --silent \
+#         --output /dev/null \
+# )
+# test "$response" -ge 200 && test "$response" -le 299
 
-pm2 delete index
+# pm2 delete index
 
 # Test the default shell scripts to create users.
 foal run create-user
