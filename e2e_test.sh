@@ -150,7 +150,7 @@ npm run start:e2e
 # Build the app
 npm run build
 
-Test the application when it is started
+# Test the application when it is started
 PORT=3001 pm2 start build/index.js
 sleep 1
 response=$(
