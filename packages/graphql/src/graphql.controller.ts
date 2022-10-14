@@ -15,7 +15,7 @@ const getQuerySchema = {
 
 const postBodySchema = {
   properties: {
-    operationName: { type: 'string' },
+    operationName: { type: 'string', nullable: true },
     query: { type: 'string' },
     variables: { type: ['object', 'null'] },
   },
