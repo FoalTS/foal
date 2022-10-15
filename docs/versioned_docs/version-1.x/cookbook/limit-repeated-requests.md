@@ -37,7 +37,7 @@ async function main() {
       res.setHeader('X-Download-Options', 'noopen');
       res.setHeader('X-Frame-Options', 'SAMEORIGIN');
       res.setHeader('X-XSS-Protection', '1; mode=block');
-      res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+      res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
       
       // Send the response with the default statusCode and message from rateLimit
       res.status(this.statusCode).send(this.message);
@@ -73,7 +73,7 @@ expressApp.use(rateLimit({
     res.setHeader('X-Download-Options', 'noopen');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Strict-Transport-Security', 'max-age=15552000; includeSubDomains');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
 
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
