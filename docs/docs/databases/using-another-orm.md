@@ -15,11 +15,11 @@ To do so, you will have to remove TypeORM and all its utilities.
     npm uninstall typeorm @foal/typeorm
     ```
 
-2. Then remove the directory `src/app/entities`.
+2. Then remove the directory `src/app/entities` and the file `src/db.ts`.
 
 3. Remove or replace the script `create-user` in `src/app/scripts`.
 
-4. In the file `app.controller.ts`, delete the connection creation called `dataSource.initialize()`.
+4. In the file `src/index.ts`, delete the connection creation called `dataSource.initialize()`.
 
 5. Finally, remove in `package.json` the scripts to manage migrations.
 
@@ -111,7 +111,7 @@ import { PrismaClient } from '@prisma/client';
 
 // App
 import { AppController } from './app/app.controller';
-import { prisma } from './app/db';
+import { prisma } from './db';
 
 async function main() {
   const serviceManager = new ServiceManager()
@@ -123,7 +123,7 @@ async function main() {
 
 main()
   .catch(err => { console.error(err.stack); process.exit(1); })
-  .finally(() => prisma.$disconnect());
+  .finally(() => { prisma.$disconnect().catch(err => console.error(err)) });
 ```
 
 Finally, inject the prisma client into your controllers and start using it.
