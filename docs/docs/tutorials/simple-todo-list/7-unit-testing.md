@@ -29,7 +29,6 @@ describe('ApiController', () => {
 
   let dataSource: DataSource;
   let controller: ApiController;
-  let dataSource: DataSource;
 
   // Create a connection to the database before running all the tests.
   before(async () => {
