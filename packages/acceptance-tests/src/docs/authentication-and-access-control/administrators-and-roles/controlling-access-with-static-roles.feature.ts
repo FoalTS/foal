@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, getConnection, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from 'typeorm';
 import * as request from 'supertest';
 
 // FoalTS
@@ -11,16 +11,20 @@ import {
   dependency, Get, Hook, HttpResponseForbidden, HttpResponseOK,
   HttpResponseUnauthorized, IAppController, Post, Store, UseSessions
 } from '@foal/core';
-import { DatabaseSession, fetchUser } from '@foal/typeorm';
-import { createTestConnection, getTypeORMStorePath } from '../../../common';
+import { DatabaseSession } from '@foal/typeorm';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Controlling access with static roles', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => Config.set('settings.session.store', getTypeORMStorePath()));
 
   afterEach(async () => {
     Config.remove('settings.session.store');
-    await getConnection().close();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: A simple access control.', async () => {
@@ -41,7 +45,7 @@ describe('Feature: Controlling access with static roles', () => {
 
     // hooks/role-required.hook.ts
     function RoleRequired(role: string) {
-      return Hook((ctx: Context<User>) => {
+      return Hook((ctx: Context<User|null>) => {
         if (!ctx.user) {
           return new HttpResponseUnauthorized();
         }
@@ -65,7 +69,7 @@ describe('Feature: Controlling access with static roles', () => {
     /* ======================= DOCUMENTATION END ========================= */
 
     @UseSessions({
-      user: fetchUser(User),
+      user: (id: number) => User.findOneBy({ id }),
     })
     class AppController implements IAppController {
       @dependency
@@ -75,13 +79,9 @@ describe('Feature: Controlling access with static roles', () => {
         controller('/api', ApiController)
       ];
 
-      async init() {
-        await createTestConnection([ User, DatabaseSession ]);
-      }
-
       @Post('/login-as-user')
       async loginAsUser(ctx: Context) {
-        const user = await User.findOneOrFail({ roles: ['user'] });
+        const user = await User.findOneByOrFail({ roles: 'user' });
 
         ctx.session = await createSession(this.store);
         ctx.session.setUser(user);
@@ -91,7 +91,7 @@ describe('Feature: Controlling access with static roles', () => {
 
       @Post('/login-as-admin')
       async loginAsAdmin(ctx: Context) {
-        const user = await User.findOneOrFail({ roles: ['admin'] });
+        const user = await User.findOneByOrFail({ roles: 'admin' });
 
         ctx.session = await createSession(this.store);
         ctx.session.setUser(user);
@@ -101,6 +101,7 @@ describe('Feature: Controlling access with static roles', () => {
     }
 
     const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     const user = new User();
     user.roles = [ 'user' ];

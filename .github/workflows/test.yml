@@ -13,66 +13,30 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10, 12, 14]
+        node-version: [16, 18]
 
     env:
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
       SETTINGS_AWS_SECRET_ACCESS_KEY: ${{ secrets.SETTINGS_AWS_SECRET_ACCESS_KEY }}
+      SETTINGS_AWS_REGION: ${{ secrets.SETTINGS_AWS_REGION }}
       NODE_VERSION: ${{ matrix.node-version }}
-
-    services:
-      mysql:
-        image: mysql:5.7.10
-        ports:
-          # Another version of MySQL is installed on the vm and already uses the port 3306.
-          - 3308:3306
-        env:
-          MYSQL_ROOT_PASSWORD: admin
-          MYSQL_USER: test
-          MYSQL_PASSWORD: test
-          MYSQL_DATABASE: test
-
-      mariadb:
-        image: mariadb:10.3.22
-        ports:
-          - 3307:3306
-        env:
-          MYSQL_ROOT_PASSWORD: admin
-          MYSQL_USER: test
-          MYSQL_PASSWORD: test
-          MYSQL_DATABASE: test
-
-      postgres:
-        image: postgres:9.6.1
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: test
-
-      mongodb:
-        image: mongo:3.4.1
-        ports:
-          - 27017:27017
-
-      redis:
-        image: redis:4.0.14
-        ports:
-          - 6380:6379
 
     steps:
     - uses: actions/checkout@v1
+    - name: Start up databases
+      run: docker-compose up -d
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Install global dependencies (lerna, pm2, codecov)
-      run: npm install -g lerna@3.20 pm2 codecov
+    - name: Use npm version 8.5
+      run: npm install -g npm@8.5
+    - name: Install global dependencies (pm2, codecov)
+      run: npm install -g pm2 codecov
     - name: Install project dependencies
       run: npm install
     - name: Install package dependencies and build packages
-      run: lerna bootstrap
+      run: npm run bootstrap
     - name: Create CLI symlink in the global folder
       run: npm link
       working-directory: packages/cli
@@ -98,8 +62,6 @@ jobs:
       run: cd packages/jwt && npm run test
     - name: Run unit tests of @foal/mongodb
       run: cd packages/mongodb && npm run test
-    - name: Run unit tests of @foal/password
-      run: cd packages/password && npm run test
     - name: Run unit tests of @foal/redis
       run: cd packages/redis && npm run test
     - name: Run unit tests of @foal/social

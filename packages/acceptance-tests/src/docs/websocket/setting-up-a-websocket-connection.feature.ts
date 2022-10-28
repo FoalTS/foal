@@ -73,7 +73,7 @@ describe('Feature: Setting up a websocket connection', () => {
       // Instanciate, init and connect websocket controllers.
       await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
 
-      await new Promise(resolve => httpServer.listen(3001, () => resolve()));
+      await new Promise<void>(resolve => httpServer.listen(3001, () => resolve()));
     }
 
     await main();
@@ -83,7 +83,7 @@ describe('Feature: Setting up a websocket connection', () => {
     socket2 = io('ws://localhost:3001');
     socket2.on('connect', () => {});
 
-    const promise = new Promise(resolve => socket2.on('refresh products', () => {
+    const promise = new Promise<void>(resolve => socket2.on('refresh products', () => {
       console.log('refresh products!');
       hasEventBeenBroadcast = true;
       resolve();

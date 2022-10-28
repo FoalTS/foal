@@ -7,4 +7,4 @@ export {
   Session,
   SessionState,
 } from './core';
-export { UseSessions, FetchUser } from './http';
+export { UseSessions } from './http';

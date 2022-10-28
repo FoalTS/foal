@@ -2,7 +2,8 @@
   "settings": {
     "aws": {
       "accessKeyId": "env(SETTINGS_AWS_ACCESS_KEY_ID)",
-      "secretAccessKey": "env(SETTINGS_AWS_SECRET_ACCESS_KEY)"
+      "secretAccessKey": "env(SETTINGS_AWS_SECRET_ACCESS_KEY)",
+      "region": "env(SETTINGS_AWS_REGION)"
     }
   }
 }

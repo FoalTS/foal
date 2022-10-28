@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import { strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { decode, sign } from 'jsonwebtoken';
 
 // FoalTS
@@ -17,18 +17,22 @@ import {
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
 import { getSecretOrPrivateKey, setAuthCookie } from '@foal/jwt';
-import { closeTestConnection, createTestConnection } from '../../../common';
+import { createAndInitializeDataSource } from '../../../common';
 import { DatabaseSession } from '@foal/typeorm';
 
 describe('Feature: Using social auth with JWT', () => {
+
+  let dataSource: DataSource;
 
   before(() => {
     Config.set('settings.jwt.secret', 'my_secret');
   })
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.jwt.secret');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple auth controller.', async () => {
@@ -63,7 +67,7 @@ describe('Feature: Using social auth with JWT', () => {
           throw new Error('Google should have returned an email address.');
         }
 
-        let user = await User.findOne({ email: userInfo.email });
+        let user = await User.findOneBy({ email: userInfo.email });
 
         if (!user) {
           // If the user has not already signed up, then add them to the database.
@@ -92,7 +96,7 @@ describe('Feature: Using social auth with JWT', () => {
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    await createTestConnection([ User, DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     const user = new User();
     user.email = 'jane.doe@foalts.org';
@@ -141,7 +145,7 @@ describe('Feature: Using social auth with JWT', () => {
       }
     });
 
-    strictEqual(await User.findOne({ email: 'unknown@foalts.org' }), undefined);
+    strictEqual(await User.findOneBy({ email: 'unknown@foalts.org' }), null);
 
     const response2 = await controller.handleGoogleRedirection(ctx2);
     const cookie2 = response2.getCookie('auth');
@@ -150,7 +154,7 @@ describe('Feature: Using social auth with JWT', () => {
       throw new Error('No cookie "auth" found.');
     }
 
-    const user2 = await User.findOneOrFail({ email: 'unknown@foalts.org' });
+    const user2 = await User.findOneByOrFail({ email: 'unknown@foalts.org' });
 
     const payload2 = decode(cookie2.value);
     strictEqual((payload2 as any).id, user2.id);

@@ -6,13 +6,16 @@
 
 try {
   const version = process.versions.node;
-  const NODE_MAJOR_VERSION = parseInt(version.split('.')[0], 10);
-  if (NODE_MAJOR_VERSION < 10) {
-    console.warn(`[Warning] You are using version ${version} of Node. FoalTS requires at least version 10.`);
+  const NODE_CURRENT_MAJOR_VERSION = parseInt(version.split('.')[0], 10);
+  const NODE_MINIMUM_MAJOR_VERSION = 16;
+  if (NODE_CURRENT_MAJOR_VERSION < NODE_MINIMUM_MAJOR_VERSION) {
+    console.warn(`[Warning] You are using version ${version} of Node. FoalTS requires at least version ${NODE_MINIMUM_MAJOR_VERSION}.`);
   }
 } finally {}
 
 export {
+  File,
+  FileList,
   Log,
   LogOptions,
   UserRequired,
@@ -21,12 +24,12 @@ export {
   ValidateHeader,
   ValidatePathParam,
   ValidateQueryParam,
+  PermissionRequired,
+  IUserWithPermissions,
   controller,
   displayServerURL,
   convertBase64ToBase64url,
   convertBase64urlToBase64,
-  escape,
-  escapeProp,
   generateSignedToken,
   generateToken,
   getAjvInstance,
@@ -224,5 +227,4 @@ export {
   UseSessions,
   createSession,
   readSession,
-  FetchUser,
 } from './sessions';

@@ -8,13 +8,13 @@ import 'source-map-support/register';
 
 // 3p
 import { Config, createApp, displayServerURL } from '@foal/core';
-import { createConnection } from '@foal/typeorm/node_modules/typeorm';
 
 // App
 import { AppController } from './app/app.controller';
+import { dataSource } from './db';
 
 async function main() {
-  await createConnection(require('../ormconfig.json'));
+  await dataSource.initialize();
 
   const app = await createApp(AppController);
 

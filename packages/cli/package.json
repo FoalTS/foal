@@ -1,6 +1,6 @@
 {
   "name": "@foal/cli",
-  "version": "2.11.0",
+  "version": "3.0.0",
   "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -23,7 +23,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=16.0.0"
   },
   "bin": {
     "foal": "./lib/index.js"
@@ -57,18 +57,18 @@
     "bin/"
   ],
   "dependencies": {
-    "ajv": "~6.12.0",
+    "ajv": "~8.11.0",
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
-    "commander": "~7.2.0"
+    "commander": "~9.3.0"
   },
   "devDependencies": {
-    "@types/mocha": "7.0.2",
-    "@types/node": "10.17.24",
-    "copyfiles": "~2.4.0",
-    "mocha": "~8.3.0",
-    "rimraf": "~2.6.2",
-    "ts-node": "~9.0.0",
-    "typescript": "~4.0.2"
+    "@types/mocha": "9.1.1",
+    "@types/node": "16.11.7",
+    "copyfiles": "~2.4.1",
+    "mocha": "~10.0.0",
+    "rimraf": "~3.0.2",
+    "ts-node": "~10.8.1",
+    "typescript": "~4.7.4"
   }
 }

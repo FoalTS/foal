@@ -21,20 +21,19 @@ import {
   verifyPassword
 } from '@foal/core';
 import { MongoDBStore } from '@foal/mongodb';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import * as request from 'supertest';
 
 // FoalTS
-import { fetchMongoDBUser } from '@foal/typeorm';
 import {
+  BaseEntity,
   Column,
-  Connection,
-  createConnection,
+  DataSource,
   Entity,
-  getMongoRepository,
   ObjectID,
   ObjectIdColumn
-} from '@foal/typeorm/node_modules/typeorm';
+} from 'typeorm';
+import { createAndInitializeDataSource } from '../common';
 
 describe('[Sample] TypeORM & MongoDB Store', async () => {
 
@@ -42,12 +41,12 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
 
   let app: any;
   let token: string;
-  let mongoClient: MongoClient;
+  let mongoClient: any;
 
   @Entity()
-  class User {
+  class User extends BaseEntity {
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
 
     @Column({ unique: true })
     email: string;
@@ -67,7 +66,12 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     });
   }
 
-  @UseSessions({ user: fetchMongoDBUser(User), store: MongoDBStore, required: true })
+  @UseSessions({
+    user: id => User.findOneBy({ _id: new ObjectId(id) }),
+    userIdType: 'string',
+    store: MongoDBStore,
+    required: true
+  })
   class MyController {
     @Get('/foo')
     foo() {
@@ -106,7 +110,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
       type: 'object',
     })
     async login(ctx: Context) {
-      const user = await getMongoRepository(User).findOne({ email: ctx.request.body.email });
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
@@ -133,17 +137,13 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     ];
   }
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   before(async () => {
     Config.set('settings.mongodb.uri', 'mongodb://localhost:27017/e2e_db');
 
-    connection = await createConnection({
+    dataSource = await createAndInitializeDataSource([User], {
       database: 'e2e_db',
-      dropSchema: true,
-      entities: [User],
-      host: 'localhost',
-      port: 27017,
       type: 'mongodb',
     });
 
@@ -155,7 +155,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     user.email = 'john@foalts.org';
     user.password = await hashPassword('password');
     user.isAdmin = false;
-    await getMongoRepository(User).save(user);
+    await user.save();
 
     app = await createApp(AppController);
   });
@@ -164,7 +164,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     Config.remove('settings.mongodb.uri');
 
     return Promise.all([
-      connection.close(),
+      dataSource.destroy(),
       app.foal.services.get(MongoDBStore).close(),
       mongoClient.close()
     ]);
@@ -212,13 +212,13 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
 
     /* Add the admin group and permission */
 
-    const user2 = await getMongoRepository(User).findOne({ email: 'john@foalts.org' });
+    const user2 = await User.findOneBy({ email: 'john@foalts.org' });
     if (!user2) {
       throw new Error('John was not found in the database.');
     }
 
     user2.isAdmin = true;
-    await getMongoRepository(User).save(user2);
+    await user2.save();
 
     /* Access the route that requires a specific permission */
 

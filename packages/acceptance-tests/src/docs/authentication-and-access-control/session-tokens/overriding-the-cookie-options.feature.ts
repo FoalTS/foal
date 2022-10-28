@@ -3,21 +3,24 @@ import { strictEqual } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import {
   Config, createApp, Get, HttpResponseOK, UseSessions,
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Overriding the cookie options', async () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
     Config.remove('settings.session.cookie.name');
     Config.remove('settings.session.cookie.domain');
@@ -25,16 +28,14 @@ describe('Feature: Overriding the cookie options', async () => {
     Config.remove('settings.session.cookie.path');
     Config.remove('settings.session.cookie.sameSite');
     Config.remove('settings.session.cookie.secure');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Override all options.', async () => {
     @UseSessions({ cookie: true })
     class AppController {
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
 
       @Get('/')
       index() {
@@ -44,6 +45,7 @@ describe('Feature: Overriding the cookie options', async () => {
     }
 
     const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     Config.set('settings.session.cookie.name', 'xxx');
     Config.set('settings.session.cookie.domain', 'example.com');

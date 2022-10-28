@@ -276,15 +276,13 @@ module.exports = {
 </TabItem>
 </Tabs>
 
-If the same variable is provided both as environment variable and in the `.env` file, then the value of the `.env` file is used.
+If the same variable is provided both as environment variable and in the `.env` file, then the value of the environment variable is used.
 
 ### Deployment Environments
 
 Just like the configuration files in the `config/` directory, the `.env` files can be used for several environments: `.env.production`, `.env.test`, etc.
 
 ### Using `*.local` files
-
-> *This feature is available from version 2.3 onwards.*
 
 In case you want to have two `.env` files, one to define the default env vars needed by the application and another to override these values on your local machine, you can use a `.env.local` file.
 

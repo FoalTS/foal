@@ -1,6 +1,6 @@
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager } from 'typeorm';
+import { createAndInitializeDataSource } from '../../common';
 
 export const schema = {
   additionalProperties: false,
@@ -17,19 +17,15 @@ export async function main(args: { codeName: string, name: string }) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  await createConnection({
-    database: './e2e_db.sqlite',
-    entities: [ Permission ],
-    type: 'better-sqlite3',
-  });
+  const dataSource = await createAndInitializeDataSource([ Permission ], { dropSchema: false });
 
   try {
     console.log(
-      await getManager().save(permission)
+      await permission.save()
     );
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await dataSource.destroy();
   }
 }

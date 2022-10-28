@@ -1,7 +1,9 @@
 // 3p
 import { createService } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
-import { createConnection } from '@foal/typeorm/node_modules/typeorm';
+
+// App
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -13,6 +15,7 @@ export const schema = {
 };
 
 export async function main({ token }: { token: string }) {
-  await createConnection(require('../../ormconfig.json'));
+  await dataSource.initialize();
+
   await createService(TypeORMStore).destroy(token);
 }

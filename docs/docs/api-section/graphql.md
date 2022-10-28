@@ -34,21 +34,6 @@ npm install graphql@15 @foal/graphql
 npm install graphql@14 @foal/graphql
 ```
 
-Due to a specificity of the `graphql` library, you must also modify your `tsconfig.json` as follows:
-
-```json
-{
-  "compilerOptions": {
-    ...
-    "lib": [
-      ...
-      "ESNext.AsyncIterable"
-    ]
-  }
-  ...
-}
-```
-
 ## Basic Usage
 
 The main component of the package is the abstract `GraphQLController`. Inheriting this class allows you to create a controller that is compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), [Apollo Client](https://www.apollographql.com/docs/react/), etc) or any client that follows the HTTP specification defined [here](https://graphql.org/learn/serving-over-http/).
@@ -171,7 +156,7 @@ npm install cpx2  --save-dev
 {
   "scripts": {
     "build": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
-    "develop": "npm run build && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build,./config -e js,json,yml,graphql --no-restart-on error ./build/index.js\"",
+    "dev": "npm run build && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build,./config -e js,json,yml,graphql --no-restart-on error ./build/index.js\"",
     "build:test": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.test.json",
     "test": "npm run build:test && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.test.json -w\" \"mocha --file ./build/test.js -w --watch-files build \\\"./build/**/*.spec.js\\\"\"",
     "build:e2e": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.e2e.json",
@@ -227,8 +212,6 @@ export class RootResolverService {
 ```
 
 ## GraphiQL
-
-> *This feature is available from version 2.3 onwards.*
 
 ![GraphiQL](./images/graphiql.png)
 
@@ -392,7 +375,6 @@ async function maskAndLogError(err: any): Promise<any> {
 ```typescript
 import { GraphQLController } from '@foal/graphql';
 import { JWTRequired } from '@foal/jwt';
-import { fetchUser } from '@foal/typeorm';
 import { buildSchema } from 'graphql';
 
 import { User } from '../entities';
@@ -412,7 +394,7 @@ const root = {
   },
 };
 
-@JWTRequired({ user: fetchUser(User) })
+@JWTRequired({ user: (id: number) => User.findOneBy({ id }) })
 export class ApiController extends GraphQLController {
   schema = schema;
   resolvers = root;

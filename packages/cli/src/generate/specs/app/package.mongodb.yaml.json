@@ -7,7 +7,7 @@
   "scripts": {
     "build": "foal rmdir build && tsc -p tsconfig.app.json",
     "start": "node ./build/index.js",
-    "develop": "npm run build && concurrently -r \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build,./config -e js,json,yml --no-restart-on error ./build/index.js\"",
+    "dev": "npm run build && concurrently -r \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build,./config -e js,json,yml --no-restart-on error ./build/index.js\"",
     "build:test": "foal rmdir build && tsc -p tsconfig.test.json",
     "start:test": "mocha --file ./build/test.js \"./build/**/*.spec.js\"",
     "test": "npm run build:test && concurrently -r \"tsc -p tsconfig.test.json -w\" \"mocha --file ./build/test.js -w \\\"./build/**/*.spec.js\\\"\"",
@@ -18,26 +18,26 @@
     "lint:fix": "eslint --ext ts --fix src"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=16.0.0"
   },
   "dependencies": {
-    "@foal/core": "^2.0.0",
+    "@foal/core": "^3.0.0",
     "mongodb": "~3.7.3",
-    "source-map-support": "~0.5.19",
-    "typeorm": "0.2.26",
+    "source-map-support": "~0.5.21",
+    "typeorm": "0.3.10",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
     "@foal/cli": "^2.9.0",
-    "@types/mocha": "7.0.2",
-    "@types/node": "10.17.24",
-    "concurrently": "~5.3.0",
+    "@types/mocha": "9.1.1",
+    "@types/node": "16.11.7",
+    "concurrently": "~7.2.2",
     "mocha": "~8.2.0",
-    "supertest": "~6.0.0",
+    "supertest": "~6.2.3",
     "supervisor": "~0.12.0",
-    "eslint": "^6.7.0",
-    "@typescript-eslint/eslint-plugin": "~2.7.0",
-    "@typescript-eslint/parser": "~2.7.0",
-    "typescript": "~4.0.2"
+    "eslint": "~8.17.0",
+    "@typescript-eslint/eslint-plugin": "~5.27.1",
+    "@typescript-eslint/parser": "~5.27.1",
+    "typescript": "~4.7.4"
   }
 }

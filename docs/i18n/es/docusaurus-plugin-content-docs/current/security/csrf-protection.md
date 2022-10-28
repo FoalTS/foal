@@ -281,7 +281,7 @@ export class AuthController {
           if (err) {
             return reject(err);
           }
-          resolve(encoded);
+          resolve(encoded as string);
         }
       );
     });
@@ -528,8 +528,6 @@ module.exports = {
 </Tabs>
 
 ### Disable CSRF protection on a specific route
-
-> *This feature is available from version 2.1 onwards.*
 
 In case the CSRF protection is enabled globally and you want to disable it for a specific route, you can use the `csrf` option for that.
 

@@ -27,7 +27,6 @@ import {
   SESSION_DEFAULT_COOKIE_NAME,
   SESSION_USER_COOKIE_NAME
 } from './constants';
-import { FetchUser } from './fetch-user.interface';
 import {
   SESSION_DEFAULT_ABSOLUTE_TIMEOUT,
   SESSION_DEFAULT_INACTIVITY_TIMEOUT,
@@ -133,7 +132,7 @@ describe('UseSessions', () => {
 
     it('should throw an error if the configuration value settings.session.store is empty.', () => {
       return rejects(
-        () => hook(ctx, services),
+        async () => hook(ctx, services),
         new ConfigNotFoundError('settings.session.store')
       );
     });
@@ -141,7 +140,7 @@ describe('UseSessions', () => {
     it('should use the session store package provided in settings.session.store.', () => {
       Config.set('settings.session.store', '@foal/internal-test');
 
-      return doesNotReject(() => hook(ctx, services));
+      return doesNotReject(async () => hook(ctx, services));
     });
 
   });
@@ -160,18 +159,18 @@ describe('UseSessions', () => {
             strictEqual(isHttpResponse(response), false);
           });
 
-          it('should let ctx.user equal undefined.', async () => {
+          it('should let ctx.user equal null.', async () => {
             await hook(ctx, services);
 
-            strictEqual(ctx.user, undefined);
+            strictEqual(ctx.user, null);
           });
 
           context('given options.create is false or undefined', async () => {
 
-            it('should let ctx.session equal undefined.', async () => {
+            it('should let ctx.session equal null.', async () => {
               await hook(ctx, services);
 
-              strictEqual(ctx.session, undefined);
+              strictEqual(ctx.session, null);
             });
 
           });
@@ -286,10 +285,10 @@ describe('UseSessions', () => {
             strictEqual(isHttpResponse(response), false);
           });
 
-          it('should let ctx.user equal undefined.', async () => {
+          it('should let ctx.user equal null.', async () => {
             await hook(ctx, services);
 
-            strictEqual(ctx.user, undefined);
+            strictEqual(ctx.user, null);
           });
 
           context('given options.create is not defined', async () => {
@@ -308,10 +307,10 @@ describe('UseSessions', () => {
 
             beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, cookie: true, create: false })));
 
-            it('should let ctx.session equal undefined.', async () => {
+            it('should let ctx.session equal null.', async () => {
               await hook(ctx, services);
 
-              strictEqual(ctx.session, undefined);
+              strictEqual(ctx.session, null);
             });
 
           });
@@ -599,11 +598,11 @@ describe('UseSessions', () => {
 
       beforeEach(() => ctx = createContext({ Authorization: `Bearer ${anonymousSessionID}`}));
 
-      it('with the undefined value.', async () => {
+      it('with the null value.', async () => {
         const response = await hook(ctx, services);
         strictEqual(isHttpResponse(response), false);
 
-        strictEqual(ctx.user, undefined);
+        strictEqual(ctx.user, null);
       });
 
     });
@@ -614,11 +613,11 @@ describe('UseSessions', () => {
 
       context('given options.user is not defined', () => {
 
-        it('with the undefined value.', async () => {
+        it('with the null value.', async () => {
           const response = await hook(ctx, services);
           strictEqual(isHttpResponse(response), false);
 
-          strictEqual(ctx.user, undefined);
+          strictEqual(ctx.user, null);
         });
 
       });
@@ -629,12 +628,25 @@ describe('UseSessions', () => {
         let actualServices: ServiceManager;
 
         beforeEach(() => {
-          const fetchUser: FetchUser = async (id, services) => {
+          const findUser = async (id: number, services: ServiceManager) => {
             actualServices = services;
-            return id === userId ? user : undefined
+            return id === userId ? user : null
           };
-          hook = getHookFunction(UseSessions({ store: Store, user: fetchUser }));
+          hook = getHookFunction(UseSessions({ store: Store, user: findUser }));
         });
+
+        it('should validate the user ID type.', async () => {
+          hook = getHookFunction(UseSessions({
+            store: Store,
+            user: async () => null,
+            userIdType: 'string'
+          }));
+
+          await rejects(
+            async () => hook(ctx, services),
+            new Error('Invalid user ID type: number')
+          );
+        })
 
         it('and should call options.user with the service manager.', async () => {
           await hook(ctx, services);
@@ -649,16 +661,16 @@ describe('UseSessions', () => {
           strictEqual(ctx.user, user);
         });
 
-        context('given the function options.user returns undefined (session invalid)', () => {
+        context('given the function options.user returns null (session invalid)', () => {
 
-          const fetchUser: FetchUser = async id => undefined;
+          const findUser = async (id: number) => null;
 
-          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: fetchUser })));
+          beforeEach(() => hook = getHookFunction(UseSessions({ store: Store, user: findUser })));
 
-          it('with the undefined value and should destroy the session.', async () => {
+          it('with the null value and should destroy the session.', async () => {
             await hook(ctx, services);
 
-            strictEqual(ctx.user, undefined);
+            strictEqual(ctx.user, null);
             // tslint:disable-next-line
             strictEqual(ctx.session?.isDestroyed, true);
           });
@@ -666,7 +678,7 @@ describe('UseSessions', () => {
           context('given options.cookie is false or not defined', () => {
 
             it(
-              'with the undefined value and should not remove a session cookie in the response '
+              'with the null value and should not remove a session cookie in the response '
               + '(it can belongs to another application).',
               async () => {
                 const response = await hook(ctx, services);
@@ -674,7 +686,7 @@ describe('UseSessions', () => {
                   throw new Error('The hook should have returned an HttpResponse instance.');
                 }
 
-                strictEqual(ctx.user, undefined);
+                strictEqual(ctx.user, null);
 
                 deepStrictEqual(response.getCookies(), {});
               }
@@ -685,7 +697,7 @@ describe('UseSessions', () => {
           context('given options.cookie is true', () => {
 
             beforeEach(() => {
-              hook = getHookFunction(UseSessions({ store: Store, user: fetchUser, cookie: true }));
+              hook = getHookFunction(UseSessions({ store: Store, user: findUser, cookie: true }));
               const token = ctx.request.get('Authorization');
               if (token) {
                 ctx = createContext(
@@ -699,13 +711,13 @@ describe('UseSessions', () => {
               }
             });
 
-            it('with the undefined value and should remove the session cookie.', async () => {
+            it('with the null value and should remove the session cookie.', async () => {
               const response = await hook(ctx, services);
               if (!isHttpResponse(response)) {
                 throw new Error('The hook should have returned an HttpResponse instance.');
               }
 
-              strictEqual(ctx.user, undefined);
+              strictEqual(ctx.user, null);
 
               const { value, options } = response.getCookie(SESSION_DEFAULT_COOKIE_NAME);
               strictEqual(value, '');
@@ -718,7 +730,7 @@ describe('UseSessions', () => {
                 hook = getHookFunction(UseSessions({
                   cookie: true,
                   store: Store,
-                  user: fetchUser,
+                  user: findUser,
                   userCookie: () => '',
                 }));
               });
@@ -729,7 +741,7 @@ describe('UseSessions', () => {
                   throw new Error('The hook should have returned an HttpResponse instance.');
                 }
 
-                strictEqual(ctx.user, undefined);
+                strictEqual(ctx.user, null);
 
                 const { value, options } = response.getCookie(SESSION_USER_COOKIE_NAME);
                 strictEqual(value, '');
@@ -746,7 +758,7 @@ describe('UseSessions', () => {
                   throw new Error('The hook should have returned an HttpResponse instance.');
                 }
 
-                strictEqual(ctx.user, undefined);
+                strictEqual(ctx.user, null);
 
                 const { value } = response.getCookie(SESSION_USER_COOKIE_NAME);
                 strictEqual(value, undefined);
@@ -758,10 +770,10 @@ describe('UseSessions', () => {
 
           context('given options.redirectTo is not defined', () => {
 
-            it('with the undefined value and should return an HttpResponseUnauthorized object.', async () => {
+            it('with the null value and should return an HttpResponseUnauthorized object.', async () => {
               const response = await hook(ctx, services);
 
-              strictEqual(ctx.user, undefined);
+              strictEqual(ctx.user, null);
 
               if (!isHttpResponseUnauthorized(response)) {
                 throw new Error('response should be instance of HttpResponseUnauthorized');
@@ -781,13 +793,13 @@ describe('UseSessions', () => {
           context('given options.redirectTo is defined', () => {
 
             beforeEach(() => {
-              hook = getHookFunction(UseSessions({ store: Store, user: fetchUser, redirectTo: '/foo' }));
+              hook = getHookFunction(UseSessions({ store: Store, user: findUser, redirectTo: '/foo' }));
             });
 
             it('with the null value and should return an HttpResponseRedirect object.', async () => {
               const response = await hook(ctx, services);
 
-              strictEqual(ctx.user, undefined);
+              strictEqual(ctx.user, null);
 
               if (!isHttpResponseRedirect(response)) {
                 throw new Error('response should be instance of HttpResponseRedirect');
@@ -896,7 +908,7 @@ describe('UseSessions', () => {
 
             await ctx.session.destroy();
 
-            return doesNotReject(() => postHookFunction(new HttpResponseOK()));
+            return doesNotReject(async () => postHookFunction(new HttpResponseOK()));
           }
         );
 

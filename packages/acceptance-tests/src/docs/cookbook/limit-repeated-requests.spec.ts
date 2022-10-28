@@ -15,7 +15,7 @@ it('[Docs] Cookbook > Limit Repeated Requests', () => {
       max: 100,
       // 15 minutes
       windowMs: 15 * 60 * 1000,
-      handler (req, res, next) {
+      handler (req: any, res: any, next: () => void) {
         // Set default FoalTS headers to the response of limited requests
         res.removeHeader('X-Powered-By');
         res.setHeader('X-Content-Type-Options', 'nosniff');

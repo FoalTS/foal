@@ -15,7 +15,7 @@ export async function convertErrorToWebsocketResponse(
   if (socketIOController.handleError) {
     try {
       return await socketIOController.handleError(error, ctx);
-    } catch (error2) {
+    } catch (error2: any) {
       return renderWebsocketError(error2, ctx);
     }
   }

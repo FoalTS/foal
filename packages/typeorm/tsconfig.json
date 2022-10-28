@@ -2,18 +2,21 @@
   "compilerOptions": {
     "outDir": "lib/",
     "module": "commonjs",
-    "target": "es2017",
+    "target": "es2021",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "sourceMap": true,
     "declaration": true,
-    "lib": [
-      "es2017",
-      "dom"
+    "typeRoots": [
+      "./node_modules/@types",
+      "./typings"
     ],
-    "types": [ "node", "mocha" ]
+    "lib": [
+      "es2021",
+      "dom"
+    ]
   },
   "include": [
     "./src/**/*.ts"

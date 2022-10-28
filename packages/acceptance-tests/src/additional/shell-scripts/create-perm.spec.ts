@@ -1,22 +1,17 @@
 // 3p
-import * as Ajv from 'ajv';
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import Ajv from 'ajv';
 
 // FoalTS
 import { Permission } from '@foal/typeorm';
 import { main as createPerm, schema } from './create-perm';
+import { createAndInitializeDataSource } from '../../common';
 
 describe('[Shell scripts] create-perm', () => {
 
   beforeEach(async () => {
-    const connection = await createConnection({
-      database: './e2e_db.sqlite',
-      dropSchema: true,
-      entities: [ Permission ],
-      synchronize: true,
-      type: 'better-sqlite3',
-    });
-    await connection.close();
+    // Clear database.
+    const dataSource = await createAndInitializeDataSource([ Permission ]);
+    await dataSource.destroy();
   });
 
   it('should work as expected.', async () => {
@@ -28,25 +23,21 @@ describe('[Shell scripts] create-perm', () => {
 
     const ajv = new Ajv({ useDefaults: true });
     if (!ajv.validate(schema, args)) {
-      (ajv.errors as Ajv.ErrorObject[]).forEach(err => {
+      ajv.errors!.forEach(err => {
         throw new Error(`Error: The command line arguments ${err.message}.`);
       });
     }
 
     await createPerm(args);
 
-    await createConnection({
-      database: './e2e_db.sqlite',
-      entities: [ Permission ],
-      type: 'better-sqlite3',
-    });
+    const dataSource = await createAndInitializeDataSource([ Permission ], { dropSchema: false });
 
     try {
-      await getRepository(Permission).findOneOrFail(args);
+      await Permission.findOneByOrFail(args);
     } catch (error: any) {
       throw error;
     } finally {
-      await getConnection().close();
+      await dataSource.destroy();
     }
   });
 });

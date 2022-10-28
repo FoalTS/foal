@@ -77,6 +77,22 @@ describe('Env', () => {
         strictEqual(Env.get('FOO_BAR'), 'hello');
       });
 
+      context('and a variable exists in a .env file with the given name', () => {
+
+        beforeEach(() => process.env.HELLO = 'there');
+
+        afterEach(() => {
+          delete process.env.HELLO;
+          removeFile('.env');
+        });
+
+        it('should return the value of the environment variable.', () => {
+          writeFileSync('.env', dotEnvContent);
+
+          strictEqual(Env.get('HELLO'), 'there');
+        })
+      });
+
     });
 
     function testConfigFile(filename: string, nodeEnv?: string, nodeEnvName = 'NODE_ENV'): void {

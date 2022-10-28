@@ -18,12 +18,12 @@ import {
   ServiceManager
 } from '../../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
+import { checkUserIdType } from './check-user-id-type';
+import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';
 import { createSession, readSession, SessionStore } from '../core';
-import { FetchUser } from './fetch-user.interface';
 import { getCsrfTokenFromRequest, removeSessionCookie, setSessionCookie, shouldVerifyCsrfToken } from './utils';
 
-export interface UseSessionOptions {
-  user?: FetchUser;
+export type UseSessionOptions = {
   store?: Class<SessionStore>;
   cookie?: boolean;
   csrf?: boolean;
@@ -32,7 +32,16 @@ export interface UseSessionOptions {
   required?: boolean;
   create?: boolean;
   userCookie?: (ctx: Context, services: ServiceManager) => string|Promise<string>;
-}
+} & (
+  {
+    userIdType: 'string';
+    user?: (id: string, services: ServiceManager) => Promise<Context['user']>;
+  } |
+  {
+    userIdType?: 'number';
+    user?: (id: number, services: ServiceManager) => Promise<Context['user']>;
+  }
+);
 
 export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
@@ -80,42 +89,23 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
 
     /* Validate the request */
 
-    let sessionID: string;
+    let sessionID: string|undefined;
 
-    if (options.cookie) {
-      const cookieName = Config.get('settings.session.cookie.name', 'string', SESSION_DEFAULT_COOKIE_NAME);
-      const content = ctx.request.cookies[cookieName] as string|undefined;
-
-      if (!content) {
-        if (!options.required) {
-          if (options.create ?? true) {
-            ctx.session = await createSession(store);
-          }
-          return postFunction;
-        }
-        return badRequestOrRedirect('Session cookie not found.');
+    try {
+      sessionID = getSessionIDFromRequest(ctx.request, options.cookie ? 'token-in-cookie' : 'token-in-header', !!options.required);
+    } catch (error) {
+      if (error instanceof RequestValidationError) {
+        return badRequestOrRedirect(error.message);
       }
+      // TODO: test this.
+      throw error;
+    }
 
-      sessionID = content;
-    } else {
-      const authorizationHeader = ctx.request.get('Authorization') || '';
-
-      if (!authorizationHeader) {
-        if (!options.required) {
-          if (options.create) {
-            ctx.session = await createSession(store);
-          }
-          return postFunction;
-        }
-        return badRequestOrRedirect('Authorization header not found.');
+    if (!sessionID) {
+      if (options.create ?? options.cookie) {
+        ctx.session = await createSession(store);
       }
-
-      const content = authorizationHeader.split('Bearer ')[1] as string|undefined;
-      if (!content) {
-        return badRequestOrRedirect('Expected a bearer token. Scheme is Authorization: Bearer <token>.');
-      }
-
-      sessionID = content;
+      return postFunction;
     }
 
     /* Verify the session ID */
@@ -153,7 +143,8 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
     /* Set ctx.user */
 
     if (session.userId !== null && options.user) {
-      ctx.user = await options.user(session.userId, services);
+      const userId = checkUserIdType(session.userId, options.userIdType);
+      ctx.user = await options.user(userId as never, services);
       if (!ctx.user) {
         await session.destroy();
         const response = unauthorizedOrRedirect('The token does not match any user.');

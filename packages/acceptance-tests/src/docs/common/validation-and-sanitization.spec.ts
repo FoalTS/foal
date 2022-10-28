@@ -55,9 +55,9 @@ describe('[Docs] Input Validation & Sanitization', () => {
         const errors = {
           body: [
             {
-              dataPath: '.price',
+              instancePath: '/price',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -129,9 +129,9 @@ describe('[Docs] Input Validation & Sanitization', () => {
         const errors = {
           headers: [
             {
-              dataPath: '[\'a-number\']',
+              instancePath: '/a-number',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -189,9 +189,9 @@ describe('[Docs] Input Validation & Sanitization', () => {
         const errors = {
           cookies: [
             {
-              dataPath: '[\'A-Number\']',
+              instancePath: '/A-Number',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -247,9 +247,9 @@ describe('[Docs] Input Validation & Sanitization', () => {
         const errors = {
           pathParams: [
             {
-              dataPath: '.productId',
+              instancePath: '/productId',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -301,9 +301,9 @@ describe('[Docs] Input Validation & Sanitization', () => {
         const errors = {
           query: [
             {
-              dataPath: '[\'a-number\']',
+              instancePath: '/a-number',
               keyword: 'type',
-              message: 'should be integer',
+              message: 'must be integer',
               params: {
                 type: 'integer'
               },
@@ -427,7 +427,7 @@ describe('[Docs] Input Validation & Sanitization', () => {
         .expect([
           {
             children: [],
-            constraints: { length: 'title must be longer than or equal to 10 characters' },
+            constraints: { isLength: 'title must be longer than or equal to 10 characters' },
             property: 'title',
             target: { text: 'foo' },
           },

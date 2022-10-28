@@ -1,22 +1,27 @@
 // 3p
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import {
   Config, controller, createApp, Get, HttpResponseOK, IAppController, UseSessions
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
 describe('Feature: Requiring the session cookie', async () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple example.', async () => {
@@ -39,13 +44,10 @@ describe('Feature: Requiring the session cookie', async () => {
       subControllers = [
         controller('/api', ApiController),
       ];
-
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
     }
 
     const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     await request(app)
       .get('/api/products')

@@ -75,7 +75,7 @@ describe('Feature: Using Websocket controllers and hooks', () => {
 
     ({ httpServer, socket, controller } = await createConnections(WebsocketController));
 
-    await new Promise((resolve, reject) => {
+    await new Promise<void>((resolve, reject) => {
 
       socket.emit('user:create', { name: 3 }, (response: any) => {
         try {

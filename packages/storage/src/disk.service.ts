@@ -53,9 +53,9 @@ export function isFileDoesNotExist(obj: any): obj is FileDoesNotExist {
  */
 export abstract class Disk {
 
-  static concreteClassConfigPath = 'settings.disk.driver';
-  static concreteClassName = 'ConcreteDisk';
-  static defaultConcreteClassPath = join(__dirname, './local-disk.service');
+  static readonly concreteClassConfigPath = 'settings.disk.driver';
+  static readonly concreteClassName = 'ConcreteDisk';
+  static readonly defaultConcreteClassPath = join(__dirname, './local-disk.service');
 
   /**
    * Asynchronously write a file. If the file already exists, it is replaced.
@@ -64,7 +64,7 @@ export abstract class Disk {
    * @abstract
    * @param {string} dirname - Name or path of the directory where the file must
    * be saved.
-   * @param {(Buffer|NodeJS.ReadableStream)} content - Content of the file (buffer or readable
+   * @param {(Buffer|Readable)} content - Content of the file (buffer or readable
    * stream).
    * @param {({ name?: string } | { extension?: string })} [options] - Optional name
    * or extension of the file. If no name is provided, the method generates one.
@@ -74,7 +74,7 @@ export abstract class Disk {
    */
   abstract write(
     dirname: string,
-    content: Buffer|NodeJS.ReadableStream,
+    content: Buffer|Readable,
     options?: { name?: string } | { extension?: string },
   ): Promise<{ path: string }>;
 

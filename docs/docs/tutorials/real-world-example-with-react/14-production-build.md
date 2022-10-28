@@ -34,7 +34,6 @@ Open `app.controller.ts` and update its contents.
 
 ```typescript
 import { Context, controller, Get, HttpResponseNotFound, IAppController, render } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController, OpenapiController } from './controllers';
 
@@ -43,10 +42,6 @@ export class AppController implements IAppController {
     controller('/api', ApiController),
     controller('/swagger', OpenapiController)
   ];
-
-  async init() {
-    await createConnection();
-  }
 
   @Get('*')
   renderApp(ctx: Context) {
@@ -66,7 +61,7 @@ If you return to [http://localhost:3001/login](http://localhost:3001/login) and 
 
 ## Building the Foal app
 
-Now, if you want to build the backend application so that you don't use the `npm run develop` option, you can run this command:
+Now, if you want to build the backend application so that you don't use the `npm run dev` option, you can run this command:
 
 ```bash
 npm run build

@@ -478,7 +478,6 @@ export class AuthController {
 
 ## Reading User Information on the Client (cookies)
 
-> *This feature is available from version 2.2 onwards.*
 
 When building a SPA with cookie-based authentication, it can sometimes be difficult to know if the user is logged in or to obtain certain information about the user (`isAdmin`, etc).
 
@@ -1101,7 +1100,9 @@ import { RedisStore } from '@foal/redis';
 import { createClient } from 'redis';
 
 async function main() {
-  const redisClient = createClient('redis://localhost:6379');
+  const redisClient = createClient({ url: 'redis://localhost:6379' });
+  await redisClient.connect();
+
 
   const serviceManager = new ServiceManager();
   serviceManager.get(RedisStore).setRedisClient(redisClient);
@@ -1115,7 +1116,7 @@ async function main() {
 #### `MongoDBStore`
 
 ```
-npm install mongodb@3
+npm install mongodb@4
 ```
 
 *index.ts*
@@ -1125,10 +1126,7 @@ import { MongoDBStore } from '@foal/mongodb';
 import { MongoClient } from 'mongodb';
 
 async function main() {
-  const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  });
+  const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db');
 
   const serviceManager = new ServiceManager();
   serviceManager.get(MongoDBStore).setMongoDBClient(mongoDBClient);

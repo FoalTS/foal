@@ -21,7 +21,7 @@ export class LocalDisk extends Disk {
 
   async write(
     dirname: string,
-    content: Buffer | NodeJS.ReadableStream,
+    content: Buffer | Readable,
     options: { name?: string } | { extension?: string } = {}
   ): Promise<{ path: string; }> {
     let name = this.hasName(options) ? options.name : await generateToken();
@@ -35,16 +35,7 @@ export class LocalDisk extends Disk {
     if (content instanceof Buffer) {
       await promisify(writeFile)(this.getPath(path), content);
     } else {
-      await new Promise<void>((resolve, reject) => {
-        pipeline(content, createWriteStream(this.getPath(path)), err => {
-          // Note: error streams are unlikely to occur (most "createWriteStream" errors are simply thrown).
-          // TODO: test the error case.
-          if (err) {
-            return reject(err);
-          }
-          resolve();
-        });
-      });
+      await promisify(pipeline)(content, createWriteStream(this.getPath(path)));
     }
 
     return { path };

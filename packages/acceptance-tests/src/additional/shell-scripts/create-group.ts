@@ -1,6 +1,6 @@
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager, getRepository } from 'typeorm';
+import { createAndInitializeDataSource } from '../../common';
 
 export const schema = {
   additionalProperties: false,
@@ -9,7 +9,7 @@ export const schema = {
     name: { type: 'string', maxLength: 80 },
     permissions: { type: 'array', items: { type: 'string' }, uniqueItems: true, default: [] }
   },
-  required: [ 'name', 'codeName' ],
+  required: ['name', 'codeName'],
   type: 'object',
 };
 
@@ -19,28 +19,24 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  await createConnection({
-    database: './e2e_db.sqlite',
-    entities: [ Permission, Group ],
-    type: 'better-sqlite3',
-  });
-
-  for (const codeName of args.permissions) {
-    const permission = await getRepository(Permission).findOne({ codeName });
-    if (!permission) {
-      console.log(`No permission with the code name "${codeName}" was found.`);
-      return;
-    }
-    group.permissions.push(permission);
-  }
+  const dataSource = await createAndInitializeDataSource([Permission, Group], { dropSchema: false });
 
   try {
+    for (const codeName of args.permissions) {
+      const permission = await Permission.findOneBy({ codeName });
+      if (!permission) {
+        console.log(`No permission with the code name "${codeName}" was found.`);
+        return;
+      }
+      group.permissions.push(permission);
+    }
+
     console.log(
-      await getManager().save(group)
+      await group.save()
     );
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await dataSource.destroy();
   }
 }

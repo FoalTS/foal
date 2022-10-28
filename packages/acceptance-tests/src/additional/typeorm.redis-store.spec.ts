@@ -21,31 +21,31 @@ import {
   verifyPassword
 } from '@foal/core';
 import { RedisStore } from '@foal/redis';
-import * as redis from 'redis';
+import { createClient } from 'redis';
 import * as request from 'supertest';
+import { ObjectId } from 'mongodb';
 
 // FoalTS
-import { fetchMongoDBUser } from '@foal/typeorm';
 import {
+  BaseEntity,
   Column,
-  Connection,
-  createConnection,
+  DataSource,
   Entity,
-  getMongoRepository,
   ObjectID,
   ObjectIdColumn
-} from '@foal/typeorm/node_modules/typeorm';
+} from 'typeorm';
+import { createAndInitializeDataSource } from '../common';
 
 describe('[Sample] MongoDB & Redis Store', async () => {
 
   let app: any;
   let token: string;
-  let redisClient: redis.RedisClient;
+  let redisClient: ReturnType<typeof createClient>;
 
   @Entity()
-  class User {
+  class User extends BaseEntity {
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
 
     @Column({ unique: true })
     email: string;
@@ -65,7 +65,12 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     });
   }
 
-  @UseSessions({ user: fetchMongoDBUser(User), store: RedisStore, required: true, })
+  @UseSessions({
+    user: id => User.findOneBy({ _id: new ObjectId(id) }),
+    userIdType: 'string',
+    store: RedisStore,
+    required: true,
+  })
   class MyController {
     @Get('/foo')
     foo() {
@@ -104,7 +109,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
       type: 'object',
     })
     async login(ctx: Context) {
-      const user = await getMongoRepository(User).findOne({ email: ctx.request.body.email });
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
@@ -131,7 +136,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     ];
   }
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   before(async () => {
     const MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
@@ -140,31 +145,21 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     Config.set('settings.mongodb.uri', MONGODB_URI);
     Config.set('settings.redis.uri', REDIS_URI);
 
-    connection = await createConnection({
+    dataSource = await createAndInitializeDataSource([User], {
       database: 'e2e_db',
-      dropSchema: true,
-      entities: [User],
-      host: 'localhost',
-      port: 27017,
       type: 'mongodb',
     });
 
-    redisClient = redis.createClient(REDIS_URI);
+    redisClient = createClient({ url: REDIS_URI });
+    await redisClient.connect();
 
-    await new Promise((resolve, reject) => {
-      redisClient.flushdb((err, success) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(success);
-      });
-    });
+    await redisClient.flushDb();
 
     const user = new User();
     user.email = 'john@foalts.org';
     user.password = await hashPassword('password');
     user.isAdmin = false;
-    await getMongoRepository(User).save(user);
+    await user.save();
 
     app = await createApp(AppController);
   });
@@ -174,9 +169,9 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     Config.remove('settings.redis.uri');
 
     return Promise.all([
-      connection.close(),
+      dataSource.destroy(),
       app.foal.services.get(RedisStore).close(),
-      redisClient.end(true)
+      redisClient.quit(),
     ]);
   });
 
@@ -222,13 +217,13 @@ describe('[Sample] MongoDB & Redis Store', async () => {
 
     /* Add the admin group and permission */
 
-    const user2 = await getMongoRepository(User).findOne({ email: 'john@foalts.org' });
+    const user2 = await User.findOneBy({ email: 'john@foalts.org' });
     if (!user2) {
       throw new Error('John was not found in the database.');
     }
 
     user2.isAdmin = true;
-    await getMongoRepository(User).save(user2);
+    await user2.save();
 
     /* Access the route that requires a specific permission */
 

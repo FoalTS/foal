@@ -1,5 +1,5 @@
 export class InvalidTokenError extends Error {
-  isInvalidTokenError = true;
+  readonly isInvalidTokenError = true;
 }
 
 export function isInvalidTokenError(obj: any): obj is InvalidTokenError {

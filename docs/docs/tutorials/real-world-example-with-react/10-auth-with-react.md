@@ -52,8 +52,8 @@ import { Context } from '@foal/core';
 
 @UseSessions({
   cookie: true,
-  user: fetchUser(User),
-  userCookie: (ctx: Context<User|undefined>) => ctx.user ? JSON.stringify({ id: ctx.user.id, name: ctx.user.name }) : '',
+  user: (id: number) => User.findOneBy({ id }),
+  userCookie: (ctx) => ctx.user ? JSON.stringify({ id: ctx.user.id, name: ctx.user.name }) : '',
 })
 ```
 

@@ -18,7 +18,7 @@ describe('Feature: Mocking services in hooks', () => {
       };
 
       getUser(key: string) {
-        return this.users[key];
+        return this.users[key] ?? null;
       }
     }
 

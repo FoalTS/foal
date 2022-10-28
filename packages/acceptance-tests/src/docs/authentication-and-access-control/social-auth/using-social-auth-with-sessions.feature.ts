@@ -2,7 +2,7 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 // FoalTS
 import {
@@ -13,23 +13,26 @@ import {
   dependency,
   Get,
   HttpResponseRedirect,
-  Session,
   Store,
   UseSessions,
 } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 import { DatabaseSession } from '@foal/typeorm';
 
 describe('Feature: Using social auth with sessions', () => {
+
+  let dataSource: DataSource;
 
   before(() => {
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  after(() => {
+  after(async () => {
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: Simple auth controller.', async () => {
@@ -63,14 +66,14 @@ describe('Feature: Using social auth with sessions', () => {
       @UseSessions({
         cookie: true,
       })
-      async handleGoogleRedirection(ctx: Context<User, Session>) {
+      async handleGoogleRedirection(ctx: Context<User>) {
         const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
 
         if (!userInfo.email) {
           throw new Error('Google should have returned an email address.');
         }
 
-        let user = await User.findOne({ email: userInfo.email });
+        let user = await User.findOneBy({ email: userInfo.email });
 
         if (!user) {
           // If the user has not already signed up, then add them to the database.
@@ -79,7 +82,7 @@ describe('Feature: Using social auth with sessions', () => {
           await user.save();
         }
 
-        ctx.session.setUser(user);
+        ctx.session!.setUser(user);
 
         return new HttpResponseRedirect('/');
       }
@@ -88,7 +91,7 @@ describe('Feature: Using social auth with sessions', () => {
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    await createTestConnection([ User, DatabaseSession ]);
+    dataSource = await createAndInitializeDataSource([ User, DatabaseSession ]);
 
     const user = new User();
     user.email = 'jane.doe@foalts.org';
@@ -113,7 +116,7 @@ describe('Feature: Using social auth with sessions', () => {
     });
 
     // Known user
-    const ctx = new Context<any, Session>({
+    const ctx = new Context<User>({
       query: {
         code: 'known_user'
       }
@@ -127,7 +130,7 @@ describe('Feature: Using social auth with sessions', () => {
     deepStrictEqual(ctx.session.userId, user.id);
 
     // Unknown user
-    const ctx2 = new Context<any, Session>({
+    const ctx2 = new Context<User>({
       query: {
         code: 'unknown_user'
       }
@@ -135,11 +138,11 @@ describe('Feature: Using social auth with sessions', () => {
     ctx2.session = await createSession({} as any);
 
     strictEqual(ctx2.session.userId, null);
-    strictEqual(await User.findOne({ email: 'unknown@foalts.org' }), undefined);
+    strictEqual(await User.findOneBy({ email: 'unknown@foalts.org' }), null);
 
     await controller.handleGoogleRedirection(ctx2);
 
-    const user2 = await User.findOneOrFail({ email: 'unknown@foalts.org' })
+    const user2 = await User.findOneByOrFail({ email: 'unknown@foalts.org' })
 
     deepStrictEqual(ctx2.session.userId, user2.id);
   });

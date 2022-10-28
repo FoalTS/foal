@@ -71,7 +71,7 @@ function getCurrentUserFromCookie(): IUser | null {
   }
   try {
     return JSON.parse(userCookie);
-  } catch (error) {
+  } catch (error: any) {
     return null;
   }
 }

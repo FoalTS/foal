@@ -5,16 +5,16 @@ import { promisify } from 'util';
 
 // FoalTS
 import { hashPassword, HttpResponseOK, HttpResponseUnauthorized, isHttpResponseOK, passwordHashNeedsToBeRefreshed, verifyPassword } from '@foal/core';
-import { BaseEntity, Column, Connection, Entity, PrimaryGeneratedColumn } from '@foal/typeorm/node_modules/typeorm';
-import { createTestConnection } from '../../../common';
+import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { createAndInitializeDataSource } from '../../../common';
 
 describe('Feature: Upgrading passwords', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
   afterEach(async () => {
-    if (connection) {
-      await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
     }
   });
 
@@ -48,7 +48,7 @@ describe('Feature: Upgrading passwords', () => {
 
       /* ======================= DOCUMENTATION BEGIN ======================= */
 
-      const user = await User.findOne({ email });
+      const user = await User.findOneBy({ email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
@@ -73,7 +73,7 @@ describe('Feature: Upgrading passwords', () => {
       return new HttpResponseOK();
     }
 
-    connection = await createTestConnection([ User ]);
+    dataSource = await createAndInitializeDataSource([ User ]);
 
     const plainTextPassword = 'password';
 

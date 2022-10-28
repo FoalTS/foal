@@ -5,7 +5,6 @@ import {
   Get,
   HttpResponse,
   HttpResponseRedirect,
-  Session,
   UseSessions,
 } from '@foal/core';
 import { FacebookProvider, GithubProvider, GoogleProvider, LinkedInProvider, TwitterProvider } from '@foal/social';
@@ -37,7 +36,7 @@ export class AuthController {
   }
 
   @Get('/signin/google/cb')
-  async handleGoogleRedirection(ctx: Context<any, Session>) {
+  async handleGoogleRedirection(ctx: Context) {
     const { userInfo } = await this.google.getUserInfo(ctx);
     return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
@@ -48,7 +47,7 @@ export class AuthController {
   }
 
   @Get('/signin/facebook/cb')
-  async handleFacebookRedirection(ctx: Context<any, Session>) {
+  async handleFacebookRedirection(ctx: Context) {
     const { userInfo } = await this.facebook.getUserInfo(ctx);
     return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
@@ -59,7 +58,7 @@ export class AuthController {
   }
 
   @Get('/signin/github/cb')
-  async handleGithubRedirection(ctx: Context<any, Session>) {
+  async handleGithubRedirection(ctx: Context) {
     const { userInfo } = await this.github.getUserInfo(ctx);
     return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
@@ -70,25 +69,25 @@ export class AuthController {
   }
 
   @Get('/signin/linkedin/cb')
-  async handleLinkedInRedirection(ctx: Context<any, Session>) {
+  async handleLinkedInRedirection(ctx: Context) {
     const { userInfo } = await this.linkedin.getUserInfo(ctx);
     return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
 
   @Get('/signin/twitter')
-  redirectToTwittern() {
+  redirectToTwitter() {
     return this.twitter.redirect();
   }
 
   @Get('/signin/twitter/cb')
-  async handleTwitterRedirection(ctx: Context<any, Session>) {
+  async handleTwitterRedirection(ctx: Context) {
     const { userInfo } = await this.twitter.getUserInfo(ctx);
     return this.createSessionAndSaveUserInfo(userInfo, ctx);
   }
 
-  private async createSessionAndSaveUserInfo(userInfo: any, ctx: Context<any, Session>): Promise<HttpResponse> {
-    ctx.session.set('userInfo', userInfo);
-    ctx.session.regenerateID();
+  private async createSessionAndSaveUserInfo(userInfo: any, ctx: Context): Promise<HttpResponse> {
+    ctx.session!.set('userInfo', userInfo);
+    ctx.session!.regenerateID();
 
     return new HttpResponseRedirect('/');
   }

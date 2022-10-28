@@ -2,7 +2,7 @@
 import { strictEqual } from 'assert';
 
 // 3p
-import { Connection } from '@foal/typeorm/node_modules/typeorm';
+import { DataSource } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import * as request from 'supertest';
 
@@ -20,7 +20,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, setAuthCookie } from '@foal/jwt';
-import { createFixtureUser, createTestConnection, credentialsSchema, readCookie, User } from '../../../common';
+import { createFixtureUser, createAndInitializeDataSource, credentialsSchema, readCookie, User } from '../../../common';
 
 describe('Feature: Stateless CSRF protection in a Single-Page Application', () => {
 
@@ -31,7 +31,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     @Post('/login')
     @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
-      const user = await User.findOne({ email: ctx.request.body.email });
+      const user = await User.findOneBy({ email: ctx.request.body.email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
@@ -46,11 +46,11 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
           { email: user.email },
           getSecretOrPrivateKey(),
           { subject: user.id.toString() },
-          (err, encoded) => {
+          (err: any, encoded: any) => {
             if (err) {
               return reject(err);
             }
-            resolve(encoded);
+            resolve(encoded as string);
           }
         );
       });
@@ -84,7 +84,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
 
   const csrfCookieName = 'Custom-XSRF-Token';
 
-  let connection: Connection;
+  let dataSource: DataSource;
   let user: User;
 
   let app: any;
@@ -96,7 +96,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.set('settings.jwt.csrf.enabled', true);
     Config.set('settings.jwt.csrf.cookie.name', csrfCookieName);
 
-    connection = await createTestConnection([ User ]);
+    dataSource = await createAndInitializeDataSource([ User ]);
 
     user = await createFixtureUser(1);
     await user.save();
@@ -109,7 +109,9 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
     Config.remove('settings.jwt.csrf.enabled');
     Config.remove('settings.jwt.csrf.cookie.name');
 
-    await connection.close();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Step 1: User logs in and gets a CSRF token.', () => {

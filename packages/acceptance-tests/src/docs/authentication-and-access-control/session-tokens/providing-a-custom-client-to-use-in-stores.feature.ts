@@ -1,99 +1,14 @@
-// std
-import { } from 'assert';
-
 // 3p
 import * as request from 'supertest';
 import { createClient } from 'redis';
-import { getConnection } from '@foal/typeorm/node_modules/typeorm';
-import { MongoClient } from 'mongodb';
+import { MongoClient } from 'mongodb4';
 
 // FoalTS
 import { createApp, createSession, dependency, Get, HttpResponseInternalServerError, HttpResponseOK, ServiceManager } from '@foal/core';
 import { RedisStore } from '@foal/redis';
-import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { MongoDBStore } from '@foal/mongodb';
-import { createTestConnection } from '../../../common';
 
 describe('Feature: Providing a Custom Client to Use in the Stores', () => {
-
-  const typeOrmConnectionName = 'connection2';
-
-  afterEach(async () => {
-    const connection = getConnection(typeOrmConnectionName);
-    if (connection.isConnected) {
-      await connection.close();
-    }
-  })
-
-  it('Example: TypeORMStore (in the "init" method).', async () => {
-
-    class AppController {
-      @dependency
-      store: TypeORMStore;
-
-      @Get('/')
-      async index() {
-        const session = await createSession(this.store);
-        // Should not throw.
-        await session.commit();
-        return new HttpResponseOK();
-      }
-    }
-
-    /* ======================= DOCUMENTATION BEGIN ======================= */
-
-    async function main() {
-      const connection = await createTestConnection([ DatabaseSession ], typeOrmConnectionName);
-
-      const serviceManager = new ServiceManager();
-      serviceManager.get(TypeORMStore).setConnection(connection);
-
-      const app = await createApp(AppController, { serviceManager });
-
-      return app;
-    }
-
-    /* ======================= DOCUMENTATION END ========================= */
-
-    const app = await main();
-
-    return request(app)
-      .get('/')
-      .expect(200);
-  });
-
-  it('Example: TypeORMStore (in the "main" function).', async () => {
-
-    /* ======================= DOCUMENTATION BEGIN ======================= */
-
-    class AppController {
-      @dependency
-      store: TypeORMStore;
-
-      /* ======================= DOCUMENTATION END ========================= */
-      @Get('/')
-      async index() {
-        const session = await createSession(this.store);
-        // Should not throw.
-        await session.commit();
-        return new HttpResponseOK();
-      }
-      /* ======================= DOCUMENTATION BEGIN ======================= */
-
-      async init() {
-        const connection = await createTestConnection([ DatabaseSession ], 'connection2');
-        this.store.setConnection(connection);
-      }
-    }
-
-    /* ======================= DOCUMENTATION END ========================= */
-
-    const app = await createApp(AppController);
-
-    return request(app)
-      .get('/')
-      .expect(200);
-  });
 
   it('Example: RedisStore.', async () => {
 
@@ -110,7 +25,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
           await session.commit();
         } catch (error: any) {
           // Should throw because the connection has already been closed.
-          if (error.name === 'AbortError') {
+          if (error.message === 'The client is closed') {
             return new HttpResponseOK();
           }
           throw error;
@@ -122,7 +37,8 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main() {
-      redisClient = createClient('redis://localhost:6379');
+      redisClient = createClient({ url: 'redis://localhost:6380' });
+      await redisClient.connect();
 
       const serviceManager = new ServiceManager();
       serviceManager.get(RedisStore).setRedisClient(redisClient);
@@ -136,7 +52,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
 
     const app = await main();
 
-    await new Promise(resolve => redisClient!.quit(resolve));
+    await redisClient!.quit();
 
     return request(app)
       .get('/')
@@ -158,7 +74,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
           await session.commit();
         } catch (error: any) {
           // Should throw because the connection has already been closed.
-          if (error.name === 'MongoError') {
+          if (error.name === 'MongoNotConnectedError') {
             return new HttpResponseOK();
           }
           throw error;
@@ -170,10 +86,7 @@ describe('Feature: Providing a Custom Client to Use in the Stores', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     async function main() {
-      mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      });
+      mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db');
 
       const serviceManager = new ServiceManager();
       serviceManager.get(MongoDBStore).setMongoDBClient(mongoDBClient);

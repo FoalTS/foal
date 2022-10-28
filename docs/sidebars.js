@@ -121,7 +121,6 @@ module.exports = {
       category('Security', [
         'security/http-headers-protection',
         'security/csrf-protection',
-        'security/xss-protection',
       ]),
       category('Cookbook', [
         'cookbook/scheduling-jobs',
@@ -141,7 +140,8 @@ module.exports = {
       // 'comparison-with-other-frameworks/nest',
     ]),
     expandedCategory('Upgrading', [
-      'upgrade-to-v2/README',
+      'upgrade-to-v3/README',
+      link('To v2', 'https://foalts.org/docs/2.x/upgrade-to-v2/'),
       link('To v1', 'https://github.com/FoalTS/foal/releases/tag/v1.0.0'),
     ]),
     expandedCategory('Community', [

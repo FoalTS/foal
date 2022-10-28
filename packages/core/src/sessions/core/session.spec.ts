@@ -34,7 +34,7 @@ describe('Session', () => {
 
     async save(state: SessionState, maxInactivity: number): Promise<void> {
       // This line is required to test the use of "await".
-      await new Promise(resolve => setTimeout(() => resolve(), 0));
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
       this.saveCalledWith = { state, maxInactivity };
     }
     read(id: string): Promise<SessionState | null> {
@@ -42,12 +42,12 @@ describe('Session', () => {
     }
     async update(state: SessionState, maxInactivity: number): Promise<void> {
       // This line is required to test the use of "await".
-      await new Promise(resolve => setTimeout(() => resolve(), 0));
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
       this.updateCalledWith = { state, maxInactivity };
     }
     async destroy(id: string): Promise<void> {
       // This line is required to test the use of "await".
-      await new Promise(resolve => setTimeout(() => resolve(), 0));
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
       this.destroyCalledWith = id;
     }
     clear(): Promise<void> {
@@ -55,8 +55,8 @@ describe('Session', () => {
     }
     async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
       // These lines are required to test the use of "await".
-      await new Promise(resolve => setTimeout(() => resolve(), 0));
-      await new Promise(resolve => setTimeout(() => resolve(), 0));
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 0));
       this.cleanUpExpiredSessionsCalledWith = { maxInactivity, maxLifeTime };
     }
   }

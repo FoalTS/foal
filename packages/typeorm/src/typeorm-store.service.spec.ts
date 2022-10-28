@@ -2,7 +2,7 @@
 import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
 
 // 3p
-import { Connection, createConnection, getConnection, getRepository } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
@@ -10,11 +10,11 @@ import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
 type DBType = 'mysql'|'mariadb'|'postgres'|'sqlite'|'better-sqlite3';
 
-async function createTestConnection(type: DBType, name?: string): Promise<Connection> {
+function createTestDataSource(type: DBType, name?: string): DataSource {
   switch (type) {
     case 'mysql':
     case 'mariadb':
-      return createConnection({
+      return new DataSource({
         database: 'test',
         dropSchema: true,
         entities: [ DatabaseSession ],
@@ -26,7 +26,7 @@ async function createTestConnection(type: DBType, name?: string): Promise<Connec
         name,
       });
     case 'postgres':
-      return createConnection({
+      return new DataSource({
         database: 'test',
         dropSchema: true,
         entities: [ DatabaseSession ],
@@ -38,7 +38,7 @@ async function createTestConnection(type: DBType, name?: string): Promise<Connec
       });
     case 'sqlite':
     case 'better-sqlite3':
-      return createConnection({
+      return new DataSource({
         database: 'test_db.sqlite',
         dropSchema: true,
         entities: [ DatabaseSession ],
@@ -56,20 +56,29 @@ function entityTestSuite(type: DBType) {
   describe(`with ${type}`, () => {
     const longNumber = 2147483647;
 
-    before(() => createTestConnection(type));
+    let dataSource: DataSource;
 
-    beforeEach(async () => {
-      await getRepository(DatabaseSession).clear();
+    before(async () => {
+      dataSource = createTestDataSource(type);
+      await dataSource.initialize();
     });
 
-    after(() => getConnection().close());
+    beforeEach(async () => {
+      await dataSource.getRepository(DatabaseSession).clear();
+    });
+
+    after(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     it('should be associated to table named "sessions".', () => {
-      strictEqual(getRepository(DatabaseSession).metadata.tableName, 'sessions');
+      strictEqual(dataSource.getRepository(DatabaseSession).metadata.tableName, 'sessions');
     });
 
     it('should have an id which is unique.', async () => {
-      const session1 = getRepository(DatabaseSession).create({
+      const session1 = dataSource.getRepository(DatabaseSession).create({
         content: '',
         created_at: 0,
         flash: '',
@@ -77,10 +86,10 @@ function entityTestSuite(type: DBType) {
         updated_at: 0,
         user_id: undefined,
       });
-      await getRepository(DatabaseSession).save(session1);
+      await dataSource.getRepository(DatabaseSession).save(session1);
 
       await rejects(
-        () => getRepository(DatabaseSession)
+        () => dataSource.getRepository(DatabaseSession)
           .createQueryBuilder()
           .insert()
           .values({
@@ -98,7 +107,7 @@ function entityTestSuite(type: DBType) {
       const session = await createSession({} as any);
       const id = session.getToken();
 
-      const dbSession = getRepository(DatabaseSession).create({
+      const dbSession = dataSource.getRepository(DatabaseSession).create({
         content: '',
         created_at: 0,
         flash: '',
@@ -106,13 +115,13 @@ function entityTestSuite(type: DBType) {
         updated_at: 0,
         user_id: undefined,
       });
-      await getRepository(DatabaseSession).save(dbSession);
+      await dataSource.getRepository(DatabaseSession).save(dbSession);
 
-      return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail(id));
+      return doesNotReject(() => dataSource.getRepository(DatabaseSession).findOneByOrFail({ id }));
     });
 
     it('should have a "content" column which supports long strings.', async () => {
-      const session1 = getRepository(DatabaseSession).create({
+      const session1 = dataSource.getRepository(DatabaseSession).create({
         content: JSON.stringify({
           hello: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
             + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
@@ -125,11 +134,11 @@ function entityTestSuite(type: DBType) {
         id: 'a',
         updated_at: 0,
       });
-      await getRepository(DatabaseSession).save(session1);
+      await dataSource.getRepository(DatabaseSession).save(session1);
     });
 
     it('should have a "flash" column which supports long strings.', async () => {
-      const session1 = getRepository(DatabaseSession).create({
+      const session1 = dataSource.getRepository(DatabaseSession).create({
         content: '',
         created_at: 0,
         flash:  JSON.stringify({
@@ -142,11 +151,11 @@ function entityTestSuite(type: DBType) {
         id: 'a',
         updated_at: 0,
       });
-      await getRepository(DatabaseSession).save(session1);
+      await dataSource.getRepository(DatabaseSession).save(session1);
     });
 
     it('should have an "updated_at" column which supports numbers of 4-bytes', async () => {
-      const session1 = getRepository(DatabaseSession).create({
+      const session1 = dataSource.getRepository(DatabaseSession).create({
         content: '',
         created_at: 0,
         flash: '',
@@ -154,11 +163,11 @@ function entityTestSuite(type: DBType) {
         updated_at: longNumber,
       });
 
-      await getRepository(DatabaseSession).save(session1);
+      await dataSource.getRepository(DatabaseSession).save(session1);
     });
 
     it('should have an "created_at" column which supports numbers of 4-bytes', async () => {
-      const session1 = getRepository(DatabaseSession).create({
+      const session1 = dataSource.getRepository(DatabaseSession).create({
         content: '',
         created_at: longNumber,
         flash: '',
@@ -166,7 +175,7 @@ function entityTestSuite(type: DBType) {
         updated_at: 0,
       });
 
-      await getRepository(DatabaseSession).save(session1);
+      await dataSource.getRepository(DatabaseSession).save(session1);
     });
 
   });
@@ -186,7 +195,7 @@ function storeTestSuite(type: DBType) {
 
   describe(`with ${type}`, () => {
 
-    let connection2: Connection|undefined;
+    let dataSource: DataSource;
     let store: TypeORMStore;
     let state: SessionState;
     let state2: SessionState;
@@ -210,7 +219,9 @@ function storeTestSuite(type: DBType) {
 
     beforeEach(async () => {
       store = createService(TypeORMStore);
-      await createTestConnection(type);
+
+      dataSource = createTestDataSource(type);
+      await dataSource.initialize();
     });
 
     beforeEach(async () => {
@@ -220,13 +231,14 @@ function storeTestSuite(type: DBType) {
         id: `${state.id}2`
       };
       maxInactivity = 1000;
-      await getRepository(DatabaseSession).clear();
+      await dataSource.getRepository(DatabaseSession).clear();
     });
 
-    afterEach(() => Promise.all([
-      connection2 && connection2.isConnected ? connection2.close() : null,
-      getConnection().isConnected ? getConnection().close() : null,
-    ]));
+    afterEach(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     function convertDbSessionToState(dbSession: DatabaseSession): SessionState {
       return {
@@ -244,7 +256,7 @@ function storeTestSuite(type: DBType) {
       if (typeof state.userId === 'string') {
         throw new Error('user ID cannot be a string.');
       }
-      return getRepository(DatabaseSession).create({
+      return dataSource.getRepository(DatabaseSession).create({
         content: JSON.stringify(state.content),
         created_at: state.createdAt,
         flash: JSON.stringify(state.flash),
@@ -254,20 +266,6 @@ function storeTestSuite(type: DBType) {
         user_id: state.userId ?? undefined,
       });
     }
-
-    describe('has a "setConnection" method that', () => {
-
-      it('should override the default connection used by other methods.', async () => {
-        connection2 = await createTestConnection(type, 'connection2');
-
-        store.setConnection(connection2);
-
-        strictEqual(connection2.isConnected, true);
-        await store.close();
-        strictEqual(connection2.isConnected, false);
-      });
-
-    })
 
     describe('has a "save" method that', () => {
 
@@ -291,7 +289,7 @@ function storeTestSuite(type: DBType) {
         it('should save the session state in the database.', async () => {
           await store.save(state, maxInactivity);
 
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+          const dbSession = await dataSource.getRepository(DatabaseSession).findOneByOrFail({ id: state.id });
           deepStrictEqual(convertDbSessionToState(dbSession), state);
         });
 
@@ -301,7 +299,7 @@ function storeTestSuite(type: DBType) {
 
         beforeEach(async () => {
           const session = convertStateToDbSession(state);
-          await getRepository(DatabaseSession).save(session);
+          await dataSource.getRepository(DatabaseSession).save(session);
         });
 
         it('should throw a SessionAlreadyExists error.', async () => {
@@ -329,7 +327,7 @@ function storeTestSuite(type: DBType) {
 
         beforeEach(async () => {
           const session = convertStateToDbSession(state);
-          await getRepository(DatabaseSession).save(session);
+          await dataSource.getRepository(DatabaseSession).save(session);
         });
 
         it('should return the session state.', async () => {
@@ -365,7 +363,7 @@ function storeTestSuite(type: DBType) {
         it('should save the session state in the database.', async () => {
           await store.update(state, maxInactivity);
 
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+          const dbSession = await dataSource.getRepository(DatabaseSession).findOneByOrFail({ id: state.id });
           deepStrictEqual(convertDbSessionToState(dbSession), state);
         });
 
@@ -379,7 +377,7 @@ function storeTestSuite(type: DBType) {
           const session = convertStateToDbSession(state);
           const session2 = convertStateToDbSession(state2);
           // The state2 must be saved before the state.
-          await getRepository(DatabaseSession).save([ session2, session ]);
+          await dataSource.getRepository(DatabaseSession).save([ session2, session ]);
 
           updatedState = {
             content: {
@@ -400,14 +398,14 @@ function storeTestSuite(type: DBType) {
         it('should update the session state in the database.', async () => {
           await store.update(updatedState, maxInactivity);
 
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state.id });
+          const dbSession = await dataSource.getRepository(DatabaseSession).findOneByOrFail({ id: state.id });
           deepStrictEqual(convertDbSessionToState(dbSession), updatedState);
         });
 
         it('should not update the other session states in the database.', async () => {
           await store.update(updatedState, maxInactivity);
 
-          const dbSession = await getRepository(DatabaseSession).findOneOrFail({ id: state2.id });
+          const dbSession = await dataSource.getRepository(DatabaseSession).findOneByOrFail({ id: state2.id });
           deepStrictEqual(convertDbSessionToState(dbSession), state2);
         });
 
@@ -431,19 +429,19 @@ function storeTestSuite(type: DBType) {
           const session = convertStateToDbSession(state);
           const session2 = convertStateToDbSession(state2);
           // The state2 must be saved before the state.
-          await getRepository(DatabaseSession).save([ session2, session ]);
+          await dataSource.getRepository(DatabaseSession).save([ session2, session ]);
         });
 
         it('should delete the session in the database.', async () => {
           await store.destroy(state.id);
 
-          strictEqual((await getRepository(DatabaseSession).findOne({ id: state.id })), undefined);
+          strictEqual((await dataSource.getRepository(DatabaseSession).findOneBy({ id: state.id })), null);
         });
 
         it('should not delete the other sessions in the database.', async () => {
           await store.destroy(state.id);
 
-          return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: state2.id }));
+          return doesNotReject(() => dataSource.getRepository(DatabaseSession).findOneByOrFail({ id: state2.id }));
         });
 
       });
@@ -454,13 +452,13 @@ function storeTestSuite(type: DBType) {
 
       beforeEach(async () => {
         const session = convertStateToDbSession(state);
-        await getRepository(DatabaseSession).save(session);
+        await dataSource.getRepository(DatabaseSession).save(session);
       });
 
       it('should remove all sessions.', async () => {
         await store.clear();
 
-        strictEqual((await getRepository(DatabaseSession).find()).length, 0);
+        strictEqual((await dataSource.getRepository(DatabaseSession).find()).length, 0);
       });
 
     });
@@ -497,26 +495,26 @@ function storeTestSuite(type: DBType) {
 
         for (const state of states) {
           const session = convertStateToDbSession(state);
-          await getRepository(DatabaseSession).save(session);
+          await dataSource.getRepository(DatabaseSession).save(session);
         }
       });
 
       it('should not remove unexpired sessions.', async () => {
         await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        return doesNotReject(() => getRepository(DatabaseSession).findOneOrFail({ id: 'xxx' }));
+        return doesNotReject(() => dataSource.getRepository(DatabaseSession).findOneByOrFail({ id: 'xxx' }));
       });
 
       it('should remove sessions expired due to inactivity.', async () => {
         await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'yyy' }));
+        return rejects(() => dataSource.getRepository(DatabaseSession).findOneByOrFail({ id: 'yyy' }));
       });
 
       it('should remove sessions expired due to absolute end of life.', async () => {
         await store.cleanUpExpiredSessions(maxInactivity, maxLifeTime);
 
-        return rejects(() => getRepository(DatabaseSession).findOneOrFail({ id: 'zzz' }));
+        return rejects(() => dataSource.getRepository(DatabaseSession).findOneByOrFail({ id: 'zzz' }));
       });
 
     });
@@ -524,7 +522,7 @@ function storeTestSuite(type: DBType) {
     describe('has a "getAuthenticatedUsers" method that', () => {
 
       beforeEach(async () => {
-        const sessions = getRepository(DatabaseSession).create([
+        const sessions = dataSource.getRepository(DatabaseSession).create([
           {
             content: '{}',
             created_at: 1,
@@ -558,7 +556,7 @@ function storeTestSuite(type: DBType) {
           }
         ]);
 
-        await getRepository(DatabaseSession).save(sessions);
+        await dataSource.getRepository(DatabaseSession).save(sessions);
       });
 
       it('should return the IDs of the authenticated users (distinct).', async () => {
@@ -572,7 +570,7 @@ function storeTestSuite(type: DBType) {
     describe('has a "destroyAllSessionsOf" method that', () => {
 
       beforeEach(async () => {
-        const sessions = getRepository(DatabaseSession).create([
+        const sessions = dataSource.getRepository(DatabaseSession).create([
           {
             content: '{}',
             created_at: 1,
@@ -606,14 +604,14 @@ function storeTestSuite(type: DBType) {
           }
         ]);
 
-        await getRepository(DatabaseSession).save(sessions);
+        await dataSource.getRepository(DatabaseSession).save(sessions);
       });
 
       it('destroy all the sessions of the given user.', async () => {
         const user = { id: 2 };
-        await store.destroyAllSessionsOf(user);
+        await store.destroyAllSessionsOf(user.id);
 
-        const sessions = await getRepository(DatabaseSession).find();
+        const sessions = await dataSource.getRepository(DatabaseSession).find();
         strictEqual(sessions.length, 2);
         strictEqual(sessions[0].id, 'a');
         strictEqual(sessions[1].id, 'b');
@@ -624,7 +622,7 @@ function storeTestSuite(type: DBType) {
     describe('has a "getSessionIDsOf" method that', () => {
 
       beforeEach(async () => {
-        const sessions = getRepository(DatabaseSession).create([
+        const sessions = dataSource.getRepository(DatabaseSession).create([
           {
             content: '{}',
             created_at: 1,
@@ -658,18 +656,18 @@ function storeTestSuite(type: DBType) {
           }
         ]);
 
-        await getRepository(DatabaseSession).save(sessions);
+        await dataSource.getRepository(DatabaseSession).save(sessions);
       });
 
       it('should return an empty array if the user ID does not match any users.', async () => {
         const user = { id: 0 };
-        const sessions = await store.getSessionIDsOf(user);
+        const sessions = await store.getSessionIDsOf(user.id);
         strictEqual(sessions.length, 0);
       });
 
       it('should return the IDs of the sessions associated with the given user.', async () => {
         const user = { id: 2 };
-        const sessions = await store.getSessionIDsOf(user);
+        const sessions = await store.getSessionIDsOf(user.id);
         strictEqual(sessions.length, 2);
 
         strictEqual(sessions[0], 'c');

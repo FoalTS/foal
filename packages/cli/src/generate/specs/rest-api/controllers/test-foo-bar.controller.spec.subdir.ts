@@ -7,28 +7,36 @@ import {
   isHttpResponseCreated, isHttpResponseNoContent,
   isHttpResponseNotFound, isHttpResponseOK
 } from '@foal/core';
-import { createConnection, getConnection, getRepository } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 // App
 import { TestFooBar } from '../../../entities';
+import { createDataSource } from '../../../../db';
 import { TestFooBarController } from './test-foo-bar.controller';
 
 describe('TestFooBarController', () => {
 
+  let dataSource: DataSource;
   let controller: TestFooBarController;
   let testFooBar1: TestFooBar;
   let testFooBar2: TestFooBar;
 
-  before(() => createConnection());
+  before(async () => {
+    dataSource = createDataSource();
+    await dataSource.initialize();
+  });
 
-  after(() => getConnection().close());
+  after(async () => {
+    if (dataSource) {
+      await dataSource.destroy();
+    }
+  });
 
   beforeEach(async () => {
     controller = createController(TestFooBarController);
 
-    const repository = getRepository(TestFooBar);
-    await repository.clear();
-    [ testFooBar1, testFooBar2 ] = await repository.save([
+    await TestFooBar.clear();
+    [ testFooBar1, testFooBar2 ] = await TestFooBar.save([
       {
         text: 'TestFooBar 1'
       },
@@ -63,7 +71,7 @@ describe('TestFooBarController', () => {
     });
 
     it('should support pagination', async () => {
-      const testFooBar3 = await getRepository(TestFooBar).save({
+      const testFooBar3 = await TestFooBar.save({
         text: 'TestFooBar 3',
       });
 
@@ -152,7 +160,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseCreated object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne({ text: 'TestFooBar 3' });
+      const testFooBar = await TestFooBar.findOneBy({ text: 'TestFooBar 3' });
 
       if (!testFooBar) {
         throw new Error('No testFooBar 3 was found in the database.');
@@ -188,7 +196,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await TestFooBar.findOneBy({ id: testFooBar2.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -211,7 +219,7 @@ describe('TestFooBarController', () => {
       });
       await controller.modifyTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await TestFooBar.findOneBy({ id: testFooBar1.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -260,7 +268,7 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseOK object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await TestFooBar.findOneBy({ id: testFooBar2.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -283,7 +291,7 @@ describe('TestFooBarController', () => {
       });
       await controller.replaceTestFooBar(ctx);
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await TestFooBar.findOneBy({ id: testFooBar1.id });
 
       if (!testFooBar) {
         throw new Error();
@@ -329,9 +337,9 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar2.id);
+      const testFooBar = await TestFooBar.findOneBy({ id: testFooBar2.id });
 
-      strictEqual(testFooBar, undefined);
+      strictEqual(testFooBar, null);
     });
 
     it('should not delete the other testFooBars.', async () => {
@@ -346,9 +354,9 @@ describe('TestFooBarController', () => {
         throw new Error('The returned value should be an HttpResponseNoContent object.');
       }
 
-      const testFooBar = await getRepository(TestFooBar).findOne(testFooBar1.id);
+      const testFooBar = await TestFooBar.findOneBy({ id: testFooBar1.id });
 
-      notStrictEqual(testFooBar, undefined);
+      notStrictEqual(testFooBar, null);
     });
 
     it('should return an HttpResponseNotFound if the testFooBar was not found.', async () => {

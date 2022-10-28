@@ -3,23 +3,28 @@ import { } from 'assert';
 
 // 3p
 import * as request from 'supertest';
+import { DataSource } from 'typeorm';
 
 // FoalTS
 import { Config, controller, createApp, Get, HttpResponseOK, Post, UseSessions } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
-import { closeTestConnection, createTestConnection, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
+import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
 
 describe('Feature: Disabling CSRF protection on a specific route.', () => {
+
+  let dataSource: DataSource;
 
   beforeEach(() => {
     Config.set('settings.session.csrf.enabled', true);
     Config.set('settings.session.store', getTypeORMStorePath());
   });
 
-  afterEach(() => {
+  afterEach(async () => {
     Config.remove('settings.session.csrf.enabled');
     Config.remove('settings.session.store');
-    return closeTestConnection();
+    if (dataSource) {
+      await dataSource.destroy();
+    }
   });
 
   it('Example: use case with @UseSessions.', async () => {
@@ -49,10 +54,6 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
         controller('/api', ApiController)
       ];
 
-      async init() {
-        await createTestConnection([ DatabaseSession ]);
-      }
-
       @Get('/')
       @UseSessions({ cookie: true })
       index() {
@@ -62,6 +63,7 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
     }
 
     const app = await createApp(AppController);
+    dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
     let token = '';
 

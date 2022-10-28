@@ -5,18 +5,18 @@ import { Readable } from 'stream';
 // 3p
 import { Config, ConfigNotFoundError, ConfigTypeError, createService, streamToBuffer } from '@foal/core';
 import { FileDoesNotExist } from '@foal/storage';
-import * as S3 from 'aws-sdk/clients/s3';
+import { S3 } from '@aws-sdk/client-s3';
 
 // FoalTS
 import { S3Disk } from './s3-disk.service';
 
 // Isolate each job with a different S3 bucket.
-const bucketName = `foal-test-${process.env.NODE_VERSION || 10}`;
+const bucketName = `foal-test-${process.env.NODE_VERSION?.slice(0,2) || 16}`;
 
 async function rmObjectsIfExist(s3: S3) {
   const response = await s3.listObjects({
     Bucket: bucketName
-  }).promise();
+  });
 
   const objects: { Key: string }[] = [];
   for (const { Key } of response.Contents || []) {
@@ -35,7 +35,7 @@ async function rmObjectsIfExist(s3: S3) {
       Objects: objects,
       Quiet: false
     }
-  }).promise();
+  });
 }
 
 describe('S3Disk', () => {
@@ -44,17 +44,21 @@ describe('S3Disk', () => {
   let s3: S3;
 
   const accessKeyId = Config.get('settings.aws.accessKeyId', 'string');
-  const secretAccessKey = Config.get('settings.aws.secretAccessKey', 'string');
 
   if (!accessKeyId) {
     console.warn('SETTINGS_AWS_ACCESS_KEY_ID not defined. Skipping S3Disk tests...');
     return;
   }
 
+  const secretAccessKey = Config.getOrThrow('settings.aws.secretAccessKey', 'string');
+  const region = Config.getOrThrow('settings.aws.region', 'string');
+
   before(() => s3 = new S3({
-    accessKeyId,
-    apiVersion: '2006-03-01',
-    secretAccessKey,
+    region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
   }));
 
   beforeEach(() => {
@@ -74,14 +78,10 @@ describe('S3Disk', () => {
     // This test assumes that the "delete" method tries at least to connect to AWS.
     Config.set('settings.aws.endpoint', 'foobar');
 
-    try {
-      await disk.delete('foo/test.txt');
-      throw new Error('An error should have been thrown.');
-    } catch (error: any) {
-      if (error.code !== 'NetworkingError' && error.code !== 'UnknownEndpoint') {
-        throw new Error(`Invalid error code: ${error.code}`);
-      }
-    }
+    await rejects(
+      () => disk.delete('foo/test.txt'),
+      (error: any) => error.code === 'ERR_INVALID_URL',
+    );
   });
 
   describe('has a "write" method that', () => {
@@ -104,12 +104,11 @@ describe('S3Disk', () => {
     it('should write the file at the given path (buffer) (name given).', async () => {
       await disk.write('foo', Buffer.from('hello', 'utf8'), { name: 'test.txt' });
 
-      const response = await s3.getObject({ Bucket: bucketName, Key: 'foo/test.txt' }).promise();
-      if (!(response.Body instanceof Buffer)) {
-        throw new Error('response.Body should be a buffer');
-      }
+      const response = await s3.getObject({ Bucket: bucketName, Key: 'foo/test.txt' });
+      const buffer = await streamToBuffer(response.Body as Readable);
+
       strictEqual(
-        response.Body.toString('utf8'),
+        buffer.toString('utf8'),
         'hello'
       );
     });
@@ -120,12 +119,11 @@ describe('S3Disk', () => {
       stream.push(null);
       await disk.write('foo', stream, { name: 'test.txt' });
 
-      const response = await s3.getObject({ Bucket: bucketName, Key: 'foo/test.txt' }).promise();
-      if (!(response.Body instanceof Buffer)) {
-        throw new Error('response.Body should be a buffer');
-      }
+      const response = await s3.getObject({ Bucket: bucketName, Key: 'foo/test.txt' });
+      const buffer = await streamToBuffer(response.Body as Readable);
+
       strictEqual(
-        response.Body.toString('utf8'),
+        buffer.toString('utf8'),
         'hello'
       );
     });
@@ -162,7 +160,7 @@ describe('S3Disk', () => {
 
       await disk.write('foo', Buffer.from('hello', 'utf8'), { name: 'test.txt' });
 
-      const { ServerSideEncryption } = await s3.getObject({ Bucket: bucketName, Key: 'foo/test.txt' }).promise();
+      const { ServerSideEncryption } = await s3.getObject({ Bucket: bucketName, Key: 'foo/test.txt' });
 
       strictEqual(ServerSideEncryption, 'AES256');
     });
@@ -191,7 +189,7 @@ describe('S3Disk', () => {
         Body: 'hello',
         Bucket: bucketName,
         Key: 'foo/test.txt',
-      }).promise();
+      });
 
       const { file } = await disk.read('foo/test.txt', 'buffer');
       strictEqual(file.toString('utf8'), 'hello');
@@ -202,7 +200,7 @@ describe('S3Disk', () => {
         Body: 'hello',
         Bucket: bucketName,
         Key: 'foo/test.txt',
-      }).promise();
+      });
 
       const { file } = await disk.read('foo/test.txt', 'stream');
       const buffer = await streamToBuffer(file);
@@ -238,7 +236,7 @@ describe('S3Disk', () => {
         Body: Buffer.from('hello', 'utf8'),
         Bucket: bucketName,
         Key: 'foo/test.txt',
-      }).promise();
+      });
 
       const { size } = await disk.read('foo/test.txt', 'buffer');
       strictEqual(size, 5);
@@ -249,7 +247,7 @@ describe('S3Disk', () => {
         Body: Buffer.from('hello', 'utf8'),
         Bucket: bucketName,
         Key: 'foo/test.txt',
-      }).promise();
+      });
 
       const { size } = await disk.read('foo/test.txt', 'stream');
       strictEqual(size, 5);
@@ -291,7 +289,7 @@ describe('S3Disk', () => {
         Body: Buffer.from('hello', 'utf8'),
         Bucket: bucketName,
         Key: 'foo/test.txt',
-      }).promise();
+      });
 
       const size = await disk.readSize('foo/test.txt');
       strictEqual(size, 5);
@@ -321,21 +319,17 @@ describe('S3Disk', () => {
         Body: 'hello',
         Bucket: bucketName,
         Key: 'foo/test.txt',
-      }).promise();
+      });
 
       await disk.delete('foo/test.txt');
 
-      try {
-        await s3.getObject({
+      await rejects(
+        () => s3.getObject({
           Bucket: bucketName,
           Key: 'foo/test.txt',
-        }).promise();
-        throw new Error('An error should have been thrown');
-      } catch (error: any) {
-        if (error.code !== 'NoSuchKey') {
-          throw error;
-        }
-      }
+        }),
+        (error: any) => error.name === 'NoSuchKey',
+      );
     });
 
   });

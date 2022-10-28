@@ -3,8 +3,6 @@ title: Comunicación en Tiempo Real
 sidebar_label: WebSockets
 ---
 
-> *This feature is available from version 2.8 onwards.*
-
 Foal allows you to establish two-way interactive communication between your server(s) and your clients. For this, it uses the [socket.io v4](https://socket.io/) library which is primarily based on the **WebSocket** protocol. It supports disconnection detection and automatic reconnection and works with proxies and load balancers.
 
 ## Get Started
@@ -402,7 +400,22 @@ Testing WebSocket controllers and hooks is very similar to testing their HTTP eq
 This example shows how to manage multiple node servers using a redis adapter.
 
 ```bash
-npm install @socket.io/redis-adapter@7 redis@3
+npm install @socket.io/redis-adapter@7 redis@4
+```
+
+*src/index.ts*
+```typescript
+import { createApp, ServiceManager } from '@foal/core';
+import { WebsocketController, pubClient, subClient } from './services/websocket.controller';
+async function main() {
+  const serviceManager = new ServiceManager();
+  const app = await createApp(AppController, { serviceManager });
+  const httpServer = http.createServer(app);
+  // Connect the redis clients to the database.
+  await Promise.all([pubClient.connect(), subClient.connect()]);
+  await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
+  // ...
+}
 ```
 
 *websocket.controller.ts*

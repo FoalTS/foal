@@ -2,7 +2,7 @@ import { ApiResponse, Context, Hook, HookDecorator, HttpResponseRedirect, HttpRe
 
 export function UserRequired(options: { redirectTo?: string, openapi?: boolean } = {}): HookDecorator {
   function hook(ctx: Context) {
-    if (ctx.user === undefined || ctx.user === null) {
+    if (!ctx.user) {
       if (options.redirectTo) {
         return new HttpResponseRedirect(options.redirectTo);
       }

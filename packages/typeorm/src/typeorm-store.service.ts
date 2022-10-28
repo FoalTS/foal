@@ -1,10 +1,11 @@
+// 3p
 import { SessionAlreadyExists, SessionState, SessionStore } from '@foal/core';
-import { Column, Connection, Entity, getConnection, IsNull, LessThan, Not, PrimaryColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, IsNull, LessThan, Not, PrimaryColumn, Repository } from 'typeorm';
 
 @Entity({
   name: 'sessions'
 })
-export class DatabaseSession {
+export class DatabaseSession extends BaseEntity {
   @PrimaryColumn({ length: 44 })
   id: string;
 
@@ -39,17 +40,8 @@ export class DatabaseSession {
  */
 export class TypeORMStore extends SessionStore {
 
-  private _connection: Connection;
-
-  setConnection(connection: Connection) {
-    this._connection = connection;
-  }
-
-  get connection(): Connection {
-    if (this._connection) {
-      return this._connection;
-    }
-    return getConnection();
+  private get repository(): Repository<DatabaseSession> {
+    return DatabaseSession.getRepository();
   }
 
   async save(state: SessionState, maxInactivity: number): Promise<void> {
@@ -58,8 +50,7 @@ export class TypeORMStore extends SessionStore {
     }
 
     try {
-      await this.connection
-        .getRepository(DatabaseSession)
+      await this.repository
         .createQueryBuilder()
         .insert()
         .values({
@@ -86,7 +77,7 @@ export class TypeORMStore extends SessionStore {
   }
 
   async read(id: string): Promise<SessionState | null> {
-    const session = await this.connection.getRepository(DatabaseSession).findOne({ id });
+    const session = await this.repository.findOneBy({ id });
     if (!session) {
       return null;
     }
@@ -107,7 +98,7 @@ export class TypeORMStore extends SessionStore {
       throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
     }
 
-    const dbSession = this.connection.getRepository(DatabaseSession).create({
+    const dbSession = this.repository.create({
       content: JSON.stringify(state.content),
       created_at: state.createdAt,
       flash: JSON.stringify(state.flash),
@@ -118,22 +109,21 @@ export class TypeORMStore extends SessionStore {
     });
 
     // The "save" method performs an UPSERT.
-    await this.connection.getRepository(DatabaseSession).save(dbSession);
+    await this.repository.save(dbSession);
   }
 
   async destroy(sessionID: string): Promise<void> {
-    await this.connection.getRepository(DatabaseSession)
+    await this.repository
       .delete({ id: sessionID });
   }
 
   async clear(): Promise<void> {
-    await this.connection.getRepository(DatabaseSession)
+    await this.repository
       .clear();
   }
 
   async cleanUpExpiredSessions(maxInactivity: number, maxLifeTime: number): Promise<void> {
-    await this.connection
-      .getRepository(DatabaseSession)
+    await this.repository
       .createQueryBuilder()
       .delete()
       .where([
@@ -144,8 +134,7 @@ export class TypeORMStore extends SessionStore {
   }
 
   async getAuthenticatedUserIds(): Promise<number[]> {
-    const sessions = await this.connection
-      .getRepository(DatabaseSession)
+    const sessions = await this.repository
       .createQueryBuilder()
       .select('DISTINCT user_id')
       .where({
@@ -155,26 +144,17 @@ export class TypeORMStore extends SessionStore {
     return sessions.map(({ user_id }) => user_id);
   }
 
-  async destroyAllSessionsOf(user: { id: number }): Promise<void> {
-    await this.connection.getRepository(DatabaseSession).delete({ user_id: user.id });
+  async destroyAllSessionsOf(userId: number): Promise<void> {
+    await this.repository.delete({ user_id: userId });
   }
 
-  async getSessionIDsOf(user: { id: number }): Promise<string[]> {
-    const databaseSessions = await this.connection.getRepository(DatabaseSession).find({
+  async getSessionIDsOf(userId: number): Promise<string[]> {
+    const databaseSessions = await this.repository.find({
       // Do not select unused fields.
-      select: ['id'],
-      where: { user_id: user.id },
+      select: { id: true },
+      where: { user_id: userId },
     });
     return databaseSessions.map(dbSession => dbSession.id);
-  }
-
-  /**
-   * Closes the connection to the database.
-   *
-   * @memberof RedisStore
-   */
-  async close(): Promise<void> {
-    await this.connection.close();
   }
 
 }

@@ -29,19 +29,6 @@ describe('UserRequired', () => {
 
     beforeEach(() => hook = getHookFunction(UserRequired()));
 
-    context('given Context.user is undefined', () => {
-
-      beforeEach(() => ctx.user = undefined);
-
-      it('should return an HttpResponseUnauthorized instance.', () => {
-        const response = hook(ctx, services);
-        if (!isHttpResponseUnauthorized(response)) {
-          throw new Error('The hook should have returned an HttpResponseUnauthorized instance.');
-        }
-      });
-
-    });
-
     context('given Context.user is null', () => {
 
       beforeEach(() => ctx.user = null);
@@ -73,20 +60,6 @@ describe('UserRequired', () => {
     const path = '/foo';
 
     beforeEach(() => hook = getHookFunction(UserRequired({ redirectTo: path })));
-
-    context('given Context.user is undefined', () => {
-
-      beforeEach(() => ctx.user = undefined);
-
-      it('should return an HttpResponseRedirect instance.', () => {
-        const response = hook(ctx, services);
-        if (!isHttpResponseRedirect(response)) {
-          throw new Error('The hook should have returned an HttpResponseRedirect instance.');
-        }
-        strictEqual(response.path, path);
-      });
-
-    });
 
     context('given Context.user is null', () => {
 

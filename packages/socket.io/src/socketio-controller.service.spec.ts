@@ -17,7 +17,7 @@ import {
   ServiceManager
 } from '@foal/core';
 import { createAdapter } from '@socket.io/redis-adapter';
-import * as redis from 'redis';
+import { createClient } from 'redis';
 
 // FoalTS
 import { EventName, WebsocketHook, WebsocketContext, WebsocketErrorResponse, WebsocketResponse, wsController } from './architecture';
@@ -49,10 +49,10 @@ describe('SocketIOController', () => {
         httpServer2.close();
       }
       if (pubClient) {
-        await pubClient.end(true);
+        await pubClient.quit();
       }
       if (subClient) {
-        await subClient.end(true);
+        await subClient.quit();
       }
     });
 
@@ -102,11 +102,11 @@ describe('SocketIOController', () => {
 
         strictEqual(actualContext?.eventName, '');
         strictEqual(actualContext?.payload, undefined);
-        strictEqual(actualContext?.session, undefined);
+        strictEqual(actualContext?.session, null);
         notStrictEqual(actualContext?.socket, undefined);
         notDeepStrictEqual(actualContext?.socket, {});
         deepStrictEqual(actualContext?.state, {});
-        strictEqual(actualContext?.user, undefined);
+        strictEqual(actualContext?.user, null);
       });
 
       it('and should emit a connection error if SocketIOController.onConnection throws or rejects an error.', async () => {
@@ -161,11 +161,11 @@ describe('SocketIOController', () => {
         deepStrictEqual(actualContext?.payload, payload);
         deepStrictEqual(actualPayload, payload);
 
-        strictEqual(actualContext?.session, undefined);
+        strictEqual(actualContext?.session, null);
         notStrictEqual(actualContext?.socket, undefined);
         notDeepStrictEqual(actualContext?.socket, {});
         deepStrictEqual(actualContext?.state, {});
-        strictEqual(actualContext?.user, undefined);
+        strictEqual(actualContext?.user, null);
       });
 
       it('and should return an ok response if the controller method returns a WebsocketResponse (with no payload).', async () => {
@@ -346,7 +346,7 @@ describe('SocketIOController', () => {
       })
 
       it('with the optional SocketIOController.adapter.', done => {
-        pubClient = redis.createClient('redis://localhost:6380');
+        pubClient = createClient({ url: 'redis://localhost:6380' });
         subClient = pubClient.duplicate();
 
         class WebsocketController extends SocketIOController {
@@ -375,27 +375,29 @@ describe('SocketIOController', () => {
         }
 
         Promise
-          .all([
-            createHttpServerAndSockets(),
-            createHttpServerAndSockets(),
-          ])
-          .then(serverAndSockets => {
-            httpServer = serverAndSockets[0].httpServer;
-            httpServer2 = serverAndSockets[1].httpServer;
-            return [
-              serverAndSockets[0].clientSocket,
-              serverAndSockets[1].clientSocket,
-            ]
-          })
-          .then(clientSockets => {
-            clientSockets[0].on('refresh users', () => {
-              clientSockets[0].close();
-              clientSockets[1].close();
-              done();
-            });
-            clientSockets[1].emit('create user')
-          })
-          .catch(done);
+          .all([pubClient.connect(), subClient.connect()])
+          .then(() => Promise
+            .all([
+              createHttpServerAndSockets(),
+              createHttpServerAndSockets(),
+            ])
+            .then(serverAndSockets => {
+              httpServer = serverAndSockets[0].httpServer;
+              httpServer2 = serverAndSockets[1].httpServer;
+              return [
+                serverAndSockets[0].clientSocket,
+                serverAndSockets[1].clientSocket,
+              ]
+            })
+            .then(clientSockets => {
+              clientSockets[0].on('refresh users', () => {
+                clientSockets[0].close();
+                clientSockets[1].close();
+                done();
+              });
+              clientSockets[1].emit('create user')
+            })
+            .catch(done));
       })
 
     });

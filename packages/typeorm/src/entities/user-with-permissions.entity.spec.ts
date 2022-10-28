@@ -2,7 +2,7 @@
 import { notStrictEqual, ok, strictEqual } from 'assert';
 
 // 3p
-import { BaseEntity, createConnection, Entity, getConnection, getManager } from 'typeorm';
+import { BaseEntity, DataSource, Entity } from 'typeorm';
 
 // FoalTS
 import { Group } from './group.entity';
@@ -16,11 +16,13 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     @Entity()
     class User extends UserWithPermissions { }
 
+    let dataSource: DataSource;
+
     before(async () => {
       switch (type) {
         case 'mysql':
         case 'mariadb':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -32,7 +34,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           });
           break;
         case 'postgres':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -44,7 +46,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           break;
         case 'sqlite':
         case 'better-sqlite3':
-          await createConnection({
+          dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
             entities: [User, Group, Permission],
@@ -55,9 +57,14 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         default:
           break;
       }
+      await dataSource.initialize();
     });
 
-    after(() => getConnection().close());
+    after(async () => {
+      if (dataSource) {
+        await dataSource.destroy();
+      }
+    });
 
     beforeEach(async () => {
       await Permission.delete({});
@@ -74,7 +81,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const user = new User();
       user.groups = [];
       user.userPermissions = [];
-      await getManager().save(user);
+      await user.save();
       notStrictEqual(user.id, undefined);
     });
 
@@ -82,7 +89,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const permission = new Permission();
       permission.name = 'permission1';
       permission.codeName = '';
-      await getManager().save(permission);
+      await permission.save();
 
       const user = new User();
       user.groups = [];
@@ -90,9 +97,14 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         permission
       ];
 
-      await getManager().save(user);
+      await user.save();
 
-      const user2 = await getManager().findOne(User, user.id, { relations: ['userPermissions'] });
+      const user2 = await User.findOne({
+        where: { id: user.id },
+        relations: {
+          userPermissions: true,
+        },
+      });
       if (!user2) {
         throw new Error('User should have been saved.');
       }
@@ -107,15 +119,20 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
       const group = new Group();
       group.name = 'group1';
       group.codeName = 'group1';
-      await getManager().save(group);
+      await group.save();
 
       const user = new User();
       user.groups = [ group ];
       user.userPermissions = [];
 
-      await getManager().save(user);
+      await user.save();
 
-      const user2 = await getManager().findOne(User, user.id, { relations: ['groups'] });
+      const user2 = await User.findOne({
+        where: { id: user.id },
+        relations: {
+          groups: true,
+        },
+      });
       if (!user2) {
         throw new Error('User should have been saved.');
       }
@@ -243,6 +260,67 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         const users = await User.withPerm<User>(perm1.codeName);
         strictEqual(users.length, 1);
         strictEqual(users[0] instanceof User, true);
+      });
+
+    });
+
+    describe('has a static "findOneWithPermissionsBy" method that', () => {
+      let user: User;
+
+      beforeEach(async () => {
+        const permission1 = new Permission();
+        permission1.codeName = 'permission1';
+        permission1.name = '';
+        await permission1.save();
+
+        const permission2 = new Permission();
+        permission2.codeName = 'permission2';
+        permission2.name = '';
+        await permission2.save();
+
+        const group = new Group();
+        group.name = 'group1';
+        group.codeName = 'group1';
+        group.permissions = [permission1];
+        await group.save();
+
+        user = new User();
+        user.groups = [group];
+        user.userPermissions = [permission2];
+        await user.save();
+      });
+
+      it('should return the user fetched from the database.', async () => {
+        const actual = await User.findOneWithPermissionsBy({ id: user.id });
+        if (actual === null) {
+          throw new Error('The user should not be null.');
+        }
+        strictEqual(actual.id, user.id);
+      });
+
+      it('should return the user fetched from the database with their groups and permissions.', async () => {
+        const actual = await User.findOneWithPermissionsBy({ id: user.id });
+        if (actual === null) {
+          throw new Error('The user should not be null.');
+        }
+        strictEqual(actual.id, user.id);
+
+        ok(Array.isArray(actual.userPermissions), 'userPermissions is not an array');
+        strictEqual(actual.userPermissions.length, 1);
+        strictEqual(actual.userPermissions[0].codeName, 'permission2');
+
+        ok(Array.isArray(actual.groups), 'groups is not an array');
+        strictEqual(actual.groups.length, 1);
+        strictEqual(actual.groups[0].name, 'group1');
+
+        ok(Array.isArray(actual.groups[0].permissions), 'groups[0].permissions is not an array');
+        strictEqual(actual.groups[0].permissions.length, 1);
+        strictEqual(actual.groups[0].permissions[0].codeName, 'permission1');
+      });
+
+      it('should return null if no user is found in the database.', async () => {
+        const actual = await User.findOneWithPermissionsBy({ id: 56 });
+        strictEqual(actual, null);
       });
 
     });

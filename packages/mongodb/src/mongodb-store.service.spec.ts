@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, doesNotReject, rejects, strictEqual } from 'assert';
+import { deepStrictEqual, doesNotReject, doesNotThrow, rejects, strictEqual } from 'assert';
 
 // 3p
 import {
@@ -10,7 +10,7 @@ import {
   SessionAlreadyExists,
   SessionState
 } from '@foal/core';
-import { MongoClient } from 'mongodb';
+import { MongoClient, MongoNotConnectedError } from 'mongodb';
 
 // FoalTS
 import { MongoDBStore } from './mongodb-store.service';
@@ -26,7 +26,7 @@ describe('MongoDBStore', () => {
   const COLLECTION_NAME = 'sessions';
 
   let store: MongoDBStore;
-  let mongoDBClient: any;
+  let mongoDBClient: MongoClient;
 
   before(() => Config.set('settings.mongodb.uri', MONGODB_URI));
 
@@ -44,9 +44,9 @@ describe('MongoDBStore', () => {
     context('when setMongoDBClient has been previously called', () => {
 
       it('should NOT create a new MongoDB instance but use the one provided.', async () => {
-        mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+        mongoDBClient = await MongoClient.connect(MONGODB_URI);
         try {
-          await mongoDBClient.db().collection(COLLECTION_NAME).dropIndexes();
+          await mongoDBClient.db().collection<DatabaseSession>(COLLECTION_NAME).dropIndexes();
         } catch (error: any) {
           if (!(error.message.includes('ns not found'))) {
             throw error;
@@ -55,18 +55,23 @@ describe('MongoDBStore', () => {
 
         store.setMongoDBClient(mongoDBClient);
 
-        strictEqual(mongoDBClient.isConnected(), true);
+        doesNotThrow(
+          () => mongoDBClient.db().collection(COLLECTION_NAME).findOne()
+        );
 
         await store.boot();
         await store.close();
 
-        strictEqual(mongoDBClient.isConnected(), false);
+        await rejects(
+          () => mongoDBClient.db().collection(COLLECTION_NAME).findOne(),
+          new MongoNotConnectedError('Client must be connected before running operations'),
+        );
       });
 
-      it('should still create an index on the provided MongoDB instance', async () => {
-        mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+      it('should still create an index on the provided MongoDB instance.', async () => {
+        mongoDBClient = await MongoClient.connect(MONGODB_URI);
         try {
-          await mongoDBClient.db().collection(COLLECTION_NAME).dropIndexes();
+          await mongoDBClient.db().collection<DatabaseSession>(COLLECTION_NAME).dropIndexes();
         } catch (error: any) {
           if (!(error.message.includes('ns not found'))) {
             throw error;
@@ -80,12 +85,12 @@ describe('MongoDBStore', () => {
           await mongoDBClient.db().createCollection('sessions');
         }
 
-        let indexInformation = await mongoDBClient.db().collection(COLLECTION_NAME).indexInformation();
+        let indexInformation = await mongoDBClient.db().collection<DatabaseSession>(COLLECTION_NAME).indexInformation();
         strictEqual(Object.keys(indexInformation).some(key => indexInformation[key][0][0] === 'sessionID'), false);
 
         await store.boot();
 
-        indexInformation = await mongoDBClient.db().collection(COLLECTION_NAME).indexInformation();
+        indexInformation = await mongoDBClient.db().collection<DatabaseSession>(COLLECTION_NAME).indexInformation();
         strictEqual(Object.keys(indexInformation).some(key => indexInformation[key][0][0] === 'sessionID'), true);
       })
 
@@ -115,9 +120,9 @@ describe('MongoDBStore', () => {
     }
 
     before(async () => {
-      mongoDBClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+      mongoDBClient = await MongoClient.connect(MONGODB_URI);
       try {
-        await mongoDBClient.db().collection(COLLECTION_NAME).dropIndexes();
+        await mongoDBClient.db().collection<DatabaseSession>(COLLECTION_NAME).dropIndexes();
       } catch (error: any) {
         if (!(error.message.includes('ns not found'))) {
           throw error;
@@ -134,7 +139,7 @@ describe('MongoDBStore', () => {
         id: `${state.id}2`
       };
       maxInactivity = 1000;
-      await mongoDBClient.db().collection(COLLECTION_NAME).deleteMany({});
+      await mongoDBClient.db().collection<DatabaseSession>(COLLECTION_NAME).deleteMany({});
     });
 
     after(() => {
@@ -145,16 +150,16 @@ describe('MongoDBStore', () => {
     });
 
     async function insertSessionIntoDB(session: DatabaseSession): Promise<DatabaseSession> {
-      await mongoDBClient.db().collection(COLLECTION_NAME).insertOne(session);
+      await mongoDBClient.db().collection<DatabaseSession>(COLLECTION_NAME).insertOne(session);
       return session;
     }
 
     async function readSessionsFromDB(): Promise<DatabaseSession[]> {
-      return mongoDBClient.db().collection(COLLECTION_NAME).find({}).toArray();
+      return mongoDBClient.db().collection<DatabaseSession>(COLLECTION_NAME).find({}).toArray();
     }
 
     async function findByID(sessionID: string): Promise<DatabaseSession> {
-      const session = await mongoDBClient.db().collection(COLLECTION_NAME).findOne({ sessionID });
+      const session = await mongoDBClient.db().collection<DatabaseSession>(COLLECTION_NAME).findOne({ sessionID });
       if (!session) {
         throw new Error('Session not found');
       }
