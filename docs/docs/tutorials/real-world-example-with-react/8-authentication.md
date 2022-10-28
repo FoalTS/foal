@@ -98,7 +98,7 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(ctx: Context<User|null>) {
+  async logout(ctx: Context) {
     await ctx.session!.destroy();
     return new HttpResponseNoContent();
   }
