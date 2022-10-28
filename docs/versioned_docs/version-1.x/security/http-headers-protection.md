@@ -8,7 +8,7 @@ To protect the application against some (!) common attacks, FoalTS sets by defau
 
 | Header name | Value |
 | --- | --- |
-| `Strict-Transport-Security` | `max-age=15552000; includeSubDomains` |
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` |
 | `X-Content-Type-Options` | `nosniff` |
 | `X-DNS-Prefetch-Control` | `off` |
 | `X-Download-Options` | `noopen` |
