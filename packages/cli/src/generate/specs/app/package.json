@@ -24,8 +24,8 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@foal/core": "3.0.0-alpha.0",
-    "@foal/typeorm": "3.0.0-alpha.0",
+    "@foal/core": "3.0.0-alpha.1",
+    "@foal/typeorm": "3.0.0-alpha.1",
     "source-map-support": "~0.5.21",
     "better-sqlite3": "~7.6.2",
     "typeorm": "0.3.10"
