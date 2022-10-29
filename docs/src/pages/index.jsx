@@ -20,14 +20,14 @@ function FeatureCell(props) {
   );
 }
 
-function CompanyLogo({ imageSrc, href }) {
+function CompanyLogo({ imageSrc, href, companyName }) {
   return (
-    <a href={href}>
+    <a href={href} class="tw-basis-1/2 sm:tw-basis-1/3 lg:tw-basis-1/6" target="_blank">
       <div className="tw-col-span-1 tw-flex tw-justify-center tw-py-8 tw-px-8 tw-bg-gray-50">
         <img
           className="tw-max-h-12"
           src={`${imageSrc}`}
-          alt="Workcation"
+          alt={companyName}
         />
       </div>
     </a>
@@ -37,18 +37,18 @@ function CompanyLogo({ imageSrc, href }) {
 function CompanyLogos() {
   return (
     <div>
-      <div className="tw-max-w-7xl tw-mx-auto tw-py-12 tw-px-4 sm:tw-px-6 lg:tw-py-16 lg:tw-px-8">
-        {/* <p className="tw-text-center tw-text-lg tw-font-semibold tw-text-gray-600 tw-uppercase">
+      <div className="tw-max-w-7xl tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-py-12 lg:tw-px-8">
+        <p className="tw-text-center tw-text-lg tw-font-semibold tw-text-gray-600 tw-uppercase tw-mb-0">
           Trusted by
         </p>
-        <div className="tw-mt-6 tw-grid tw-grid-cols-2 tw-gap-0.5 md:tw-grid-cols-3 lg:tw-mt-8">
-          <CompanyLogo imageSrc="https://tailwindui.com/img/logos/transistor-logo-gray-400.svg" />
-          <CompanyLogo imageSrc="https://tailwindui.com/img/logos/mirage-logo-gray-400.svg" />
+        <div className="tw-flex tw-justify-center tw-flex-wrap">
+          <CompanyLogo imageSrc={useBaseUrl('img/trusted-by/erkoware_logo.svg')} companyName="erkoware solutions" href="https://www.erkoware.de/" />
+          {/* <CompanyLogo imageSrc="https://tailwindui.com/img/logos/mirage-logo-gray-400.svg" />
           <CompanyLogo imageSrc="https://tailwindui.com/img/logos/tuple-logo-gray-400.svg" />
           <CompanyLogo imageSrc="https://tailwindui.com/img/logos/laravel-logo-gray-400.svg" />
           <CompanyLogo imageSrc="https://tailwindui.com/img/logos/statickit-logo-gray-400.svg" />
-          <CompanyLogo imageSrc="https://tailwindui.com/img/logos/statamic-logo-gray-400.svg" />
-        </div> */}
+          <CompanyLogo imageSrc="https://tailwindui.com/img/logos/statamic-logo-gray-400.svg" /> */}
+        </div>
       </div>
     </div>
   )
