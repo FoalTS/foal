@@ -33,7 +33,7 @@ import { Context, Hook, HttpResponseForbidden, HttpResponseUnauthorized } from '
 import { User } from '../entities';
 
 export function AdminRequired() {
-  return Hook((ctx: Context<User>) => {
+  return Hook((ctx: Context<User|null>) => {
     if (!ctx.user) {
       return new HttpResponseUnauthorized();
     }
@@ -88,7 +88,7 @@ import { Context, Hook, HttpResponseForbidden, HttpResponseUnauthorized } from '
 import { User } from '../entities';
 
 export function RoleRequired(role: string) {
-  return Hook((ctx: Context<User>) => {
+  return Hook((ctx: Context<User|null>) => {
     if (!ctx.user) {
       return new HttpResponseUnauthorized();
     }
