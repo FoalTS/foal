@@ -47,7 +47,9 @@ Replace the content of the new created file `src/scripts/create-perm.ts` with th
 ```typescript
 // 3p
 import { Permission } from '@foal/typeorm';
-import { createConnection, getConnection } from 'typeorm';
+
+// App
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -64,7 +66,7 @@ export async function main(args: { codeName: string, name: string }) {
   permission.codeName = args.codeName;
   permission.name = args.name;
 
-  await createConnection();
+  await dataSource.initialize();
 
   try {
     console.log(
@@ -73,7 +75,7 @@ export async function main(args: { codeName: string, name: string }) {
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await dataSource.destroy();
   }
 }
 ```
@@ -129,7 +131,9 @@ Replace the content of the new created file `src/scripts/create-group.ts` with t
 ```typescript
 // 3p
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection } from 'typeorm';
+
+// App
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -148,14 +152,13 @@ export async function main(args: { codeName: string, name: string, permissions: 
   group.codeName = args.codeName;
   group.name = args.name;
 
-  const connection = await createConnection();
+  await dataSource.initialize();
+
   try {
     for (const codeName of args.permissions) {
-      const permission = await Permission.findOne({ codeName });
+      const permission = await Permission.findOneBy({ codeName });
       if (!permission) {
-        console.log(
-          `No permission with the code name "${codeName}" was found.`
-        );
+        console.log(`No permission with the code name "${codeName}" was found.`);
         return;
       }
       group.permissions.push(permission);
@@ -167,7 +170,7 @@ export async function main(args: { codeName: string, name: string, permissions: 
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await connection.close();
+    await dataSource.destroy();
   }
 }
 
@@ -213,6 +216,10 @@ The `hasPerm(permissionCodeName: string)` method of the `UserWithPermissions` cl
 - The user has the required permission.
 - The user belongs to a group that has the required permission.
 
+### The static `findOneWithPermissionsBy` Method
+
+This method takes an id as parameter and returns the corresponding user with its groups and permissions. If no user is found, the method returns `null`.
+
 ### Creating Users with Groups and Permissions with a Shell Script (CLI)
 
 Replace the content of the new created file `src/scripts/create-user.ts` with the following:
@@ -221,10 +228,10 @@ Replace the content of the new created file `src/scripts/create-user.ts` with th
 // 3p
 import { hashPassword } from '@foal/core';
 import { Group, Permission } from '@foal/typeorm';
-import { createConnection, getConnection, getManager } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -245,10 +252,10 @@ export async function main(args) {
   user.email = args.email;
   user.password = await hashPassword(args.password);
 
-  await createConnection();
+  await dataSource.initialize();
 
   for (const codeName of args.userPermissions as string[]) {
-    const permission = await Permission.findOne({ codeName });
+    const permission = await Permission.findOneBy({ codeName });
     if (!permission) {
       console.log(`No permission with the code name "${codeName}" was found.`);
       return;
@@ -257,7 +264,7 @@ export async function main(args) {
   }
 
   for (const codeName of args.groups as string[]) {
-    const group = await Group.findOne({ codeName });
+    const group = await Group.findOneBy({ codeName });
     if (!group) {
       console.log(`No group with the code name "${codeName}" was found.`);
       return;
@@ -267,12 +274,12 @@ export async function main(args) {
 
   try {
     console.log(
-      await getManager().save(user)
+      await user.save()
     );
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await dataSource.destroy();
   }
 }
 ```
@@ -286,16 +293,15 @@ foal run create-user userPermissions="[ \"my-first-perm\" ]" groups="[ \"my-grou
 
 ## Fetching a User with their Permissions
 
-If you want the `hasPerm` method to work on the context `user` property, you must use the `fetchUserWithPermissions` function in the authentication hook.
+If you want the `hasPerm` method to work on the context `user` property, you must use the `User.findOneWithPermissionsBy` method in the authentication hook.
 
 *Example with JSON Web Tokens*
 ```typescript
 import { Context, Get } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
-import { fetchUserWithPermissions } from '@foal/typeorm';
 
 @JWTRequired({
-  user: fetchUserWithPermissions(User)
+  user: (id: number) => User.findOneWithPermissionsBy({ id })
 })
 export class ProductController {
   @Get('/products')
@@ -311,12 +317,10 @@ export class ProductController {
 *Example with Sessions Tokens*
 ```typescript
 import { Context, Get, UseSessions } from '@foal/core';
-import { fetchUserWithPermissions, TypeORMStore } from '@foal/typeorm';
 
 @UseSessions({
-  store: TypeORMStore,
   required: true,
-  user: fetchUserWithPermissions(User)
+  user: (id: number) => User.findOneWithPermissionsBy({ id }),
 })
 export class ProductController {
   @Get('/products')
@@ -331,33 +335,36 @@ export class ProductController {
 
 ## The PermissionRequired Hook
 
-> This requires the use of `fetchUserWithPermissions`.
+> This requires the use of `User.findOneWithPermissionsBy`.
 
 ```typescript
+import { PermissionRequired } from '@foal/core';
+
 @PermissionRequired('perm')
 ```
 
 | Context | Response |
 | --- | --- |
-| `ctx.user` is undefined | 401 - UNAUTHORIZED |
+| `ctx.user` is null | 401 - UNAUTHORIZED |
 | `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
 
 ```typescript
+import { PermissionRequired } from '@foal/core';
+
 @PermissionRequired('perm', { redirect: '/login' })
 ```
 
 | Context | Response |
 | --- | --- |
-| `ctx.user` is undefined | Redirects to `/login` (302 - FOUND) |
+| `ctx.user` is null | Redirects to `/login` (302 - FOUND) |
 | `ctx.user.hasPerm('perm')` is false | 403 - FORBIDDEN |
 
 *Example*
 ```typescript
-import { Context, Get } from '@foal/core';
-import { fetchUserWithPermissions, PermissionRequired } from '@foal/typeorm';
+import { Context, Get, PermissionRequired } from '@foal/core';
 import { JWTRequired } from '@foal/jwt';
 
-@JWTRequired({ user: fetchUserWithPermissions(User) })
+@JWTRequired({ user: (id: number) => User.findOneWithPermissionsBy({ id }) })
 export class ProductController {
   @Get('/products')
   @PermissionRequired('read-products')
@@ -373,7 +380,7 @@ The classes `Permission`, `Group` and `UserWithPermissions` all extends the `Bas
 
 *Example*
 ```typescript
-const perm = await Permission.findOneOrFail({ codeName: 'perm1' });
+const perm = await Permission.findOneByOrFail({ codeName: 'perm1' });
 perm.name = 'Permission1';
 await perm.save();
 ```

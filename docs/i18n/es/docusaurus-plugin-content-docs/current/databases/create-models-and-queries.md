@@ -45,8 +45,8 @@ await product.save();
 
 const products = await Product.find();
 // find by id:
-const firstProduct = await Product.findOne(1);
-const chair = await Product.findOne({ name: 'chair' });
+const firstProduct = await Product.findOneBy({ id: 1 });
+const chair = await Product.findOneBy({ name: 'chair' });
 
 await chair.remove();
 ```
