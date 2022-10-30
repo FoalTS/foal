@@ -86,7 +86,7 @@ module.exports = {
           dropdownActiveClassDisabled: true,
         },
         // {
-        //   to: 'to-complete',
+        //   to: 'who-is-using-foal',
         //   label: 'Who\'s using Foal?',
         //   position: 'right'
         // },
