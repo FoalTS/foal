@@ -395,7 +395,7 @@ export class UserService {
   };
 
   getUser(key: string) {
-    return this.users[key];
+    return this.users[key] ?? null;
   }
 }
 
@@ -468,7 +468,7 @@ import { Org } from '../entities';
 function AddOrgToContext() {
   return Hook(async ctx => {
     if (ctx.user) {
-      ctx.state.org = await Org.findOneOrFail(ctx.user.orgId);
+      ctx.state.org = await Org.findOneByOrFail({ id: ctx.user.orgId });
     }
   })
 }
@@ -494,7 +494,7 @@ interface State {
 
 export class ApiController {
   // ...
-  readOrgName(ctx: Context<any, any, State>) {
+  readOrgName(ctx: Context<any, State>) {
     // ...
   }
 }

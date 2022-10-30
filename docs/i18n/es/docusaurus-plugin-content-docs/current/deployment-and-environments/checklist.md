@@ -64,7 +64,6 @@ If you install dependencies and build the app on the remote host, then you shoul
 
 ```sh
 config/
-ormconfig.js
 package-lock.json
 package.json
 public/ # this may depend on how the platform manages static files
@@ -82,7 +81,6 @@ If you install dependencies and build the app on your local host directly, then 
 build/
 config/
 node_modules/
-ormconfig.js
 package-lock.json
 package.json
 public/ # this may depend on how the platform manages static files

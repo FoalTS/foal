@@ -71,13 +71,13 @@ module.exports = {
 The definition of entities and columns is the same as in relational databases, except that the ID type must be an `ObjectID` and the column decorator must be `@ObjectIdColumn`.
 
 ```typescript
-import { Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
+import { BaseEntity, Entity, ObjectID, ObjectIdColumn, Column } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
     
     @ObjectIdColumn()
-    id: ObjectID;
+    _id: ObjectID;
     
     @Column()
     firstName: string;
@@ -90,24 +90,22 @@ export class User {
 
 *Example*
 ```typescript
-import { getMongoRepository } from 'typeorm';
+import { ObjectId } from 'mongodb';
 
-const user = await getMongoRepository(User).findOne('xxxx');
+const user = await User.findOneBy({ _id: new ObjectId('xxxx') });
 ```
 
 ## Authentication
 
-### The `fetchMongoDBUser` function
-
 *user.entity.ts*
 ```typescript
-import { Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { BaseEntity, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
 
   @ObjectIdColumn()
-  id: ObjectID;
+  _id: ObjectID;
 
 }
 ```
@@ -115,11 +113,14 @@ export class User {
 *Example with JSON Web Tokens*:
 ```typescript
 import { JWTRequired } from '@foal/jwt';
-import { fetchMongoDBUser } from '@foal/typeorm';
+import { ObjectId } from 'mongodb';
 
 import { User } from '../entities';
 
-@JWTRequired({ user: fetchMongoDBUser(User) })
+@JWTRequired({
+  userIdType: 'string',
+  user: id => User.findOneBy({ _id: new ObjectId(id) })
+})
 class MyController {}
 ```
 

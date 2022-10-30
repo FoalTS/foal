@@ -5,7 +5,7 @@ sidebar_label: Utiliser un Autre ORM
 
 The core of the framework is independent of TypeORM. So, if you do not want to use an ORM at all or use another ORM or ODM than TypeORM, you absolutely can.
 
-To do so, you will have to remove TypeORM and all its utilities and implement some functions yourself like the authentication function `fetchUser`.
+To do so, you will have to remove TypeORM and all its utilities.
 
 ## Uninstall TypeORM
 
@@ -15,39 +15,13 @@ To do so, you will have to remove TypeORM and all its utilities and implement so
     npm uninstall typeorm @foal/typeorm
     ```
 
-2. Then remove the directory `src/app/entities`.
+2. Then remove the directory `src/app/entities` and the file `src/db.ts`.
 
 3. Remove or replace the script `create-user` in `src/app/scripts`.
 
-4. In the file `app.controller.ts`, delete the connection creation call `createConnection`.
+4. In the file `src/index.ts`, delete the connection creation called `dataSource.initialize()`.
 
 5. Finally, remove in `package.json` the scripts to manage migrations.
-
-## Functions to Be Added
-
-### The `fetchUser` function
-
-If you wish to use the `user` option of `@JWTRequired` or `@UseSessions` to set the `ctx.user` property, then you will need to implement your own `fetchUser` function.
-
-This utility returns a function that takes an `id` as parameter which might be a `string` or a `number` and returns a promise. The promise value must be `undefined` is no user matches the given `id` and the *user object* otherwise.
-
-*Example*
-```typescript
-import { FetchUser, ServiceManager } from '@foal/core';
-
-export function fetchUser(userModel: any): FetchUser {
-  return async (id: number|string, services: ServiceManager) => {
-    if (typeof id === 'string') {
-      throw new Error('The user ID must be a number.');
-    }
-    const user = await userModel.findOne({ id });
-    if (user === null) {
-      return undefined;
-    }
-    return user;
-  };
-}
-```
 
 ## Examples
 
@@ -119,7 +93,15 @@ Generate the TypeScript interfaces.
 npx prisma generate
 ```
 
-Update your `src/index.ts` to create the prisma connection and pass it to the service manager.
+Update your `src/app/db.ts` to create the prisma connection:
+
+```typescript
+import { PrismaClient } from '@prisma/client';
+
+export const prisma = new PrismaClient();
+```
+
+Then update your `src/index.ts` to inject it into the service manager.
 
 *src/index.ts*
 ```typescript
@@ -129,12 +111,11 @@ import { PrismaClient } from '@prisma/client';
 
 // App
 import { AppController } from './app/app.controller';
-
-const prisma = new PrismaClient();
+import { prisma } from './db';
 
 async function main() {
-  const serviceManager = new ServiceManager();
-  serviceManager.set(PrismaClient, prisma);
+  const serviceManager = new ServiceManager()
+    .set(PrismaClient, prisma);
   const app = await createApp(AppController, { serviceManager });
 
   // ...
@@ -142,7 +123,7 @@ async function main() {
 
 main()
   .catch(err => { console.error(err.stack); process.exit(1); })
-  .finally(() => prisma.$disconnect());
+  .finally(() => { prisma.$disconnect().catch(err => console.error(err)) });
 ```
 
 Finally, inject the prisma client into your controllers and start using it.
@@ -164,9 +145,7 @@ export class AppController implements IAppController {
 }
 ```
 
-#### The `fetchUser` function
-
-In case your application uses the hooks `@UseSessions` or `@JWTRequired` and you want to assign a value to `ctx.user`, then you will need to create a `fetchUser` function.
+#### Authenticating users
 
 First, make sure your have a `User` model defined in `schema.prisma`.
 
@@ -187,33 +166,20 @@ npx prisma migrate dev --name add-user
 npx prisma generate
 ```
 
-Then create the `fetchPrismaUser` function.
+Then add the `user` option to your authentication hooks as follows:
+
 ```typescript
-import { ServiceManager } from '@foal/core';
-import { PrismaClient } from '@prisma/client';
-
-export async function fetchPrismaUser(id: number|string, services: ServiceManager) {
-  if (typeof id === 'string') {
-    throw new Error('The user ID must be a number.');
-  }
-
-  const user = await services.get(PrismaClient).user.findFirst({
+@JWTRequired({
+  user: (id: number, services: ServiceManager) => services.get(PrismaClient).user.findFirst({
     where: { id }
-  });
-
-  if (user === null) {
-    return undefined;
-  }
-  
-  return user;
-}
-```
-
-You're now ready to use it in your hooks.
-```typescript
-@JWTRequired({ user: fetchPrismaUser })
+  })
+})
 // OR
-@UseSessions({ user: fetchPrismaUser })
+@UseSessions({
+  user: (id: number, services: ServiceManager) => services.get(PrismaClient).user.findFirst({
+    where: { id }
+  })
+})
 ```
 
 ## Limitations

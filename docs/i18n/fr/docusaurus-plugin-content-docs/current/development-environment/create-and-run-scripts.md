@@ -19,20 +19,21 @@ Remove the content of `src/scripts/display-users.ts` and replace it with the bel
 ```typescript
 // 3p
 import { createService } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 // App
+import { dataSource } from '../db';
 import { User } from '../app/entities';
 import { Logger } from '../app/services';
 
 export async function main() {
-  const connection = await createConnection();
+  await dataSource.initialize();
+
   try {
-    const users = await connection.getRepository(User).find();
+    const users = await User.find();
     const logger = createService(Logger);
     logger.log(users);
   } finally {
-    connection.close();
+    dataSource.destroy();
   }
 }
 
@@ -60,4 +61,4 @@ foal run my-script # or foal run-script my-script
 
 > You can also provide additionnal arguments to your script (for example: `foal run my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.
 
-> If you want your script to recompile each time you save the file, you can run `npm run develop` in a separate terminal.
+> If you want your script to recompile each time you save the file, you can run `npm run dev` in a separate terminal.

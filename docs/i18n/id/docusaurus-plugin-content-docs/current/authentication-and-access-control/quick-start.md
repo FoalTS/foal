@@ -111,15 +111,13 @@ npm run migrations
 *src/app/app.controller.ts*
 ```typescript
 import { controller, dependency, IAppController, Store, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
-import { createConnection } from 'typeorm';
 
 import { User } from './entities';
 import { ApiController, AuthController } from './controllers';
 
 @UseSessions({
   cookie: true,
-  user: fetchUser(User)
+  user: (id: number) => User.findOneBy({ id }),
 })
 export class AppController implements IAppController {
   // This line is required.
@@ -131,16 +129,12 @@ export class AppController implements IAppController {
     controller('/api', ApiController),
   ];
 
-  async init() {
-    await createConnection();
-  }
-
 }
 ```
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -158,22 +152,22 @@ export class AuthController {
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
-  async signup(ctx: Context<any, Session>) {
+  async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
     user.password = await hashPassword(ctx.request.body.password);
     await user.save();
 
-    ctx.session.setUser(user);
-    await ctx.session.regenerateID();
+    ctx.session!.setUser(user);
+    await ctx.session!.regenerateID();
 
     return new HttpResponseOK();
   }
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  async login(ctx: Context<any, Session>) {
-    const user = await User.findOne({ email: ctx.request.body.email });
+  async login(ctx: Context) {
+    const user = await User.findOneBy({ email: ctx.request.body.email });
 
     if (!user) {
       return new HttpResponseUnauthorized();
@@ -183,15 +177,15 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    ctx.session.setUser(user);
-    await ctx.session.regenerateID();
+    ctx.session!.setUser(user);
+    await ctx.session!.regenerateID();
 
     return new HttpResponseOK();
   }
 
   @Post('/logout')
-  async logout(ctx: Context<any, Session>) {
-    await ctx.session.destroy();
+  async logout(ctx: Context) {
+    await ctx.session!.destroy();
 
     return new HttpResponseOK();
   }
@@ -282,7 +276,6 @@ module.exports = {
 *src/app/app.controller.ts*
 ```typescript
 import { controller, IAppController } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController, AuthController } from './controllers';
 
@@ -292,10 +285,6 @@ export class AppController implements IAppController {
     controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
-
-  async init() {
-    await createConnection();
-  }
 
 }
 ```
@@ -337,7 +326,7 @@ export class AuthController {
   @Post('/login')
   @ValidateBody(credentialsSchema)
   async login(ctx: Context) {
-    const user = await User.findOne({ email: ctx.request.body.email });
+    const user = await User.findOneBy({ email: ctx.request.body.email });
 
     if (!user) {
       return new HttpResponseUnauthorized();
@@ -385,7 +374,7 @@ import { User } from './entities';
   cookie: true,
   // Add the line below if you prefer ctx.user
   // to be an instance of User instead of the JWT payload.
-  // user: fetchUser(User)
+  // user: (id: number) => User.findOneBy({ id })
 })
 export class ApiController {
   @Get('/products')
@@ -417,7 +406,6 @@ npm run migrations
 *src/app/app.controller.ts*
 ```typescript
 import { controller, IAppController } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController, AuthController } from './controllers';
 
@@ -427,10 +415,6 @@ export class AppController implements IAppController {
     controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
-
-  async init() {
-    await createConnection();
-  }
 
 }
 ```
@@ -475,7 +459,7 @@ export class AuthController {
   @Post('/login')
   @ValidateBody(credentialsSchema)
   async login(ctx: Context) {
-    const user = await User.findOne({ email: ctx.request.body.email });
+    const user = await User.findOneBy({ email: ctx.request.body.email });
 
     if (!user) {
       return new HttpResponseUnauthorized();
@@ -507,14 +491,13 @@ export class AuthController {
 *src/app/controllers/api.controller.ts*
 ```typescript
 import { Get, HttpResponseOK, UserRequired, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
 
 import { User } from '../entities';
 
 // The `request` option returns a pretty message if the Authorization header is not here.
 @UseSessions({
   required: true,
-  user: fetchUser(User)
+  user: (id: number) => User.findOneBy({ id }),
 })
 @UserRequired()
 export class ApiController {
@@ -597,7 +580,6 @@ module.exports = {
 *src/app/app.controller.ts*
 ```typescript
 import { controller, IAppController } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController, AuthController } from './controllers';
 
@@ -607,10 +589,6 @@ export class AppController implements IAppController {
     controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
-
-  async init() {
-    await createConnection();
-  }
 
 }
 ```
@@ -652,7 +630,7 @@ export class AuthController {
   @Post('/login')
   @ValidateBody(credentialsSchema)
   async login(ctx: Context) {
-    const user = await User.findOne({ email: ctx.request.body.email });
+    const user = await User.findOneBy({ email: ctx.request.body.email });
 
     if (!user) {
       return new HttpResponseUnauthorized();
@@ -692,7 +670,7 @@ import { User } from '../entities';
 @JWTRequired({
   // Add the line below if you prefer ctx.user
   // to be an instance of User instead of the JWT payload.
-  // user: fetchUser(User)
+  // user: (id: number) => User.findOneBy({ id })
 })
 export class ApiController {
   @Get('/products')
@@ -719,16 +697,14 @@ npm run migrations
 
 *src/app/app.controller.ts*
 ```typescript
-import { Context, controller, dependency, Get, IAppController, render, Session, Store, UserRequired, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
-import { createConnection } from 'typeorm';
+import { Context, controller, dependency, Get, IAppController, render, Store, UserRequired, UseSessions } from '@foal/core';
 
 import { ApiController, AuthController } from './controllers';
 import { User } from './entities';
 
 @UseSessions({
   cookie: true,
-  user: fetchUser(User)
+  user: (id: number) => User.findOneBy({ id }),
 })
 export class AppController implements IAppController {
   // This line is required.
@@ -739,10 +715,6 @@ export class AppController implements IAppController {
     controller('/auth', AuthController),
     controller('/api', ApiController),
   ];
-  
-  async init() {
-    await createConnection();
-  }
 
   @Get('/')
   @UserRequired({ redirectTo: '/login' })
@@ -751,9 +723,9 @@ export class AppController implements IAppController {
   }
 
   @Get('/login')
-  login(ctx: Context<any, Session>) {
+  login(ctx: Context) {
     return render('./templates/login.html', {
-      errorMessage: ctx.session.get<string>('errorMessage', '')
+      errorMessage: ctx.session!.get<string>('errorMessage', '')
     });
   }
 
@@ -762,7 +734,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, hashPassword, HttpResponseRedirect, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, hashPassword, HttpResponseRedirect, Post, ValidateBody, verifyPassword } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -780,42 +752,42 @@ export class AuthController {
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
-  async signup(ctx: Context<any, Session>) {
+  async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
     user.password = await hashPassword(ctx.request.body.password);
     await user.save();
 
-    ctx.session.setUser(user);
-    await ctx.session.regenerateID();
+    ctx.session!.setUser(user);
+    await ctx.session!.regenerateID();
 
     return new HttpResponseRedirect('/');
   }
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  async login(ctx: Context<any, Session>) {
-    const user = await User.findOne({ email: ctx.request.body.email });
+  async login(ctx: Context) {
+    const user = await User.findOneBy({ email: ctx.request.body.email });
 
     if (!user) {
-      ctx.session.set('errorMessage', 'Unknown email.', { flash: true });
+      ctx.session!.set('errorMessage', 'Unknown email.', { flash: true });
       return new HttpResponseRedirect('/login');
     }
 
     if (!await verifyPassword(ctx.request.body.password, user.password)) {
-      ctx.session.set('errorMessage', 'Invalid password.', { flash: true });
+      ctx.session!.set('errorMessage', 'Invalid password.', { flash: true });
       return new HttpResponseRedirect('/login');
     }
 
-    ctx.session.setUser(user);
-    await ctx.session.regenerateID();
+    ctx.session!.setUser(user);
+    await ctx.session!.regenerateID();
 
     return new HttpResponseRedirect('/');
   }
 
   @Post('/logout')
-  async logout(ctx: Context<any, Session>) {
-    await ctx.session.destroy();
+  async logout(ctx: Context) {
+    await ctx.session!.destroy();
 
     return new HttpResponseRedirect('/login');
   }

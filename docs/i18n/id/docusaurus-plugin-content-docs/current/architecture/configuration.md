@@ -276,7 +276,7 @@ module.exports = {
 </TabItem>
 </Tabs>
 
-If the same variable is provided both as environment variable and in the `.env` file, then the value of the `.env` file is used.
+If the same variable is provided both as environment variable and in the `.env` file, then the value of the environment variable is used.
 
 ### Deployment Environments
 
