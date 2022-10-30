@@ -21,10 +21,10 @@ describe('runScript', () => {
     rmfileIfExists('my-script-temp');
   });
 
-  it('should log a suitable message if build/scripts/my-script.js and src/scripts/my-script.ts do not exist.', () => {
+  it('should log a suitable message if build/scripts/my-script.js and src/scripts/my-script.ts do not exist.', async () => {
     let msg;
     const log = (message: any) => msg = message;
-    runScript({ name: 'my-script' }, [], log);
+    await runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
       msg, 'The script "my-script" does not exist. You can create it by running the command "foal g script my-script".'
@@ -32,13 +32,13 @@ describe('runScript', () => {
   });
 
   it('should log a suitable message if build/scripts/my-script.js does not exist but '
-      + 'src/scripts/my-script.ts exists.', () => {
+      + 'src/scripts/my-script.ts exists.', async () => {
     mkdirIfDoesNotExist('src/scripts');
     writeFileSync('src/scripts/my-script.ts', '', 'utf8');
 
     let msg;
     const log = (message: any) => msg = message;
-    runScript({ name: 'my-script' }, [], log);
+    await runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
       msg,
@@ -47,7 +47,7 @@ describe('runScript', () => {
     );
   });
 
-  it('should log a suitable message if no function called "main" was found in build/scripts/my-script.js.', () => {
+  it('should log a suitable message if no function called "main" was found in build/scripts/my-script.js.', async () => {
     mkdirIfDoesNotExist('build/scripts');
     writeFileSync('build/scripts/my-script.js', '', 'utf8');
 
@@ -56,7 +56,7 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    runScript({ name: 'my-script' }, [], log);
+    await runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
       msg,
@@ -64,10 +64,10 @@ describe('runScript', () => {
     );
   });
 
-  it('should validate the process arguments with the schema if it is given.', () => {
+  it('should validate the process arguments with the schema if it is given.', async () => {
     mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
-    module.exports.schema = { type: 'object', additionalProperties: false };
+    module.exports.schema = { type: 'object', properties: { email: { type: 'string', format: 'email' } } };
     module.exports.main = function main(args) {
       writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
     }`;
@@ -78,21 +78,21 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    runScript({ name: 'my-script' }, [
+    await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run-script',
       'my-script',
-      'foo=bar',
+      'email=bar',
     ], log);
 
     strictEqual(
       msg,
-      'Error: The command line arguments must NOT have additional properties.'
+      'Error: The command line arguments must match format "email".'
     );
   });
 
-  it('should call the "main" function of build/scripts/my-script.js with the script arguments (no schema).', () => {
+  it('should call the "main" function of build/scripts/my-script.js with the script arguments (no schema).', async () => {
     mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
     module.exports.main = function main(args) {
@@ -102,7 +102,7 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    runScript({ name: 'my-script' }, [
+    await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run-script',
@@ -120,7 +120,7 @@ describe('runScript', () => {
     });
   });
 
-  it('should call the "main" function of build/scripts/my-script.js with the script arguments (a schema).', () => {
+  it('should call the "main" function of build/scripts/my-script.js with the script arguments (a schema).', async () => {
     mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
     module.exports.schema = {
@@ -137,7 +137,7 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    runScript({ name: 'my-script' }, [
+    await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run-script',
@@ -156,7 +156,7 @@ describe('runScript', () => {
     });
   });
 
-  it('should catch and log errors thrown in the "main" function.', () => {
+  it('should catch and log errors thrown in the "main" function.', async () => {
     mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
     module.exports.main = function main() {
@@ -169,7 +169,7 @@ describe('runScript', () => {
     let msg: any;
     const log = (message: any) => msg = message;
 
-    runScript({ name: 'my-script' }, [
+    await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run-script',
