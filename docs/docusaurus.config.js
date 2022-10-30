@@ -82,14 +82,13 @@ module.exports = {
         },
         {
           type: 'docsVersionDropdown',
-          position: 'left',
+          position: 'right',
           dropdownActiveClassDisabled: true,
         },
-        // {
-        //   to: 'to-complete',
-        //   label: 'Who\'s using Foal?',
-        //   position: 'right'
-        // },
+        {
+          type: 'localeDropdown',
+          position: 'right',
+        },
         {
           href: 'https://github.com/FoalTS/foal',
           position: 'right',
@@ -107,10 +106,6 @@ module.exports = {
           position: 'right',
           className: 'header-discord-link',
           'aria-label': 'Discord chat',
-        },
-        {
-          type: 'localeDropdown',
-          position: 'right',
         },
       ],
     }
@@ -140,7 +135,7 @@ module.exports = {
           lastVersion: "current",
           versions: {
             current: {
-              "label": `${require('../lerna.json').version[0]}.x`,
+              "label": require('../lerna.json').version + ' (latest)',
             },
             '2.x': {
               'label': '2.x',
