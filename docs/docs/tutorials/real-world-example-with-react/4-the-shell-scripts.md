@@ -88,7 +88,7 @@ Open the `create-story.ts` file and replace its content.
 
 ```typescript
 import { Story, User } from '../app/entities';
-import { dataSource } from' ../db';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
