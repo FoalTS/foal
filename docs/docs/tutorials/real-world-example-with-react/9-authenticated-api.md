@@ -32,7 +32,7 @@ export class StoriesController {
     additionalProperties: false,
   })
   @UserRequired()
-  async createStory(ctx: Context) {
+  async createStory(ctx: Context<User>) {
     const story = new Story();
     story.title = ctx.request.body.title;
     story.link = ctx.request.body.link;
