@@ -176,11 +176,15 @@ const files = ctx.files.get('images');
 
 In version 2, GraphQL schemas were of type `any`. In version 3, they are all based on the `GraphQLSchema` interface.
 
-## Closer to the standards of the JS ecosystem
+## Closer to JS ecosystem standards
 
-- `null` value in contexts to be closer to ORM standards
-- npm run dev
-- config behavior similar to dotenv
+Some parts have been modified to get closer to the JS ecosystem standards. In particular:
+
+- The `npm run develop` has been renamed to `npm run dev`.
+
+- When two values of the same variable are provided by a `.env` file and an environment variable, then the value of the environment is used (the behavior is similar to that of the [dotenv](https://www.npmjs.com/package/dotenv) library).
+
+- When the request has no session or the user is not authenticated, the values of `ctx.session` and `ctx.user` are `null` and no longer `undefined`. This makes sense from a semantic point of view, and it also simplifies the user assignment from the `find` functions of popular ORMs (Prisma, TypeORM, Mikro-ORM). They all return `null` when no value is found.
 
 ## More open to other ORMs
 
