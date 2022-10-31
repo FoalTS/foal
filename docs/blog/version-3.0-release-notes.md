@@ -30,9 +30,9 @@ A lot of work has been done to make sure that `@foal/typeorm`, new projects gene
 
 In particular, the connection to the database is now managed by a file `src/db.ts` that replaces the older `ormconfig.json`.
 
-## Code simplication
+## Code simplified
 
-Some parts of the framework have also been simplified to require less code and make it more understandable.
+Some parts of the framework have been simplified to require less code and make it more understandable.
 
 ### Authentication
 
@@ -125,10 +125,56 @@ await user.save();
 
 ## Better typing
 
-- AJV types
-- File upload in the controler method
+The use of TypeScript types has been improved and some parts of the framework ensure better type safety.
+
+### Validation with AJV
+
+Foal's version uses `ajv@8` which allows you to bind a TypeScript type with a JSON schema object. To do this, you can import the generic type `JSONSchemaType` to build the interface of the schema object.
+
+```typescript
+import { JSONSchemaType } from 'ajv';
+
+interface MyData {
+  foo: number;
+  bar?: string
+}
+
+const schema: JSONSchemaType<MyData> = {
+  type: 'object',
+  properties: {
+    foo: { type: 'integer' },
+    bar: { type: 'string', nullable: true }
+  },
+  required: ['foo'],
+  additionalProperties: false
+}
+```
+
+### File upload
+
+In version 2, handling file uploads in the controller was tedious because all types were `any`. Starting with version 3, it is no longer necessary to cast the types to `File` or `File[]`:
+
+```typescript
+// Version 2
+const name = ctx.request.body.fields.name;
+const file = ctx.request.body.files.avatar as File;
+const files = ctx.request.body.files.images as File[];
+
+// After
+const name = ctx.request.body.name;
+// file is of type "File"
+const file = ctx.files.get('avatar')[0];
+// files is of type "Files"
+const files = ctx.files.get('images');
+```
+
+### Authentication
+
 - fetchUser: JS and TS types
-- GraphQL
+
+### GraphQL
+
+In version 2, GraphQL schemas were of type `any`. In version 3, they are all based on the `GraphQLSchema` interface.
 
 ## Closer to the standards of the JS ecosystem
 
