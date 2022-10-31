@@ -30,11 +30,98 @@ A lot of work has been done to make sure that `@foal/typeorm`, new projects gene
 
 In particular, the connection to the database is now managed by a file `src/db.ts` that replaces the older `ormconfig.json`.
 
-## Code simplified
+## Code simplication
 
-- fetchUser
-- Parameters of the upload hook
-- active record vs data mapper
+Some parts of the framework have also been simplified to require less code and make it more understandable.
+
+### Authentication
+
+The `@UseSessions` and `@JWTRequired` authentication hooks called obscure functions such as `fetchUser`, `fetchUserWithPermissions` to populate the `ctx.user` property. The real role of these functions was not clear and a newcomer to the framework could wonder what they were for.
+
+This is why these functions have been removed and replaced by direct calls to database models.
+
+```typescript
+// Version 2
+@UseSessions({ user: fetchUser(User) })
+@JWTRequired({ user: fetchUserWithPermissions(User) })
+
+// Version 3
+@UseSessions({ user: (id: number) => User.findOneBy({ id }) })
+@JWTRequired({ user: (id: number) => User.findOneWithPermissionsBy({ id }) })
+```
+
+### File upload
+
+When uploading files in a _multipart/form-data_ request, it was not allowed to pass optional fields. This is now possible. 
+
+The interface of the `@ValidateMultipartFormDataBody` hook, renamed to `@ParseAndValidateFiles` to be more understandable for people who don't know the HTTP protocol handling the upload, has been simplified.
+
+*Examples with only files*
+```typescript
+// Version 2
+@ValidateMultipartFormDataBody({
+  files: {
+    profile: { required: true }
+  }
+})
+
+// Version 3
+@ParseAndValidateFiles({
+  profile: { required: true }
+})
+```
+
+*Examples with files and fields*
+```typescript
+// Version 2
+@ValidateMultipartFormDataBody({
+  files: {
+    profile: { required: true }
+  }
+  fields: {
+    description: { type: 'string' }
+  }
+})
+
+// Version 3
+@ParseAndValidateFiles(
+  {
+    profile: { required: true }
+  },
+  // The second parameter is optional
+  // and is used to add fields. It expects an AJV object.
+  {
+    type: 'object',
+    properties: {
+      description: { type: 'string' }
+    },
+    required: ['description'],
+    additionalProperties: false
+  }
+)
+```
+
+### Database models
+
+Using functions like `getRepository` or `getManager` to manipulate data in a database is not necessarily obvious to newcomers. It adds complexity that is not necessary for small or medium sized projects. Most frameworks prefer to use the Active Record pattern for simplicity.
+
+This is why, from version 3 and to take into account that TypeORM v0.3 no longer uses a global connection, the examples in the documentation and the generators will extend all the models from `BaseEntity`. Of course, it will still be possible to use the functions below if desired. 
+
+```typescript
+// Version 2
+@Entity()
+class User {}
+
+const user = getRepository(User).create();
+await getRepository(User).save(user);
+
+// Version 3
+@Entity()
+class User extends BaseEntity {}
+
+const user = new User();
+await user.save();
+```
 
 ## Better typing
 
