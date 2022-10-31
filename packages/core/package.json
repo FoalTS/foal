@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Full-featured Node.js framework, with no complexity",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -86,7 +86,7 @@
     "reflect-metadata": "~0.1.13"
   },
   "devDependencies": {
-    "@foal/internal-test": "^3.0.1",
+    "@foal/internal-test": "^3.0.2",
     "@types/mocha": "9.1.1",
     "@types/node": "16.11.7",
     "@types/supertest": "2.0.12",
