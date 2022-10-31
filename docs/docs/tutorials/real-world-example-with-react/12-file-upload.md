@@ -41,7 +41,7 @@ You are ready to create the controller. Generate a new one.
 foal generate controller api/profile --register
 ```
 
-Open the new file and add two new routes.
+Open the new file `profile.controller.ts` and add two new routes.
 
 | API endpoint | Method | Description |
 | --- | --- | --- |
@@ -50,7 +50,8 @@ Open the new file and add two new routes.
 
 ```typescript
 import { Context, dependency, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
-import { File, Disk, ParseAndValidateFiles } from '@foal/storage';
+import { Disk, ParseAndValidateFiles } from '@foal/storage';
+import { File } from '@foal/core';
 import { User } from '../../entities';
 
 export class ProfileController {
@@ -81,8 +82,8 @@ export class ProfileController {
       avatar: { required: false, saveTo: 'images/profiles/uploaded' }
     },
     {
-      type: 'object':
-      properties {
+      type: 'object',
+      properties: {
         name: { type: 'string', maxLength: 255 }
       },
       required: ['name']

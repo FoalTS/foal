@@ -1,6 +1,6 @@
 {
   "version.label": {
-    "message": "3.0.0 (terbaru)",
+    "message": "3.x",
     "description": "The label for version current"
   },
   "sidebar.someSidebar.category.TUTORIALS": {

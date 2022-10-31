@@ -38,7 +38,7 @@ The example below shows how to perform this check during a login and how to upgr
 ```typescript
 const { email, password } = ctx.request.body;
 
-const user = await User.findOne({ email });
+const user = await User.findOneBy({ email });
 
 if (!user) {
   return new HttpResponseUnauthorized();
@@ -57,16 +57,4 @@ if (passwordHashNeedsToBeRefreshed(user.password)) {
 // highlight-end
 
 // Log the user in.
-```
-
-## Forbid Overly Common Passwords
-
-```
-npm install @foal/password
-```
-
-To prevent users from using very weak passwords such as `123456` or `password`, you can call the `isCommon` function. This utility checks if the given password is part of the 10000 most common passwords listed [here](https://github.com/danielmiessler/SecLists/blob/master/Passwords/Common-Credentials/10-million-password-list-top-10000.txt).
-
-```typescript
-const isPasswordTooCommon = await isCommon(password);
 ```

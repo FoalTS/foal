@@ -46,7 +46,7 @@ Here is a non-exhaustive list of its features:
 FoalTS supports officially the following databases:
 
 | Database | Versions | Driver |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | PostgreSQL | 9.6+ ([Version Policy](https://www.postgresql.org/support/versioning/)) | `pg@8` |
 | MySQL | 5.7+ ([Version Policy](https://en.wikipedia.org/wiki/MySQL#Release_history)) | `mysql@2` |
 | MariaDB | 10.2+ ([Version Policy](https://en.wikipedia.org/wiki/MariaDB#Versioning)) | `mysql@2` |
@@ -59,65 +59,7 @@ TypeORM is integrated by default in each new FoalTS project. This allows you to 
 
 ### Initial Configuration
 
-When creating a new project, an `SQLite` database is used by default as it does not require any additional installation (the data is saved in a file). The connection configuration is stored in `ormconfig.js` and `default.json` located respectively at the root of your project and in the `config/` directory.
-
-*ormconfig.js*
-```js
-const { Config } = require('@foal/core');
-
-module.exports = {
-  type: 'better-sqlite3',
-  database: Config.get('database.database', 'string'),
-  dropSchema: Config.get('database.dropSchema', 'boolean', false),
-  entities: ['build/app/**/*.entity.js'],
-  migrations: ['build/migrations/*.js'],
-  cli: {
-    migrationsDir: 'src/migrations'
-  },
-  synchronize: Config.get('database.synchronize', 'boolean', false)
-}
-```
-
-<Tabs
-  defaultValue="yaml"
-  values={[
-    {label: 'YAML', value: 'yaml'},
-    {label: 'JSON', value: 'json'},
-    {label: 'JS', value: 'js'},
-  ]}
->
-<TabItem value="yaml">
-
-```yaml
-database:
-  database: ./db.sqlite3
-```
-
-</TabItem>
-<TabItem value="json">
-
-```json
-{
-  "database": {
-    "database": "./db.sqlite3"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="js">
-
-```javascript
-module.exports = {
-  database: {
-    database: "./db.sqlite3",
-  }
-}
-```
-
-</TabItem>
-</Tabs>
-
+When creating a new project, an `SQLite` database is used by default as it does not require any additional installation (the data is saved in a file). The connection configuration is stored in `default.json` located in the `config/` directory.
 
 ### Packages
 
@@ -131,33 +73,13 @@ Two packages are required to use TypeORM with FoalTS:
 
 ## Database Configuration Examples
 
-This section shows how to configure **MySQL** or **PostgreSQL** with Foal.
+### PostgreSQL
 
-*ormconfig.js*
-```js
-const { Config } = require('@foal/core');
-
-module.exports = {
-  type: 'mysql', // or 'postgres'
-
-  host: Config.get('database.host', 'string'),
-  port: Config.get('database.port', 'number'),
-  username: Config.get('database.username', 'string'),
-  password: Config.get('database.password', 'string'),
-  database: Config.get('database.database', 'string'),
-
-  dropSchema: Config.get('database.dropSchema', 'boolean', false),
-  synchronize: Config.get('database.synchronize', 'boolean', false),
-  
-  entities: ["build/app/**/*.entity.js"],
-  migrations: ["build/migrations/*.js"],
-  cli: {
-    migrationsDir: "src/migrations"
-  },
-}
+```sh
+npm install pg
 ```
 
-With this configuration, database credentials can be provided in a YAML, a JSON or a `.env `configuration file or in environment variables.
+*config/default.{json|yml|js}*
 
 <Tabs
   defaultValue="yaml"
@@ -173,6 +95,76 @@ With this configuration, database credentials can be provided in a YAML, a JSON 
 # ...
 
 database:
+  type: postgres
+  host: localhost
+  port: 5432
+  username: root
+  password: password
+  database: my-db
+```
+
+</TabItem>
+<TabItem value="json">
+
+```json
+{
+  // ...
+
+  "database": {
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "root",
+    "password": "password",
+    "database": "my-db"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="js">
+
+```javascript
+module.exports = {
+  // ...
+
+  database: {
+    type: "postgres",
+    host: "localhost",
+    port: 5432,
+    username: "root",
+    password: "password",
+    database: "my-db"
+  }
+}
+```
+
+</TabItem>
+</Tabs>
+
+### MySQL
+
+```sh
+npm install mysql
+```
+
+*config/default.{json|yml|js}*
+
+<Tabs
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
+
+```yaml
+# ...
+
+database:
+  type: mysql
   host: localhost
   port: 3306
   username: root
@@ -186,7 +178,9 @@ database:
 ```json
 {
   // ...
+
   "database": {
+    "type": "mysql",
     "host": "localhost",
     "port": 3306,
     "username": "root",
@@ -202,7 +196,9 @@ database:
 ```javascript
 module.exports = {
   // ...
+
   database: {
+    type: "mysql",
     host: "localhost",
     port: 3306,
     username: "root",
@@ -215,21 +211,74 @@ module.exports = {
 </TabItem>
 </Tabs>
 
-### MySQL / MariaDB
-
-Install `mysql` or `mysql3` drivers.
+### MariaDB
 
 ```sh
-npm install mysql --save # mysql2 is also supported
+npm install mysql
 ```
 
-### PostgreSQL
+*config/default.{json|yml|js}*
 
-Install `pg` driver.
+<Tabs
+  defaultValue="yaml"
+  values={[
+    {label: 'YAML', value: 'yaml'},
+    {label: 'JSON', value: 'json'},
+    {label: 'JS', value: 'js'},
+  ]}
+>
+<TabItem value="yaml">
 
-```sh
-npm install pg --save
+```yaml
+# ...
+
+database:
+  type: mariadb
+  host: localhost
+  port: 3306
+  username: root
+  password: password
+  database: my-db
 ```
+
+</TabItem>
+<TabItem value="json">
+
+```json
+{
+  // ...
+
+  "database": {
+    "type": "mariadb",
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "password",
+    "database": "my-db"
+  }
+}
+```
+
+</TabItem>
+<TabItem value="js">
+
+```javascript
+module.exports = {
+  // ...
+
+  database: {
+    type: "mariadb",
+    host: "localhost",
+    port: 3306,
+    username: "root",
+    password: "password",
+    database: "my-db"
+  }
+}
+```
+
+</TabItem>
+</Tabs>
 
 ## Configuration and Testing
 
@@ -247,7 +296,7 @@ In this way, you can define a default configuration in the `config/default.{yml|
 > You learn more on how configuration works in Foal [here](../architecture/configuration.md)
 
 In the example below, we add two new options:
-- `dropSchema` clears the database each time we call `createConnection`
+- `dropSchema` clears the database each time we create the connection
 - and `synchronize` synchronizes the database tables with your entities so your do not have to generate and run migrations during testing.
 
 *config/test.yml*
@@ -264,17 +313,21 @@ database:
 
 *Example of a test*
 ```typescript
-import { createConnection, Connection } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { createDataSource } from '../db';
 
 describe('xxx', () => {
 
-  let connection: Connection;
+  let dataSource: DataSource;
 
-  beforeEach(() => connection = await createConnection())
+  beforeEach(async () => {
+    dataSource = createDataSource();
+    await dataSource.initialize();
+  });
 
   afterEach(async () => {
-    if (connection) {
-      await connection.close()
+    if (dataSource) {
+      await dataSource.destroy()
     }
   });
 

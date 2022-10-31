@@ -1,6 +1,6 @@
 {
   "name": "@foal/redis",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "Redis sessions for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -41,7 +41,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^3.0.0",
+    "@foal/core": "^3.0.2",
     "redis": "~4.1.0"
   },
   "devDependencies": {

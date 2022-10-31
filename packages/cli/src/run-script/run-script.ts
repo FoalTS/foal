@@ -4,6 +4,7 @@ import { join } from 'path';
 
 // 3p
 import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
 
 // FoalTS
 import { getCommandLineArguments } from './get-command-line-arguments.util';
@@ -32,6 +33,7 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
 
   if (schema) {
     const ajv = new Ajv({ useDefaults: true });
+    addFormats(ajv);
     if (!ajv.validate(schema, args)) {
       ajv.errors!.forEach(err => {
         log(`Error: The command line arguments ${err.message}.`);

@@ -50,7 +50,7 @@ Every file using JSX must now have the extension `.tsx`.
 ## Example with React
 
 ```
-npm install react react-dom @types/react-dom
+npm install react react-dom
 ```
 
 This example shows how to use JSX SSR with React. It assumes that `templates` directory is in the root, next to `src`.
