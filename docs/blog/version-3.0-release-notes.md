@@ -206,10 +206,9 @@ When running the `foal generate script` command, the generated script file no lo
 
 The `@PermissionRequired` option is no longer bound to TypeORM and can be used with any `ctx.user` that implements the `IUserWithPermissions` interface.
 
-## Smaller packages
+## Smaller AWS S3 package
 
-- Packages compiled to ES2021
-- Smaller dependencies such as the one for AWS S3
+The `@foal/aws-s3` package is now based on version 3 of the AWS SDK. Thanks to this, the size of the `node_modules` has been reduced by three.
 
 ## Dependencies updated and support of Node latest versions
 
