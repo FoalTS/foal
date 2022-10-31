@@ -202,7 +202,9 @@ When the request has no session or the user is not authenticated, the values of 
 - Packages compiled to ES2021
 - Smaller dependencies such as the one for AWS S3
 
-## Up-to-date with the latest versions of Node and npm dependencies
+## Dependencies updated and support of Node latest versions
+
+All Foal's dependencies have been upgraded. The framework is also tested on Node versions 16 and 18.
 
 ## Some bug fixes
 
