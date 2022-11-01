@@ -430,8 +430,8 @@ As of version 3:
 ## GraphQL
 
 - `@foal/graphql` requires at least version `^15.8.0` of `graphql`.
-- The returned values of `schemaFromTypePaths`, `schemaFromTypeDefs` and `schemaFromTypeGlob` are better typed as well as `GraphQLController.schema`.
-- `GraphQLController.schema` is now typed with the interface `GraphQLSchema`. Same with all `schemaFrom*` functions.
+- The returned values of `schemaFromTypePaths`, `schemaFromTypeDefs` and `schemaFromTypeGlob` are better typed as well as `GraphQLController.schema`. They all rely on the `GraphQLSchema` interface.
+
 
 ## Miscellaneous
 
