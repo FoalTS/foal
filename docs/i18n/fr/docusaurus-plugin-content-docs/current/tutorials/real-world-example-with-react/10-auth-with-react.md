@@ -49,7 +49,7 @@ Ouvrez le fichier `api.controller.ts` et ajoutez l'option `userCookie`.
 @UseSessions({
   cookie: true,
   user: (id: number) => User.findOneBy({ id }),
-  userCookie: (ctx) => ctx.user ? JSON.stringify({ id: ctx.user.id, name: ctx.user.name }) : '',
+  userCookie: ctx => ctx.user ? JSON.stringify({ id: ctx.user.id, name: ctx.user.name }) : '',
 })
 ```
 

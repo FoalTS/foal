@@ -41,7 +41,7 @@ Vous êtes prêt à créer le contrôleur. Générez-en un nouveau.
 foal generate controller api/profile --register
 ```
 
-Ouvrez le nouveau fichier et ajoutez deux nouvelles routes.
+Ouvrez le nouveau fichier `profile.controller.ts` et ajoutez deux nouvelles routes.
 
 | Point de terminaison | Méthode | Description |
 | --- | --- | --- |
@@ -49,8 +49,8 @@ Ouvrez le nouveau fichier et ajoutez deux nouvelles routes.
 | `/api/profile` | `POST` | Met à jour le profil de l'utilisateur. Un champ `name` et un fichier `avatar` facultatif sont attendus. |
 
 ```typescript
-import { Context, dependency, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
-import { File, Disk, ParseAndValidateFiles } from '@foal/storage';
+import { Context, dependency, File, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
+import { Disk, ParseAndValidateFiles } from '@foal/storage';
 import { User } from '../../entities';
 
 export class ProfileController {
@@ -81,8 +81,8 @@ export class ProfileController {
       avatar: { required: false, saveTo: 'images/profiles/uploaded' }
     },
     {
-      type: 'object':
-      properties {
+      type: 'object',
+      properties: {
         name: { type: 'string', maxLength: 255 }
       },
       required: ['name']

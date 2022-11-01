@@ -34,9 +34,9 @@ describe('ApiController', () => {
   before(async () => {
     // The connection uses the configuration defined in the file config/test.json.
     // By default, the file has three connection options:
-    //  "database": "./test_db.sqlite3" -> Use a different database for running the tests.
-    // "synchronize": true ->  Auto create the database schema when the connection is established.
-    // "dropSchema": true -> Drop the schema when the connection is established (empty the database).
+    // - "database": "./test_db.sqlite3" -> Use a different database for running the tests.
+    // - "synchronize": true ->  Auto create the database schema when the connection is established.
+    // - "dropSchema": true -> Drop the schema when the connection is established (empty the database).
     dataSource = createDataSource();
     await dataSource.initialize();
   });
@@ -56,7 +56,7 @@ describe('ApiController', () => {
 
     // Define a unit test.
     it('should handle requests at GET /todos.', () => {
-      // Throw an error and make the test fail if the http method of `getTodos` is not GET.
+      // Throw an error and make the test fail if the HTTP method of `getTodos` is not GET.
       strictEqual(getHttpMethod(ApiController, 'getTodos'), 'GET');
       // Throw an error and make the test fail if the path of `getTodos` is not /todos.
       strictEqual(getPath(ApiController, 'getTodos'), '/todos');
@@ -111,4 +111,4 @@ Congratulations! You have reached the end of this tutorial!
 
 If you have any questions, feel free to open an issue on Github!
 
-> The entire source code is available [here](https://foalts.org/simple-todo-list-source-code-v2.zip).
+> The entire source code is available [here](https://foalts.org/simple-todo-list-source-code-v3.zip).
