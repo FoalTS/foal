@@ -8,7 +8,7 @@ Pada tutorial kali ini kita akan coba membuat aplikasi web dengan Foal. Aplikasi
 
 > **Yang diperlukan:**
 >
-> [Node.js](https://nodejs.org/en/) versi 10 ke atas
+> [Node.js](https://nodejs.org/en/) versi 16 ke atas
 
 ## Memulai Proyek Baru
 
@@ -41,7 +41,6 @@ my-app/
     app/
     e2e/
     scripts/
-  ormconfig.js
   package.json
   tsconfig.*.json
   .eslintrc.js
@@ -55,7 +54,6 @@ Folder `my-app` merupakan folder induk proyek kita.
   - Subfolder `app/` berisi kode utama kita (seperti controllers, services, hooks) 
   - Subfolder `e2e/` berisi tes end-to-end.
   - Subfolder `scripts/` berisi script untuk dijalankan di terminal/prompt sebagai command line (seperti: create-user) 
-- File `ormconfig.js` berisi data konfigurasi dan kredensial koneksi database. Kredensial bisa juga diambil dari variabel di environment.
 - File `package.json` berisi daftar dependency yang terinstal dan perintah menjalankan proyek.
 - File `tsconfig.*.json` berisi konfigurasi kompilasi TypeScript.
 - File `.eslintrc.js` berisi konfigurasi linting atau merapikan kode.
@@ -70,7 +68,7 @@ Mari kita lihat, apakah proyek kita bisa dijalankan. Eksekusi perintah berikut:
 
 ```
 cd my-app
-npm run develop
+npm run dev
 ```
 
 Seharusnya sekarang server sudah jalan.

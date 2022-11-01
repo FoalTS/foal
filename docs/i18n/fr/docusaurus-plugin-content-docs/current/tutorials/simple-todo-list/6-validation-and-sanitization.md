@@ -53,7 +53,7 @@ export class ApiController {
   // The id should be a number. If it is not, the hook returns a "400 - Bad Request" error.
   @ValidatePathParam('id', { type: 'number' })
   async deleteTodo(ctx: Context) {
-    const todo = await Todo.findOne({ id: ctx.request.params.id });
+    const todo = await Todo.findOneBy({ id: ctx.request.params.id });
     if (!todo) {
       return new HttpResponseNotFound();
     }
