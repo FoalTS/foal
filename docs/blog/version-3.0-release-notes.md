@@ -170,7 +170,21 @@ const files = ctx.files.get('images');
 
 ### Authentication
 
-- fetchUser: JS and TS types
+Why? to support types of id (number or uuids like in MongoDB)
+
+No verification and convertion
+
+Also returned types was any such as context.user. Does not check if returned `null` instead of `undefined`.
+
+Version 3: dependending which userIdType you want (number as default)
+
+```typescript
+(id: string, services: ServiceManager) => Promise<{ [key: string]: any } | null>
+```
+
+```typescript
+type FetchUser = (id: string|number, services: ServiceManager) => Promise<any>;
+```
 
 ### GraphQL
 
@@ -216,4 +230,4 @@ All Foal's dependencies have been upgraded. The framework is also tested on Node
 
 ## Some bug fixes
 
-- the `undefined` values in the configuration
+If the configuration file `production.js` explicitly returns `undefined` for a given key and the `default.json` file returns a defined value for this key, then the value from the `default.json` file is returned by `Config.get`.
