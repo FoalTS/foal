@@ -43,7 +43,7 @@ Kami mencurahkan segenap perhatian atas stabilitas produk. Untuk keterangan lebi
 > npm install -g @foal/cli
 > foal createapp my-app
 > cd my-app
-> npm run develop
+> npm run dev
 ```
 
 Server develop sudah jalan! Coba buka `http://localhost:3001` dan lihat apa yang tampil!
