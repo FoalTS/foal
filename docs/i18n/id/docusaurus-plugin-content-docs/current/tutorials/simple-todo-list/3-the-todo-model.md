@@ -91,4 +91,4 @@ Your database (`db.sqlite3`) now contains a new table named `todo`:
 +------------+-----------+-------------------------------------+
 ```
 
-> Alternatively, you can also use the `synchronize` option in your configuration file `config/default.json`. When set to `true`, the database schema is auto created from the entities definition on every application launch. You do not need migrations in this case. However, although this behavior may be useful during debug and development, it is not suitable for a production environment (you could lose production data).
+> Alternatively, you can also use the `database.synchronize` option in your configuration file `config/default.json`. When set to `true`, the database schema is auto created from the entities definition on every application launch. You do not need migrations in this case. However, although this behavior may be useful during debug and development, it is not suitable for a production environment (you could lose production data).

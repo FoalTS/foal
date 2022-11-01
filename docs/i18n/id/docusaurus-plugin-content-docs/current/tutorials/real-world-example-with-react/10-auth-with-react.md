@@ -46,14 +46,10 @@ To do this, you will use an additional cookie to store this information that wil
 Open the `api.controller.ts` file and add the `userCookie` option.
 
 ```typescript
-import { Context } from '@foal/core';
-
-// ...
-
 @UseSessions({
   cookie: true,
-  user: fetchUser(User),
-  userCookie: (ctx: Context<User|undefined>) => ctx.user ? JSON.stringify({ id: ctx.user.id, name: ctx.user.name }) : '',
+  user: (id: number) => User.findOneBy({ id }),
+  userCookie: ctx => ctx.user ? JSON.stringify({ id: ctx.user.id, name: ctx.user.name }) : '',
 })
 ```
 

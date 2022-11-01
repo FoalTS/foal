@@ -32,7 +32,7 @@ export class StoriesController {
     additionalProperties: false,
   })
   @UserRequired()
-  async createStory(ctx: Context) {
+  async createStory(ctx: Context<User>) {
     const story = new Story();
     story.title = ctx.request.body.title;
     story.link = ctx.request.body.link;
@@ -48,7 +48,7 @@ export class StoriesController {
   @UserRequired()
   async deleteStory(ctx: Context<User>, { storyId }: { storyId: number }) {
     // Only retrieve stories whose author is the current user.
-    const story = await Story.findOne({ id: storyId, author: ctx.user });
+    const story = await Story.findOneBy({ id: storyId, author: { id: ctx.user.id } });
 
     if (!story) {
       return new HttpResponseNotFound();
@@ -62,6 +62,6 @@ export class StoriesController {
 }
 ```
 
-When sending a request to these endpoints, the `@UserRequired` hook will return a 401 error if `ctx.user` is not defined (i.e. if the user has not logged in first). But if it is, the controller method will be executed.
+When sending a request to these endpoints, the `@UserRequired` hook will return a 401 error if `ctx.user` is null (i.e. if the user has not logged in first). But if it is, the controller method will be executed.
 
 Go to [http://localhost:3001/swagger](http://localhost:3001/swagger) and check that the controller is working as expected. You can, for example, first try to create a story without being connected and then log in and try again.

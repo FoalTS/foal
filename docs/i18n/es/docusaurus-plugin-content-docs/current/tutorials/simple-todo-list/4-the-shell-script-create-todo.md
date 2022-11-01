@@ -22,11 +22,9 @@ Un *script shell* es una pieza de código destinada a ser llamada desde la líne
 Abra el nuevo archivo generado en el directorio `src/scripts` y actualice su contenido.
 
 ```typescript
-// 3p
-import { createConnection } from 'typeorm';
-
 // App
 import { Todo } from '../app/entities';
+import { dataSource } from '../db';
 
 export const schema = {
   properties: {
@@ -37,8 +35,8 @@ export const schema = {
 };
 
 export async function main(args: { text: string }) {
-  // Create a new connection to the database.
-  const connection = await createConnection();
+  // Connect to the database.
+  await dataSource.initialize();
 
   try {
     // Create a new task with the text given in the command line.
@@ -51,7 +49,7 @@ export async function main(args: { text: string }) {
     console.log(error.message);
   } finally {
     // Close the connection to the database.
-    await connection.close();
+    await dataSource.destroy();
   }
 }
 

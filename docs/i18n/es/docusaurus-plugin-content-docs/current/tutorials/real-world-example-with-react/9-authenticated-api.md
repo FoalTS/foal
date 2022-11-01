@@ -32,7 +32,7 @@ export class StoriesController {
     additionalProperties: false,
   })
   @UserRequired()
-  async createStory(ctx: Context) {
+  async createStory(ctx: Context<User>) {
     const story = new Story();
     story.title = ctx.request.body.title;
     story.link = ctx.request.body.link;
@@ -48,7 +48,7 @@ export class StoriesController {
   @UserRequired()
   async deleteStory(ctx: Context<User>, { storyId }: { storyId: number }) {
     // Only retrieve stories whose author is the current user.
-    const story = await Story.findOne({ id: storyId, author: ctx.user });
+    const story = await Story.findOneBy({ id: storyId, author: { id: ctx.user.id } });
 
     if (!story) {
       return new HttpResponseNotFound();
@@ -62,6 +62,6 @@ export class StoriesController {
 }
 ```
 
-Al enviar una solicitud a estos puntos finales, el hook `@UserRequired` devolverá un error 401 si `ctx.user` no está definido (es decir, si el usuario no se ha identificado primero). Pero si lo está, se ejecutará el método del controlador.
+Al enviar una solicitud a estos puntos finales, el hook `@UserRequired` devolverá un error 401 si `ctx.user` no es `null` (es decir, si el usuario no se ha identificado primero). Pero si lo está, se ejecutará el método del controlador.
 
 Vaya a [http://localhost:3001/swagger](http://localhost:3001/swagger) y compruebe que el controlador funciona como se espera. Puede, por ejemplo, intentar primero crear una publicación sin estar conectado y luego conectarse e intentarlo de nuevo.

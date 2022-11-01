@@ -34,15 +34,28 @@ Between version 2 and version 3, some parts of the framework have been improved 
 
 First, upgrade to the latest minor release of version 2 and check that everything is working properly.
 
+It is also recommended that you update your `@types/node` dependency to the latest version and modify your `tsconfig.json` file so that the TypeScript compiler compiles to the ES2021 version of JavaScript. This will avoid some typing problems during compilation when upgrading to version 3.
+
+*tsconfig.json*
+```json
+{
+  "compilerOptions": {
+    "target": "es2021",
+    ...
+  }
+  ...
+}
+```
+
 ## Supported versions
 
 | Supported node versions | TS min version |
 | --- | --- |
 | 16.x, 18.x | 4.7 |
 
- The framework requires at least version 4.7 of TypeScript. When upgrading from v4.0, there are usually two things to do:
- - Add an `any` type in all `catch(error)` (i.e they become `catch(error: any)`)
- - Add a returned type to the `new Promise`: `new Promise<void>(...)`.
+The framework requires at least version 4.7 of TypeScript. When upgrading from v4.0, there are usually two things to do:
+- Add an `any` type in all `catch(error)` (i.e they become `catch(error: any)`)
+- Add a returned type to the `new Promise`: `new Promise<void>(...)`.
 
 ## Configuration
 

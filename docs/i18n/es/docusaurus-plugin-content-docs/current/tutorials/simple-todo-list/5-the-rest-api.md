@@ -75,7 +75,7 @@ Añada las funciones de creación y eliminación.
   @Delete('/todos/:id')
   async deleteTodo(ctx: Context) {
     // Get the todo with the id given in the URL if it exists.
-    const todo = await Todo.findOne({ id: ctx.request.params.id });
+    const todo = await Todo.findOneBy({ id: ctx.request.params.id });
 
     // Return a 404 Not Found response if no such todo exists.
     if (!todo) {
@@ -100,7 +100,6 @@ Abra el archivo `app.controller.ts` en `src/app`.
 
 ```typescript
 import { controller, IAppController } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController } from './controllers';
 
@@ -108,10 +107,6 @@ export class AppController implements IAppController {
   subControllers = [
     controller('/api', ApiController),
   ];
-
-  async init() {
-    await createConnection();
-  }
 }
 ```
 

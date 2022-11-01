@@ -8,7 +8,7 @@ Dans ce tutoriel, vous apprendrez comment créer une application web de base ave
 
 > **Configuration requise:**
 >
-> [Node.js](https://nodejs.org/en/) 10 ou supérieur
+> [Node.js](https://nodejs.org/en/) 16 ou supérieur
 
 ## Créer un Nouveau Projet
 
@@ -41,7 +41,6 @@ my-app/
     app/
     e2e/
     scripts/
-  ormconfig.js
   package.json
   tsconfig.*.json
   .eslintrc.js
@@ -55,7 +54,6 @@ Le répertoire racine extérieur `my-app` n'est qu'un conteneur pour votre proje
   - Le répertoire interne `app/` comprend les composants de votre serveur (contrôleurs, services et hooks).
   - Les tests de bout en bout se trouvent dans le répertoire `e2e/`.
   - Le répertoire interne `scripts/` contient les scripts destinés à être appelés en ligne de commande (ex : create-user).
-- Le fichier `ormconfig.js` définit la configuration et les informations d'identification de la ou des base(s) de données connectée(s). Elles peuvent également être passés par des variables d'environnement.
 - Le fichier `package.json` liste les dépendances et les commandes du projet.
 - Les fichiers `tsconfig.*.json` listent la configuration du compilateur TypeScript pour chaque commande `npm`.
 - Enfin, la configuration de linting peut être trouvée dans le fichier `.eslintrc.js`.
@@ -70,7 +68,7 @@ Vérifions que le projet FoalTS fonctionne. Exécutez les commandes suivantes :
 
 ```
 cd my-app
-npm run develop
+npm run dev
 ```
 
 > Le **serveur de développement** surveille vos fichiers et compile et recharge automatiquement votre code. Vous n'avez pas besoin de redémarrer le serveur à chaque fois que vous modifiez le code. Notez qu'il est uniquement destiné à être utilisé en développement, ne l'utilisez pas en production.

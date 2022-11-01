@@ -55,7 +55,7 @@ Luego inicie el servidor de desarrollo.
 
 ```bash
 cd backend-app
-npm run develop
+npm run dev
 ```
 
 Vaya a [http://localhost:3001](http://localhost:3001) en su navegador. Debería ver el mensaje *Welcome on board*.
