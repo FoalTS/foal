@@ -170,20 +170,40 @@ const files = ctx.files.get('images');
 
 ### Authentication
 
-Why? to support types of id (number or uuids like in MongoDB)
-
-No verification and convertion
-
-Also returned types was any such as context.user. Does not check if returned `null` instead of `undefined`.
-
-Version 3: dependending which userIdType you want (number as default)
+In version 2, the `user` option of `@UseSessions` and `@JWTRequired` expected a function with this signature:
 
 ```typescript
-(id: string, services: ServiceManager) => Promise<{ [key: string]: any } | null>
+(id: string|number, services: ServiceManager) => Promise<any>;
 ```
 
+There was no way to guess and guarantee the type of the user ID and the function had to check and convert the type itself if necessary.
+
+The returned type was also very permissive (type `any`) preventing us from detecting silly errors such as confusion between `null` and `undefined` values.
+
+In version 3, the hooks have been added a new `userIdType` option to check and convert the JavaScript type if necessary and force the TypeScript type of the function. The returned type is also safer and corresponds to the type of `ctx.user` which is no longer `any` but `{ [key : string] : any } | null`.
+
+*Example where the ID is a string*
 ```typescript
-type FetchUser = (id: string|number, services: ServiceManager) => Promise<any>;
+@JWTRequired({
+  user: (id: string) => User.findOneBy({ id });
+  userIdType: 'string',
+})
+```
+
+*Example where the ID is a number*
+```typescript
+@JWTRequired({
+  user: (id: number) => User.findOneBy({ id });
+  userIdType: 'number',
+})
+```
+
+By default, the value of `userIdType` is a number, so we can simply write this: 
+
+```typescript
+@JWTRequired({
+  user: (id: number) => User.findOneBy({ id });
+})
 ```
 
 ### GraphQL
