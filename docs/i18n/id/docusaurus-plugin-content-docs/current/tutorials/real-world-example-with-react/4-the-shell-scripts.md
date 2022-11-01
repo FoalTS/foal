@@ -15,10 +15,10 @@ Open the file and replace its content with the following:
 ```typescript
 // 3p
 import { hashPassword } from '@foal/core';
-import { createConnection, getConnection } from 'typeorm';
 
 // App
 import { User } from '../app/entities';
+import { dataSource } from '../db';
 
 export const schema = {
   additionalProperties: false,
@@ -38,14 +38,14 @@ export async function main(args: { email: string, password: string, name?: strin
   user.name = args.name ?? 'Unknown';
   user.avatar = '';
 
-  await createConnection();
+  await dataSource.initialize();
 
   try {
     console.log(await user.save());
   } catch (error: any) {
     console.log(error.message);
   } finally {
-    await getConnection().close();
+    await dataSource.destroy();
   }
 }
 
@@ -87,8 +87,8 @@ foal generate script create-story
 Open the `create-story.ts` file and replace its content.
 
 ```typescript
-import { createConnection } from 'typeorm';
 import { Story, User } from '../app/entities';
+import { dataSource } from' ../db';
 
 export const schema = {
   additionalProperties: false,
@@ -102,9 +102,9 @@ export const schema = {
 };
 
 export async function main(args: { author: string, title: string, link: string }) {
-  const connection = await createConnection();
+  await dataSource.initialize();
 
-  const user = await User.findOneOrFail({ email: args.author });
+  const user = await User.findOneByOrFail({ email: args.author });
 
   const story = new Story();
   story.author = user;
@@ -116,7 +116,7 @@ export async function main(args: { author: string, title: string, link: string }
   } catch (error: any) {
     console.error(error);
   } finally {
-    await connection.close();
+    await dataSource.destroy();
   }
 }
 

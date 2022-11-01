@@ -13,7 +13,7 @@ Hasta ahora, sólo los usuarios creados con el script `create-user` pueden regis
 Abra el archivo `auth.controller.ts` y añada una nueva ruta.
 
 ```typescript
-import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
 import { User } from '../../entities';
 
 const credentialsSchema = {
@@ -28,7 +28,7 @@ export class AuthController {
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
-  async signup(ctx: Context<User|undefined, Session>) {
+  async signup(ctx: Context<User|null>) {
     const email = ctx.request.body.email;
     const password = ctx.request.body.password;
 
@@ -39,7 +39,7 @@ export class AuthController {
     user.password = await hashPassword(password);
     await user.save();
 
-    ctx.session.setUser(user);
+    ctx.session!.setUser(user);
     ctx.user = user;
 
     return new HttpResponseOK({
