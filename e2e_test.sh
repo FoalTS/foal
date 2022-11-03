@@ -41,7 +41,7 @@ npm run start:e2e
 npm run build
 
 # Test the application when it is started
-pm2 start build/index.js
+node build/index.js &
 sleep 1
 response=$(
     curl http://localhost:3001 \
@@ -115,7 +115,7 @@ test_rest_api DELETE "http://localhost:3001/products/1" 204
 test_rest_api DELETE "http://localhost:3001/products/1" 404
 test_rest_api DELETE "http://localhost:3001/products/ab" 400
 
-pm2 delete index
+kill -9 $(ps aux | grep '\snode\s')
 
 # Test the default shell scripts to create users.
 foal run create-user
