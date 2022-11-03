@@ -41,7 +41,7 @@ Ya está listo para crear el controlador. Genere uno nuevo.
 foal generate controller api/profile --register
 ```
 
-Abra el nuevo archivo y añada dos nuevas rutas.
+Abra el nuevo archivo `profile.controller.ts` y añada dos nuevas rutas.
 
 | Punto final | Método | Descripción |
 | --- | --- | --- |
@@ -49,8 +49,8 @@ Abra el nuevo archivo y añada dos nuevas rutas.
 | `/api/profile` | `POST` | Actualiza el perfil del usuario. Se espera un campo `name` y un archivo opcional `avatar`. |
 
 ```typescript
-import { Context, dependency, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
-import { File, Disk, ValidateMultipartFormDataBody } from '@foal/storage';
+import { Context, dependency, File, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
+import { Disk, ParseAndValidateFiles } from '@foal/storage';
 import { User } from '../../entities';
 
 export class ProfileController {
@@ -59,12 +59,12 @@ export class ProfileController {
 
   @Get('/avatar')
   @ValidateQueryParam('userId', { type: 'number' }, { required: false })
-  async readProfileImage(ctx: Context<User|undefined>) {
+  async readProfileImage(ctx: Context<User|null>) {
     let user = ctx.user;
 
     const userId: number|undefined = ctx.request.query.userId;
     if (userId !== undefined) {
-      user = await User.findOne({ id: userId })
+      user = await User.findOneBy({ id: userId })
     }
 
     if (!user || !user.avatar) {
@@ -76,19 +76,23 @@ export class ProfileController {
 
   @Post()
   @UserRequired()
-  @ValidateMultipartFormDataBody({
-    files: {
+  @ParseAndValidateFiles(
+    {
       avatar: { required: false, saveTo: 'images/profiles/uploaded' }
     },
-    fields: {
-      name: { type: 'string', maxLength: 255 }
+    {
+      type: 'object',
+      properties: {
+        name: { type: 'string', maxLength: 255 }
+      },
+      required: ['name']
     }
-  })
+  )
   async updateProfileImage(ctx: Context<User>) {
-    ctx.user.name = ctx.request.body.fields.name;
+    ctx.user.name = ctx.request.body.name;
 
-    // Warning: use Foal's File interface
-    const file = ctx.request.body.files.avatar as File|undefined;
+    // Warning: File must be imported from `@foal/core`.
+    const file: File|undefined = ctx.files.get('avatar')[0];
     if (file) {
       if (ctx.user.avatar) {
         await this.disk.delete(ctx.user.avatar);

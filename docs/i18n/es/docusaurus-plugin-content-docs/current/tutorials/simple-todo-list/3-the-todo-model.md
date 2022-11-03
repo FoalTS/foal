@@ -91,4 +91,4 @@ Su base de datos (`db.sqlite3`) contiene ahora una nueva tabla llamada `todo`:
 +------------+-----------+-------------------------------------+
 ```
 
-> También puede utilizar la opción `synchronize` en su archivo de configuración `config/default.json`. Cuando se establece en `true`, el esquema de la base de datos se crea automáticamente a partir de la definición de entidades en cada lanzamiento de la aplicación. En este caso, no es necesario realizar migraciones. Sin embargo, aunque este comportamiento puede ser útil durante la depuración y el desarrollo, no es adecuado para un entorno de producción (podría perder datos de producción).
+> También puede utilizar la opción `database.synchronize` en su archivo de configuración `config/default.json`. Cuando se establece en `true`, el esquema de la base de datos se crea automáticamente a partir de la definición de entidades en cada lanzamiento de la aplicación. En este caso, no es necesario realizar migraciones. Sin embargo, aunque este comportamiento puede ser útil durante la depuración y el desarrollo, no es adecuado para un entorno de producción (podría perder datos de producción).

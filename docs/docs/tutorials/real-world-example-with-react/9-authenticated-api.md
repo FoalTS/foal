@@ -62,6 +62,6 @@ export class StoriesController {
 }
 ```
 
-When sending a request to these endpoints, the `@UserRequired` hook will return a 401 error if `ctx.user` is not null (i.e. if the user has not logged in first). But if it is, the controller method will be executed.
+When sending a request to these endpoints, the `@UserRequired` hook will return a 401 error if `ctx.user` is null (i.e. if the user has not logged in first). But if it is, the controller method will be executed.
 
 Go to [http://localhost:3001/swagger](http://localhost:3001/swagger) and check that the controller is working as expected. You can, for example, first try to create a story without being connected and then log in and try again.

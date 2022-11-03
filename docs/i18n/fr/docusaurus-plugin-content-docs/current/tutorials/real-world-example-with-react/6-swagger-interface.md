@@ -60,7 +60,6 @@ Enfin, mettez à jour votre fichier `app.controller.ts` afin que la page Swagger
 
 ```typescript
 import { controller, IAppController } from '@foal/core';
-import { createConnection } from 'typeorm';
 
 import { ApiController, OpenapiController } from './controllers';
 
@@ -69,10 +68,6 @@ export class AppController implements IAppController {
     controller('/api', ApiController),
     controller('/swagger', OpenapiController)
   ];
-
-  async init() {
-    await createConnection();
-  }
 }
 
 ```

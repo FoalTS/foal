@@ -8,7 +8,7 @@ En este tutorial aprenderá a crear una aplicación web básica con FoalTS. La a
 
 > **Requisitos:**
 >
-> [Node.js](https://nodejs.org/en/) 10 o superior
+> [Node.js](https://nodejs.org/en/) 16 o superior
 
 ## Crear un Nuevo Proyecto
 
@@ -41,7 +41,6 @@ my-app/
     app/
     e2e/
     scripts/
-  ormconfig.js
   package.json
   tsconfig.*.json
   .eslintrc.js
@@ -55,7 +54,6 @@ El directorio raíz externo `my-app` es sólo un contenedor para su proyecto.
   - El directorio interno `app/` incluye los componentes de su servidor (controladores, servicios y hooks).
   - Las pruebas de lado a lado se encuentran en el directorio `e2e/`.
   - La carpeta interior `scripts/` contiene los scripts destinados a ser llamados desde la línea de comandos (por ejemplo: create-user).
-- El archivo `ormconfig.js` define la configuración y las credenciales de conexión de la(s) base(s) de datos. También se pueden pasar a través de variables de entorno.
 - El `package.json` enumera las dependencias y comandos del proyecto.
 - Los archivos `tsconfig.*.json` listan la configuración del compilador de TypeScript para cada comando `npm`.
 - Finalmente, la configuración de linting se encuentra en el archivo `.eslintrc.js`.
@@ -70,7 +68,7 @@ Verifiquemos que el proyecto FoalTS funciona. Ejecute los siguientes comandos:
 
 ```
 cd my-app
-npm run develop
+npm run dev
 ```
 
 Ha iniciado el servidor de desarrollo.

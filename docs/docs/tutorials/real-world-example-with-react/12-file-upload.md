@@ -49,9 +49,8 @@ Open the new file `profile.controller.ts` and add two new routes.
 | `/api/profile` | `POST` | Updates the user profile. A `name` field and an optional `avatar` file are expected. |
 
 ```typescript
-import { Context, dependency, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
+import { Context, dependency, File, Get, HttpResponseNoContent, Post, UserRequired, ValidateQueryParam } from '@foal/core';
 import { Disk, ParseAndValidateFiles } from '@foal/storage';
-import { File } from '@foal/core';
 import { User } from '../../entities';
 
 export class ProfileController {

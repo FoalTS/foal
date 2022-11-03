@@ -14,7 +14,6 @@ Open the file `api.controller.ts` and add the `@UseSessions` hook at the top of 
 
 ```typescript
 import { ApiInfo, ApiServer, controller, UseSessions } from '@foal/core';
-import { fetchUser } from '@foal/typeorm';
 import { User } from '../entities';
 import { StoriesController } from './api';
 
@@ -27,7 +26,7 @@ import { StoriesController } from './api';
 })
 @UseSessions({
   cookie: true,
-  user: fetchUser(User),
+  user: (id: number) => User.findOneBy({ id }),
 })
 export class ApiController {
 
@@ -59,7 +58,7 @@ Open the new created file and add two routes.
 | `/api/auth/logout` | `POST` | Logs the user out. |
 
 ```typescript
-import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, Session, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
 import { User } from '../../entities';
 
 const credentialsSchema = {
@@ -76,11 +75,11 @@ export class AuthController {
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
-  async login(ctx: Context<User|undefined, Session>) {
+  async login(ctx: Context<User|null>) {
     const email = ctx.request.body.email;
     const password = ctx.request.body.password;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOneBy({ email });
     if (!user) {
       return new HttpResponseUnauthorized();
     }
@@ -89,7 +88,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    ctx.session.setUser(user);
+    ctx.session!.setUser(user);
     ctx.user = user;
 
     return new HttpResponseOK({
@@ -99,8 +98,8 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(ctx: Context<User|undefined, Session>) {
-    await ctx.session.destroy();
+  async logout(ctx: Context) {
+    await ctx.session!.destroy();
     return new HttpResponseNoContent();
   }
 
@@ -110,5 +109,5 @@ export class AuthController {
 
 The `login` method first checks that the user exists and that the credentials provided are correct. If so, it associates the user with the current session.
 
-On subsequent requests, the *UseSessions* hook will retrieve the user's ID from the session and set the `ctx.user` property accordingly. If the user has not previously logged in, then `ctx.user` will be `undefined`. If they have, then `ctx.user` will be an instance of `User`. This is made possible by the `user` option we provided to the hook earlier. It is actually the function that takes the user ID as parameter and returns the value to assign to `ctx.user`.
+On subsequent requests, the *UseSessions* hook will retrieve the user's ID from the session and set the `ctx.user` property accordingly. If the user has not previously logged in, then `ctx.user` will be `null`. If they have, then `ctx.user` will be an instance of `User`. This is made possible by the `user` option we provided to the hook earlier. It is actually the function that takes the user ID as parameter and returns the value to assign to `ctx.user`.
 
