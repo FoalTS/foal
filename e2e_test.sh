@@ -115,7 +115,7 @@ test_rest_api DELETE "http://localhost:3001/products/1" 204
 test_rest_api DELETE "http://localhost:3001/products/1" 404
 test_rest_api DELETE "http://localhost:3001/products/ab" 400
 
-killall `ps | grep node`
+kill -9 $(ps aux | grep '\snode\s')
 
 # Test the default shell scripts to create users.
 foal run create-user
