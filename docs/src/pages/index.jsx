@@ -22,7 +22,7 @@ function FeatureCell(props) {
 
 function CompanyLogo({ imageSrc, href, companyName }) {
   return (
-    <a href={href} class="tw-basis-1/2 sm:tw-basis-1/3 lg:tw-basis-1/6" target="_blank">
+    <a href={href} class="tw-basis-1/2 sm:tw-basis-1/3 lg:tw-basis-1/6 tw-flex tw-items-center" target="_blank">
       <div className="tw-col-span-1 tw-flex tw-justify-center tw-py-8 tw-px-8 tw-bg-gray-50">
         <img
           className="tw-max-h-12"
@@ -34,15 +34,28 @@ function CompanyLogo({ imageSrc, href, companyName }) {
   );
 }
 
+function PlusLogo() {
+  return (
+    <a href="https://github.com/sponsors/LoicPoullain" class="tw-basis-1/2 sm:tw-basis-1/3 lg:tw-basis-1/6 tw-flex tw-items-center" target="_blank">
+      <div className="tw-col-span-1 tw-flex tw-justify-center tw-py-8 tw-px-8 tw-bg-gray-50 tw-text-gray-300">
+        <div className="tw-border tw-border-solid tw-rounded-lg tw-border-gray-300 tw-flex tw-justify-center tw-py-3 tw-px-14">
+          <svg class="tw-w-8 tw-h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+        </div>
+      </div>
+    </a>
+  );
+}
+
 function CompanyLogos() {
   return (
     <div>
       <div className="tw-max-w-7xl tw-mx-auto tw-py-6 tw-px-4 sm:tw-px-6 lg:tw-py-12 lg:tw-px-8">
         <p className="tw-text-center tw-text-lg tw-font-semibold tw-text-gray-600 tw-uppercase tw-mb-0">
-          Trusted by
+          Sponsored by
         </p>
         <div className="tw-flex tw-justify-center tw-flex-wrap">
           <CompanyLogo imageSrc={useBaseUrl('img/trusted-by/erkoware_logo.svg')} companyName="erkoware solutions" href="https://www.erkoware.de/" />
+          <PlusLogo />
           {/* <CompanyLogo imageSrc="https://tailwindui.com/img/logos/mirage-logo-gray-400.svg" />
           <CompanyLogo imageSrc="https://tailwindui.com/img/logos/tuple-logo-gray-400.svg" />
           <CompanyLogo imageSrc="https://tailwindui.com/img/logos/laravel-logo-gray-400.svg" />
