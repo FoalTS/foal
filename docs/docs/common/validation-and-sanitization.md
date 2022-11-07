@@ -16,7 +16,7 @@ Foal offers several utils and hooks to handle both validation and sanitization. 
 
 ### Ajv, the JSON Schema Validator
 
-FoalTS default validation and sanitization system is based on [AJV version 6](https://github.com/ajv-validator/ajv/tree/v6), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](https://ajv.js.org/). 
+FoalTS default validation and sanitization system is based on [AJV version 8](https://github.com/ajv-validator/ajv/), a fast JSON Schema Validator. You'll find more details on how to define a shema on its [website](https://ajv.js.org/). 
 
 ### Options
 
