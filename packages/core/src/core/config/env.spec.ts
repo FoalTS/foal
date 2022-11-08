@@ -13,6 +13,7 @@ function removeFile(path: string) {
 
 const dotEnvContent = `HELLO=world
 FOO_BAR=hello
+ FOO_BAR_WITH_WHITESPACES_AROUND_THE_NAME = hello you
 FOO_BAR_WITH_EQUAL=hello=world
 FOO_BAR_WITH_WINDOWS_NEW_LINE=hello new line\r
 # FOO_BAR_COMMENTED=hello commented
@@ -113,6 +114,10 @@ describe('Env', () => {
         it('should return its value.', () => {
           strictEqual(Env.get('FOO_BAR'), 'hello');
         });
+
+        it('should return its value even if there are whitespaces around the variable name.', () => {
+          strictEqual(Env.get('FOO_BAR_WITH_WHITESPACES_AROUND_THE_NAME'), 'hello you');
+        })
 
         it('should return its value (value with an equal).', () => {
           strictEqual(Env.get('FOO_BAR_WITH_EQUAL'), 'hello=world');
