@@ -51,16 +51,17 @@ export class Env {
 
       const [ key, ...values ] = line.split('=');
       const value = values.join('=').trim();
+      const trimmedKey = key.trim();
 
       if (
         (value.startsWith('"') && value.endsWith('"')) ||
         (value.startsWith('\'') && value.endsWith('\''))
       ) {
-        this.dotEnv[key] = value.substr(1, value.length - 2);
+        this.dotEnv[trimmedKey] = value.substr(1, value.length - 2);
         continue;
       }
 
-      this.dotEnv[key] = value;
+      this.dotEnv[trimmedKey] = value;
     }
   }
 }
