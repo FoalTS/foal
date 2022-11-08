@@ -920,6 +920,60 @@ describe('FileSystem', () => {
 
   });
 
+  describe('has a "setOrUpdateProjectDependency" method that', () => {
+
+    let initialPkg: Buffer;
+
+    beforeEach(() => {
+      mkdir('test-generators');
+      mkdir('test-generators/subdir');
+      initialPkg = readFileSync('package.json');
+      writeFileSync('package.json', JSON.stringify({
+        dependencies: {
+          '@foal/core': '~1.0.1',
+          'bar': '~2.2.0'
+        }
+      }), 'utf8');
+    });
+
+    afterEach(() => {
+      writeFileSync('package.json', initialPkg);
+      rmdir('test-generators/subdir');
+      rmdir('test-generators');
+    });
+
+    it('should return itself.', () => {
+      strictEqual(fs.setOrUpdateProjectDependency('foo', '1.0.0'), fs);
+    });
+
+    it('should add the dependency if it does not exist.', () => {
+      fs.setOrUpdateProjectDependency('foo', '1.0.0');
+      
+      const fileContent = readFileSync('package.json', 'utf8');
+      const pkg = JSON.parse(fileContent);
+
+      deepStrictEqual(pkg.dependencies, {
+        '@foal/core': '~1.0.1',
+        'bar': '~2.2.0',
+        'foo': '1.0.0'
+      });
+    });
+
+    it('should update the dependency if it already exists.', () => {
+      fs.setOrUpdateProjectDependency('@foal/core', '2.0.0');
+
+      const fileContent = readFileSync('package.json', 'utf8');
+      const pkg = JSON.parse(fileContent);
+
+      deepStrictEqual(pkg.dependencies, {
+        '@foal/core': '2.0.0',
+        'bar': '~2.2.0'
+      });
+
+    });
+
+  });
+
   describe('has a "getProjectDevDependencies" method that', () => {
 
     let initialPkg: Buffer;
@@ -958,6 +1012,63 @@ describe('FileSystem', () => {
     it('should not change the current working directory.', () => {
       fs.getProjectDevDependencies();
       strictEqual(fs.currentDir, '');
+    });
+
+  });
+
+  describe('has a "setOrUpdateProjectDevDependency" method that', () => {
+
+    let initialPkg: Buffer;
+
+    beforeEach(() => {
+      mkdir('test-generators');
+      mkdir('test-generators/subdir');
+      initialPkg = readFileSync('package.json');
+      writeFileSync('package.json', JSON.stringify({
+        dependencies: {
+          '@foal/core': '0.0.1',
+        },
+        devDependencies: {
+          '@foal/cli': '~1.0.1',
+          'bar': '~2.2.0'
+        }
+      }), 'utf8');
+    });
+
+    afterEach(() => {
+      writeFileSync('package.json', initialPkg);
+      rmdir('test-generators/subdir');
+      rmdir('test-generators');
+    });
+
+    it('should return itself.', () => {
+      strictEqual(fs.setOrUpdateProjectDevDependency('foo', '1.0.0'), fs);
+    });
+
+    it('should add the dependency if it does not exist.', () => {
+      fs.setOrUpdateProjectDevDependency('foo', '1.0.0');
+      
+      const fileContent = readFileSync('package.json', 'utf8');
+      const pkg = JSON.parse(fileContent);
+
+      deepStrictEqual(pkg.devDependencies, {
+        '@foal/cli': '~1.0.1',
+        'bar': '~2.2.0',
+        'foo': '1.0.0'
+      });
+    });
+
+    it('should update the dependency if it already exists.', () => {
+      fs.setOrUpdateProjectDevDependency('@foal/cli', '2.0.0');
+
+      const fileContent = readFileSync('package.json', 'utf8');
+      const pkg = JSON.parse(fileContent);
+
+      deepStrictEqual(pkg.devDependencies, {
+        '@foal/cli': '2.0.0',
+        'bar': '~2.2.0'
+      });
+
     });
 
   });
