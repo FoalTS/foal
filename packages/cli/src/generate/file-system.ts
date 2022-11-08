@@ -472,7 +472,7 @@ export class FileSystem {
   }
 
   /**
-   * Set or updates a dependency in the project package.json.
+   * Sets or updates a dependency in the project package.json.
    *
    * @returns {this}
    */
@@ -487,6 +487,18 @@ export class FileSystem {
     writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
 
     this.currentDir = initialCurrentDir;
+    return this;
+  }
+
+  /**
+   * Set or updates a dependency in the project package.json if the condition is true.
+   *
+   * @returns {this}
+   */
+  setOrUpdateProjectDependencyOnlyIf(condition: boolean, name: string, version: string): this {
+    if (condition) {
+      this.setOrUpdateProjectDependency(name, version);
+    }
     return this;
   }
 
@@ -507,7 +519,7 @@ export class FileSystem {
   }
 
   /**
-   * Set or updates a dev dependency in the project package.json.
+   * Sets or updates a dev dependency in the project package.json.
    *
    * @returns {this}
    */
