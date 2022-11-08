@@ -75,10 +75,9 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   fs
     .hideLogs()
     .copy('app/gitignore', '.gitignore')
-    .renderOnlyIf(!mongodb && !yaml, 'app/package.json', 'package.json', locals)
-    .renderOnlyIf(!mongodb && yaml, 'app/package.yaml.json', 'package.json', locals)
-    .renderOnlyIf(mongodb && !yaml, 'app/package.mongodb.json', 'package.json', locals)
-    .renderOnlyIf(mongodb && yaml, 'app/package.mongodb.yaml.json', 'package.json', locals)
+    .renderOnlyIf(!mongodb, 'app/package.json', 'package.json', locals)
+    .renderOnlyIf(mongodb, 'app/package.mongodb.json', 'package.json', locals)
+    .setOrUpdateProjectDependencyOnlyIf(yaml, 'yamljs', '~0.3.0')
     .copy('app/tsconfig.app.json', 'tsconfig.app.json')
     .copy('app/tsconfig.e2e.json', 'tsconfig.e2e.json')
     .copy('app/tsconfig.json', 'tsconfig.json')
