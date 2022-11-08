@@ -948,7 +948,7 @@ describe('FileSystem', () => {
 
     it('should add the dependency if it does not exist.', () => {
       fs.setOrUpdateProjectDependency('foo', '1.0.0');
-      
+
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
 
@@ -1104,7 +1104,7 @@ describe('FileSystem', () => {
 
     it('should add the dependency if it does not exist.', () => {
       fs.setOrUpdateProjectDevDependency('foo', '1.0.0');
-      
+
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
 
