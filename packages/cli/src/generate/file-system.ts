@@ -472,6 +472,37 @@ export class FileSystem {
   }
 
   /**
+   * Sets or updates a dependency in the project package.json.
+   *
+   * @returns {this}
+   */
+  setOrUpdateProjectDependency(name: string, version: string): this {
+    const initialCurrentDir = this.currentDir;
+
+    this.cdProjectRootDir();
+    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+
+    pkg.dependencies[name] = version;
+
+    writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
+
+    this.currentDir = initialCurrentDir;
+    return this;
+  }
+
+  /**
+   * Set or updates a dependency in the project package.json if the condition is true.
+   *
+   * @returns {this}
+   */
+  setOrUpdateProjectDependencyOnlyIf(condition: boolean, name: string, version: string): this {
+    if (condition) {
+      this.setOrUpdateProjectDependency(name, version);
+    }
+    return this;
+  }
+
+  /**
    * Returns the dev dependencies of the project package.json.
    *
    * @returns {{ name: string, version: string }[]}
@@ -485,6 +516,25 @@ export class FileSystem {
     this.currentDir = initialCurrentDir;
     return Object.keys(pkg.devDependencies)
       .map(name => ({ name, version: pkg.devDependencies[name] }));
+  }
+
+  /**
+   * Sets or updates a dev dependency in the project package.json.
+   *
+   * @returns {this}
+   */
+  setOrUpdateProjectDevDependency(name: string, version: string): this {
+    const initialCurrentDir = this.currentDir;
+
+    this.cdProjectRootDir();
+    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+
+    pkg.devDependencies[name] = version;
+
+    writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
+
+    this.currentDir = initialCurrentDir;
+    return this;
   }
 
   /************************
