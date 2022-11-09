@@ -30,8 +30,6 @@ To use GraphQL with FoalTS, you need to install the packages `graphql` and `@foa
 
 ```bash
 npm install graphql@15 @foal/graphql
-# OR
-npm install graphql@14 @foal/graphql
 ```
 
 ## Basic Usage
