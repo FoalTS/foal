@@ -1,8 +1,8 @@
 ---
-title: Nuxt.js
+title: Nuxt
 ---
 
-[Nuxt.js](https://nuxtjs.org/) is a frontend framework based on [Vue.JS](http://vuejs.org).
+[Nuxt](https://nuxtjs.org/) is a frontend framework based on [Vue.JS](http://vuejs.org).
 
 This document explains how to use it in conjunction with FoalTS.
 
