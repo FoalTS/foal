@@ -7,7 +7,7 @@ Building an Open API requires to allow Cross-Origin Request Sharing.
 
 ## Enable Cross-Origin Resource Sharing (CORS)
 
-> If you are building a web application, **you may not need to enable CORS for your API**. See [here](../frontend-integration/angular-react-vue.md) the section *Origins that Do not Match*.
+> If you are building a web application, **you may not need to enable CORS for your API**. See [here](../frontend/angular-react-vue.md) the section *Origins that Do not Match*.
 
 If you want different origins to make requests to your API from a browser, you need to enable [Cross-Origin Resource Sharing](https://www.html5rocks.com/en/tutorials/cors/).
 

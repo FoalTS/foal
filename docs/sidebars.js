@@ -96,11 +96,11 @@ module.exports = {
         'api-section/graphql',
         'api-section/gRPC',
       ]),
-      category('Frontend Integration', [
-        'frontend-integration/single-page-applications',
-        'frontend-integration/angular-react-vue',
-        'frontend-integration/jsx-server-side-rendering',
-        'frontend-integration/nuxt.js',
+      category('Frontend', [
+        'frontend/single-page-applications',
+        'frontend/angular-react-vue',
+        'frontend/jsx-server-side-rendering',
+        'frontend/nuxt.js',
       ]),
       category('File Storage', [
         'file-system/local-and-cloud-storage',
