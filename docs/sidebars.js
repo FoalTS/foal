@@ -68,6 +68,7 @@ module.exports = {
         'common/validation-and-sanitization',
         'common/serialization',
         'common/logging',
+        'common/task-scheduling',
         'common/generate-tokens',
         'common/conversions',
       ]),
@@ -124,7 +125,6 @@ module.exports = {
         'security/rate-limiting',
       ]),
       category('Cookbook', [
-        'cookbook/scheduling-jobs',
         'cookbook/request-body-size',
         'cookbook/expressjs',
       ]),
