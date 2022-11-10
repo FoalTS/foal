@@ -725,6 +725,32 @@ describe('Abstract Provider With PKCE', () => {
         ok(searchParams.get('code_challenge'));
         strictEqual(searchParams.get('code_challenge_method'), 'S256');
       });
+
+      it('that sets a cookie containing the code verifier encrypted.', async () =>{
+        const response = await provider.redirect();
+
+        const stateCookieValue = response.getCookie(CODE_VERIFIER_COOKIE_NAME).value;
+        const stateCookieOptions = response.getCookie(CODE_VERIFIER_COOKIE_NAME).options;
+        if (typeof stateCookieValue !== 'string') {
+          throw new Error('Cookie not found.');
+        }
+
+        deepStrictEqual(stateCookieOptions, {
+          httpOnly: true,
+          maxAge: 300,
+          path: '/',
+          secure: false
+        });
+      });
+
+      it('that sets a cookie that can have a custom domain.', async () =>{
+        Config.set('settings.social.cookie.domain', 'foalts.org');
+
+        const response = await provider.redirect();
+        const { options } = response.getCookie(CODE_VERIFIER_COOKIE_NAME);
+
+        strictEqual(options.domain, 'foalts.org');
+      });
     });
 
     describe('has a "getTokens" method that', () => {

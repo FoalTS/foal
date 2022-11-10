@@ -295,12 +295,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
     // Add Code Challenge COOKIE for token request
     if (this.usePKCE) {
       // Encrypt this code_challenge cookie for security reasons
-      redirectResponse.setCookie(CODE_VERIFIER_COOKIE_NAME, this.encryptString(codeVerifier), {
-        httpOnly: true,
-        maxAge: 300,
-        path: '/',
-        secure: Config.get('settings.social.cookie.secure', 'boolean', false)
-      });
+      redirectResponse.setCookie(CODE_VERIFIER_COOKIE_NAME, this.encryptString(codeVerifier), cookieOptions);
     }
 
     // Return a redirection response with the state as cookie.
