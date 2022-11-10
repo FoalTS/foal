@@ -11,7 +11,7 @@ In addition to traditional password authentication, Foal provides services to au
 - Google
 - Facebook
 - Github
-- Linkedin
+- LinkedIn
 - Twitter
 
 If your provider is not listed here but supports OAuth 2.0, then you can still [extend the `AbstractProvider`](#custom-provider) class to integrate it or use a [community provider](#community-providers) below.
@@ -571,11 +571,11 @@ There are no community providers available yet! If you want to share one, feel f
 | `AuthorizationError` | The authorization server returns an error. This can happen when a user does not give consent on the provider page. |
 | `UserInfoError` | Thrown in `AbstractProvider.getUserFromTokens` if the request to the resource server is unsuccessful. |
 
-## Security
+## Cookie options
 
 ### HTTPS
 
-When deploying the application, you application must use HTTPS.
+When deploying the application to production, your application must use HTTPS. The `social.cookie.secure` option must be enabled in order to transmit the state cookie only when the request is transmitted through a secure channel (HTTPS).
 
 *production.yml*
 ```yaml
@@ -587,4 +587,15 @@ settings:
     google:
       # Your redirect URI in production
       redirectUri: 'https://example.com/signin/google/callback'
+```
+
+### Custom domain
+
+To support authentication via different subdomains, you can set the domain of the state cookie with the `social.cookie.domain` option.
+
+```yaml
+settings:
+  social:
+    cookie:
+      domain: foalts.org
 ```
