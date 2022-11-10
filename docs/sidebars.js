@@ -100,6 +100,7 @@ module.exports = {
         'frontend/angular-react-vue',
         'frontend/server-side-rendering',
         'frontend/nuxt.js',
+        'frontend/not-found-page',
       ]),
       category('File Storage', [
         'file-system/local-and-cloud-storage',
@@ -124,7 +125,6 @@ module.exports = {
       ]),
       category('Cookbook', [
         'cookbook/scheduling-jobs',
-        'cookbook/not-found-page',
         'cookbook/request-body-size',
         'cookbook/expressjs',
       ]),
