@@ -121,6 +121,7 @@ module.exports = {
       category('Security', [
         'security/http-headers-protection',
         'security/csrf-protection',
+        'security/rate-limiting',
       ]),
       category('Cookbook', [
         'cookbook/scheduling-jobs',
@@ -128,7 +129,6 @@ module.exports = {
         'cookbook/request-body-size',
         'cookbook/expressjs',
         'cookbook/root-imports',
-        'cookbook/limit-repeated-requests',
       ]),
       'websockets',
       category('Deployment', [

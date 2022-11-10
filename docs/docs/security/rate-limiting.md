@@ -1,5 +1,5 @@
 ---
-title: Limit Repeated Requests
+title: Rate Limiting
 ---
 
 To avoid brute force attacks or overloading your application, you can set up a rate limiter to limit the number of requests a user can send to your application.
