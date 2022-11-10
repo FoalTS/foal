@@ -174,6 +174,7 @@ describe('AbstractProvider', () => {
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
     Config.remove('settings.social.cookie.secure');
+    Config.remove('settings.social.cookie.domain');
   });
 
   describe('has a "redirect" method that', () => {
@@ -292,6 +293,15 @@ describe('AbstractProvider', () => {
         const { options } = response.getCookie(STATE_COOKIE_NAME);
 
         strictEqual(options.secure, true);
+      });
+
+      it('with a generated state in a cookie whose domain option is defined with the config.', async () => {
+        Config.set('settings.social.cookie.domain', 'foalts.org');
+
+        const response = await provider.redirect();
+        const { options } = response.getCookie(STATE_COOKIE_NAME);
+
+        strictEqual(options.domain, 'foalts.org');
       });
 
       it('with a redirect path which contains extra parameters if any are provided to the method.', async () => {
@@ -678,6 +688,7 @@ describe('Abstract Provider With PKCE', () => {
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
     Config.remove('settings.social.cookie.secure');
+    Config.remove('settings.social.cookie.domain');
   });
 
   describe('has a "redirect" method that', () => {
@@ -850,6 +861,7 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
     Config.remove('settings.social.cookie.secure');
+    Config.remove('settings.social.cookie.domain');
   });
 
   describe('has a "redirect" method that', () => {

@@ -3,7 +3,7 @@ import { URL, URLSearchParams } from 'url';
 import * as crypto from 'crypto';
 
 // 3p
-import { Config, Context, generateToken, HttpResponseRedirect, convertBase64ToBase64url } from '@foal/core';
+import { Config, Context, generateToken, HttpResponseRedirect, convertBase64ToBase64url, CookieOptions } from '@foal/core';
 import * as fetch from 'node-fetch';
 
 /**
@@ -280,6 +280,18 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
 
     const redirectResponse = new HttpResponseRedirect(url.href);
 
+    const cookieOptions: CookieOptions = {
+      httpOnly: true,
+      maxAge: 300,
+      path: '/',
+      secure: Config.get('settings.social.cookie.secure', 'boolean', false)
+    }
+
+    const cookieDomain = Config.get('settings.social.cookie.domain', 'string');
+    if (cookieDomain) {
+      cookieOptions.domain = cookieDomain;
+    }
+
     // Add Code Challenge COOKIE for token request
     if (this.usePKCE) {
       // Encrypt this code_challenge cookie for security reasons
@@ -293,12 +305,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
 
     // Return a redirection response with the state as cookie.
     return redirectResponse
-      .setCookie(STATE_COOKIE_NAME, state, {
-        httpOnly: true,
-        maxAge: 300,
-        path: '/',
-        secure: Config.get('settings.social.cookie.secure', 'boolean', false)
-      })
+      .setCookie(STATE_COOKIE_NAME, state, cookieOptions)
   }
 
   /**
