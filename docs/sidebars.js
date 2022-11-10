@@ -68,7 +68,7 @@ module.exports = {
         'common/validation-and-sanitization',
         'common/serializing-and-deserializing',
         'common/templating',
-        'common/logging-and-debugging',
+        'common/logging',
         'common/generate-tokens',
         'common/conversions',
       ]),

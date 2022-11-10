@@ -1,5 +1,5 @@
 ---
-title: Logging & Depuración
+title: Logging
 ---
 
 import Tabs from '@theme/Tabs';
