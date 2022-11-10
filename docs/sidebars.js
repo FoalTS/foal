@@ -127,7 +127,6 @@ module.exports = {
         'cookbook/not-found-page',
         'cookbook/request-body-size',
         'cookbook/expressjs',
-        'cookbook/root-imports',
       ]),
       'websockets',
       category('Deployment', [
