@@ -1,11 +1,11 @@
 ---
-title: Templates - Rendu côté serveur (SSR)
-sidebar_label: Templates (SSR)
+title: Rendu côté serveur (SSR)
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+## Regular Templates
 
 Regular Web Applications rely on _templates_ to dynamically generate HTML pages on the server. These templates are text files that contain static content as well as a special syntax describing how the data should be inserted dynamically. During an HTTP request, the application loads and renders the template using the given contextual data and sends back the page to the client.
 
@@ -30,7 +30,7 @@ Here is an example of what a template might look like:
 </html>
 ```
 
-## Rendering Templates
+### Rendering Templates
 
 FoalTS provides a minimalist template engine to render templates. This engine replaces all the occurrences of `{{ myVariableName }}` with the given values.
 
@@ -79,7 +79,7 @@ export class AppController {
 </html>
 ```
 
-## Using Another Template Engine
+### Using Another Template Engine
 
 External template engines, such as [EJS](https://www.npmjs.com/package/ejs) or [pug](https://www.npmjs.com/package/pug), are also supported and can be configured for the current project using the configuration key `settings.templateEngine`.
 
@@ -185,7 +185,7 @@ export class AppController {
 </html>
 ```
 
-## Templates Location
+### Path Resolution
 
 By default, the `render` function loads templates from the project root directory.
 
@@ -210,4 +210,86 @@ But the path can also be relative to the controller file. The `render` function 
 //       | '- login.html
 //       '- login.controller.ts
 render('./templates/login.html', { /* ... */ }, __dirname)
+```
+
+## JSX Server-Side Rendering
+
+To compile JSX files, you need to update the `tsconfig.json` as follows:
+
+```json
+{
+  "compilerOptions": {
+    ...
+    "jsx": "react",
+  },
+  "include": [
+    "src/**/*.ts"
+    "src/**/*.tsx"
+  ]
+}
+
+```
+
+Then, add the file extension `tsx` in every `tsconfig.*.json`.
+
+*Example with `tsconfig.app.json`*
+```json
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "src/e2e/*.ts",
+    "src/**/*.spec.ts",
+    "src/e2e.ts",
+    "src/test.ts"
+  ]
+}
+```
+
+Every file using JSX must now have the extension `.tsx`.
+
+### Example with React
+
+```
+npm install react react-dom
+```
+
+This example shows how to use JSX SSR with React. It assumes that `templates` directory is in the root, next to `src`.
+
+*view.controller.tsx*
+```typescript
+import { Get, render } from '@foal/core';
+import * as React from 'react';
+import * as ReactDOMServer from 'react-dom/server';
+
+export class ViewController {
+
+  @Get('/')
+  async index() {
+    const content = ReactDOMServer.renderToString(<div>Hello world!</div>);
+
+    return render('./templates/index.html', {
+      content,
+    });
+  }
+
+}
+
+```
+
+*./templates/index.html*
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+</head>
+<body>
+  {{ content }}
+</body>
+</html>
 ```

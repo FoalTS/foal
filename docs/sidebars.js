@@ -67,7 +67,6 @@ module.exports = {
       category('Common', [
         'common/validation-and-sanitization',
         'common/serialization',
-        'common/templating',
         'common/logging',
         'common/generate-tokens',
         'common/conversions',
@@ -99,7 +98,7 @@ module.exports = {
       category('Frontend', [
         'frontend/single-page-applications',
         'frontend/angular-react-vue',
-        'frontend/jsx-server-side-rendering',
+        'frontend/server-side-rendering',
         'frontend/nuxt.js',
       ]),
       category('File Storage', [
