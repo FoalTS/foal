@@ -71,6 +71,7 @@ module.exports = {
         'common/task-scheduling',
         'common/generate-tokens',
         'common/conversions',
+        'common/expressjs',
       ]),
       category('Databases', [
         'databases/typeorm',
@@ -124,9 +125,6 @@ module.exports = {
         'security/csrf-protection',
         'security/rate-limiting',
         'security/body-size-limiting',
-      ]),
-      category('Cookbook', [
-        'cookbook/expressjs',
       ]),
       'websockets',
       category('Deployment', [
