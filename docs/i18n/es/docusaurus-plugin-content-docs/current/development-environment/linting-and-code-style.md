@@ -38,9 +38,3 @@ Instructions to configure VSCode with ESLint and TypeScript can be found [here](
 The rules are specified in the `.eslintrc` configuration file located at the root of the project.
 
 The list of available JavaScript rules can be found on the [ESLint website](https://eslint.org/docs/rules/). Some of them are compatible with TypeScript. Others are not and you will need to find equivalents [here](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules).
-
-## Migrating from TSLint
-
-[TSLint](https://palantir.github.io/tslint/) is a TypeScript linter that was previously used by FoalTS but has since been [deprecated](https://medium.com/palantir/tslint-in-2019-1a144c2317a9). This is why new versions of the framework use ESLint.
-
-In order to migrate from TSLint to ESLint, you can refer to this [page](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/ROADMAP.md). It lists all TSLint rules along side rules from the ESLint ecosystem that are identical or similar.
