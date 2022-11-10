@@ -66,7 +66,7 @@ module.exports = {
       ]),
       category('Common', [
         'common/validation-and-sanitization',
-        'common/serializing-and-deserializing',
+        'common/serialization',
         'common/templating',
         'common/logging',
         'common/generate-tokens',
