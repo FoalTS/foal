@@ -10,7 +10,7 @@ import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from '
 // FoalTS
 import { Context, dependency, Get, HttpResponseNotFound, HttpResponseRedirect, Post, render, Config, createApp, Hook } from '@foal/core';
 import { Disk, ParseAndValidateFiles } from '@foal/storage';
-import { createAndInitializeDataSource } from '../../../common';
+import { createAndInitializeDataSource } from '../../../../common';
 
 describe('Feature: Uploading and downloading files with a database.', () => {
 

@@ -66,6 +66,10 @@ module.exports = {
       ]),
       category('Common', [
         'common/validation-and-sanitization',
+        category('File Storage', [
+          'common/file-storage/local-and-cloud-storage',
+          'common/file-storage/upload-and-download-files',
+        ]),
         'common/serialization',
         'common/logging',
         'common/task-scheduling',
@@ -103,10 +107,6 @@ module.exports = {
         'frontend/server-side-rendering',
         'frontend/nuxt.js',
         'frontend/not-found-page',
-      ]),
-      category('File Storage', [
-        'file-system/local-and-cloud-storage',
-        'file-system/upload-and-download-files',
       ]),
       category('Dev Tools', [
         'development-environment/build-and-start-the-app',
