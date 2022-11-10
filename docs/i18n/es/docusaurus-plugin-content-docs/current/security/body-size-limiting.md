@@ -1,5 +1,5 @@
 ---
-title: Request Body Size
+title: Limitación Tamaño del Cuerpo de las Solicitudes
 ---
 
 import Tabs from '@theme/Tabs';

@@ -1,5 +1,5 @@
 ---
-title: Request Body Size
+title: Body Size Limiting
 ---
 
 import Tabs from '@theme/Tabs';

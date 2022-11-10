@@ -123,9 +123,9 @@ module.exports = {
         'security/http-headers-protection',
         'security/csrf-protection',
         'security/rate-limiting',
+        'security/body-size-limiting',
       ]),
       category('Cookbook', [
-        'cookbook/request-body-size',
         'cookbook/expressjs',
       ]),
       'websockets',

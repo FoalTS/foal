@@ -1,5 +1,5 @@
 ---
-title: Taille du Corps de Requête
+title: Body Size Limiting
 ---
 
 import Tabs from '@theme/Tabs';

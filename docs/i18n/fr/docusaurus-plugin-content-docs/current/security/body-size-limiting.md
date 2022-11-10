@@ -1,5 +1,5 @@
 ---
-title: Tamaño del Cuerpo de las Solicitudes
+title: Limitation de la Taille du Corps de Requête
 ---
 
 import Tabs from '@theme/Tabs';
