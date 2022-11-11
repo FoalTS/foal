@@ -1,6 +1,6 @@
 ---
 title: Authentication with JWT
-sidebar_label: JSON Web Tokens (authentication)
+sidebar_label: JSON Web Tokens
 ---
 
 import Tabs from '@theme/Tabs';

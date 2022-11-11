@@ -1,6 +1,6 @@
 ---
 title: Tokens de sesión
-sidebar_label: Tokens de sesión (autenticación)
+sidebar_label: Tokens de sesión
 ---
 
 import Tabs from '@theme/Tabs';
