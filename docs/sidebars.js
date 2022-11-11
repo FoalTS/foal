@@ -76,6 +76,7 @@ module.exports = {
         'common/generate-tokens',
         'common/conversions',
         'common/openapi-and-swagger-ui',
+        'common/websockets',
         'common/expressjs',
       ]),
       category('Databases', [
@@ -125,7 +126,6 @@ module.exports = {
         'security/rate-limiting',
         'security/body-size-limiting',
       ]),
-      'websockets',
       category('Deployment', [
         'deployment-and-environments/checklist',
       ])
