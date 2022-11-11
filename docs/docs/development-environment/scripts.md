@@ -1,5 +1,5 @@
 ---
-title: Crear y Ejecutar Scripts
+title: Scripts
 ---
 
 

@@ -1,6 +1,5 @@
 ---
-title: Create and Run Scripts
-sidebar_label: Create & Run Scripts
+title: Scripts
 ---
 
 

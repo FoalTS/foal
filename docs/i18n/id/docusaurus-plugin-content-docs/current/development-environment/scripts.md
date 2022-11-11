@@ -1,6 +1,5 @@
 ---
-title: Créer et Exécuter des Scripts
-sidebar_label: Créer & Exécuter des Scripts
+title: Scripts
 ---
 
 
