@@ -75,6 +75,7 @@ module.exports = {
         'common/task-scheduling',
         'common/generate-tokens',
         'common/conversions',
+        'common/openapi-and-swagger-ui',
         'common/expressjs',
       ]),
       category('Databases', [
@@ -96,7 +97,6 @@ module.exports = {
       ]),
       category('API', [
         'api-section/rest-blueprints',
-        'api-section/openapi-and-swagger-ui',
         'api-section/graphql',
         'api-section/gRPC',
       ]),

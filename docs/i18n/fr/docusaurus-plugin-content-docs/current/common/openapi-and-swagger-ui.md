@@ -1,5 +1,6 @@
 ---
 title: OpenAPI & Swagger UI
+sidebar_label: OpenAPI
 ---
 
 import Tabs from '@theme/Tabs';
