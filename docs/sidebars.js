@@ -110,11 +110,11 @@ module.exports = {
         'frontend/nuxt.js',
         'frontend/not-found-page',
       ]),
-      category('Dev Tools', [
-        'development-environment/commands',
-        'development-environment/shell-scripts',
-        'development-environment/code-generation',
-        'development-environment/linting-and-code-style',
+      category('CLI', [
+        'cli/commands',
+        'cli/shell-scripts',
+        'cli/code-generation',
+        'cli/linting-and-code-style',
       ]),
       category('Testing', [
         'testing/introduction',
