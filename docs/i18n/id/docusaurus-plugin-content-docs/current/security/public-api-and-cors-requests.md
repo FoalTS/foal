@@ -1,9 +1,10 @@
 ---
-title: API Publiques & Requêtes CORS
+title: Public API & CORS Requests
+sidebar_label: CORS
 ---
 
 
-Building an Open API requires to allow Cross-Origin Request Sharing.
+Building a public API requires to allow Cross-Origin Request Sharing.
 
 ## Enable Cross-Origin Resource Sharing (CORS)
 

@@ -97,7 +97,6 @@ module.exports = {
       category('API', [
         'api-section/rest-blueprints',
         'api-section/openapi-and-swagger-ui',
-        'api-section/public-api-and-cors-requests',
         'api-section/graphql',
         'api-section/gRPC',
       ]),
@@ -122,6 +121,7 @@ module.exports = {
       category('Security', [
         'security/http-headers-protection',
         'security/csrf-protection',
+        'security/public-api-and-cors-requests',
         'security/rate-limiting',
         'security/body-size-limiting',
       ]),
