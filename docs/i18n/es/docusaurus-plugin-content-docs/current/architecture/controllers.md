@@ -101,7 +101,7 @@ It has four properties:
 | --- | --- | --- |
 | `request` | `Request` | Gives information about the HTTP request. |
 | `state` | `{ [key: string]: any }` | Object which can be used to forward data accross several hooks (see [Hooks](./hooks.md)). |
-| `user` | `{ [key: string]: any }\|null` | The current user (see [Authentication](../authentication-and-access-control/quick-start.md)). | 
+| `user` | `{ [key: string]: any }\|null` | The current user (see [Authentication](../authentication/quick-start.md)). | 
 | `session`| `Session\|null` | The session object if you use sessions. |
 
 
