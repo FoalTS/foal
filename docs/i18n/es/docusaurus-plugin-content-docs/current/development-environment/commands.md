@@ -1,6 +1,5 @@
 ---
-title: Build and Start the App
-sidebar_label: Build & Start the App
+title: Comandos
 ---
 
 

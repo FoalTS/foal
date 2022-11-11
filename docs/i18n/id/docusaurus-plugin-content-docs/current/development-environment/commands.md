@@ -1,6 +1,5 @@
 ---
-title: Construire et Démarrer l'App
-sidebar_label: Construire & Démarrer l'App
+title: Commands
 ---
 
 

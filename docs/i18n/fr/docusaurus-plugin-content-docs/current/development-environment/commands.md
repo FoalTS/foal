@@ -1,6 +1,5 @@
 ---
-title: Construir e Iniciar la Aplicación
-sidebar_label: Construir & Iniciar la Aplicación
+title: Commandes
 ---
 
 
