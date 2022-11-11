@@ -76,6 +76,7 @@ module.exports = {
         'common/generate-tokens',
         'common/conversions',
         'common/openapi-and-swagger-ui',
+        'common/graphql',
         'common/websockets',
         'common/expressjs',
       ]),
@@ -100,7 +101,6 @@ module.exports = {
       ]),
       category('API', [
         'api-section/rest-blueprints',
-        'api-section/graphql',
         'api-section/gRPC',
       ]),
       category('Frontend', [
