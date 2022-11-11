@@ -1,5 +1,6 @@
 ---
 title: Cabeceras HTTP de Protección
+sidebar_label: Cabeceras de Respuesta
 ---
 
 
