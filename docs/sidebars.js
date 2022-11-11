@@ -78,6 +78,7 @@ module.exports = {
         'common/openapi-and-swagger-ui',
         'common/graphql',
         'common/websockets',
+        'common/gRPC',
         'common/expressjs',
       ]),
       category('Databases', [
@@ -101,7 +102,6 @@ module.exports = {
       ]),
       category('API', [
         'api-section/rest-blueprints',
-        'api-section/gRPC',
       ]),
       category('Frontend', [
         'frontend/single-page-applications',
