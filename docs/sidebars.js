@@ -109,7 +109,7 @@ module.exports = {
       ]),
       category('Dev Tools', [
         'development-environment/build-and-start-the-app',
-        'development-environment/scripts',
+        'development-environment/shell-scripts',
         'development-environment/code-generation',
         'development-environment/linting-and-code-style',
       ]),

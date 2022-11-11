@@ -1,5 +1,5 @@
 ---
-title: Scripts
+title: Shell Scripts
 ---
 
 
