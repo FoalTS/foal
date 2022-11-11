@@ -28,11 +28,6 @@ And if the linting issues can be automatically fixed, you can also fix them with
 npm run lint:fix
 ```
 
-
-## Configuration with VSCode
-
-Instructions to configure VSCode with ESLint and TypeScript can be found [here](./vscode.md).
-
 ## Adding New Rules
 
 The rules are specified in the `.eslintrc` configuration file located at the root of the project.

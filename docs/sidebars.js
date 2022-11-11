@@ -113,7 +113,6 @@ module.exports = {
         'development-environment/scripts',
         'development-environment/code-generation',
         'development-environment/linting-and-code-style',
-        'development-environment/vscode',
       ]),
       category('Testing', [
         'testing/introduction',
