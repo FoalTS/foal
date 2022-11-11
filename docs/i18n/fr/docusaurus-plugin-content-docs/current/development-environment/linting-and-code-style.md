@@ -1,6 +1,6 @@
 ---
 title: Linting et Style de Code
-sidebar_label: Linting & Style de Code
+sidebar_label: Linting
 ---
 
 
