@@ -73,12 +73,11 @@ module.exports = {
         'common/serialization',
         'common/logging',
         'common/task-scheduling',
-        'common/generate-tokens',
-        'common/conversions',
         'common/openapi-and-swagger-ui',
         'common/graphql',
         'common/websockets',
         'common/gRPC',
+        'common/utilities',
         'common/expressjs',
       ]),
       category('Databases', [
