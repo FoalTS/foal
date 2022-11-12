@@ -25,8 +25,6 @@ const isEqual = await verifyPassword(plainTextPassword, passwordHash);
 
 ## Password Upgrading
 
-> *This feature is available from version 2.11 onwards.*
-
 The PBKDF2 algorithm uses a number of iterations to hash passwords. This work factor is deliberate and slows down potential attackers, making attacks against hashed passwords more difficult.
 
 As computing power increases, the number of iterations must also increase. This is why the latest versions of Foal use a higher number of iterations.
