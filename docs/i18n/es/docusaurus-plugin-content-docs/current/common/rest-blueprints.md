@@ -28,7 +28,7 @@ The generated controller already has a set of implemented routes **that you can 
 Below is a table summarizing how the generated API works:
 
 | *HTTP Method* | *CRUD* | *Entire Collection (e.g. `/products`)* | *Specific Item (e.g. `/products/{id}`)* |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | GET | Read | 200 (OK) - list of products | 200 (OK) - the product <br /> 404 (Not Found)|
 | POST | Create | 201 (Created) - the created product <br /> 400 (Bad Request) - the validation error | Not implemented |
 | PUT | Update/Replace | Not implemented | 200 (OK) - the updated product <br /> 400 (Bad Request) - the validation error <br /> 404 (Not Found) |

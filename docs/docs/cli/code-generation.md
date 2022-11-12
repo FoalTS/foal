@@ -86,7 +86,7 @@ export class ApiController {
 }
 ```
 
-## Create an entity (simple model)
+## Create an entity 
 
 ```shell
 foal g entity <name>

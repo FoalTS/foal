@@ -73,6 +73,7 @@ module.exports = {
         'common/serialization',
         'common/logging',
         'common/task-scheduling',
+        'common/rest-blueprints',
         'common/openapi-and-swagger-ui',
         'common/graphql',
         'common/websockets',
@@ -98,9 +99,6 @@ module.exports = {
       category('Authorization', [
         'authorization/administrators-and-roles',
         'authorization/groups-and-permissions',
-      ]),
-      category('API', [
-        'api-section/rest-blueprints',
       ]),
       category('Frontend', [
         'frontend/single-page-applications',
