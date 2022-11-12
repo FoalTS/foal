@@ -1,5 +1,6 @@
 ---
 title: En-têtes HTTP de Protection
+sidebar_label: En-têtes de réponse
 ---
 
 

@@ -6,7 +6,7 @@ slug: 12-file-upload
 
 The next step in this tutorial is to allow users to upload a profile picture. This image will be displayed on the homepage in front of each author's story.
 
-To do this, you will use Foal's storage system. It allows you to validate and save the files uploaded by the client. These files can be saved to your local drive or in the cloud using AWS S3. We won't use the cloud feature in this tutorial, but you can find out how to configure it [here](../../file-system/local-and-cloud-storage.md).
+To do this, you will use Foal's storage system. It allows you to validate and save the files uploaded by the client. These files can be saved to your local drive or in the cloud using AWS S3. We won't use the cloud feature in this tutorial, but you can find out how to configure it [here](../../common/file-storage/local-and-cloud-storage.md).
 
 ## Server Side
 

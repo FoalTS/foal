@@ -8,7 +8,7 @@ In this last part of the tutorial, we will give users the ability to log in with
 
 To do this, you will use Foal's social authentication system.
 
-> *This section assumes that you have already set up a Google application and have retrieved your client ID and secret. If you have not, you might want to check this [page](../../authentication-and-access-control/social-auth.md) first. The redirection URIs allowed in your Google application must include `http://localhost:3001/api/auth/google/callback`.*
+> *This section assumes that you have already set up a Google application and have retrieved your client ID and secret. If you have not, you might want to check this [page](../../authentication/social-auth.md) first. The redirection URIs allowed in your Google application must include `http://localhost:3001/api/auth/google/callback`.*
 
 ## Nullable Passwords
 

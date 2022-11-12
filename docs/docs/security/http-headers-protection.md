@@ -1,5 +1,6 @@
 ---
 title: Protection HTTP Headers
+sidebar_label: Response Headers
 ---
 
 

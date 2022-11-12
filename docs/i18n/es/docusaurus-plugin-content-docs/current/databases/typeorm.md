@@ -69,7 +69,7 @@ npm install typeorm @foal/typeorm
 
 Two packages are required to use TypeORM with FoalTS:
 - The package [typeorm](https://www.npmjs.com/package/typeorm) which is the official one of the ORM. It includes everything you need to create models and make database requests.
-- The package [@foal/typeorm](https://www.npmjs.com/package/@foal/typeorm) (maintained by FoalTS) which contains additional components. These are particularly useful when using FoalTS [authentication and authorization system](../authentication-and-access-control/quick-start.md).
+- The package [@foal/typeorm](https://www.npmjs.com/package/@foal/typeorm) (maintained by FoalTS) which contains additional components. These are particularly useful when using FoalTS [authentication and authorization system](../authentication/quick-start.md).
 
 ## Database Configuration Examples
 

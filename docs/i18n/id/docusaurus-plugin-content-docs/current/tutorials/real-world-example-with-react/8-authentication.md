@@ -8,7 +8,7 @@ Stories are displayed on the home page. If we want users to be able to post new 
 
 To do this, we will use Foal's sessions with cookies.
 
-> FoalTS offers many options for user authentication. For example, you can send session tokens with the `Authorization` header or use stateless tokens with JWT. We won't explore all these possibilities in this tutorial but you can find the full documentation [here](../../authentication-and-access-control/quick-start.md).
+> FoalTS offers many options for user authentication. For example, you can send session tokens with the `Authorization` header or use stateless tokens with JWT. We won't explore all these possibilities in this tutorial but you can find the full documentation [here](../../authentication/quick-start.md).
 
 Open the file `api.controller.ts` and add the `@UseSessions` hook at the top of the class.
 

@@ -8,7 +8,7 @@ Dans cette dernière partie du tutoriel, nous allons donner aux utilisateurs la 
 
 Pour ce faire, vous utiliserez le système d'authentification sociale de Foal.
 
-> *Cette section suppose que vous avez déjà configuré une application Google et que vous avez récupéré votre ID client et votre secret. Si ce n'est pas le cas, vous pouvez d'abord consulter cette [page](../../authentication-and-access-control/social-auth.md). Les URI de redirection autorisés dans votre application Google doivent inclure `http://localhost:3001/api/auth/google/callback`.*
+> *Cette section suppose que vous avez déjà configuré une application Google et que vous avez récupéré votre ID client et votre secret. Si ce n'est pas le cas, vous pouvez d'abord consulter cette [page](../../authentication/social-auth.md). Les URI de redirection autorisés dans votre application Google doivent inclure `http://localhost:3001/api/auth/google/callback`.*
 
 ## Mots de Passe Nullables
 

@@ -8,7 +8,7 @@ Les posts sont affichées sur la page d'accueil. Si nous voulons que les utilisa
 
 Pour ce faire, nous allons utiliser les sessions de Foal avec des cookies.
 
-> FoalTS offre de nombreuses options pour authentifier les utilisateurs. Par exemple, vous pouvez envoyer des jetons (*tokens*) de session avec l'en-tête `Authorization` ou utiliser des jetons sans état avec JWT. Nous n'allons pas explorer toutes ces possibilités dans ce tutoriel mais vous pouvez trouver la documentation complète [ici](../../authentication-and-access-control/quick-start.md).
+> FoalTS offre de nombreuses options pour authentifier les utilisateurs. Par exemple, vous pouvez envoyer des jetons (*tokens*) de session avec l'en-tête `Authorization` ou utiliser des jetons sans état avec JWT. Nous n'allons pas explorer toutes ces possibilités dans ce tutoriel mais vous pouvez trouver la documentation complète [ici](../../authentication/quick-start.md).
 
 Ouvrez le fichier `api.controller.ts` et ajoutez le hook `@UseSessions` en haut de la classe.
 

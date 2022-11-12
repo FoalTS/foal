@@ -39,9 +39,9 @@
     "message": "API",
     "description": "The label for category API in sidebar someSidebar"
   },
-  "sidebar.someSidebar.category.Frontend Integration": {
+  "sidebar.someSidebar.category.Frontend": {
     "message": "Intégration du Frontend",
-    "description": "The label for category Frontend Integration in sidebar someSidebar"
+    "description": "The label for category Frontend in sidebar someSidebar"
   },
   "sidebar.someSidebar.category.File Storage": {
     "message": "Stockage de Fichiers",

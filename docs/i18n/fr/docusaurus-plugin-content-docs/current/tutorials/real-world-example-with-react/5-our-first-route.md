@@ -77,7 +77,7 @@ Lors de l'envoie d'une requête à ce point de terminaison, le corps de la répo
   {
     "id": 3,
     "title": "Authentication with Foal",
-    "link": "https://foalts.org/docs/authentication-and-access-control/quick-start",
+    "link": "https://foalts.org/docs/authentication/quick-start",
     "author": {
       "id": 2,
       "name": "Mary"

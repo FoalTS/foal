@@ -1,5 +1,6 @@
 ---
 title: Générer & Exécuter des Migrations
+sidebar_label: Migrations
 ---
 
 

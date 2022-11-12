@@ -1,5 +1,6 @@
 ---
 title: Validation & Assainissement
+sidebar_label: Validation
 ---
 
 import Tabs from '@theme/Tabs';
