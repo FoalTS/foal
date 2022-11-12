@@ -3,7 +3,7 @@ title: Task Scheduling
 ---
 
 
-You can schedule jobs using [shell scripts](../cli/scripts.md) and the [node-schedule](https://www.npmjs.com/package/node-schedule) library.
+You can schedule jobs using [shell scripts](../cli/shell-scripts.md) and the [node-schedule](https://www.npmjs.com/package/node-schedule) library.
 
 ## Example
 

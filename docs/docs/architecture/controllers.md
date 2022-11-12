@@ -103,7 +103,7 @@ It has five properties:
 | `state` | `{ [key: string]: any }` | Object which can be used to forward data accross several hooks (see [Hooks](./hooks.md)). |
 | `user` | `{ [key: string]: any }`\|`null` | The current user (see [Authentication](../authentication/quick-start.md)). | 
 | `session`| `Session`\|`null` | The session object if you use sessions. |
-| `files` | `FileList` | A list of file paths or buffers if you uploaded files (see [Upload and download files](../file-system/upload-and-download-files.md)). |
+| `files` | `FileList` | A list of file paths or buffers if you uploaded files (see [Upload and download files](../common/file-storage/upload-and-download-files.md)). |
 
 The types of the `user` and `state` properties are generic. You override their types if needed:
 

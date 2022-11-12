@@ -6,7 +6,7 @@ slug: 12-file-upload
 
 L'étape suivante de ce tutoriel consiste à permettre aux utilisateurs de télécharger une photo de profil. Cette image sera affichée sur la page d'accueil en face de chaque post de chaque auteur.
 
-Pour ce faire, vous utiliserez le système de stockage de Foal. Il vous permet de valider et d'enregistrer les fichiers téléchargés par le client. Ces fichiers peuvent être sauvegardés sur votre disque local ou dans le Cloud en utilisant AWS S3. Nous n'utiliserons pas la fonction "cloud" dans ce tutoriel, mais vous pouvez découvrir comment la configurer [ici](../../file-system/local-and-cloud-storage.md).
+Pour ce faire, vous utiliserez le système de stockage de Foal. Il vous permet de valider et d'enregistrer les fichiers téléchargés par le client. Ces fichiers peuvent être sauvegardés sur votre disque local ou dans le Cloud en utilisant AWS S3. Nous n'utiliserons pas la fonction "cloud" dans ce tutoriel, mais vous pouvez découvrir comment la configurer [ici](../../common/file-storage/local-and-cloud-storage.md).
 
 ## Côté serveur
 
