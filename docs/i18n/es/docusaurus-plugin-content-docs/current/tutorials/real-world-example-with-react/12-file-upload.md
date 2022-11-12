@@ -6,7 +6,7 @@ slug: 12-file-upload
 
 El siguiente paso en este tutorial es permitir a los usuarios subir una imagen de perfil. Esta imagen se mostrará en la página de inicio delante de cada publicación de cada autor.
 
-Para ello, utilizará el sistema de almacenamiento de Foal. Éste le permite validar y guardar los archivos subidos por el cliente. Estos archivos pueden guardarse en su unidad local o en la nube utilizando AWS S3. No utilizaremos la función de la nube en este tutorial, pero puede encontrar cómo configurarla [aquí](../../file-system/local-and-cloud-storage.md).
+Para ello, utilizará el sistema de almacenamiento de Foal. Éste le permite validar y guardar los archivos subidos por el cliente. Estos archivos pueden guardarse en su unidad local o en la nube utilizando AWS S3. No utilizaremos la función de la nube en este tutorial, pero puede encontrar cómo configurarla [aquí](../../common/file-storage/local-and-cloud-storage.md).
 
 ## Lado del servidor
 

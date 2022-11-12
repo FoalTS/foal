@@ -137,5 +137,5 @@ Et créez de nouveaux posts pour chaque utilisateur.
 ```bash
 foal run create-story author="john@foalts.org" title="How to build a simple to-do list" link="https://foalts.org/docs/tutorials/simple-todo-list/1-installation"
 foal run create-story author="mary@foalts.org" title="FoalTS architecture overview" link="https://foalts.org/docs/architecture/architecture-overview"
-foal run create-story author="mary@foalts.org" title="Authentication with Foal" link="https://foalts.org/docs/authentication-and-access-control/quick-start"
+foal run create-story author="mary@foalts.org" title="Authentication with Foal" link="https://foalts.org/docs/authentication/quick-start"
 ```

@@ -37,7 +37,7 @@ The new authentication system is probably the main new feature of version 2. The
 - and add missing features impossible to implement in version 1.
 
 Here is the way to use it:
-- First [specify in the configuration](/docs/authentication-and-access-control/session-tokens#choosing-a-session-store) where your sessions should be stored (SQL database, redis, Mongo, etc).
+- First [specify in the configuration](/docs/authentication/session-tokens#choosing-a-session-store) where your sessions should be stored (SQL database, redis, Mongo, etc).
 - Then decorate any route or controller that need authentication with `@UseSessions`.
 
 ### Example with the `Authorization` header

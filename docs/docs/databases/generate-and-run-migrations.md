@@ -1,5 +1,6 @@
 ---
 title: Generate & Run Migrations
+sidebar_label: Migrations
 ---
 
 

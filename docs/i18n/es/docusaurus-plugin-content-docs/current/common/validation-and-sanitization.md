@@ -1,5 +1,6 @@
 ---
 title: Validación & Sanitización
+sidebar_label: Validación
 ---
 
 import Tabs from '@theme/Tabs';

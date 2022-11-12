@@ -8,7 +8,7 @@ En esta última parte del tutorial, daremos a los usuarios la posibilidad de ini
 
 Para ello, utilizará el sistema de autenticación social de Foal.
 
-> *Esta sección supone que ya ha configurado una aplicación de Google y ha recuperado su ID de cliente y su secreto. Si no lo ha hecho, es posible que quiera consultar primero esta [página](../../authentication-and-access-control/social-auth.md). Los URI de redirección permitidos en su aplicación de Google deben incluir `http://localhost:3001/api/auth/google/callback`.*
+> *Esta sección supone que ya ha configurado una aplicación de Google y ha recuperado su ID de cliente y su secreto. Si no lo ha hecho, es posible que quiera consultar primero esta [página](../../authentication/social-auth.md). Los URI de redirección permitidos en su aplicación de Google deben incluir `http://localhost:3001/api/auth/google/callback`.*
 
 
 ## Contraseñas anulables

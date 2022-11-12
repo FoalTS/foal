@@ -85,11 +85,11 @@ module.exports = {
           position: 'left',
           dropdownActiveClassDisabled: true,
         },
-        // {
-        //   to: 'who-is-using-foal',
-        //   label: 'Who\'s using Foal?',
-        //   position: 'right'
-        // },
+        {
+          to: 'who-is-using-foal',
+          label: 'Who\'s using Foal?',
+          position: 'right'
+        },
         {
           href: 'https://github.com/FoalTS/foal',
           position: 'right',
