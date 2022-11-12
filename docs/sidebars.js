@@ -121,7 +121,7 @@ module.exports = {
       category('Security', [
         'security/http-headers-protection',
         'security/csrf-protection',
-        'security/public-api-and-cors-requests',
+        'security/cors',
         'security/rate-limiting',
         'security/body-size-limiting',
       ]),

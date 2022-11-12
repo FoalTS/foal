@@ -152,7 +152,7 @@ foal g controller api --register
 foal g controller api/product --register
 ```
 
-See the page [REST Blueprints](../api-section/rest-blueprints.md) for more details.
+See the page [REST Blueprints](../common/rest-blueprints.md) for more details.
 
 ## Create a hook
 

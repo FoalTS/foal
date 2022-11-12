@@ -97,7 +97,7 @@ In these implementations, the client does not have to handle the receipt, sendin
 
 > *Note: If you develop a native Mobile application, you may need to enable a *cookie* plugin in your code.*
 
-> *Note: If your server and client do not have the same origins, you may also need to enable [CORS requests](../api-section/public-api-and-cors-requests.md).*
+> *Note: If your server and client do not have the same origins, you may also need to enable [CORS requests](../security/cors.md).*
 
 #### Using Session Tokens
 
@@ -392,7 +392,7 @@ In these implementations, the user logs in with the route `POST /auth/login` and
 Authorization: Bearer my-token
 ```
 
-> *Note: If your server and client do not have the same origins, you may also need to enable [CORS requests](../api-section/public-api-and-cors-requests.md).*
+> *Note: If your server and client do not have the same origins, you may also need to enable [CORS requests](../security/cors.md).*
 
 #### Using Session Tokens
 

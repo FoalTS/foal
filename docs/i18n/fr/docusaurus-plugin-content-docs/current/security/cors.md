@@ -1,5 +1,5 @@
 ---
-title: Public API & CORS Requests
+title: Requêtes CORS
 sidebar_label: CORS
 ---
 
