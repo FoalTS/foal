@@ -8,12 +8,6 @@
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
   </a>
-  <a href="https://badge.fury.io/js/%40foal%2Faws-s3">
-    <img src="https://badge.fury.io/js/%40foal%2Faws-s3.svg" alt="npm version">
-  </a>
-  <a href="https://github.com/FoalTS/foal/actions">
-    <img src="https://github.com/FoalTS/foal/workflows/Test/badge.svg" alt="Build Status">
-  </a>
   <a href="https://codecov.io/github/FoalTS/foal">
     <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage">
   </a>
@@ -25,9 +19,6 @@
   </a>
   <a href="https://github.com/FoalTS/foal/commits/master">
     <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit">
-  </a>
-  <a href="https://discord.gg/QUrJv98">
-    <img src="https://img.shields.io/badge/Chat-Discord-blue.svg" alt="2FA">
   </a>
 </p>
 
