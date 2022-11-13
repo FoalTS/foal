@@ -4,7 +4,6 @@ slug: /
 ---
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
-![node version](https://img.shields.io/badge/node-%3E%3D10-brightgreen.svg)
 ![npm version](https://badge.fury.io/js/%40foal%2Fcore.svg)
 [![Actions Status](https://github.com/FoalTS/foal/workflows/Test/badge.svg)](https://github.com/FoalTS/foal/actions)
 ![Code coverage](https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg)

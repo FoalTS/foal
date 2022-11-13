@@ -9,7 +9,6 @@
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
   </a>
-  <img src="https://img.shields.io/badge/node-%3E%3D10-brightgreen.svg" alt="node version">
   <a href="https://badge.fury.io/js/%40foal%2Fmongodb">
     <img src="https://badge.fury.io/js/%40foal%2Fmongodb.svg" alt="npm version">
   </a>
