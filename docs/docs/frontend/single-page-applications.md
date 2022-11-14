@@ -14,7 +14,7 @@ See the [Angular, React & Vue](./angular-react-vue.md) section to learn on how t
 
 ## Using Frontend Routers
 
-Most single-page applications simulate routing on the frontend side. This is usually done by libraries such as [react-router](https://reacttraining.com/react-router) or [@angular/router](https://angular.io/guide/router). The application does not actually make any requests to the server but simply modifies the URL in the address bar.
+Most single-page applications simulate routing on the frontend side. This is usually done by libraries such as [react-router](https://reactrouter.com) or [@angular/router](https://angular.io/guide/router). The application does not actually make any requests to the server but simply modifies the URL in the address bar.
 
 This works fine until the user presses the refresh button, shares the link or saves the page in their bookmarks. In that case, the browser makes a request to the server to retreive the desired page and thus gets a 404 error.
 
