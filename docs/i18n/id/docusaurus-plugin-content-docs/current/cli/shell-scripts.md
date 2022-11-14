@@ -54,7 +54,7 @@ npm run build
 
 Then you can execute it with this command:
 
-```sh
+```shell
 foal run my-script # or foal run-script my-script
 ```
 
