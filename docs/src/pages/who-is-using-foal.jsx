@@ -1,6 +1,9 @@
 import React from 'react';
 import Layout from '@theme/Layout';
 
+// The static files are located in this directory: docs/static/img/who-is-using-foal.
+// Don't forget to compress your image before adding it to the directory.
+
 const posts = [
   {
     title: 'Your website name',
