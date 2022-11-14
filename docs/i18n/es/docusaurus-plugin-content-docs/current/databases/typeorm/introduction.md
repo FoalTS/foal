@@ -55,7 +55,7 @@ FoalTS supports officially the following databases:
 
 ## Use with FoalTS
 
-TypeORM is integrated by default in each new FoalTS project. This allows you to quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the page [Using another ORM](../using-another-orm.md).
+TypeORM is integrated by default in each new FoalTS project. This allows you to quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the page [Using another ORM](../other-orm/introduction.md).
 
 ### Initial Configuration
 
@@ -284,12 +284,8 @@ module.exports = {
 
 When running the command `npm run test` with the above configuration, FoalTS will try to retrieve the database configuration in this order:
 
-1. Environment variables.
-2. `.env` file.
-3. `config/test.yml` and `config/test.json`.
-4. `config/default.yml` and `config/default.json`.
-
-For example, if the environment variable `DATABASE_PASSWORD` is defined, Foal will use its value. Otherwise, it will look at the `.env` file to see if it is defined here. If it is not, it will go through the YAML and JSON `config/` files.
+1. `config/test.yml` and `config/test.json`.
+2. `config/default.yml` and `config/default.json`.
 
 In this way, you can define a default configuration in the `config/default.{yml|json}` file to use both during development and testing and override some settings in `config/test.{yml|json}` during testing.
 
