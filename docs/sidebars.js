@@ -90,6 +90,7 @@ module.exports = {
         ]),
         category('With another ORM', [
           'databases/other-orm/introduction',
+          'databases/other-orm/prisma',
         ]),
       ]),
       category('Authentication', [
