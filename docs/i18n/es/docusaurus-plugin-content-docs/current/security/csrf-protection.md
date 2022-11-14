@@ -16,7 +16,7 @@ import TabItem from '@theme/TabItem';
 
 FoalTS combines two defenses to protect your application against a CSRF attack. It uses the `SameSite` cookie directive and a token-based technique to have in-depth protection.
 
-When enabled, authentication cookies have their `SameSite` attribute set to `lax` in order to prevent third-party websites from sending authenticated requests to your server. When they make a POST, PUT, PATCH or DELETE request to your application, the authentication cookie is not sent. As of August 2020, this protection is supported by 92% of modern browsers.
+When enabled, authentication cookies have their `SameSite` attribute set to `lax` in order to prevent third-party websites from sending authenticated requests to your server. When they make a POST, PUT, PATCH or DELETE request to your application, the authentication cookie is not sent. As of November 2022, this protection is supported by 96% of modern browsers.
 
 In addition, the framework provides token-based mitigation that works with either state (session tokens) or stateless (JWT). The client can read the *CSRF token* either from the HTML page (using a template) or from the `XSRF-Token` cookie. Then, the token must be included in the `X-XSRF-Token` header, the `X-CSRF-Token` header or in the body with the `_csrf` field in any POST, PUT, PATCH or DELETE request sent to the server (see examples).
 
