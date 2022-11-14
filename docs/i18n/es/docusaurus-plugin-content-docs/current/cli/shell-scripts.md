@@ -13,7 +13,7 @@ Let's create a new one with the command line: `foal g script display-users`. A n
 
 ## Write Scripts
 
-Remove the content of `src/scripts/display-users.ts` and replace it with the below code.
+Remove the content of `src/scripts/display-users.ts` and replace it with the code below.
 
 ```typescript
 // 3p
