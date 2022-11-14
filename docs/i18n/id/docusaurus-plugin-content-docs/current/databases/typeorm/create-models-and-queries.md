@@ -1,5 +1,5 @@
 ---
-title: Create Models & Queries
+title: Models & Queries
 ---
 
 
@@ -35,7 +35,7 @@ The class `Product` represents the database table and its instances represent th
 
 > In FoalTS, entity files should always be named with the extension `.entity.ts`. This way the CLI can find the entities when automatically generating migrations.
 
-## Using Entities
+### Using Entities
 
 ```typescript
 const product = new Product();

@@ -82,11 +82,15 @@ module.exports = {
         'common/expressjs',
       ]),
       category('Databases', [
-        'databases/typeorm',
-        'databases/create-models-and-queries',
-        'databases/generate-and-run-migrations',
-        'databases/mongodb',
-        'databases/using-another-orm',
+        category('With TypeORM', [
+          'databases/typeorm/introduction',
+          'databases/typeorm/create-models-and-queries',
+          'databases/typeorm/generate-and-run-migrations',
+          'databases/typeorm/mongodb',
+        ]),
+        category('With another ORM', [
+          'databases/other-orm/introduction',
+        ]),
       ]),
       category('Authentication', [
         'authentication/quick-start',

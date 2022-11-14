@@ -1,6 +1,6 @@
 ---
-title: Using Another ORM or Query Builder
-sidebar_label: Using Another ORM
+title: Using Another ORM
+sidebar_label: Introduction
 ---
 
 The core of the framework is independent of TypeORM. So, if you do not want to use an ORM at all or use another ORM or ODM than TypeORM, you absolutely can.

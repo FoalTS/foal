@@ -1,6 +1,6 @@
 ---
-title: Utilizar Otro ORM o Generador de Consultas
-sidebar_label: Utilizar Otro ORM
+title: Utiliser un autre ORM
+sidebar_label: Introduction
 ---
 
 The core of the framework is independent of TypeORM. So, if you do not want to use an ORM at all or use another ORM or ODM than TypeORM, you absolutely can.

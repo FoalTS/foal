@@ -1,6 +1,6 @@
 ---
 title: TypeORM
-sidebar_label: SQL Databases
+sidebar_label: Introduction
 ---
 
 import Tabs from '@theme/Tabs';
@@ -55,7 +55,7 @@ FoalTS supports officially the following databases:
 
 ## Use with FoalTS
 
-TypeORM is integrated by default in each new FoalTS project. This allows you to quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the page [Using another ORM](./using-another-orm.md).
+TypeORM is integrated by default in each new FoalTS project. This allows you to quickly create models, run migrations and use the authentication system without wasting time on configuration. However, if you do not wish to use it, you can refer to the page [Using another ORM](../using-another-orm.md).
 
 ### Initial Configuration
 
@@ -69,7 +69,7 @@ npm install typeorm @foal/typeorm
 
 Two packages are required to use TypeORM with FoalTS:
 - The package [typeorm](https://www.npmjs.com/package/typeorm) which is the official one of the ORM. It includes everything you need to create models and make database requests.
-- The package [@foal/typeorm](https://www.npmjs.com/package/@foal/typeorm) (maintained by FoalTS) which contains additional components. These are particularly useful when using FoalTS [authentication and authorization system](../authentication/quick-start.md).
+- The package [@foal/typeorm](https://www.npmjs.com/package/@foal/typeorm) (maintained by FoalTS) which contains additional components. These are particularly useful when using FoalTS [authentication and authorization system](../../authentication/quick-start.md).
 
 ## Database Configuration Examples
 
@@ -293,7 +293,7 @@ For example, if the environment variable `DATABASE_PASSWORD` is defined, Foal wi
 
 In this way, you can define a default configuration in the `config/default.{yml|json}` file to use both during development and testing and override some settings in `config/test.{yml|json}` during testing.
 
-> You learn more on how configuration works in Foal [here](../architecture/configuration.md)
+> You learn more on how configuration works in Foal [here](../../architecture/configuration.md)
 
 In the example below, we add two new options:
 - `dropSchema` clears the database each time we create the connection

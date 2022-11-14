@@ -1,6 +1,6 @@
 ---
-title: Utiliser un Autre ORM ou Constructeur de Requêtes
-sidebar_label: Utiliser un Autre ORM
+title: Utilizar Otro ORM
+sidebar_label: Introducción
 ---
 
 The core of the framework is independent of TypeORM. So, if you do not want to use an ORM at all or use another ORM or ODM than TypeORM, you absolutely can.
