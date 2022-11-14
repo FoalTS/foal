@@ -30,7 +30,7 @@ The process runs forever until you stop it.
 
 If you need to build and run the tests only once, you can use these two commands:
 
-```sh
+```shell
 npm run build:test # Build the unit tests code (compile the typescript files and copy the templates)
 npm run start:test # Execute the unit tests from the built files
 ```

@@ -21,7 +21,7 @@ The process runs forever until you stop it.
 
 If you need to build and run the tests only once, you can use these two commands:
 
-```sh
+```shell
 npm run build:e2e # Build the e2e tests code (compile the typescript files and copy the templates)
 npm run start:e2e # Execute the e2e tests from the built files
 ```
