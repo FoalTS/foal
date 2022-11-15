@@ -4,7 +4,7 @@ title: Utilitaires
 
 ## Random Tokens
 
-In many situations, we need to generate tokens and then verify them (for example in the flow of a password reset). This document shows how to do so with FoalTS.
+In many situations, we need to generate tokens and then verify them. If your tokens are tied to a state (for example, a user ID), you should refer to the [sessions tokens](../authentication/session-tokens.md) page. If not, the token generators below may be useful.
 
 ### Unsigned Tokens
 
