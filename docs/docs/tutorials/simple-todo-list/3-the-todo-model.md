@@ -14,7 +14,7 @@ foal generate entity todo
 
 :::info
 
-FoalTS uses [TypeORM](http://typeorm.io) as the default ORM in any new application. This way, you don't have to configure anything and you can start a project quickly. However, if you wish, you still can choose to [use another one](../../databases/using-another-orm.md) ([Prisma](https://www.prisma.io/), [MikroORM](https://mikro-orm.io/), [Mongoose](https://mongoosejs.com/), etc), as the framework code is ORM independent.
+FoalTS uses [TypeORM](http://typeorm.io) as the default ORM in any new application. This way, you don't have to configure anything and you can start a project quickly. However, if you wish, you still can choose to [use another one](../../databases/other-orm/introduction.md) ([Prisma](https://www.prisma.io/), [MikroORM](https://mikro-orm.io/), [Mongoose](https://mongoosejs.com/), etc), as the framework code is ORM independent.
 
 :::
 

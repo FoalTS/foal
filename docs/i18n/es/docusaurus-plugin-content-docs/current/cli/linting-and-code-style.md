@@ -33,4 +33,4 @@ npm run lint:fix
 
 The rules are specified in the `.eslintrc` configuration file located at the root of the project.
 
-The list of available JavaScript rules can be found on the [ESLint website](https://eslint.org/docs/rules/). Some of them are compatible with TypeScript. Others are not and you will need to find equivalents [here](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin#supported-rules).
+The list of available JavaScript rules can be found on the [ESLint website](https://eslint.org/docs/rules/). Some of them are compatible with TypeScript. Others are not and you will need to find equivalents [here](https://typescript-eslint.io/rules/).

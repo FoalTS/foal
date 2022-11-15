@@ -1,41 +1,18 @@
 ---
-title: Utilizar Otro ORM o Generador de Consultas
-sidebar_label: Utilizar Otro ORM
+title: Prisma
 ---
 
-The core of the framework is independent of TypeORM. So, if you do not want to use an ORM at all or use another ORM or ODM than TypeORM, you absolutely can.
+> This document shows how to configure Prisma in a FoalTS project. It assumes that you have already [uninstalled TypeORM](./introduction.md).
 
-To do so, you will have to remove TypeORM and all its utilities.
-
-## Uninstall TypeORM
-
-1. First uninstall the dependencies.
-
-    ```bash
-    npm uninstall typeorm @foal/typeorm
-    ```
-
-2. Then remove the directory `src/app/entities` and the file `src/db.ts`.
-
-3. Remove or replace the script `create-user` in `src/app/scripts`.
-
-4. In the file `src/index.ts`, delete the connection creation called `dataSource.initialize()`.
-
-5. Finally, remove in `package.json` the scripts to manage migrations.
-
-## Examples
-
-### Prisma
-
-> *This example uses an SQLite database.*
-
-#### Warning on Configuration
+## Warning on Configuration
 
 Prisma uses the [dotenv library](https://www.npmjs.com/package/dotenv) under the hood which handles `.env` files and environment variables differently.
 
 Therefore, when using Prisma, you can only use one single `.env` file. Using other files such as `.env.local` or `.env.production` will lead to unexpected variable values.
 
-#### Basic Set Up
+## Basic Set Up
+
+> *This example uses an SQLite database.*
 
 Install the latest version of TypeScript (Prisma v2.21 requires at least v4.1).
 
@@ -60,7 +37,7 @@ npx prisma init
 
 Set up the database configuration in `prisma/schema.prisma`.
 
-```
+```prisma
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -145,7 +122,7 @@ export class AppController implements IAppController {
 }
 ```
 
-#### Authenticating users
+## Authenticating users
 
 First, make sure your have a `User` model defined in `schema.prisma`.
 
@@ -181,9 +158,3 @@ Then add the `user` option to your authentication hooks as follows:
   })
 })
 ```
-
-## Limitations
-
-When using another ORM than TypeORM some features, are not available:
-- the *Groups & Permissions* system,
-- and the `foal g rest-api` command.

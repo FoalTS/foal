@@ -4,7 +4,7 @@ sidebar_label: Response Headers
 ---
 
 
-To protect the application against some (!) common attacks, FoalTS sets by default various HTTP headers. These can be overrided in the `HttpResponse` objects.
+To protect the application against some common attacks, FoalTS sets by default various HTTP headers. These can be overrided in the `HttpResponse` objects.
 
 > Note that this is not a silver bullet, it is just a little help.
 
