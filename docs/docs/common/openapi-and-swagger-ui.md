@@ -418,7 +418,7 @@ foal run generate-openapi-doc
 ```
 
 
-#### using the Swagger UI controller
+#### Using the Swagger UI controller
 
 Another alternative is to use the  [SwaggerController](#Swagger%20UI) directly. This allows you to serve the document(s) at `/openapi.json` and to use it (them) in a Swagger interface.
 
@@ -730,8 +730,6 @@ export class ApiController {
 | `@ApiDefineCallback` |
 
 >  The `@ApiDefineXXX` decorators can be added to any controllers or methods but they always define components in the global scope of the API the controller belongs to.
-
---
 
 > The schemas defined with these decorators can also be re-used in the `@ValidateXXX` hooks.
 > ```typescript

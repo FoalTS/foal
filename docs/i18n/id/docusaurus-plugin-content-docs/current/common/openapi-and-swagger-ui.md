@@ -418,7 +418,7 @@ foal run generate-openapi-doc
 ```
 
 
-#### using the Swagger UI controller
+#### Using the Swagger UI controller
 
 Another alternative is to use the  [SwaggerController](#Swagger%20UI) directly. This allows you to serve the document(s) at `/openapi.json` and to use it (them) in a Swagger interface.
 
