@@ -7,7 +7,7 @@ import Layout from '@theme/Layout';
 const posts = [
   {
     title: 'sinzy Blogs',
-    imageUrl: '/img/who-is-using-foal/foalts.png',
+    imageUrl: '/img/who-is-using-foal/blog.sinzy.net.png',
     href: 'https://blog.sinzy.net/',
     // Description in one short sentence.
     description: 'A blog community (currently in Chinese) based on a multi-user blog system powered by FoalTS'
