@@ -6,11 +6,11 @@ import Layout from '@theme/Layout';
 
 const posts = [
   {
-    title: 'Your website name',
+    title: 'sinzy Blogs',
     imageUrl: '/img/who-is-using-foal/foalts.png',
-    href: 'https://foalts.org',
+    href: 'https://blog.sinzy.net/',
     // Description in one short sentence.
-    description: 'Be the first one to add your website!'
+    description: 'A blog community (currently in Chinese) based on a multi-user blog system powered by FoalTS'
   },
 ];
 
