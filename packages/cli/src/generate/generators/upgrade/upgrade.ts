@@ -3,15 +3,18 @@ import * as fetch from 'node-fetch';
 
 // FoalTS
 import { FileSystem } from '../../file-system';
-import { logger } from '../../utils';
+import { installDependencies, logger } from '../../utils';
 
-export async function getLatestVersion(): Promise<string> {
+async function getLatestVersion(): Promise<string> {
   const response = await fetch('https://registry.npmjs.org/@foal/core/latest');
   const { version } = await response.json();
   return version;
 }
 
-export async function upgrade(version?: string, options: { getLatestVersion: typeof getLatestVersion } = { getLatestVersion }): Promise<void> {
+export async function upgrade(
+  { version, autoInstall }: { version?: string, autoInstall?: boolean },
+  options: { getLatestVersion: typeof getLatestVersion } = { getLatestVersion }
+): Promise<void> {
   version ??= await options.getLatestVersion();
 
   logger.log();
@@ -31,5 +34,9 @@ export async function upgrade(version?: string, options: { getLatestVersion: typ
     if (devDependency.name.startsWith('@foal/')) {
       fs.setOrUpdateProjectDevDependency(devDependency.name, version);
     }
+  }
+
+  if (autoInstall) {
+    await installDependencies();
   }
 }

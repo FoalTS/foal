@@ -189,8 +189,9 @@ program
   .command('upgrade')
   .argument('[version]', 'Name of the specific version to upgrade to')
   .description('Upgrade the project to the latest version of FoalTS. If a version is provided, upgrade to that version.')
-  .action(async (version: string) => {
-    await upgrade(version);
+  .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
+  .action(async (version: string|undefined, options: { install: boolean }) => {
+    await upgrade({ version, autoInstall: options.install });
   });
 
 program
