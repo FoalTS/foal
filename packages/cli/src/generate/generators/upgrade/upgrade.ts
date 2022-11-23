@@ -1,9 +1,17 @@
+// 3p
+import * as fetch from 'node-fetch';
+
 // FoalTS
 import { FileSystem } from '../../file-system';
 
-export async function upgrade(version?: string): Promise<void> {
-  // Temp
-  version ??= '0.0.0';
+export async function getLatestVersion(): Promise<string> {
+  const response = await fetch('https://registry.npmjs.org/@foal/core/latest');
+  const { version } = await response.json();
+  return version;
+}
+
+export async function upgrade(version?: string, options: { getLatestVersion: typeof getLatestVersion } = { getLatestVersion }): Promise<void> {
+  version ??= await options.getLatestVersion();
 
   const fs = new FileSystem();
 
