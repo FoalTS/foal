@@ -8,14 +8,14 @@ export const logger = {
     if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST === 'true') {
       return;
     }
-  
+
     if (spinner) {
       const spinner = new Spinner(msg);
       spinner.setSpinnerString(18);
       spinner.start();
       return spinner;
     }
-  
+
     console.log(msg);
   },
   logCommand(msg: string) {

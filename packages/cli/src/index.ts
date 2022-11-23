@@ -22,11 +22,11 @@ import {
   createRestApi,
   createScript,
   createService,
+  upgrade,
 } from './generate';
 import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
 import { runScript } from './run-script';
-import { upgrade } from './generate';
 
 function displayError(...lines: string[]): void {
   console.error();
