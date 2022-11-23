@@ -62,7 +62,7 @@
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
     "commander": "~9.4.1",
-    "node-fetch": "2"
+    "node-fetch": "~2.6.7"
   },
   "devDependencies": {
     "@types/mocha": "9.1.1",
