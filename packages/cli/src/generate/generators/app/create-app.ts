@@ -2,14 +2,14 @@
 import { execSync, spawn, SpawnOptions } from 'child_process';
 
 // 3p
-import { Spinner } from 'cli-spinner';
-import { cyan, red } from 'colors/safe';
+import { red } from 'colors/safe';
 
 // FoalTS
 import { FileSystem } from '../../file-system';
 import {
   getNames,
   initGitRepo,
+  logger,
 } from '../../utils';
 
 function isYarnInstalled() {
@@ -21,47 +21,27 @@ function isYarnInstalled() {
   }
 }
 
-function log(msg = '', spinner = false): any {
-  // Do not print logs during testing.
-  if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST === 'true') {
-    return;
-  }
-
-  if (spinner) {
-    const spinner = new Spinner(msg);
-    spinner.setSpinnerString(18);
-    spinner.start();
-    return spinner;
-  }
-
-  console.log(msg);
-}
-
-function logCommand(msg: string) {
-  log(`    $ ${cyan(msg)}`);
-}
-
 export async function createApp({ name, autoInstall, initRepo, mongodb = false, yaml = false }:
   { name: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean,
     yaml?: boolean }) {
   const names = getNames(name);
 
-  log();
-  log(' ------------------------------------------------- ');
-  log('|                                                 |');
-  log('|                     Foal                        |');
-  log('|                                                 |');
-  log(' ------------------------------------------------- ');
+  logger.log();
+  logger.log(' ------------------------------------------------- ');
+  logger.log('|                                                 |');
+  logger.log('|                     Foal                        |');
+  logger.log('|                                                 |');
+  logger.log(' ------------------------------------------------- ');
 
   const locals = names;
 
   const fs = new FileSystem();
 
   if (fs.exists(names.kebabName)) {
-    log();
-    log(red('  Error: ') + `The target directory "${names.kebabName}" already exists.`);
-    log('Please remove it before proceeding.');
-    log();
+    logger.log();
+    logger.log(red('  Error: ') + `The target directory "${names.kebabName}" already exists.`);
+    logger.log('Please remove it before proceeding.');
+    logger.log();
     return;
   }
 
@@ -69,8 +49,8 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     .ensureDir(names.kebabName)
     .cd(names.kebabName);
 
-  log();
-  log('  📂 Creating files...');
+  logger.log();
+  logger.log('  📂 Creating files...');
 
   fs
     .hideLogs()
@@ -158,8 +138,8 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   if (autoInstall) {
     const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
 
-    log();
-    const spinner = log(`%s 📦 Installing dependencies (${packageManager})...`, true);
+    logger.log();
+    const spinner = logger.log(`%s 📦 Installing dependencies (${packageManager})...`, true);
 
     const args = [ 'install' /*, '--ignore-engines'*/ ];
     const options: SpawnOptions = {
@@ -178,38 +158,38 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     }
 
     if (!success) {
-      log(`  ❗ Installing dependencies (${packageManager})...`);
-      log();
-      log(red('  Error: ') + 'A problem occurred during the installation of');
-      log('the dependencies. Try installing them manually by running');
-      log('the following commands:');
-      log();
-      logCommand(`cd ${names.kebabName}`);
-      logCommand(`${packageManager} install`);
-      log();
+      logger.log(`  ❗ Installing dependencies (${packageManager})...`);
+      logger.log();
+      logger.log(red('  Error: ') + 'A problem occurred during the installation of');
+      logger.log('the dependencies. Try installing them manually by running');
+      logger.log('the following commands:');
+      logger.log();
+      logger.logCommand(`cd ${names.kebabName}`);
+      logger.logCommand(`${packageManager} install`);
+      logger.log();
       return;
     } else {
-      log(`  📦 Installing dependencies (${packageManager})...`);
+      logger.log(`  📦 Installing dependencies (${packageManager})...`);
     }
 
   }
 
   if (initRepo) {
-    log();
-    log('  📔 Initializing git repository...');
+    logger.log();
+    logger.log('  📔 Initializing git repository...');
     await initGitRepo(names.kebabName);
   }
 
-  log();
-  log('✨ Project successfully created.');
-  log('👉 Here are the next steps:');
+  logger.log();
+  logger.log('✨ Project successfully created.');
+  logger.log('👉 Here are the next steps:');
 
-  log();
-  logCommand(`cd ${names.kebabName}`);
+  logger.log();
+  logger.logCommand(`cd ${names.kebabName}`);
   if (!autoInstall) {
-    logCommand('npm install');
+    logger.logCommand('npm install');
   }
-  logCommand('npm run dev');
+  logger.logCommand('npm run dev');
 
-  log();
+  logger.log();
 }
