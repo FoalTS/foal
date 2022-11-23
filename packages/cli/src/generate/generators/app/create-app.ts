@@ -1,6 +1,3 @@
-// std
-import { execSync, spawn, SpawnOptions } from 'child_process';
-
 // 3p
 import { red } from 'colors/safe';
 
@@ -10,16 +7,8 @@ import {
   getNames,
   initGitRepo,
   logger,
+  installDependencies,
 } from '../../utils';
-
-function isYarnInstalled() {
-  try {
-    execSync('yarn --version', { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
-}
 
 export async function createApp({ name, autoInstall, initRepo, mongodb = false, yaml = false }:
   { name: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean,
@@ -136,42 +125,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         .copy('app/src/scripts/create-user.ts', 'create-user.ts');
 
   if (autoInstall) {
-    const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
-
-    logger.log();
-    const spinner = logger.log(`%s 📦 Installing dependencies (${packageManager})...`, true);
-
-    const args = [ 'install' /*, '--ignore-engines'*/ ];
-    const options: SpawnOptions = {
-      cwd: names.kebabName,
-      shell: true,
-      stdio: 'ignore',
-    };
-
-    const success = await new Promise(resolve => {
-      spawn(packageManager, args, options)
-        .on('close', (code: number) => resolve(code === 0));
-    });
-
-    if (spinner) {
-      spinner.stop(true);
-    }
-
-    if (!success) {
-      logger.log(`  ❗ Installing dependencies (${packageManager})...`);
-      logger.log();
-      logger.log(red('  Error: ') + 'A problem occurred during the installation of');
-      logger.log('the dependencies. Try installing them manually by running');
-      logger.log('the following commands:');
-      logger.log();
-      logger.logCommand(`cd ${names.kebabName}`);
-      logger.logCommand(`${packageManager} install`);
-      logger.log();
-      return;
-    } else {
-      logger.log(`  📦 Installing dependencies (${packageManager})...`);
-    }
-
+    await installDependencies(names.kebabName);
   }
 
   if (initRepo) {
