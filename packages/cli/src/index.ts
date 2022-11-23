@@ -26,6 +26,7 @@ import {
 import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
 import { runScript } from './run-script';
+import { upgrade } from './generate';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -182,6 +183,14 @@ program
       }
       throw error;
     }
+  });
+
+program
+  .command('upgrade')
+  .argument('[version]', 'Name of the specific version to upgrade to')
+  .description('Upgrade the project to the latest version of FoalTS. If a version is provided, upgrade to that version.')
+  .action(async (version: string) => {
+    await upgrade(version);
   });
 
 program

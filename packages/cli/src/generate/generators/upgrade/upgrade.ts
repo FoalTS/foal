@@ -1,0 +1,3 @@
+export async function upgrade(version?: string): Promise<void> {
+  // ...
+}
