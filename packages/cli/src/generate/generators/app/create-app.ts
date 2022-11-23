@@ -161,8 +161,7 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     log();
     const spinner = log(`%s 📦 Installing dependencies (${packageManager})...`, true);
 
-    // TODO: in version 3, remove the hack "--ignore-engines"
-    const args = [ 'install', '--ignore-engines' ];
+    const args = [ 'install' /*, '--ignore-engines'*/ ];
     const options: SpawnOptions = {
       cwd: names.kebabName,
       shell: true,
