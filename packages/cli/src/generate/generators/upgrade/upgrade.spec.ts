@@ -2,7 +2,7 @@ import { deepStrictEqual } from 'assert';
 import { FileSystem } from '../../file-system';
 import { upgrade } from './upgrade';
 
-describe.only('upgrade', () => {
+describe('upgrade', () => {
 
   const fs = new FileSystem();
 
