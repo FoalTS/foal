@@ -19,6 +19,7 @@ export async function upgrade(
 
   logger.log();
   logger.log(`  Upgrading @foal/* dependencies to version ${version}...`);
+  logger.log();
 
   const fs = new FileSystem();
 
@@ -38,5 +39,6 @@ export async function upgrade(
 
   if (autoInstall) {
     await installDependencies();
+    logger.log();
   }
 }

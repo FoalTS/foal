@@ -14,10 +14,9 @@ function isYarnInstalled() {
   }
 }
 
-export async function installDependencies(cwd: string = ''): Promise<void> {
+export async function installDependencies(cwd: string = ''): Promise<{ failed: boolean }> {
   const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
 
-  logger.log();
   const spinner = logger.log(`%s 📦 Installing dependencies (${packageManager})...`, true);
 
   const args = [ 'install' /*, '--ignore-engines'*/ ];
@@ -41,15 +40,15 @@ export async function installDependencies(cwd: string = ''): Promise<void> {
     logger.log();
     logger.log(red('  Error: ') + 'A problem occurred during the installation of');
     logger.log('the dependencies. Try installing them manually by running');
-    logger.log('the following commands:');
+    logger.log('the following command(s):');
     logger.log();
     if (cwd) {
       logger.logCommand(`cd ${cwd}`);
     }
     logger.logCommand(`${packageManager} install`);
-    logger.log();
-    return;
+    return { failed: true };
   } else {
     logger.log(`  📦 Installing dependencies (${packageManager})...`);
+    return { failed: false };
   }
 }

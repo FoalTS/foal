@@ -21,13 +21,13 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
   logger.log('|                     Foal                        |');
   logger.log('|                                                 |');
   logger.log(' ------------------------------------------------- ');
+  logger.log();
 
   const locals = names;
 
   const fs = new FileSystem();
 
   if (fs.exists(names.kebabName)) {
-    logger.log();
     logger.log(red('  Error: ') + `The target directory "${names.kebabName}" already exists.`);
     logger.log('Please remove it before proceeding.');
     logger.log();
@@ -38,8 +38,8 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     .ensureDir(names.kebabName)
     .cd(names.kebabName);
 
-  logger.log();
   logger.log('  📂 Creating files...');
+  logger.log();
 
   fs
     .hideLogs()
@@ -125,16 +125,19 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         .copy('app/src/scripts/create-user.ts', 'create-user.ts');
 
   if (autoInstall) {
-    await installDependencies(names.kebabName);
+    const { failed } = await installDependencies(names.kebabName);
+    logger.log();
+    if (failed) {
+      return;
+    }
   }
 
   if (initRepo) {
-    logger.log();
     logger.log('  📔 Initializing git repository...');
+    logger.log();
     await initGitRepo(names.kebabName);
   }
 
-  logger.log();
   logger.log('✨ Project successfully created.');
   logger.log('👉 Here are the next steps:');
 
