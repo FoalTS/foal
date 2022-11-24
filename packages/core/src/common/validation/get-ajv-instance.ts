@@ -31,6 +31,7 @@ export function getAjvInstance(): Ajv {
       useDefaults: Config.get('settings.ajv.useDefaults', 'boolean|string', true) as boolean|'empty',
     });
     _instanceWrapper.instance.addKeyword({ keyword: 'components' });
+    _instanceWrapper.instance.addKeyword({ keyword: 'example' });
     addFormats(_instanceWrapper.instance);
   }
   return _instanceWrapper.instance;
