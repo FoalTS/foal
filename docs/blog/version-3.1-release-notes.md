@@ -14,6 +14,17 @@ Version 3.1 of [Foal](https://foalts.org/) is out! Here are the improvements tha
 
 <!--truncate-->
 
+## New `foal upgrade` command
+
+This command allows to upgrade all `@foal/*` dependencies and dev dependencies to a given version.
+
+*Examples*
+```bash
+foal upgrade # upgrade to the latest version
+foal upgrade 3.0.0
+foal upgrade "~3.0.0"
+```
+
 ## Social authentication supports subdomains
 
 If you're using multiple subdomains domains to handle social authentication, you can now do so by specifying a custom cookie domain in the configuration:
