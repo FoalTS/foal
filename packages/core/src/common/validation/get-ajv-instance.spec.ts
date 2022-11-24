@@ -119,6 +119,18 @@ describe('getAjvInstance', () => {
     doesNotThrow(() => getAjvInstance().validate(schema, data));
   });
 
+  it('should support the custom OpenAPI keyword "example".', () => {
+    const schema = {
+      properties: {
+        name: { type: 'string', example: 'My Organization Name' },
+      },
+      type: 'object',
+    };
+    const data = { hello: 'world' };
+
+    doesNotThrow(() => getAjvInstance().validate(schema, data));
+  });
+
   it('should support JSON schema formats for AJV (email, date, etc).', () => {
     const schema = {
       properties: {

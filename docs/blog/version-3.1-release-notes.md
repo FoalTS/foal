@@ -35,3 +35,7 @@ settings:
     cookie:
       domain: foalts.org
 ```
+
+## Regression on OpenAPI keyword "example" has been fixed
+
+In version 3.0, using the keyword `example` in an validation object was raising an error. This has been fixed.
