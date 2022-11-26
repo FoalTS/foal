@@ -16,7 +16,7 @@ Version 3.1 of [Foal](https://foalts.org/) is out! Here are the improvements tha
 
 ## New `foal upgrade` command
 
-This command allows to upgrade all `@foal/*` dependencies and dev dependencies to a given version.
+This command allows you to upgrade all `@foal/*` dependencies and dev dependencies to a given version.
 
 *Examples*
 ```bash
@@ -39,3 +39,15 @@ settings:
 ## Regression on OpenAPI keyword "example" has been fixed
 
 In version 3.0, using the keyword `example` in an validation object was raising an error. This has been fixed.
+
+## `.env` files support whitespaces
+
+Whitespaces around the equal symbol is now allowed:
+
+```bash
+FOO_BAR_WITH_WHITESPACES_AROUND_THE_NAME = hello you
+```
+
+## Value of the `Strict-Transport-Security` header has been increased
+
+It has been increased from 15,552,000 to 31,536,000.
