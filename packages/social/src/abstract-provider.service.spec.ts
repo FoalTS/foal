@@ -174,6 +174,7 @@ describe('AbstractProvider', () => {
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
     Config.remove('settings.social.cookie.secure');
+    Config.remove('settings.social.cookie.domain');
   });
 
   describe('has a "redirect" method that', () => {
@@ -292,6 +293,15 @@ describe('AbstractProvider', () => {
         const { options } = response.getCookie(STATE_COOKIE_NAME);
 
         strictEqual(options.secure, true);
+      });
+
+      it('with a generated state in a cookie whose domain option is defined with the config.', async () => {
+        Config.set('settings.social.cookie.domain', 'foalts.org');
+
+        const response = await provider.redirect();
+        const { options } = response.getCookie(STATE_COOKIE_NAME);
+
+        strictEqual(options.domain, 'foalts.org');
       });
 
       it('with a redirect path which contains extra parameters if any are provided to the method.', async () => {
@@ -678,6 +688,7 @@ describe('Abstract Provider With PKCE', () => {
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
     Config.remove('settings.social.cookie.secure');
+    Config.remove('settings.social.cookie.domain');
   });
 
   describe('has a "redirect" method that', () => {
@@ -713,6 +724,32 @@ describe('Abstract Provider With PKCE', () => {
         const searchParams = new URLSearchParams(response.path);
         ok(searchParams.get('code_challenge'));
         strictEqual(searchParams.get('code_challenge_method'), 'S256');
+      });
+
+      it('that sets a cookie containing the code verifier encrypted.', async () =>{
+        const response = await provider.redirect();
+
+        const stateCookieValue = response.getCookie(CODE_VERIFIER_COOKIE_NAME).value;
+        const stateCookieOptions = response.getCookie(CODE_VERIFIER_COOKIE_NAME).options;
+        if (typeof stateCookieValue !== 'string') {
+          throw new Error('Cookie not found.');
+        }
+
+        deepStrictEqual(stateCookieOptions, {
+          httpOnly: true,
+          maxAge: 300,
+          path: '/',
+          secure: false
+        });
+      });
+
+      it('that sets a cookie that can have a custom domain.', async () =>{
+        Config.set('settings.social.cookie.domain', 'foalts.org');
+
+        const response = await provider.redirect();
+        const { options } = response.getCookie(CODE_VERIFIER_COOKIE_NAME);
+
+        strictEqual(options.domain, 'foalts.org');
       });
     });
 
@@ -850,6 +887,7 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
     Config.remove('settings.social.cookie.secure');
+    Config.remove('settings.social.cookie.domain');
   });
 
   describe('has a "redirect" method that', () => {

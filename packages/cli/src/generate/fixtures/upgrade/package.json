@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@foal/core": "^0.7.0",
+    "@foal/foobar": "^0.8.0",
+    "another-dependency": "^1.0.0"
+  },
+  "devDependencies": {
+    "@foal/cli": "^0.9.0",
+    "another-dependency2": "^2.0.0"
+  }
+}

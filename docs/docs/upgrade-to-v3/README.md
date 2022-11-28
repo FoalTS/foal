@@ -304,7 +304,7 @@ The package `@foal/mongodb` and its Mongo store uses `mongodb@4`.
     ```json
     {
       "mongodb": "~3.7.3",
-      "mongodb4": "npm:mongodb@~4.3.1",
+      "mongodb4": "npm:mongodb@~4.11.0",
     }
     ```
     

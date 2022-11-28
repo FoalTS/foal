@@ -36,10 +36,10 @@ describe('MongoDBStore', () => {
 
     beforeEach(() => store = createService(MongoDBStore));
 
-    afterEach(() => Promise.all([
-      mongoDBClient.close(),
-      store.close(),
-    ]))
+    afterEach(async () => {
+      await mongoDBClient.close();
+      await store.close();
+    });
 
     context('when setMongoDBClient has been previously called', () => {
 

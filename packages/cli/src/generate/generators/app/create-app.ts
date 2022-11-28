@@ -1,67 +1,36 @@
-// std
-import { execSync, spawn, SpawnOptions } from 'child_process';
-
 // 3p
-import { Spinner } from 'cli-spinner';
-import { cyan, red } from 'colors/safe';
+import { red } from 'colors/safe';
 
 // FoalTS
 import { FileSystem } from '../../file-system';
 import {
   getNames,
   initGitRepo,
+  logger,
+  installDependencies,
 } from '../../utils';
-
-function isYarnInstalled() {
-  try {
-    execSync('yarn --version', { stdio: 'ignore' });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function log(msg = '', spinner = false): any {
-  // Do not print logs during testing.
-  if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST === 'true') {
-    return;
-  }
-
-  if (spinner) {
-    const spinner = new Spinner(msg);
-    spinner.setSpinnerString(18);
-    spinner.start();
-    return spinner;
-  }
-
-  console.log(msg);
-}
-
-function logCommand(msg: string) {
-  log(`    $ ${cyan(msg)}`);
-}
 
 export async function createApp({ name, autoInstall, initRepo, mongodb = false, yaml = false }:
   { name: string, autoInstall?: boolean, initRepo?: boolean, mongodb?: boolean,
     yaml?: boolean }) {
   const names = getNames(name);
 
-  log();
-  log(' ------------------------------------------------- ');
-  log('|                                                 |');
-  log('|                     Foal                        |');
-  log('|                                                 |');
-  log(' ------------------------------------------------- ');
+  logger.log();
+  logger.log(' ------------------------------------------------- ');
+  logger.log('|                                                 |');
+  logger.log('|                     Foal                        |');
+  logger.log('|                                                 |');
+  logger.log(' ------------------------------------------------- ');
+  logger.log();
 
   const locals = names;
 
   const fs = new FileSystem();
 
   if (fs.exists(names.kebabName)) {
-    log();
-    log(red('  Error: ') + `The target directory "${names.kebabName}" already exists.`);
-    log('Please remove it before proceeding.');
-    log();
+    logger.log(red('  Error: ') + `The target directory "${names.kebabName}" already exists.`);
+    logger.log('Please remove it before proceeding.');
+    logger.log();
     return;
   }
 
@@ -69,16 +38,15 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
     .ensureDir(names.kebabName)
     .cd(names.kebabName);
 
-  log();
-  log('  📂 Creating files...');
+  logger.log('  📂 Creating files...');
+  logger.log();
 
   fs
     .hideLogs()
     .copy('app/gitignore', '.gitignore')
-    .renderOnlyIf(!mongodb && !yaml, 'app/package.json', 'package.json', locals)
-    .renderOnlyIf(!mongodb && yaml, 'app/package.yaml.json', 'package.json', locals)
-    .renderOnlyIf(mongodb && !yaml, 'app/package.mongodb.json', 'package.json', locals)
-    .renderOnlyIf(mongodb && yaml, 'app/package.mongodb.yaml.json', 'package.json', locals)
+    .renderOnlyIf(!mongodb, 'app/package.json', 'package.json', locals)
+    .renderOnlyIf(mongodb, 'app/package.mongodb.json', 'package.json', locals)
+    .setOrUpdateProjectDependencyOnlyIf(yaml, 'yamljs', '~0.3.0')
     .copy('app/tsconfig.app.json', 'tsconfig.app.json')
     .copy('app/tsconfig.e2e.json', 'tsconfig.e2e.json')
     .copy('app/tsconfig.json', 'tsconfig.json')
@@ -157,61 +125,28 @@ export async function createApp({ name, autoInstall, initRepo, mongodb = false, 
         .copy('app/src/scripts/create-user.ts', 'create-user.ts');
 
   if (autoInstall) {
-    const packageManager = isYarnInstalled() ? 'yarn' : 'npm';
-
-    log();
-    const spinner = log(`%s 📦 Installing dependencies (${packageManager})...`, true);
-
-    // TODO: in version 3, remove the hack "--ignore-engines"
-    const args = [ 'install', '--ignore-engines' ];
-    const options: SpawnOptions = {
-      cwd: names.kebabName,
-      shell: true,
-      stdio: 'ignore',
-    };
-
-    const success = await new Promise(resolve => {
-      spawn(packageManager, args, options)
-        .on('close', (code: number) => resolve(code === 0));
-    });
-
-    if (spinner) {
-      spinner.stop(true);
-    }
-
-    if (!success) {
-      log(`  ❗ Installing dependencies (${packageManager})...`);
-      log();
-      log(red('  Error: ') + 'A problem occurred during the installation of');
-      log('the dependencies. Try installing them manually by running');
-      log('the following commands:');
-      log();
-      logCommand(`cd ${names.kebabName}`);
-      logCommand(`${packageManager} install`);
-      log();
+    const { failed } = await installDependencies(names.kebabName);
+    logger.log();
+    if (failed) {
       return;
-    } else {
-      log(`  📦 Installing dependencies (${packageManager})...`);
     }
-
   }
 
   if (initRepo) {
-    log();
-    log('  📔 Initializing git repository...');
+    logger.log('  📔 Initializing git repository...');
+    logger.log();
     await initGitRepo(names.kebabName);
   }
 
-  log();
-  log('✨ Project successfully created.');
-  log('👉 Here are the next steps:');
+  logger.log('✨ Project successfully created.');
+  logger.log('👉 Here are the next steps:');
 
-  log();
-  logCommand(`cd ${names.kebabName}`);
+  logger.log();
+  logger.logCommand(`cd ${names.kebabName}`);
   if (!autoInstall) {
-    logCommand('npm install');
+    logger.logCommand('npm install');
   }
-  logCommand('npm run dev');
+  logger.logCommand('npm run dev');
 
-  log();
+  logger.log();
 }

@@ -73,7 +73,7 @@ describe('createApp', () => {
       .expect('X-Content-Type-Options', 'nosniff')
       .expect('X-Frame-Options', 'SAMEORIGIN')
       .expect('X-XSS-Protection', '1; mode=block')
-      .expect('Strict-Transport-Security', 'max-age=15552000; includeSubDomains')
+      .expect('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
       .expect('X-Custom-Header', 'foobar');
   });
 
