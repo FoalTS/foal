@@ -2,7 +2,7 @@
 title: What's new in version 2 (part 1/4)
 author: Loïc Poullain
 author_title: Creator of FoalTS. Software engineer.
-author_url: https://www.loicpoullain.com
+author_url: https://loicpoullain.com
 author_image_url: https://avatars1.githubusercontent.com/u/13604533?v=4
 image: blog/twitter-banners/whats-new-in-version-2-part-1.png
 tags: [release]
