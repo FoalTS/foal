@@ -166,6 +166,9 @@ describe('SocketIOController', () => {
         notDeepStrictEqual(actualContext?.socket, {});
         deepStrictEqual(actualContext?.state, {});
         strictEqual(actualContext?.user, null);
+
+        strictEqual(actualContext?.controllerName, 'WebsocketController');
+        strictEqual(actualContext?.controllerMethodName, 'createUser');
       });
 
       it('and should return an ok response if the controller method returns a WebsocketResponse (with no payload).', async () => {

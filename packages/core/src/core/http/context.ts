@@ -104,6 +104,7 @@ interface Request extends IncomingMessage {
  * - the user object if available,
  * - the session object if available,
  * - a file list object,
+ * - the name of the controller and the name of the method,
  * - and a `state` object that can be used to pass data across several hooks.
  *
  * @export
