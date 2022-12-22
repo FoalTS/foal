@@ -104,6 +104,7 @@ interface Request extends IncomingMessage {
  * - the user object if available,
  * - the session object if available,
  * - a file list object,
+ * - the name of the controller and the name of the method,
  * - and a `state` object that can be used to pass data across several hooks.
  *
  * @export
@@ -118,17 +119,25 @@ export class Context<User = { [key: string]: any } | null, ContextState = { [key
   readonly state: ContextState;
   readonly files: FileList;
 
+  readonly controllerName: string;
+  readonly controllerMethodName: string;
+
   /**
    * Creates an instance of Context.
    * @param {*} request - Either the express request object or a mock (for testing).
+   * @param {string} [controllerName=''] - The name of the controller.
+   * @param {string} [controllerMethodName=''] - The name of the method.
    * @memberof Context
    */
-  constructor(request: any) {
+  constructor(request: any, controllerName: string = '', controllerMethodName: string = '') {
     this.request = request;
     this.session = null;
 
     this.user = null as any;
     this.state = {} as any;
     this.files = new FileList();
+
+    this.controllerName = controllerName;
+    this.controllerMethodName = controllerMethodName;
   }
 }
