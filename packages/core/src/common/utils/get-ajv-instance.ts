@@ -27,13 +27,9 @@ export function getAjvInstance(): Ajv.Ajv {
       removeAdditional: true,
       useDefaults: true,
     };
-    _instanceWrapper.instance = new Ajv({
-      ...Object.assign(
-        {},
-        defaultOption,
-        Config.get("settings.ajv", "any", {})
-      ),
-    });
+    _instanceWrapper.instance = new Ajv(
+      Object.assign({}, defaultOption, Config.get("settings.ajv", "any", {}))
+    );
   }
   return _instanceWrapper.instance;
 }
