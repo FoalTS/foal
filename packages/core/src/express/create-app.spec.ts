@@ -195,44 +195,47 @@ describe('createApp', () => {
   it(
     'should respond on DELETE, GET, PATCH, POST, PUT, HEAD, OPTIONS and "ALL" requests if a handler exists.',
     async () => {
+      let actualGetContext: Context|undefined;
+
       class MyController {
         @Head('/foo')
-        head() {
+        headSomething() {
           // A HEAD response does not have a body.
           return new HttpResponseOK()
             .setHeader('foo', 'bar');
         }
         @Get('/foo')
-        get() {
+        getSomething(ctx: Context) {
+          actualGetContext = ctx;
           return new HttpResponseOK('get');
         }
         @Post('/foo')
-        post() {
+        postSomething() {
           return new HttpResponseOK('post');
         }
         @Patch('/foo')
-        patch() {
+        patchSomething() {
           return new HttpResponseOK('patch');
         }
         @Put('/foo')
-        put() {
+        putSomething() {
           return new HttpResponseOK('put');
         }
         @Delete('/foo')
-        delete() {
+        deleteSomething() {
           return new HttpResponseOK('delete');
         }
         @Options('/foo')
-        options() {
+        optionsSomething() {
           return new HttpResponseOK('options');
         }
         @All('/bar')
-        all() {
+        allSomething() {
           return new HttpResponseOK('all');
         }
       }
       const app = await createApp(MyController);
-      return Promise.all([
+      await Promise.all([
         request(app).get('/foo').expect('get'),
         request(app).post('/foo').expect('post'),
         request(app).patch('/foo').expect('patch'),
@@ -244,6 +247,9 @@ describe('createApp', () => {
         request(app).get('/bar').expect('all'),
         request(app).post('/bar').expect('all'),
       ]);
+
+      strictEqual(actualGetContext?.controllerName, 'MyController');
+      strictEqual(actualGetContext?.controllerMethodName, 'getSomething');
     }
   );
 

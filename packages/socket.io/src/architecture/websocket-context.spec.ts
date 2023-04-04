@@ -19,6 +19,12 @@ describe('WebsocketContext', () => {
     deepStrictEqual(actual.state, {});
     strictEqual(actual.user, null);
     strictEqual(actual.session, null);
+    strictEqual(actual.controllerName, '');
+    strictEqual(actual.controllerMethodName, '');
+
+    const actual2 = new WebsocketContext(eventName, payload, socket, 'AppController', 'foobar');
+    strictEqual(actual2.controllerName, 'AppController');
+    strictEqual(actual2.controllerMethodName, 'foobar');
   });
 
 });

@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "outDir": "lib/",
+    "module": "commonjs",
+    "target": "es2021",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "sourceMap": true,
+    "declaration": true,
+    "lib": [
+      "es2021",
+      "dom"
+    ],
+    "types": [
+      "node",
+      "mocha"
+    ]
+  },
+  "include": [
+    "./src/**/*.ts"
+  ]
+}

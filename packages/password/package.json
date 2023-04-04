@@ -1,13 +1,13 @@
 {
-  "name": "@foal/socket.io",
+  "name": "@foal/password",
   "version": "3.2.0",
-  "description": "Websocket integration for FoalTS",
+  "description": "Password utilities for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
     "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
-    "build": "rimraf lib && tsc -p tsconfig-build.json",
+    "build": "rimraf lib && copy-cli \"./src/**.txt.gz\" lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "funding": {
@@ -22,11 +22,7 @@
   "keywords": [
     "FoalTS",
     "foal",
-    "socket.io",
-    "realtime",
-    "websocket",
-    "ws",
-    "nodejs"
+    "password"
   ],
   "bugs": {
     "url": "https://github.com/FoalTS/foal/issues"
@@ -44,19 +40,12 @@
     "lib/"
   ],
   "devDependencies": {
-    "@socket.io/redis-adapter": "~7.2.0",
     "@types/mocha": "9.1.1",
     "@types/node": "16.11.7",
+    "copy": "~0.3.2",
     "mocha": "~10.1.0",
-    "redis": "~4.1.0",
     "rimraf": "~3.0.2",
-    "socket.io-client": "~4.5.1",
     "ts-node": "~10.9.1",
     "typescript": "~4.7.4"
-  },
-  "dependencies": {
-    "@foal/core": "^3.2.0",
-    "reflect-metadata": "~0.1.13",
-    "socket.io": "~4.5.3"
   }
 }

@@ -128,7 +128,7 @@ export async function createApp(
   for (const { route } of routes) {
     app[route.httpMethod.toLowerCase()](route.path, async (req: any, res: any, next: (err?: any) => any) => {
       try {
-        const ctx = new Context(req);
+        const ctx = new Context(req, route.controller.constructor.name, route.propertyKey);
         // TODO: better test this line.
         const response = await getResponse(route, ctx, services, appController);
         sendResponse(response, res);
