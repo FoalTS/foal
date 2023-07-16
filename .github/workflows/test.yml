@@ -31,8 +31,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Use npm version 8.5
       run: npm install -g npm@8.5
-    - name: Install global dependencies (codecov)
-      run: npm install -g codecov
     - name: Install project dependencies
       run: npm install
     - name: Install package dependencies and build packages
@@ -82,8 +80,3 @@ jobs:
       run: cd packages/core && npm run test
     - name: Run acceptance tests (Bash)
       run: ./e2e_test.sh
-    - name: Send code coverage report to Codecov
-      uses: codecov/codecov-action@v1.0.3
-      with:
-        token: ${{secrets.CODECOV_TOKEN}}
-        file: packages/core/coverage/*.json
