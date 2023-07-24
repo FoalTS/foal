@@ -13,7 +13,7 @@ Foal allows you to establish two-way interactive communication between your serv
 npm install @foal/socket.io
 ```
 
-*services/websocket.service.ts*
+*controllers/websocket.controller.ts*
 ```typescript
 import { EventName, ValidatePayload, SocketIOController, WebsocketContext, WebsocketResponse } from '@foal/socket.io';
 
