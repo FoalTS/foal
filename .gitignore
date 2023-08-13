@@ -3,7 +3,6 @@
 node_modules/
 npm-debug.log
 lerna-debug.log
-.nyc_output/
 coverage/
 e2e-test-temp
 
