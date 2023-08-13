@@ -9,9 +9,6 @@
   <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
   </a>
-  <a href="https://codecov.io/github/FoalTS/foal">
-    <img src="https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg" alt="Code coverage">
-  </a>
   <a href="https://snyk.io/test/npm/@foal/social">
     <img src="https://snyk.io/test/npm/@foal/social/badge.svg" alt="Known Vulnerabilities">
   </a>

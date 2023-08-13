@@ -4,7 +4,6 @@ slug: /
 ---
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
-![Code coverage](https://codecov.io/gh/FoalTS/foal/branch/master/graphs/badge.svg)
 ![Known Vulnerabilities](https://snyk.io/test/github/foalts/foal/badge.svg)
 ![Commit activity](https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg)
 ![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)

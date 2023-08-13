@@ -1,7 +1,7 @@
 {
   "name": "@foal/internal-test",
   "private": true,
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "Unpublished package used to run some tests.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -38,8 +38,8 @@
     "lib/"
   ],
   "devDependencies": {
-    "rimraf": "~3.0.2",
+    "rimraf": "~5.0.1",
     "ts-node": "~10.9.1",
-    "typescript": "~4.7.4"
+    "typescript": "~4.9.5"
   }
 }
