@@ -1,6 +1,6 @@
 {
   "name": "@foal/mongodb",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "MongoDB package for FoalTS session",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -45,7 +45,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^3.2.0",
+    "@foal/core": "^3.3.0",
     "mongodb": "~4.11.0"
   },
   "devDependencies": {
