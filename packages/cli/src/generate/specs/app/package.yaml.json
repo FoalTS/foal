@@ -35,7 +35,7 @@
     "@foal/cli": "^3.0.0",
     "@types/mocha": "10.0.1",
     "@types/node": "16.18.40",
-    "concurrently": "~7.5.0",
+    "concurrently": "~8.2.0",
     "mocha": "~10.2.0",
     "supertest": "~6.3.3",
     "supervisor": "~0.12.0",
