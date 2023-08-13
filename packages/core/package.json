@@ -78,7 +78,7 @@
     "all": true
   },
   "dependencies": {
-    "ajv": "~8.11.0",
+    "ajv": "~8.12.0",
     "ajv-formats": "~2.1.1",
     "cookie-parser": "~1.4.6",
     "express": "~4.18.2",
