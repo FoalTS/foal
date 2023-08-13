@@ -43,7 +43,7 @@
   ],
   "dependencies": {
     "@foal/core": "^3.2.0",
-    "jsonwebtoken": "~8.5.1"
+    "jsonwebtoken": "~9.0.1"
   },
   "devDependencies": {
     "@types/mocha": "9.1.1",
