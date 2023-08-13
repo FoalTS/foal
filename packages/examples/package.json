@@ -62,7 +62,7 @@
     "@foal/cli": "^3.2.0",
     "@types/mocha": "10.0.1",
     "@types/node": "16.18.40",
-    "concurrently": "~7.5.0",
+    "concurrently": "~8.2.0",
     "copy": "~0.3.2",
     "mocha": "~10.2.0",
     "supervisor": "~0.12.0",
