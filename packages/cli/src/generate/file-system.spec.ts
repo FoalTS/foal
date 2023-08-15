@@ -118,9 +118,12 @@ describe('FileSystem', () => {
           throw new Error('The error thrown should be an instance of ClientError.');
         }
         strictEqual(
-          error.message,
-          'The file package.json is not a valid JSON. Unexpected token h in JSON at position 0'
-        );
+          [
+            `The file package.json is not a valid JSON. Unexpected token 'h', "hello" is not valid JSON`,
+            'The file package.json is not a valid JSON. Unexpected token h in JSON at position 0',
+          ].includes(error.message),
+          true,
+        )
       }
     });
 
