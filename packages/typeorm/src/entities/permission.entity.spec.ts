@@ -7,7 +7,7 @@ import { BaseEntity, DataSource, QueryFailedError } from 'typeorm';
 // FoalTS
 import { Permission } from './permission.entity';
 
-function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-sqlite3') {
+function testSuite(type: 'mysql' | 'postgres' | 'sqlite' | 'better-sqlite3') {
 
   describe(`with ${type}`, () => {
 
@@ -16,7 +16,6 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     before(async () => {
       switch (type) {
         case 'mysql':
-        case 'mariadb':
           dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
@@ -150,7 +149,6 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 describe('UserWithPermissions', () => {
 
   testSuite('mysql');
-  testSuite('mariadb');
   testSuite('sqlite');
   testSuite('better-sqlite3');
   testSuite('postgres');

@@ -49,7 +49,6 @@ FoalTS supports officially the following databases:
 | --- | --- | --- |
 | PostgreSQL | 9.6+ ([Version Policy](https://www.postgresql.org/support/versioning/)) | `pg@8` |
 | MySQL | 5.7+ ([Version Policy](https://en.wikipedia.org/wiki/MySQL#Release_history)) | `mysql@2` |
-| MariaDB | 10.2+ ([Version Policy](https://en.wikipedia.org/wiki/MariaDB#Versioning)) | `mysql@2` |
 | SQLite | 3 | `sqlite3@5` and `better-sqlite3@7` (since v2.1) |
 | MongoDB | 4.0+ ([Version Policy](https://www.mongodb.com/support-policy)) | `mongodb@3` |
 
@@ -199,75 +198,6 @@ module.exports = {
 
   database: {
     type: "mysql",
-    host: "localhost",
-    port: 3306,
-    username: "root",
-    password: "password",
-    database: "my-db"
-  }
-}
-```
-
-</TabItem>
-</Tabs>
-
-### MariaDB
-
-```sh
-npm install mysql
-```
-
-*config/default.{json|yml|js}*
-
-<Tabs
-  defaultValue="yaml"
-  values={[
-    {label: 'YAML', value: 'yaml'},
-    {label: 'JSON', value: 'json'},
-    {label: 'JS', value: 'js'},
-  ]}
->
-<TabItem value="yaml">
-
-```yaml
-# ...
-
-database:
-  type: mariadb
-  host: localhost
-  port: 3306
-  username: root
-  password: password
-  database: my-db
-```
-
-</TabItem>
-<TabItem value="json">
-
-```json
-{
-  // ...
-
-  "database": {
-    "type": "mariadb",
-    "host": "localhost",
-    "port": 3306,
-    "username": "root",
-    "password": "password",
-    "database": "my-db"
-  }
-}
-```
-
-</TabItem>
-<TabItem value="js">
-
-```javascript
-module.exports = {
-  // ...
-
-  database: {
-    type: "mariadb",
     host: "localhost",
     port: 3306,
     username: "root",
