@@ -27,7 +27,7 @@
     "@foal/core": "^3.0.0",
     "@foal/typeorm": "^3.0.0",
     "source-map-support": "~0.5.21",
-    "better-sqlite3": "~7.6.2",
+    "sqlite3": "~5.1.6",
     "typeorm": "0.3.10"
   },
   "devDependencies": {
