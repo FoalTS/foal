@@ -299,14 +299,28 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       if (!isHttpResponseUnauthorized(response)) {
         throw new Error('response should be instance of HttpResponseUnauthorized');
       }
-      deepStrictEqual(response.body, {
-        code: 'invalid_token',
-        description: 'Unexpected token R in JSON at position 27'
-      });
-      strictEqual(
-        response.getHeader('WWW-Authenticate'),
-        'error="invalid_token", error_description="Unexpected token R in JSON at position 27"'
-      );
+      try {
+        deepStrictEqual(response.body, {
+          code: 'invalid_token',
+          description: 'Unexpected token R in JSON at position 27'
+        });
+      } catch {
+        deepStrictEqual(response.body, {
+          code: 'invalid_token',
+          description: `Unexpected token 'R', ...\"0\",\"name\":RJohn Doe\"\"... is not valid JSON`
+        });
+      }
+      try {
+        strictEqual(
+          response.getHeader('WWW-Authenticate'),
+          'error="invalid_token", error_description="Unexpected token R in JSON at position 27"'
+        );
+      } catch {
+        strictEqual(
+          response.getHeader('WWW-Authenticate'),
+          `error="invalid_token", error_description="Unexpected token 'R', ...\"0\",\"name\":RJohn Doe\"\"... is not valid JSON"`
+        );
+      }
     });
 
     it('should return an HttpResponseUnauthorized object if options.secretOrPublicKey throws an'
