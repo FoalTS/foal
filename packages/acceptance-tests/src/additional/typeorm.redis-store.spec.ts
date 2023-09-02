@@ -36,7 +36,7 @@ import {
 } from 'typeorm';
 import { createAndInitializeDataSource } from '../common';
 
-describe.only('[Sample] MongoDB & Redis Store', async () => {
+describe('[Sample] MongoDB & Redis Store', async () => {
 
   let app: any;
   let token: string;

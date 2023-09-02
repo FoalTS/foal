@@ -35,7 +35,7 @@ import {
 } from 'typeorm';
 import { createAndInitializeDataSource } from '../common';
 
-describe.only('[Sample] TypeORM & MongoDB Store', async () => {
+describe('[Sample] TypeORM & MongoDB Store', async () => {
 
   const MONGODB_URI = 'mongodb://localhost:27017/e2e_db';
 
