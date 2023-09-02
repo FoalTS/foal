@@ -7,7 +7,7 @@ import { BaseEntity, DataSource, QueryFailedError } from 'typeorm';
 // FoalTS
 import { Permission } from './permission.entity';
 
-function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-sqlite3') {
+function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
 
   describe(`with ${type}`, () => {
 
@@ -40,7 +40,6 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           });
           break;
         case 'sqlite':
-        case 'better-sqlite3':
           dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
@@ -109,7 +108,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
         });
 
       // SQLite does not impose any length restrictions on the length of strings.
-      if (type !== 'sqlite' && type !== 'better-sqlite3') {
+      if (type !== 'sqlite') {
         permission.codeName = 'This is a very long long long long long long line.'
           + 'This is a very long long long long long long line.1';
 
@@ -152,7 +151,6 @@ describe('UserWithPermissions', () => {
   testSuite('mysql');
   testSuite('mariadb');
   testSuite('sqlite');
-  testSuite('better-sqlite3');
   testSuite('postgres');
 
 });
