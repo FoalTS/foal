@@ -41,7 +41,11 @@ describe('schemaFromTypePaths', () => {
 
     const schema = await schemaFromTypePaths(path);
 
-    const response = await graphql(schema, '{ hello }', root);
+    const response = await graphql({
+      schema,
+      source: '{ hello }',
+      rootValue: root,
+    });
     deepStrictEqual(parse(response), {
       data: {
         hello: 'Hello world!'
@@ -76,7 +80,11 @@ describe('schemaFromTypePaths', () => {
 
     const schema = await schemaFromTypePaths(path1, path2);
 
-    const response = await graphql(schema, '{ me { name } }', root);
+    const response = await graphql({
+      schema,
+      source: '{ me { name } }',
+      rootValue: root,
+    });
     deepStrictEqual(parse(response), {
       data: {
         me: { name: 'foobar' }

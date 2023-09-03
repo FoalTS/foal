@@ -22,7 +22,11 @@ describe('schemaFromTypeDefs', () => {
 
     const schema = schemaFromTypeDefs(source);
 
-    const response = await graphql(schema, '{ hello }', root);
+    const response = await graphql({
+      schema,
+      source: '{ hello }',
+      rootValue: root,
+    });
     deepStrictEqual(parse(response), {
       data: {
         hello: 'Hello world!'
@@ -51,7 +55,11 @@ describe('schemaFromTypeDefs', () => {
 
     const schema = schemaFromTypeDefs(source1, source2);
 
-    const response = await graphql(schema, '{ me { name } }', root);
+    const response = await graphql({
+      schema,
+      source: '{ me { name } }',
+      rootValue: root,
+    });
     deepStrictEqual(parse(response), {
       data: {
         me: { name: 'foobar' }

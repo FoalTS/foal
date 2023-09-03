@@ -42,7 +42,7 @@
   "dependencies": {
     "@foal/core": "^3.3.0",
     "ajv": "~8.12.0",
-    "glob": "~7.1.4"
+    "glob": "~10.3.4"
   },
   "devDependencies": {
     "@types/mocha": "10.0.1",
@@ -50,17 +50,17 @@
     "apollo-cache-inmemory": "~1.6.6",
     "apollo-client": "~2.6.10",
     "apollo-link-http": "~1.5.17",
-    "graphql": "~15.8.0",
-    "graphql-request": "~4.3.0",
+    "graphql": "~16.8.0",
+    "graphql-request": "~6.1.0",
     "graphql-tag": "~2.12.6",
     "mocha": "~10.2.0",
     "node-fetch": "~2.6.7",
     "rimraf": "~5.0.1",
     "ts-node": "~10.9.1",
-    "type-graphql": "~1.1.1",
+    "type-graphql": "2.0.0-beta.3",
     "typescript": "~4.9.5"
   },
   "peerDependencies": {
-    "graphql": "^15.8.0"
+    "graphql": "^16.8.0"
   }
 }

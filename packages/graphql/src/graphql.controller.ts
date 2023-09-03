@@ -53,7 +53,7 @@ export abstract class GraphQLController {
       return new HttpResponseBadRequest(ajv.errors);
     }
 
-    let variables: object | undefined;
+    let variables: Record<string, unknown> | undefined;
     if (ctx.request.query.variables) {
       try {
         variables = JSON.parse(ctx.request.query.variables);
