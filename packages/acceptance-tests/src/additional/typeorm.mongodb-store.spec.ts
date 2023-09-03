@@ -21,7 +21,7 @@ import {
   verifyPassword
 } from '@foal/core';
 import { MongoDBStore } from '@foal/mongodb';
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient, ObjectId as ObjectId2 } from 'mongodb';
 import * as request from 'supertest';
 
 // FoalTS
@@ -30,7 +30,7 @@ import {
   Column,
   DataSource,
   Entity,
-  ObjectID,
+  ObjectId,
   ObjectIdColumn
 } from 'typeorm';
 import { createAndInitializeDataSource } from '../common';
@@ -46,7 +46,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
   @Entity()
   class User extends BaseEntity {
     @ObjectIdColumn()
-    _id: ObjectID;
+    _id: ObjectId;
 
     @Column({ unique: true })
     email: string;
@@ -67,7 +67,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
   }
 
   @UseSessions({
-    user: id => User.findOneBy({ _id: new ObjectId(id) }),
+    user: id => User.findOneBy({ _id: new ObjectId2(id) }),
     userIdType: 'string',
     store: MongoDBStore,
     required: true
@@ -147,7 +147,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
       type: 'mongodb',
     });
 
-    mongoClient = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    mongoClient = await MongoClient.connect(MONGODB_URI);
 
     await mongoClient.db().collection('foalSessions').deleteMany({});
 

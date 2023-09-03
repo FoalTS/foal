@@ -1,9 +1,9 @@
-import { BaseEntity, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { BaseEntity, Entity, ObjectId, ObjectIdColumn } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
 
   @ObjectIdColumn()
-  _id: ObjectID;
+  _id: ObjectId;
 
 }
