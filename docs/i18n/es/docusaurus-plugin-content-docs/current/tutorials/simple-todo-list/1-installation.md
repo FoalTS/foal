@@ -8,7 +8,7 @@ En este tutorial aprenderá a crear una aplicación web básica con FoalTS. La a
 
 > **Requisitos:**
 >
-> [Node.js](https://nodejs.org/en/) 16 o superior
+> [Node.js](https://nodejs.org/en/) 18 o superior
 
 ## Crear un Nuevo Proyecto
 

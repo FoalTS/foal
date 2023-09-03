@@ -14,7 +14,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -46,7 +46,7 @@
   ],
   "dependencies": {
     "@foal/core": "^3.3.0",
-    "mongodb": "~4.11.0"
+    "mongodb": "~5.8.1"
   },
   "devDependencies": {
     "@types/mocha": "10.0.1",

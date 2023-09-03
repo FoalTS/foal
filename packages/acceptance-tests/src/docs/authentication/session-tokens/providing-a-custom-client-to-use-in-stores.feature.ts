@@ -1,7 +1,7 @@
 // 3p
 import * as request from 'supertest';
 import { createClient } from 'redis';
-import { MongoClient } from 'mongodb4';
+import { MongoClient } from 'mongodb';
 
 // FoalTS
 import { createApp, createSession, dependency, Get, HttpResponseInternalServerError, HttpResponseOK, ServiceManager } from '@foal/core';

@@ -1064,26 +1064,14 @@ async function main() {
 #### `MongoDBStore`
 
 ```
-npm install mongodb@4
+npm install mongodb@5
 ```
-
-> The `MongoDBStore` requires version 4 of the [mongodb](https://www.npmjs.com/package/mongodb) package. If you are using TypeORM with MongoDB, which requires version 3, you can have both versions coexist in your `package.json` as follows:
-> ```json
-> {
->   "mongodb": "~3.7.3",
->   "mongodb4": "npm:mongodb@~4.3.1",
-> }
-> ```
->
-> ```typescript
-> import { MongoClient } from 'mongodb4';
-> ```
 
 *index.ts*
 ```typescript
 import { createApp, ServiceManager } from '@foal/core';
 import { MongoDBStore } from '@foal/mongodb';
-import { MongoClient } from 'mongodb'; // or from 'mongodb4';
+import { MongoClient } from 'mongodb';
 
 async function main() {
   const mongoDBClient = await MongoClient.connect('mongodb://localhost:27017/db');

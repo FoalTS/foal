@@ -135,10 +135,19 @@ describe('GraphQLController', () => {
           throw new Error('The function should have returned an HttpResponseBadRequest instance.');
         }
 
-        strictEqual(
-          response.body,
-          'The "variables" URL parameter is not a valid JSON-encoded string: Unexpected end of JSON input'
-        );
+        try {
+          // Node 18
+          strictEqual(
+            response.body,
+            'The "variables" URL parameter is not a valid JSON-encoded string: Unexpected end of JSON input'
+          );
+        } catch {
+          // Node 20
+          strictEqual(
+            response.body,
+            `The "variables" URL parameter is not a valid JSON-encoded string: Expected property name or '}' in JSON at position 1`
+          );
+        }
       });
 
     });
@@ -493,10 +502,19 @@ describe('GraphQLController', () => {
             throw new Error('The function should have returned an HttpResponseBadRequest instance.');
           }
 
-          strictEqual(
-            response.body,
-            'The "variables" URL parameter is not a valid JSON-encoded string: Unexpected end of JSON input'
-          );
+          try {
+            // Node 18
+            strictEqual(
+              response.body,
+              'The "variables" URL parameter is not a valid JSON-encoded string: Unexpected end of JSON input'
+            );
+          } catch (error) {
+            // Node 20
+            strictEqual(
+              response.body,
+              `The "variables" URL parameter is not a valid JSON-encoded string: Expected property name or '}' in JSON at position 1`
+            );
+          }
         });
 
       });

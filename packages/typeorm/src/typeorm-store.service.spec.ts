@@ -8,7 +8,7 @@ import { DataSource } from 'typeorm';
 import { createService, createSession, SessionAlreadyExists, SessionState } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from './typeorm-store.service';
 
-type DBType = 'mysql'|'postgres'|'sqlite'|'better-sqlite3';
+type DBType = 'mysql'|'postgres'|'sqlite';
 
 function createTestDataSource(type: DBType, name?: string): DataSource {
   switch (type) {
@@ -36,7 +36,6 @@ function createTestDataSource(type: DBType, name?: string): DataSource {
         name,
       });
     case 'sqlite':
-    case 'better-sqlite3':
       return new DataSource({
         database: 'test_db.sqlite',
         dropSchema: true,
@@ -184,7 +183,6 @@ describe('DatabaseSession', () => {
 
   entityTestSuite('mysql');
   entityTestSuite('sqlite');
-  entityTestSuite('better-sqlite3');
   entityTestSuite('postgres');
 
 });
@@ -682,7 +680,6 @@ describe('TypeORMStore', () => {
 
   storeTestSuite('mysql');
   storeTestSuite('sqlite');
-  storeTestSuite('better-sqlite3');
   storeTestSuite('postgres');
 
 });

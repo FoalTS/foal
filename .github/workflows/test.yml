@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16, 18]
+        node-version: [18, 20]
 
     env:
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
@@ -29,8 +29,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Use npm version 8.5
-      run: npm install -g npm@8.5
+    - name: Use npm version 9.6
+      run: npm install -g npm@9.6
     - name: Install project dependencies
       run: npm install
     - name: Install package dependencies and build packages

@@ -18,19 +18,19 @@
     "lint:fix": "eslint --ext ts --fix src"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@foal/core": "^3.0.0",
-    "mongodb": "~3.7.3",
+    "mongodb": "~5.8.1",
     "source-map-support": "~0.5.21",
-    "typeorm": "0.3.10",
+    "typeorm": "0.3.17",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
     "@foal/cli": "^3.0.0",
     "@types/mocha": "10.0.1",
-    "@types/node": "16.18.40",
+    "@types/node": "18.11.9",
     "concurrently": "~8.2.0",
     "mocha": "~10.2.0",
     "supertest": "~6.3.3",

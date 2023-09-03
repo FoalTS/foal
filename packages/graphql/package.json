@@ -14,7 +14,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.1",
-    "@types/node": "16.18.40",
+    "@types/node": "18.11.9",
     "apollo-cache-inmemory": "~1.6.6",
     "apollo-client": "~2.6.10",
     "apollo-link-http": "~1.5.17",
