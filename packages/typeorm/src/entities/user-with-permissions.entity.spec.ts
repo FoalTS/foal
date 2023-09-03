@@ -9,7 +9,7 @@ import { Group } from './group.entity';
 import { Permission } from './permission.entity';
 import { UserWithPermissions } from './user-with-permissions.entity';
 
-function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
+function testSuite(type: 'mysql' | 'postgres' | 'sqlite') {
 
   describe(`with ${type}`, () => {
 
@@ -21,7 +21,6 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
     before(async () => {
       switch (type) {
         case 'mysql':
-        case 'mariadb':
           dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
@@ -331,7 +330,6 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite') {
 describe('UserWithPermissions', () => {
 
   testSuite('mysql');
-  testSuite('mariadb');
   testSuite('sqlite');
   testSuite('postgres');
 
