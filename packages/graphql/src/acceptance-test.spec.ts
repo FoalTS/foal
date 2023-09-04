@@ -21,13 +21,8 @@ import { get, Server } from 'http';
 
 // 3p
 import { Config, controller, createApp, dependency } from '@foal/core';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import fetch from 'node-fetch';
-import { ApolloClient } from 'apollo-client';
-import { HttpLink } from 'apollo-link-http';
 import { buildSchema } from 'graphql';
 import { request } from 'graphql-request';
-import gql from 'graphql-tag';
 import { buildSchema as buildTypeGraphQLSchema, Field, ObjectType, Query, Resolver } from 'type-graphql';
 
 // FoalTS
@@ -93,23 +88,6 @@ describe('[Acceptance test] GraphQLController', () => {
       );
       deepStrictEqual(data, {
         user: {
-          id: 3,
-          name: 'someone!'
-        }
-      });
-    });
-
-    it('apollo-client.', async () => {
-      const httpLink = new HttpLink({ uri: 'http://localhost:3000/graphql', fetch });
-      const cache = new InMemoryCache();
-      const client = new ApolloClient({ cache, link: httpLink });
-      const { data } = await client.query({
-        query: gql`query getUser($id: Int) { user(id: $id) { name, id } }`,
-        variables: { id: 3 }
-      });
-      deepStrictEqual(data, {
-        user: {
-          __typename: 'User',
           id: 3,
           name: 'someone!'
         }

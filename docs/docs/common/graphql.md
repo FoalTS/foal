@@ -26,15 +26,15 @@ title: GraphQL
 
 > The below document assumes that you have a basic knowledge of GraphQL.
 
-To use GraphQL with FoalTS, you need to install the packages `graphql` and `@foal/graphql`. The first one is maintained by the GraphQL community and parses and resolves queries. The second is specific to FoalTS and allows you to configure a controller compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), [Apollo Client](https://www.apollographql.com/docs/react/), etc), load type definitions from separate files or handle errors thrown in resolvers.
+To use GraphQL with FoalTS, you need to install the packages `graphql` and `@foal/graphql`. The first one is maintained by the GraphQL community and parses and resolves queries. The second is specific to FoalTS and allows you to configure a controller compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), etc), load type definitions from separate files or handle errors thrown in resolvers.
 
 ```bash
-npm install graphql@15 @foal/graphql
+npm install graphql@16 @foal/graphql
 ```
 
 ## Basic Usage
 
-The main component of the package is the abstract `GraphQLController`. Inheriting this class allows you to create a controller that is compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), [Apollo Client](https://www.apollographql.com/docs/react/), etc) or any client that follows the HTTP specification defined [here](https://graphql.org/learn/serving-over-http/).
+The main component of the package is the abstract `GraphQLController`. Inheriting this class allows you to create a controller that is compatible with common GraphQL clients ([graphql-request](https://www.npmjs.com/package/graphql-request), etc) or any client that follows the HTTP specification defined [here](https://graphql.org/learn/serving-over-http/).
 
 Here is an example on how to use it with a simple schema and resolver.
 
@@ -400,17 +400,6 @@ export class ApiController extends GraphQLController {
 ```
 
 ## Using TypeGraphQL
-
-
-:::info
-
-TypeGraphQL requires version 15 of the `graphql` package:
-
-```bash
-npm install graphql@15
-```
-
-:::
 
 > *[TypeGraphQL](https://typegraphql.com/) is a library that allows you to create GraphQL schemas and resolvers with TypeScript classes and decorators.*
 
