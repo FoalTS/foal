@@ -21,10 +21,8 @@ import { get, Server } from 'http';
 
 // 3p
 import { Config, controller, createApp, dependency } from '@foal/core';
-import fetch from 'node-fetch';
 import { buildSchema } from 'graphql';
 import { request } from 'graphql-request';
-import gql from 'graphql-tag';
 import { buildSchema as buildTypeGraphQLSchema, Field, ObjectType, Query, Resolver } from 'type-graphql';
 
 // FoalTS
