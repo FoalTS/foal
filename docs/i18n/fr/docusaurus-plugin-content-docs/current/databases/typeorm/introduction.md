@@ -50,7 +50,7 @@ FoalTS supports officially the following databases:
 | PostgreSQL | 9.6+ ([Version Policy](https://www.postgresql.org/support/versioning/)) | `pg@8` |
 | MySQL | 5.7+ ([Version Policy](https://en.wikipedia.org/wiki/MySQL#Release_history)) | `mysql@2` |
 | SQLite | 3 | `sqlite3@5` |
-| MongoDB | 4.0+ ([Version Policy](https://www.mongodb.com/support-policy)) | `mongodb@3` |
+| MongoDB | 4.0+ ([Version Policy](https://www.mongodb.com/support-policy)) | `mongodb@5` |
 
 ## Use with FoalTS
 
@@ -63,7 +63,7 @@ When creating a new project, an `SQLite` database is used by default as it does 
 ### Packages
 
 ```
-npm install typeorm @foal/typeorm
+npm install typeorm@0.3.17 @foal/typeorm
 ```
 
 Two packages are required to use TypeORM with FoalTS:

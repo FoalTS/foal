@@ -455,6 +455,9 @@ export class ApiController {
 
 *auth.controller.ts*
 ```typescript
+
+import { setAuthCookie, removeAuthCookie } from '@foal/jwt';
+
 export class AuthController {
 
   @Post('/login')

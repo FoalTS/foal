@@ -400,7 +400,7 @@ Testing WebSocket controllers and hooks is very similar to testing their HTTP eq
 This example shows how to manage multiple node servers using a redis adapter.
 
 ```bash
-npm install @socket.io/redis-adapter@7 redis@4
+npm install socket.io-adapter @socket.io/redis-adapter@8 redis@4
 ```
 
 *src/index.ts*

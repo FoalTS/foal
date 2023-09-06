@@ -25,8 +25,6 @@ const isEqual = await verifyPassword(plainTextPassword, passwordHash);
 
 ## Password Upgrading
 
-> *This feature is available from version 2.11 onwards.*
-
 The PBKDF2 algorithm uses a number of iterations to hash passwords. This work factor is deliberate and slows down potential attackers, making attacks against hashed passwords more difficult.
 
 As computing power increases, the number of iterations must also increase. This is why the latest versions of Foal use a higher number of iterations.
@@ -57,4 +55,17 @@ if (passwordHashNeedsToBeRefreshed(user.password)) {
 // highlight-end
 
 // Log the user in.
+```
+
+
+## Forbid Overly Common Passwords
+
+```
+npm install @foal/password
+```
+
+To prevent users from using very weak passwords such as `123456` or `password`, you can call the `isCommon` function. This utility checks if the given password is part of the 10000 most common passwords listed [here](https://github.com/danielmiessler/SecLists/blob/master/Passwords/Common-Credentials/10-million-password-list-top-10000.txt).
+
+```typescript
+const isPasswordTooCommon = await isCommon(password);
 ```

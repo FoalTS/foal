@@ -731,8 +731,6 @@ export class ApiController {
 
 >  The `@ApiDefineXXX` decorators can be added to any controllers or methods but they always define components in the global scope of the API the controller belongs to.
 
---
-
 > The schemas defined with these decorators can also be re-used in the `@ValidateXXX` hooks.
 > ```typescript
 > const productSchema = {
