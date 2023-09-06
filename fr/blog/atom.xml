@@ -2,11 +2,24 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://foalts.org/fr/blog</id>
     <title>FoalTS Blog</title>
-    <updated>2023-08-13T00:00:00.000Z</updated>
+    <updated>2023-09-11T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://foalts.org/fr/blog"/>
     <subtitle>FoalTS Blog</subtitle>
     <icon>https://foalts.org/fr/img/logo.png</icon>
+    <entry>
+        <title type="html"><![CDATA[Version 4.0 release notes]]></title>
+        <id>/2023/09/11/version-4.0-release-notes</id>
+        <link href="https://foalts.org/fr/blog/2023/09/11/version-4.0-release-notes"/>
+        <updated>2023-09-11T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Banner]]></summary>
+        <content type="html"><![CDATA[<p><img loading="lazy" alt="Banner" src="/fr/assets/images/banner-4c34e2e17b81c0ebcb02485f01153edd.png" width="914" height="315" class="img_ev3q"></p><p>Version 4.0 of <a href="https://foalts.org/" target="_blank" rel="noopener noreferrer">Foal</a> is out!</p><h2 class="anchor anchorWithHideOnScrollNavbar_WYt5" id="description">Description<a class="hash-link" href="#description" title="Lien direct vers le titre">​</a></h2><p>The goals of this major release are to</p><ul><li>support the latest active versions of Node (18 and 20) and update all internal dependencies to their latest major versions</li><li>facilitate framework maintenance.</li></ul><p>Full details can be found <a href="https://github.com/FoalTS/foal/issues/1223" target="_blank" rel="noopener noreferrer">here</a>.</p><h2 class="anchor anchorWithHideOnScrollNavbar_WYt5" id="migration-guide">Migration guide<a class="hash-link" href="#migration-guide" title="Lien direct vers le titre">​</a></h2><ul><li>Run <code>npx foal upgrade</code>.</li><li>Version 16 of Node is not supported anymore. Upgrade to version 18 or version 20.</li><li>Support of MariaDB has been dropped.</li><li>If you use any of these dependencies, upgrade <code>typeorm</code> to v0.3.17, <code>graphql</code> to v16, <code>type-graphql</code> to v2, <code>class-validator</code> to v0.14, <code>mongodb</code> to v5 and <code>@socket.io/redis-adapter</code> to v8.</li><li>If you use both TypeORM and <code>MongoDBStore</code>, there is no need anymore to maintain two versions of <code>mongodb</code>. You can use version 5 of <code>mongodb</code> dependency.</li><li>If you use <code>@foal/socket.io</code> with redis, install <code>socket.io-adapter</code>.</li><li>Support for <code>better-sqlite</code> driver has been dropped. Use the <code>sqlite3</code> driver instead. In DB configuration, use <code>type: 'sqlite'</code> instead of <code>type: 'better-sqlite3'</code>.</li><li>In your project dependencies, upgrade <code>@types/node</code> to v18.11.9.</li><li>If you use TypeORM with MongoDB, for the entities definitions, rename <code>import { ObjectID } from 'typeorm';</code> to <code>import { ObjectId } from 'typeorm';</code></li></ul>]]></content>
+        <author>
+            <name>Loïc Poullain</name>
+            <uri>https://loicpoullain.com</uri>
+        </author>
+        <category label="release" term="release"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Version 3.3 release notes]]></title>
         <id>/2023/08/13/version-3.3-release-notes</id>
