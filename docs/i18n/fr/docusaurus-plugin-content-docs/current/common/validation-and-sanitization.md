@@ -610,7 +610,7 @@ validate(post).then(errors => { // errors is an array of validation errors
 ### Usage with a Hook
 
 ```
-npm install class-transformer class-validator @foal/typestack
+npm install class-transformer@0.5 class-validator@0.14 @foal/typestack
 ```
 
 If you want to use it within a hook to validate request bodies, you can install the package `@foal/typestack` for this. It provides a `@ValidateBody` hook that validates the body against a given validator. This body is also unserialized and turned into an instance of the class.

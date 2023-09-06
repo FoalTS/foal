@@ -12,16 +12,6 @@ services:
       MYSQL_PASSWORD: "test"
       MYSQL_DATABASE: "test"
 
-  mariadb:
-    image: "mariadb:10.2.32"
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: "admin"
-      MYSQL_USER: "test"
-      MYSQL_PASSWORD: "test"
-      MYSQL_DATABASE: "test"
-
   postgres:
     image: "postgres:9.6.18"
     ports:
@@ -35,7 +25,7 @@ services:
     image: "mongo:4.0.18"
     ports:
       - "27017:27017"
-  
+
   redis:
     image: "redis:4.0.14"
     ports:

@@ -22,12 +22,16 @@ If you use cookies, make sure to let them only be sent to the server when the re
 
 ```yaml
 settings:
-  // If you use sessions
+  # If you use sessions
   session:
     cookie:
       secure: true
-  // If you use JWT
+  # If you use JWT
   jwt:
+    cookie:
+      secure: true
+  # If you use social authentication
+  social:
     cookie:
       secure: true
 ```

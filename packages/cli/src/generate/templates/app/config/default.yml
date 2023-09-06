@@ -6,5 +6,5 @@ settings:
     store: '@foal/typeorm'
 
 database:
-  type: better-sqlite3
+  type: sqlite
   database: './db.sqlite3'

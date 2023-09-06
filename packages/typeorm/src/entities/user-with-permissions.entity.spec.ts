@@ -9,7 +9,7 @@ import { Group } from './group.entity';
 import { Permission } from './permission.entity';
 import { UserWithPermissions } from './user-with-permissions.entity';
 
-function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-sqlite3') {
+function testSuite(type: 'mysql' | 'postgres' | 'sqlite') {
 
   describe(`with ${type}`, () => {
 
@@ -21,7 +21,6 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
     before(async () => {
       switch (type) {
         case 'mysql':
-        case 'mariadb':
           dataSource = new DataSource({
             database: 'test',
             dropSchema: true,
@@ -45,7 +44,6 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
           });
           break;
         case 'sqlite':
-        case 'better-sqlite3':
           dataSource = new DataSource({
             database: 'test_db.sqlite',
             dropSchema: true,
@@ -332,9 +330,7 @@ function testSuite(type: 'mysql' | 'mariadb' | 'postgres' | 'sqlite' | 'better-s
 describe('UserWithPermissions', () => {
 
   testSuite('mysql');
-  testSuite('mariadb');
   testSuite('sqlite');
-  testSuite('better-sqlite3');
   testSuite('postgres');
 
 });

@@ -18,7 +18,7 @@ foal createapp my-app --mongodb
 ## Configuration
 
 ```
-npm install mongodb
+npm install mongodb@5
 ```
 
 <Tabs

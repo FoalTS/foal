@@ -13,6 +13,7 @@ A collection of official and unofficial libraries and resources about Foal.
 - [@foal/jwks-rsa](https://www.npmjs.com/package/@foal/jwks-rsa): retrieve RSA signing keys from a JWKS endpoint.
 - [@foal/jwt](https://www.npmjs.com/package/@foal/jwt): authenticate users with JWT.
 - [@foal/mongodb](https://www.npmjs.com/package/@foal/mongodb): session store for MongoDB.
+- [@foal/password](https://www.npmjs.com/package/@foal/password): hash, salt and check passwords.
 - [@foal/redis](https://www.npmjs.com/package/@foal/redis): session store for redis.
 - [@foal/social](https://www.npmjs.com/package/@foal/social): authenticate users with Facebook, Github, Google and LinkedIn.
 - [@foal/storage](https://www.npmjs.com/package/@foal/storage): manage file upload and storage in local and in the Cloud.

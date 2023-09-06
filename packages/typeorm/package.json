@@ -1,6 +1,6 @@
 {
   "name": "@foal/typeorm",
-  "version": "3.3.0",
+  "version": "4.0.0",
   "description": "FoalTS integration of TypeORM",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -14,7 +14,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -23,7 +23,6 @@
     "FoalTS",
     "foal",
     "postgres",
-    "mariadb",
     "mongodb",
     "mysql",
     "sqlite",
@@ -48,22 +47,21 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^3.3.0"
+    "@foal/core": "^4.0.0"
   },
   "peerDependencies": {
-    "typeorm": "^0.3.10"
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@types/mocha": "10.0.1",
-    "better-sqlite3": "~7.6.2",
     "mocha": "~10.2.0",
-    "mongodb": "~3.7.3",
+    "mongodb": "~5.8.1",
     "mysql": "~2.18.1",
-    "pg": "~8.7.3",
+    "pg": "~8.11.3",
     "rimraf": "~5.0.1",
-    "sqlite3": "~5.1.2",
+    "sqlite3": "~5.1.6",
     "ts-node": "~10.9.1",
-    "typeorm": "0.3.10",
+    "typeorm": "0.3.17",
     "typescript": "~4.9.5"
   }
 }
