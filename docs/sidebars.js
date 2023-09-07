@@ -136,10 +136,10 @@ module.exports = {
     ]),
     expandedCategory('Comparison with Other Frameworks', [
       'comparison-with-other-frameworks/express-fastify',
-      // 'comparison-with-other-frameworks/nest',
     ]),
     expandedCategory('Upgrading', [
-      'upgrade-to-v3/README',
+      link('To v4', 'https://github.com/FoalTS/foal/releases/tag/v4.0.0'),
+      link('To v3', 'https://foalts.org/docs/3.x/upgrade-to-v3/'),
       link('To v2', 'https://foalts.org/docs/2.x/upgrade-to-v2/'),
       link('To v1', 'https://github.com/FoalTS/foal/releases/tag/v1.0.0'),
     ]),
