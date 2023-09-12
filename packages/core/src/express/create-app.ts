@@ -102,7 +102,7 @@ export async function createApp(
   app.use(express.json({ limit }));
   app.use(handleJsonErrors);
   app.use(express.urlencoded({ extended: false, limit }));
-  app.use(express.text({ type: ['text/*', 'application/graphql'], limit }));
+  app.use(express.text({ type: ['text/*', 'application/graphql', 'application/xml'], limit }));
 
   // Parse cookies.
   app.use(cookieParser(Config.get('settings.cookieParser.secret', 'string')));
