@@ -1,6 +1,9 @@
 {
   "settings": {
-    "loggerFormat": "none"
+    "loggerFormat": "none",
+    "logger": {
+      "format": "none"
+    }
   },
   "database": {
     "database": "./e2e_db.sqlite3",
