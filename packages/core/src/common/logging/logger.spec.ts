@@ -195,7 +195,7 @@ describe('Logger', () => {
       });
 
       it('should log nothing', () => {
-        const { logger, mocks, isoNow } = createLogger();
+        const { logger, mocks } = createLogger();
 
         const message = 'Hello world';
         const params = createTestParams();
