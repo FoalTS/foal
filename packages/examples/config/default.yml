@@ -3,8 +3,6 @@ port: 3001
 settings:
   openapi:
     useHooks: true
-  debug: true
-  loggerFormat: dev
   session:
     secret: 'my secret'
   staticPath: 'public/'
