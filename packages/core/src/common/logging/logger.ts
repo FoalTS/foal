@@ -3,13 +3,13 @@ import { Config } from '../../core';
 type Level = 'debug'|'info'|'warn'|'error';
 
 function formatObjectToJson(obj: Record<string, any>): string {
-  if (obj.err instanceof Error) {
+  if (obj.error instanceof Error) {
     return JSON.stringify({
       ...obj,
-      err: {
-        name: obj.err.name,
-        message: obj.err.message,
-        stack: obj.err.stack,
+      error: {
+        name: obj.error.name,
+        message: obj.error.message,
+        stack: obj.error.stack,
       },
     });
   };
@@ -97,7 +97,7 @@ export class Logger {
 
     const timestamp = `${timestampColor}[${now.toLocaleTimeString()}]${endTagColor}`;
     const logLevel = `${colors[level]}${level.toUpperCase()}${endTagColor}`;
-    const parameters = formatObjectToTextParameters({ err: params.err });
+    const parameters = formatObjectToTextParameters({ error: params.error });
 
     return `${timestamp} ${logLevel} ${message}${parameters}`;
   }
@@ -152,19 +152,19 @@ export class Logger {
     return new Date();
   }
 
-  debug(message: string, params: { err?: Error, [name: string]: any } = {}): void {
+  debug(message: string, params: { error?: Error, [name: string]: any } = {}): void {
     this.log('debug', message, params);
   }
 
-  info(message: string, params: { err?: Error, [name: string]: any } = {}): void {
+  info(message: string, params: { error?: Error, [name: string]: any } = {}): void {
     this.log('info', message, params);
   }
 
-  warn(message: string, params: { err?: Error, [name: string]: any } = {}): void {
+  warn(message: string, params: { error?: Error, [name: string]: any } = {}): void {
     this.log('warn', message, params);
   }
 
-  error(message: string, params: { err?: Error, [name: string]: any } = {}): void {
+  error(message: string, params: { error?: Error, [name: string]: any } = {}): void {
     this.log('error', message, params);
   }
 }

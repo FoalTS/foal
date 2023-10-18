@@ -7,8 +7,8 @@ const testStack = `Error: aaa
     at Context.<anonymous> (/somewhere/logger.spec.ts:129:13)`;
 
 function createTestParams() {
-  const err = new Error('aaa');
-  err.stack = testStack;
+  const error = new Error('aaa');
+  error.stack = testStack;
   return {
     myBoolean: false,
     myNull: null,
@@ -17,7 +17,7 @@ function createTestParams() {
     myString: 'xxx',
     mySymbol: Symbol('yyy'),
     myObject: { foo: 'bar' },
-    err
+    error
   };
 }
 
@@ -80,7 +80,7 @@ describe('Logger', () => {
           + `\n    myObject: {`
           + `\n      "foo": "bar"`
           + `\n    }`
-          + `\n    err: {`
+          + `\n    error: {`
           + `\n      name: "Error"`
           + `\n      message: "aaa"`
           + `\n      stack: Error: aaa`
@@ -114,7 +114,7 @@ describe('Logger', () => {
           + `\n    myObject: {`
           + `\n      "foo": "bar"`
           + `\n    }`
-          + `\n    err: {`
+          + `\n    error: {`
           + `\n      name: "Error"`
           + `\n      message: "aaa"`
           + `\n      stack: Error: aaa`
@@ -132,7 +132,7 @@ describe('Logger', () => {
         Config.set('settings.logger.format', 'dev');
       });
 
-      it('should log a text with a short timestamp, with colors but with no params (except the "err" param)', () => {
+      it('should log a text with a short timestamp, with colors but with no params (except the "error" param)', () => {
         const { logger, mocks, localTimeNow } = createLogger();
 
         const message = 'Hello world';
@@ -143,7 +143,7 @@ describe('Logger', () => {
         const actual = mocks.logWithConsoleHasBeenCalledWith;
         // Pink color
         const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[35mDEBUG\u001b[39m Hello world`
-          + `\n    err: {`
+          + `\n    error: {`
           + `\n      name: "Error"`
           + `\n      message: "aaa"`
           + `\n      stack: Error: aaa`
@@ -178,7 +178,7 @@ describe('Logger', () => {
           myNumber: 0,
           myString: 'xxx',
           myObject: { foo: 'bar' },
-          err: {
+          error: {
             name: 'Error',
             message: 'aaa',
             stack: testStack,
