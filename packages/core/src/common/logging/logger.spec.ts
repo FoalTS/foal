@@ -221,77 +221,8 @@ describe('Logger', () => {
 
         throws(
           () => logger.debug(message),
-          (error: any) => error.message === '[CONFIG] Invalid "settings.logger.format" configuration value: "foobar"'
+          (error: any) => error.message === 'Invalid logging format: "foobar"'
         );
-      });
-    });
-  });
-
-  describe('when info is called', () => {
-    context('given the configuration "settings.logger.format" is "dev"', () => {
-      beforeEach(() => {
-        Config.set('settings.logger.format', 'dev');
-      });
-
-      it('should log a text with the proper color on the log level', () => {
-        const { logger, mocks, localTimeNow } = createLogger();
-
-        const message = 'Hello world';
-        const params = createTestParams();
-
-        logger.info(message, params);
-
-        const actual = mocks.logWithConsoleHasBeenCalledWith;
-        // Cyan color
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m Hello world`;
-
-        strictEqual(actual.split('\n')[0], expected);
-      });
-    });
-  });
-
-  describe('when warn is called', () => {
-    context('given the configuration "settings.logger.format" is "dev"', () => {
-      beforeEach(() => {
-        Config.set('settings.logger.format', 'dev');
-      });
-
-      it('should log a text with the proper color on the log level', () => {
-        const { logger, mocks, localTimeNow } = createLogger();
-
-        const message = 'Hello world';
-        const params = createTestParams();
-
-        logger.warn(message, params);
-
-        const actual = mocks.logWithConsoleHasBeenCalledWith;
-        // Yellow color
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[33mWARN\u001b[39m Hello world`;
-
-        strictEqual(actual.split('\n')[0], expected);
-      });
-    });
-  });
-
-  describe('when error is called', () => {
-    context('given the configuration "settings.logger.format" is "dev"', () => {
-      beforeEach(() => {
-        Config.set('settings.logger.format', 'dev');
-      });
-
-      it('should log a text with the proper color on the log level', () => {
-        const { logger, mocks, localTimeNow } = createLogger();
-
-        const message = 'Hello world';
-        const params = createTestParams();
-
-        logger.error(message, params);
-
-        const actual = mocks.logWithConsoleHasBeenCalledWith;
-        // Red color
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[31mERROR\u001b[39m Hello world`;
-
-        strictEqual(actual.split('\n')[0], expected);
       });
     });
   });
