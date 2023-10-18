@@ -6,10 +6,15 @@ import { ISocketIOController, WebsocketContext, WebsocketErrorResponse, Websocke
 import { renderWebsocketError } from './render-websocket-error';
 
 export async function convertErrorToWebsocketResponse(
-  error: Error, ctx: WebsocketContext, socketIOController: ISocketIOController, log = console.error
+  error: Error,
+  ctx: WebsocketContext,
+  socketIOController: ISocketIOController,
+  logger: {
+    error: (message: string, params: { error: Error }) => void
+  }
 ): Promise<WebsocketResponse | WebsocketErrorResponse> {
   if (Config.get('settings.logErrors', 'boolean', true)) {
-    log(error.stack);
+    logger.error(error.message, { error });
   }
 
   if (socketIOController.handleError) {
