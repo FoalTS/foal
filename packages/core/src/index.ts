@@ -36,6 +36,7 @@ export {
   hashPassword,
   passwordHashNeedsToBeRefreshed,
   isInFile,
+  Logger,
   render,
   renderToString,
   renderError,
