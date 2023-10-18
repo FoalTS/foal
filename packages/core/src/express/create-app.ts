@@ -1,7 +1,7 @@
 // 3p
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
-import * as logger from 'morgan';
+import * as morgan from 'morgan';
 
 // FoalTS
 import {
@@ -15,6 +15,7 @@ import {
   ServiceManager,
 } from '../core';
 import { sendResponse } from './send-response';
+import { Logger } from '../common';
 
 export const OPENAPI_SERVICE_ID = 'OPENAPI_SERVICE_ID_a5NWKbBNBxVVZ';
 
@@ -86,7 +87,7 @@ export async function createApp(
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
   if (loggerFormat !== 'none') {
-    app.use(logger(loggerFormat));
+    app.use(morgan(loggerFormat));
   }
 
   app.use(protectionHeaders);
@@ -116,6 +117,9 @@ export async function createApp(
   const services = options.serviceManager || new ServiceManager();
   app.foal = { services };
 
+  // Retrieve the logger.
+  const logger = services.get(Logger);
+
   // Inject the OpenAPI service with an ID string to avoid duplicated singletons
   // across several npm packages.
   services.set(OPENAPI_SERVICE_ID, services.get(OpenApi));
@@ -131,7 +135,7 @@ export async function createApp(
         const ctx = new Context(req, route.controller.constructor.name, route.propertyKey);
         // TODO: better test this line.
         const response = await getResponse(route, ctx, services, appController);
-        sendResponse(response, res);
+        sendResponse(response, res, logger);
       } catch (error: any) {
         // This try/catch will never be called: the `getResponse` function catches any errors
         // thrown or rejected in the application and converts it into a response.

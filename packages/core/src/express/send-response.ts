@@ -12,7 +12,13 @@ import { HttpResponse, isHttpResponseMovedPermanently, isHttpResponseRedirect } 
  * @param {any} res - Express response used in middlewares.
  * @returns {void}
  */
-export function sendResponse(response: HttpResponse, res: any): void {
+export function sendResponse(
+  response: HttpResponse,
+  res: any,
+  logger: {
+    error: (message: string, params: { error: Error }) => void
+  }
+): void {
   res.status(response.statusCode);
   res.set(response.getHeaders());
   const cookies = response.getCookies();
@@ -35,8 +41,10 @@ export function sendResponse(response: HttpResponse, res: any): void {
   }
 
   if (response.stream === true) {
-    pipeline(response.body, res, (err: any) => {
-      if (err) { console.log(err); }
+    pipeline(response.body, res, (error: any) => {
+      if (error) {
+        logger.error(error.message, { error });
+      }
     });
     return;
   }
