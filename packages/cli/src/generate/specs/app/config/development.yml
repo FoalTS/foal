@@ -1,5 +1,5 @@
 settings:
   debug: true
   loggerFormat: dev
-  logger: 
+  logger:
     format: dev
