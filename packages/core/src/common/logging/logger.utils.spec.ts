@@ -127,6 +127,73 @@ describe('formatMessage', () => {
         strictEqual(actual, expected);
       });
     });
+
+    context('given the message is a HTTP log and is prefixed by "HTTP request -"', () => {
+      it('should return a text with a well-formatted message (1xx status).', () => {
+        const message = 'HTTP request - GET /foo/bar';
+        const params = {
+          statusCode: 100,
+          responseTime: 123,
+        };
+
+        const actual = formatMessage('info', message, params, 'dev', now);
+        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar 100 - 123 ms`
+
+        strictEqual(actual, expected);
+      });
+
+      it('should return a text with a well-formatted message (2xx status).', () => {
+        const message = 'HTTP request - GET /foo/bar';
+        const params = {
+          statusCode: 200,
+          responseTime: 123,
+        };
+
+        const actual = formatMessage('info', message, params, 'dev', now);
+        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[32m200\u001b[39m - 123 ms`
+
+        strictEqual(actual, expected);
+      });
+
+      it('should return a text with a well-formatted message (3xx status).', () => {
+        const message = 'HTTP request - GET /foo/bar';
+        const params = {
+          statusCode: 300,
+          responseTime: 123,
+        };
+
+        const actual = formatMessage('info', message, params, 'dev', now);
+        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[36m300\u001b[39m - 123 ms`
+
+        strictEqual(actual, expected);
+      });
+
+      it('should return a text with a well-formatted message (4xx status).', () => {
+        const message = 'HTTP request - GET /foo/bar';
+        const params = {
+          statusCode: 400,
+          responseTime: 123,
+        };
+
+        const actual = formatMessage('info', message, params, 'dev', now);
+        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[33m400\u001b[39m - 123 ms`
+
+        strictEqual(actual, expected);
+      });
+
+      it('should return a text with a well-formatted message (5xx status).', () => {
+        const message = 'HTTP request - GET /foo/bar';
+        const params = {
+          statusCode: 500,
+          responseTime: 123,
+        };
+
+        const actual = formatMessage('info', message, params, 'dev', now);
+        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[31m500\u001b[39m - 123 ms`
+
+        strictEqual(actual, expected);
+      });
+    });
   });
 
   context('given format is "json"', () => {

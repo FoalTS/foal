@@ -1,4 +1,5 @@
 export type Level = 'debug'|'info'|'warn'|'error';
+export const httpRequestMessagePrefix = 'HTTP request - ';
 
 function formatParamsToText(params: { error?: Error, [name: string]: any }): string {
   const tabLength = 2;
@@ -46,6 +47,22 @@ function formatMessageToRawText(
   return `${timestamp} ${logLevel} ${message}` + formatParamsToText(params);
 }
 
+function getColoredStatusCode(statusCode: number): string {
+  if (statusCode >= 500) {
+    return `\u001b[31m${statusCode}\u001b[39m`;
+  }
+  if (statusCode >= 400) {
+    return `\u001b[33m${statusCode}\u001b[39m`;
+  }
+  if (statusCode >= 300) {
+    return `\u001b[36m${statusCode}\u001b[39m`;
+  }
+  if (statusCode >= 200) {
+    return `\u001b[32m${statusCode}\u001b[39m`;
+  }
+  return statusCode.toString();
+}
+
 function formatMessageToDevText(
   level: Level,
   message: string,
@@ -60,6 +77,11 @@ function formatMessageToDevText(
   };
   const timestamp = `\u001b[90m[${now.toLocaleTimeString()}]\u001b[39m`;
   const logLevel = `\u001b[${levelColorCodes[level]}m${level.toUpperCase()}\u001b[39m`;
+
+  if (message.startsWith(httpRequestMessagePrefix)) {
+    message = message.slice(httpRequestMessagePrefix.length);
+    message += ` ${getColoredStatusCode(params.statusCode)} - ${params.responseTime} ms`;
+  }
 
   return `${timestamp} ${logLevel} ${message}` + formatParamsToText({ error: params.error });
 }
