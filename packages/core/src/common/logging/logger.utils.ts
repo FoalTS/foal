@@ -106,3 +106,16 @@ export function formatMessage(
       throw new Error(`Invalid logging format: "${format}"`);
   }
 }
+
+export function shouldLog(level: Level, configLogLevel: string): boolean {
+  const levels: string[] = ['debug', 'info', 'warn', 'error'];
+
+  const levelIndex = levels.indexOf(level);
+  const configLogLevelIndex = levels.indexOf(configLogLevel);
+
+  if (configLogLevelIndex === -1) {
+    throw new Error(`Invalid log level: "${configLogLevel}"`);
+  }
+
+  return levelIndex >= configLogLevelIndex;
+}

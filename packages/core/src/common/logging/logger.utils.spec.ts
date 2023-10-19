@@ -1,5 +1,5 @@
 import { deepStrictEqual, strictEqual, throws } from 'assert';
-import { formatMessage } from './logger.utils';
+import { formatMessage, shouldLog } from './logger.utils';
 
 const testStack = `Error: aaa
     at createTestParams (/somewhere/logger.spec.ts:6:11)
@@ -166,4 +166,51 @@ describe('formatMessage', () => {
       );
     });
   });
-})
+});
+
+describe('shouldLog', () => {
+  context('given the configLogLevel is "debug"', () => {
+    it('should return true for all levels.', () => {
+      strictEqual(shouldLog('debug', 'debug'), true);
+      strictEqual(shouldLog('info', 'debug'), true);
+      strictEqual(shouldLog('warn', 'debug'), true);
+      strictEqual(shouldLog('error', 'debug'), true);
+    });
+  });
+
+  context('given the configLogLevel is "info"', () => {
+    it('should return false for "debug" and true for "info", "warn" and "error".', () => {
+      strictEqual(shouldLog('debug', 'info'), false);
+      strictEqual(shouldLog('info', 'info'), true);
+      strictEqual(shouldLog('warn', 'info'), true);
+      strictEqual(shouldLog('error', 'info'), true);
+    });
+  });
+
+  context('given the configLogLevel is "warn"', () => {
+    it('should return false for "debug" and "info" and true for "warn" and "error".', () => {
+      strictEqual(shouldLog('debug', 'warn'), false);
+      strictEqual(shouldLog('info', 'warn'), false);
+      strictEqual(shouldLog('warn', 'warn'), true);
+      strictEqual(shouldLog('error', 'warn'), true);
+    });
+  });
+
+  context('given the configLogLevel is "error"', () => {
+    it('should return false for "debug", "info" and "warn" and true for "error".', () => {
+      strictEqual(shouldLog('debug', 'error'), false);
+      strictEqual(shouldLog('info', 'error'), false);
+      strictEqual(shouldLog('warn', 'error'), false);
+      strictEqual(shouldLog('error', 'error'), true);
+    });
+  });
+
+  context('given the configLogLevel is invalid', () => {
+    it('should throw an error.', () => {
+      throws(
+        () => shouldLog('debug', 'invalid'),
+        (error: any) => error.message === 'Invalid log level: "invalid"'
+      );
+    });
+  });
+});
