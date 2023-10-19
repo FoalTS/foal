@@ -15,7 +15,7 @@ import {
   ServiceManager,
 } from '../core';
 import { sendResponse } from './send-response';
-import { Logger } from '../common';
+import { httpRequestMessagePrefix, Logger } from '../common';
 
 export const OPENAPI_SERVICE_ID = 'OPENAPI_SERVICE_ID_a5NWKbBNBxVVZ';
 
@@ -80,13 +80,41 @@ export async function createApp(
     app.use(middleware);
   }
 
+  // Create the service and controller manager.
+  const services = options.serviceManager || new ServiceManager();
+  app.foal = { services };
+
+  // Retrieve the logger.
+  const logger = services.get(Logger);
+
   // Log requests.
   const loggerFormat = Config.get(
     'settings.loggerFormat',
     'string',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
-  if (loggerFormat !== 'none') {
+  if (loggerFormat === 'foal') {
+    app.use(morgan(
+      (tokens: any, req: any, res: any) => {
+        return JSON.stringify({
+          method: tokens.method(req, res),
+          url: tokens.url(req, res),
+          statusCode: parseInt(tokens.status(req, res), 10),
+          contentLength: tokens.res(req, res, 'content-length'),
+          responseTime: parseFloat(tokens['response-time'](req, res)),
+        });
+      },
+      {
+        stream: {
+          write: (message: string) => {
+            const data = JSON.parse(message);
+            logger.info(`${httpRequestMessagePrefix}${data.method} ${data.url}`, data);
+          },
+        },
+      }
+    ))
+  } else if (loggerFormat !== 'none') {
+    logger.warn('[CONFIG] Using another format than "foal" for "settings.loggerFormat" is deprecated.');
     app.use(morgan(loggerFormat));
   }
 
@@ -112,13 +140,6 @@ export async function createApp(
   for (const middleware of options.afterPreMiddlewares || []) {
     app.use(middleware);
   }
-
-  // Create the service and controller manager.
-  const services = options.serviceManager || new ServiceManager();
-  app.foal = { services };
-
-  // Retrieve the logger.
-  const logger = services.get(Logger);
 
   // Inject the OpenAPI service with an ID string to avoid duplicated singletons
   // across several npm packages.

@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 import { Buffer } from 'buffer';
 
 // 3p
@@ -25,6 +25,8 @@ import {
   ServiceManager
 } from '../core';
 import { createApp, OPENAPI_SERVICE_ID } from './create-app';
+import { mock } from 'node:test';
+import { Logger } from '../common';
 
 describe('createApp', () => {
 
@@ -48,10 +50,12 @@ describe('createApp', () => {
   });
 
   afterEach(() => {
+    mock.reset();
     Config.remove('settings.staticPathPrefix');
     Config.remove('settings.debug');
     Config.remove('settings.bodyParser.limit');
     Config.remove('settings.cookieParser.secret');
+    Config.remove('settings.loggerFormat');
   });
 
   const cookieSecret = 'strong-secret';
@@ -661,6 +665,74 @@ describe('createApp', () => {
     } catch (error: any) {
       strictEqual(error.message, 'Initialization failed.');
     }
+  });
+
+  context('given the configuration "settings.loggerFormat" is set to "foal"', () => {
+    it('should log the request with a detailed message and detail parameters.', async () => {
+      Config.set('settings.loggerFormat', 'foal');
+
+      class AppController {
+        @Get('/a')
+        getA(ctx: Context) {
+          return new HttpResponseOK('a');
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+
+      const logger = serviceManager.get(Logger);
+      const loggerMock = mock.method(logger, 'info', () => {});
+
+      const app = await createApp(AppController, {
+        serviceManager
+      });
+
+      await request(app)
+        .get('/a')
+        .expect(200);
+
+      strictEqual(loggerMock.mock.callCount(), 1);
+
+      const message = loggerMock.mock.calls[0].arguments[0];
+      const params = loggerMock.mock.calls[0].arguments[1];
+
+      strictEqual(message, 'HTTP request - GET /a');
+      strictEqual(typeof params?.responseTime, 'number')
+
+      delete params?.responseTime;
+
+      deepStrictEqual(params, {
+        method: 'GET',
+        url: '/a',
+        statusCode: 200,
+        contentLength: '1',
+      });
+    })
+  });
+
+  context('given the configuration "settings.loggerFormat" is set to a value different from "none" or "foal"', () => {
+    it('should log a warning message.', async () => {
+      Config.set('settings.loggerFormat', 'dev');
+
+      class AppController {
+        @Get('/a')
+        getA(ctx: Context) {
+          return new HttpResponseOK('a');
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+
+      const logger = serviceManager.get(Logger);
+      const loggerMock = mock.method(logger, 'warn', () => {});
+
+      const app = await createApp(AppController, {
+        serviceManager
+      });
+
+      strictEqual(loggerMock.mock.callCount(), 1);
+      strictEqual(loggerMock.mock.calls[0].arguments[0], '[CONFIG] Using another format than "foal" for "settings.loggerFormat" is deprecated.');
+    });
   });
 
 });
