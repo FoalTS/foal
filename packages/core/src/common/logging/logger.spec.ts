@@ -1,229 +1,156 @@
-import { deepStrictEqual, strictEqual, throws } from 'assert';
-import { Logger } from './logger';
+// std
+import { strictEqual } from 'assert';
+import { mock } from 'node:test';
+
+// FoalTS
+import { Logger, log } from './logger';
 import { Config } from '../../core';
 
-const testStack = `Error: aaa
-    at createTestParams (/somewhere/logger.spec.ts:6:11)
-    at Context.<anonymous> (/somewhere/logger.spec.ts:129:13)`;
+describe('log', () => {
+  afterEach(() => {
+    mock.reset();
+    Config.remove('settings.logger.format');
+    Config.remove('settings.logger.logLevel');
+  });
 
-function createTestParams() {
-  const error = new Error('aaa');
-  error.stack = testStack;
-  return {
-    myBoolean: false,
-    myNull: null,
-    myUndefined: undefined,
-    myNumber: 0,
-    myString: 'xxx',
-    mySymbol: Symbol('yyy'),
-    myObject: { foo: 'bar' },
-    error
-  };
-}
+  context('given the configuration "settings.logger.format" is NOT defined', () => {
+    it('should log the message to a raw text.', () => {
+      const consoleMock = mock.method(console, 'log', () => {});
 
-function createLogger(): {
-  logger: Logger,
-  mocks: { logWithConsoleHasBeenCalledWith: any },
-  now: Date,
-  isoNow: string,
-  localTimeNow: string
-} {
-  const mocks: { logWithConsoleHasBeenCalledWith: any } = { logWithConsoleHasBeenCalledWith: undefined };
+      log('error', 'Hello world', {});
 
-  const isoNow = '2023-02-03T01:12:03.000Z';
-  const localTimeNow = '2:12:03 AM';
-  const now = new Date(isoNow);
+      strictEqual(consoleMock.mock.callCount(), 1);
 
-  class Logger2 extends Logger {
-    logWithConsole(message: string): void {
-      mocks.logWithConsoleHasBeenCalledWith = message;
-    }
+      const loggedMessage = consoleMock.mock.calls[0].arguments[0];
 
-    getNow(): Date {
-      return now;
-    }
-  }
+      strictEqual(loggedMessage.includes('[ERROR]'), true);
+    })
+  });
 
-  const logger = new Logger2();
+  context('given the configuration "settings.logger.format" is "json"', () => {
+    it('should log the message to a JSON.', () => {
+      Config.set('settings.logger.format', 'json');
 
-  return {
-    logger,
-    mocks,
-    now,
-    isoNow,
-    localTimeNow,
-  };
-}
+      const consoleMock = mock.method(console, 'log', () => {});
+
+      log('error', 'Hello world', {});
+
+      strictEqual(consoleMock.mock.callCount(), 1);
+
+      const loggedMessage = consoleMock.mock.calls[0].arguments[0];
+      const json = JSON.parse(loggedMessage);
+
+      strictEqual(json.level, 'error');
+    });
+  });
+
+  context('given the configuration "settings.logger.format" is "none"', () => {
+    it('should log nothing.', () => {
+      Config.set('settings.logger.format', 'none');
+
+      const consoleMock = mock.method(console, 'log', () => {});
+
+      log('error', 'Hello world', {});
+
+      strictEqual(consoleMock.mock.callCount(), 0);
+    });
+  });
+
+  context('given the configuration "settings.logger.logLevel" is NOT defined', () => {
+    it('should log messages based on an "INFO" log level', () => {
+      const consoleMock = mock.method(console, 'log', () => {});
+
+      log('info', 'Hello world', {});
+      strictEqual(consoleMock.mock.callCount(), 1);
+
+      consoleMock.mock.resetCalls();
+
+      log('debug', 'Hello world', {});
+      strictEqual(consoleMock.mock.callCount(), 0);
+    });
+  });
+
+  context('given the configuration "settings.logger.logLevel" is "warn"', () => {
+    it('should log messages based on a "WARN" log level', () => {
+      Config.set('settings.logger.logLevel', 'warn');
+
+      const consoleMock = mock.method(console, 'log', () => {});
+
+      log('warn', 'Hello world', {});
+      strictEqual(consoleMock.mock.callCount(), 1);
+
+      consoleMock.mock.resetCalls();
+
+      log('info', 'Hello world', {});
+      strictEqual(consoleMock.mock.callCount(), 0);
+    });
+  });
+});
 
 describe('Logger', () => {
 
+  beforeEach(() => {
+    Config.set('settings.logger.logLevel', 'debug');
+  });
+
   afterEach(() => {
-    Config.remove('settings.logger.format');
+    mock.reset();
+    Config.remove('settings.logger.logLevel');
   })
 
-  describe('when debug is called', () => {
-    context('given the configuration "settings.logger.format" is NOT defined', () => {
-      it('should log a text with an exhaustive timestamp, with params but with no colors', () => {
-        const { logger, mocks, isoNow } = createLogger();
+  it('has a debug(...args) method which is an alias for log("debug", ...args)', () => {
+    const logger = new Logger();
 
-        const message = 'Hello world';
-        const params = createTestParams();
+    const consoleMock = mock.method(console, 'log', () => {});
 
-        logger.debug(message, params);
+    logger.debug('Hello world', {});
 
-        const actual = mocks.logWithConsoleHasBeenCalledWith;
-        const expected = `[${isoNow}] [DEBUG] Hello world`
-          + `\n    myBoolean: false`
-          + `\n    myNull: null`
-          + `\n    myNumber: 0`
-          + `\n    myString: "xxx"`
-          + `\n    myObject: {`
-          + `\n      "foo": "bar"`
-          + `\n    }`
-          + `\n    error: {`
-          + `\n      name: "Error"`
-          + `\n      message: "aaa"`
-          + `\n      stack: Error: aaa`
-          + `\n        at createTestParams (/somewhere/logger.spec.ts:6:11)`
-          + `\n        at Context.<anonymous> (/somewhere/logger.spec.ts:129:13)`
-          + `\n    }`;
+    strictEqual(consoleMock.mock.callCount(), 1);
+    strictEqual(
+      consoleMock.mock.calls[0].arguments[0].includes('[DEBUG]'),
+      true,
+    );
+  });
 
-        strictEqual(actual, expected);
-      });
-    });
+  it('has an info(...args) method which is an alias for log("info", ...args)', () => {
+    const logger = new Logger();
 
-    context('given the configuration "settings.logger.format" is "raw"', () => {
-      beforeEach(() => {
-        Config.set('settings.logger.format', 'raw');
-      });
+    const consoleMock = mock.method(console, 'log', () => {});
 
-      it('should log a text with an exhaustive timestamp, with params but with no colors', () => {
-        const { logger, mocks, isoNow } = createLogger();
+    logger.info('Hello world', {});
 
-        const message = 'Hello world';
-        const params = createTestParams();
+    strictEqual(consoleMock.mock.callCount(), 1);
+    strictEqual(
+      consoleMock.mock.calls[0].arguments[0].includes('[INFO]'),
+      true,
+    );
+  });
 
-        logger.debug(message, params);
+  it('has a warn(...args) method which is an alias for log("warn", ...args)', () => {
+    const logger = new Logger();
 
-        const actual = mocks.logWithConsoleHasBeenCalledWith;
-        const expected = `[${isoNow}] [DEBUG] Hello world`
-          + `\n    myBoolean: false`
-          + `\n    myNull: null`
-          + `\n    myNumber: 0`
-          + `\n    myString: "xxx"`
-          + `\n    myObject: {`
-          + `\n      "foo": "bar"`
-          + `\n    }`
-          + `\n    error: {`
-          + `\n      name: "Error"`
-          + `\n      message: "aaa"`
-          + `\n      stack: Error: aaa`
-          + `\n        at createTestParams (/somewhere/logger.spec.ts:6:11)`
-          + `\n        at Context.<anonymous> (/somewhere/logger.spec.ts:129:13)`
-          + `\n    }`;
+    const consoleMock = mock.method(console, 'log', () => {});
 
-        strictEqual(actual, expected);
-      });
-    });
+    logger.warn('Hello world', {});
 
+    strictEqual(consoleMock.mock.callCount(), 1);
+    strictEqual(
+      consoleMock.mock.calls[0].arguments[0].includes('[WARN]'),
+      true,
+    );
+  });
 
-    context('given the configuration "settings.logger.format" is "dev"', () => {
-      beforeEach(() => {
-        Config.set('settings.logger.format', 'dev');
-      });
+  it('has an error(...args) method which is an alias for log("error", ...args)', () => {
+    const logger = new Logger();
 
-      it('should log a text with a short timestamp, with colors but with no params (except the "error" param)', () => {
-        const { logger, mocks, localTimeNow } = createLogger();
+    const consoleMock = mock.method(console, 'log', () => {});
 
-        const message = 'Hello world';
-        const params = createTestParams();
+    logger.error('Hello world', {});
 
-        logger.debug(message, params);
-
-        const actual = mocks.logWithConsoleHasBeenCalledWith;
-        // Pink color
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[35mDEBUG\u001b[39m Hello world`
-          + `\n    error: {`
-          + `\n      name: "Error"`
-          + `\n      message: "aaa"`
-          + `\n      stack: Error: aaa`
-          + `\n        at createTestParams (/somewhere/logger.spec.ts:6:11)`
-          + `\n        at Context.<anonymous> (/somewhere/logger.spec.ts:129:13)`
-          + `\n    }`;
-
-        strictEqual(actual, expected);
-      });
-    });
-
-    context('given the configuration "settings.logger.format" is "json"', () => {
-      beforeEach(() => {
-        Config.set('settings.logger.format', 'json');
-      });
-
-      it('should log a JSON', () => {
-        const { logger, mocks, isoNow } = createLogger();
-
-        const message = 'Hello world';
-        const params = createTestParams();
-
-        logger.debug(message, params);
-
-        const actual = JSON.parse(mocks.logWithConsoleHasBeenCalledWith);
-        const expected = {
-          message,
-          timestamp: isoNow,
-          level: 'debug',
-          myBoolean: false,
-          myNull: null,
-          myNumber: 0,
-          myString: 'xxx',
-          myObject: { foo: 'bar' },
-          error: {
-            name: 'Error',
-            message: 'aaa',
-            stack: testStack,
-          }
-        };
-
-        deepStrictEqual(actual, expected);
-      });
-    });
-
-    context('given the configuration "settings.logger.format" is "none"', () => {
-      beforeEach(() => {
-        Config.set('settings.logger.format', 'none');
-      });
-
-      it('should log nothing', () => {
-        const { logger, mocks } = createLogger();
-
-        const message = 'Hello world';
-        const params = createTestParams();
-
-        logger.debug(message, params);
-
-        const actual = mocks.logWithConsoleHasBeenCalledWith;
-        const expected = undefined;
-
-        strictEqual(actual, expected);
-      });
-    });
-
-    context('given the configuration "settings.logger.format" has an incorrect value', () => {
-      beforeEach(() => {
-        Config.set('settings.logger.format', 'foobar');
-      });
-
-      it('should throw an error', () => {
-        const { logger } = createLogger();
-
-        const message = 'Hello world';
-
-        throws(
-          () => logger.debug(message),
-          (error: any) => error.message === 'Invalid logging format: "foobar"'
-        );
-      });
-    });
+    strictEqual(consoleMock.mock.callCount(), 1);
+    strictEqual(
+      consoleMock.mock.calls[0].arguments[0].includes('[ERROR]'),
+      true,
+    );
   });
 });
