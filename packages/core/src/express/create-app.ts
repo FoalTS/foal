@@ -98,7 +98,7 @@ export async function createApp(
       (tokens: any, req: any, res: any) => {
         return JSON.stringify({
           method: tokens.method(req, res),
-          url: tokens.url(req, res),
+          url: tokens.url(req, res).split('?')[0],
           statusCode: parseInt(tokens.status(req, res), 10),
           contentLength: tokens.res(req, res, 'content-length'),
           responseTime: parseFloat(tokens['response-time'](req, res)),

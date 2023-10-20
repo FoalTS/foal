@@ -688,7 +688,7 @@ describe('createApp', () => {
       });
 
       await request(app)
-        .get('/a')
+        .get('/a?apiKey=a_secret_api_key')
         .expect(200);
 
       strictEqual(loggerMock.mock.callCount(), 1);
