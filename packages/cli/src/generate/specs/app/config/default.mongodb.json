@@ -1,7 +1,7 @@
 {
   "port": "env(PORT)",
   "settings": {
-    "loggerFormat": "tiny"
+    "loggerFormat": "foal"
   },
   "database": {
     "type": "mongodb",
