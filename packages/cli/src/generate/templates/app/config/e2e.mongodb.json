@@ -1,9 +1,6 @@
 {
   "settings": {
-    "loggerFormat": "none",
-    "logger": {
-      "format": "none"
-    }
+    "loggerFormat": "none"
   },
   "database": {
     "url": "mongodb://localhost:27017/e2e-/* kebabName */"
