@@ -726,7 +726,7 @@ describe('createApp', () => {
       const logger = serviceManager.get(Logger);
       const loggerMock = mock.method(logger, 'warn', () => {});
 
-      const app = await createApp(AppController, {
+      await createApp(AppController, {
         serviceManager
       });
 
