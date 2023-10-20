@@ -31,7 +31,7 @@ export class ProfileController {
       try {
         await this.disk.delete(user.profile);
       } catch (error: any) {
-        this.logger.error(error.message, { err: error });
+        this.logger.error(error.message, { error });
       }
     }
 
