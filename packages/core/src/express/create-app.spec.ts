@@ -824,7 +824,40 @@ describe('createApp', () => {
             throw new Error('The request ID should exist.');
           }
         });
-
     });
+  });
+
+  it('should add the request ID to the log context.', async () => {
+    class AppController {
+      @Get('/')
+      get(ctx: Context) {
+        return new HttpResponseOK({
+          requestId: ctx.request.id
+        });
+      }
+    }
+
+    const serviceManager = new ServiceManager();
+    const logger = serviceManager.get(Logger);
+    const loggerMock = mock.method(logger, 'addLogContext', () => {});
+
+    const app = await createApp(AppController, {
+      serviceManager
+    });
+
+    let requestId: string|undefined;
+    await request(app)
+      .get('/')
+      .expect(200)
+      .then(response => {
+        requestId = response.body.requestId;
+      })
+
+    strictEqual(loggerMock.mock.callCount(), 1);
+
+    const [key, value] = loggerMock.mock.calls[0].arguments;
+
+    strictEqual(key, 'requestId');
+    strictEqual(value, requestId);
   });
 });
