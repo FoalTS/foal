@@ -12,6 +12,7 @@ import {
   HttpResponseForbidden,
   HttpResponseUnauthorized,
   IApiSecurityScheme,
+  Logger,
   ServiceManager
 } from '@foal/core';
 import { decode, verify } from 'jsonwebtoken';
@@ -198,6 +199,10 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     }
 
     const userId = checkAndConvertUserIdType(payload.sub, options.userIdType);
+
+    const logger = services.get(Logger);
+    logger.addLogContext('userId', userId);
+
     const user = await options.user(userId as never, services);
     if (!user) {
       return new InvalidTokenResponse('The token subject does not match any user.');
