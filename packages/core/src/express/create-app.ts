@@ -1,3 +1,6 @@
+// std
+import { randomUUID } from 'node:crypto';
+
 // 3p
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
@@ -86,6 +89,15 @@ export async function createApp(
 
   // Retrieve the logger.
   const logger = services.get(Logger);
+
+  // Generate a unique ID for each request.
+  app.use((req: any, res: any, next: (err?: any) => any) => {
+    const requestId = req.get('x-request-id') || randomUUID();
+
+    req.id = requestId;
+
+    next();
+  });
 
   // Log requests.
   const loggerFormat = Config.get(

@@ -735,4 +735,59 @@ describe('createApp', () => {
     });
   });
 
+  context('given a "X-Request-ID" header is present in the request', () => {
+    it('should add the request ID to the request object.', async () => {
+      const requestId = 'a_request_id';
+
+      class AppController {
+        @Get('/')
+        get(ctx: Context) {
+          return new HttpResponseOK({
+            requestId: ctx.request.id
+          });
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+      const app = await createApp(AppController, {
+        serviceManager
+      });
+
+      await request(app)
+        .get('/')
+        .set('X-Request-ID', requestId)
+        .expect(200)
+        .expect({
+          requestId,
+        });
+    });
+  });
+
+  context('given a "X-Request-ID" header is NOT present in the request', () => {
+    it('should add a request ID to the request object.', async () => {
+      class AppController {
+        @Get('/')
+        get(ctx: Context) {
+          return new HttpResponseOK({
+            requestId: ctx.request.id
+          });
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+      const app = await createApp(AppController, {
+        serviceManager
+      });
+
+      await request(app)
+        .get('/')
+        .expect(200)
+        .expect(response => {
+          if (!response.body.requestId) {
+            throw new Error('The request ID should exist.');
+          }
+        });
+
+    });
+  });
 });
