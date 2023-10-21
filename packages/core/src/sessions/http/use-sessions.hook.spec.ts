@@ -609,13 +609,13 @@ describe('UseSessions', () => {
 
       it('and add null as user ID to the log context.', async () => {
         const logger = services.get(Logger);
-        const loggerMock = mock.method(logger, 'addLogContext', () => {});
+        const loggerMock = mock.method(logger, 'addLogContext', () => {}).mock;
 
         await hook(ctx, services);
 
-        strictEqual(loggerMock.mock.callCount(), 1);
+        strictEqual(loggerMock.callCount(), 1);
 
-        deepStrictEqual(loggerMock.mock.calls[0].arguments, ['userId', null]);
+        deepStrictEqual(loggerMock.calls[0].arguments, ['userId', null]);
       });
 
     });
@@ -626,13 +626,13 @@ describe('UseSessions', () => {
 
       it('and add null as user ID to the log context.', async () => {
         const logger = services.get(Logger);
-        const loggerMock = mock.method(logger, 'addLogContext', () => {});
+        const loggerMock = mock.method(logger, 'addLogContext', () => {}).mock;
 
         await hook(ctx, services);
 
-        strictEqual(loggerMock.mock.callCount(), 1);
+        strictEqual(loggerMock.callCount(), 1);
 
-        deepStrictEqual(loggerMock.mock.calls[0].arguments, ['userId', userId]);
+        deepStrictEqual(loggerMock.calls[0].arguments, ['userId', userId]);
       });
 
       context('given options.user is not defined', () => {

@@ -28,13 +28,13 @@ describe('Log', () => {
     const services = new ServiceManager();
 
     const logger = services.get(Logger);
-    const loggerMock = mock.method(logger, 'warn');
+    const loggerMock = mock.method(logger, 'warn').mock;
 
     hook(ctx, services);
 
-    strictEqual(loggerMock.mock.callCount(), 1);
+    strictEqual(loggerMock.callCount(), 1);
     strictEqual(
-      loggerMock.mock.calls[0].arguments[0],
+      loggerMock.calls[0].arguments[0],
       'Using the @Log hook is deprecated. Use the Logger service in a custom hook instead.'
     );
   });

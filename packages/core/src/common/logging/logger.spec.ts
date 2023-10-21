@@ -18,7 +18,7 @@ describe('Logger', () => {
 
     context('given the log context has been initialized', () => {
       it('should log the message with the context.', () => {
-        const consoleMock = mock.method(console, 'log', () => {});
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
 
         const logger = new Logger();
         logger.initLogContext(() => {
@@ -30,15 +30,15 @@ describe('Logger', () => {
           logger.log('error', 'Hello world 2', {});
         });
 
-        strictEqual(consoleMock.mock.callCount(), 2);
+        strictEqual(consoleMock.callCount(), 2);
 
-        const loggedMessage = consoleMock.mock.calls[0].arguments[0];
+        const loggedMessage = consoleMock.calls[0].arguments[0];
 
         strictEqual(loggedMessage.includes('[ERROR]'), true);
         strictEqual(loggedMessage.includes('foo: "bar"'), true);
         notStrictEqual(loggedMessage.includes('foo2: "bar2"'), true);
 
-        const loggedMessage2 = consoleMock.mock.calls[1].arguments[0];
+        const loggedMessage2 = consoleMock.calls[1].arguments[0];
 
         strictEqual(loggedMessage2.includes('[ERROR]'), true);
         strictEqual(loggedMessage2.includes('foo2: "bar2"'), true);
@@ -46,7 +46,7 @@ describe('Logger', () => {
       });
 
       it('should let given params override the context.', () => {
-        const consoleMock = mock.method(console, 'log', () => {});
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
 
         const logger = new Logger();
         logger.initLogContext(() => {
@@ -54,9 +54,9 @@ describe('Logger', () => {
           logger.log('error', 'Hello world', { foo: 'bar2' });
         });
 
-        strictEqual(consoleMock.mock.callCount(), 1);
+        strictEqual(consoleMock.callCount(), 1);
 
-        const loggedMessage = consoleMock.mock.calls[0].arguments[0];
+        const loggedMessage = consoleMock.calls[0].arguments[0];
 
         strictEqual(loggedMessage.includes('[ERROR]'), true);
         strictEqual(loggedMessage.includes('foo: "bar2"'), true);
@@ -65,14 +65,14 @@ describe('Logger', () => {
 
     context('given the log context has NOT been initialized', () => {
       it('should log a warning message when adding log context.', () => {
-        const consoleMock = mock.method(console, 'log', () => {});
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
 
         const logger = new Logger();
         logger.addLogContext('foo', 'bar');
 
-        strictEqual(consoleMock.mock.callCount(), 1);
+        strictEqual(consoleMock.callCount(), 1);
 
-        const loggedMessage = consoleMock.mock.calls[0].arguments[0];
+        const loggedMessage = consoleMock.calls[0].arguments[0];
 
         strictEqual(loggedMessage.includes('[WARN]'), true);
         strictEqual(
@@ -84,14 +84,14 @@ describe('Logger', () => {
 
     context('given the configuration "settings.logger.format" is NOT defined', () => {
       it('should log the message to a raw text.', () => {
-        const consoleMock = mock.method(console, 'log', () => {});
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
 
         const logger = new Logger();
         logger.log('error', 'Hello world', { foobar: 'bar' });
 
-        strictEqual(consoleMock.mock.callCount(), 1);
+        strictEqual(consoleMock.callCount(), 1);
 
-        const loggedMessage = consoleMock.mock.calls[0].arguments[0];
+        const loggedMessage = consoleMock.calls[0].arguments[0];
 
         strictEqual(loggedMessage.includes('[ERROR]'), true);
         strictEqual(loggedMessage.includes('foobar: "bar"'), true);
@@ -102,14 +102,14 @@ describe('Logger', () => {
       it('should log the message to a JSON.', () => {
         Config.set('settings.logger.format', 'json');
 
-        const consoleMock = mock.method(console, 'log', () => {});
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
 
         const logger = new Logger();
         logger.log('error', 'Hello world', { foobar: 'bar' });
 
-        strictEqual(consoleMock.mock.callCount(), 1);
+        strictEqual(consoleMock.callCount(), 1);
 
-        const loggedMessage = consoleMock.mock.calls[0].arguments[0];
+        const loggedMessage = consoleMock.calls[0].arguments[0];
         const json = JSON.parse(loggedMessage);
 
         strictEqual(json.level, 'error');
@@ -121,27 +121,27 @@ describe('Logger', () => {
       it('should log nothing.', () => {
         Config.set('settings.logger.format', 'none');
 
-        const consoleMock = mock.method(console, 'log', () => {});
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
 
         const logger = new Logger();
         logger.log('error', 'Hello world', {});
 
-        strictEqual(consoleMock.mock.callCount(), 0);
+        strictEqual(consoleMock.callCount(), 0);
       });
     });
 
     context('given the configuration "settings.logger.logLevel" is NOT defined', () => {
       it('should log messages based on an "INFO" log level', () => {
-        const consoleMock = mock.method(console, 'log', () => {});
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
 
         const logger = new Logger();
         logger.log('info', 'Hello world', {});
-        strictEqual(consoleMock.mock.callCount(), 1);
+        strictEqual(consoleMock.callCount(), 1);
 
-        consoleMock.mock.resetCalls();
+        consoleMock.resetCalls();
 
         logger.log('debug', 'Hello world', {});
-        strictEqual(consoleMock.mock.callCount(), 0);
+        strictEqual(consoleMock.callCount(), 0);
       });
     });
 
@@ -149,16 +149,16 @@ describe('Logger', () => {
       it('should log messages based on a "WARN" log level', () => {
         Config.set('settings.logger.logLevel', 'warn');
 
-        const consoleMock = mock.method(console, 'log', () => {});
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
 
         const logger = new Logger();
         logger.log('warn', 'Hello world', {});
-        strictEqual(consoleMock.mock.callCount(), 1);
+        strictEqual(consoleMock.callCount(), 1);
 
-        consoleMock.mock.resetCalls();
+        consoleMock.resetCalls();
 
         logger.log('info', 'Hello world', {});
-        strictEqual(consoleMock.mock.callCount(), 0);
+        strictEqual(consoleMock.callCount(), 0);
       });
     });
   });
@@ -168,13 +168,13 @@ describe('Logger', () => {
 
     const logger = new Logger();
 
-    const consoleMock = mock.method(console, 'log', () => {});
+    const consoleMock = mock.method(console, 'log', () => {}).mock;
 
     logger.debug('Hello world', {});
 
-    strictEqual(consoleMock.mock.callCount(), 1);
+    strictEqual(consoleMock.callCount(), 1);
     strictEqual(
-      consoleMock.mock.calls[0].arguments[0].includes('[DEBUG]'),
+      consoleMock.calls[0].arguments[0].includes('[DEBUG]'),
       true,
     );
   });
@@ -182,13 +182,13 @@ describe('Logger', () => {
   it('has an info(...args) method which is an alias for log("info", ...args)', () => {
     const logger = new Logger();
 
-    const consoleMock = mock.method(console, 'log', () => {});
+    const consoleMock = mock.method(console, 'log', () => {}).mock;
 
     logger.info('Hello world', {});
 
-    strictEqual(consoleMock.mock.callCount(), 1);
+    strictEqual(consoleMock.callCount(), 1);
     strictEqual(
-      consoleMock.mock.calls[0].arguments[0].includes('[INFO]'),
+      consoleMock.calls[0].arguments[0].includes('[INFO]'),
       true,
     );
   });
@@ -196,13 +196,13 @@ describe('Logger', () => {
   it('has a warn(...args) method which is an alias for log("warn", ...args)', () => {
     const logger = new Logger();
 
-    const consoleMock = mock.method(console, 'log', () => {});
+    const consoleMock = mock.method(console, 'log', () => {}).mock;
 
     logger.warn('Hello world', {});
 
-    strictEqual(consoleMock.mock.callCount(), 1);
+    strictEqual(consoleMock.callCount(), 1);
     strictEqual(
-      consoleMock.mock.calls[0].arguments[0].includes('[WARN]'),
+      consoleMock.calls[0].arguments[0].includes('[WARN]'),
       true,
     );
   });
@@ -210,13 +210,13 @@ describe('Logger', () => {
   it('has an error(...args) method which is an alias for log("error", ...args)', () => {
     const logger = new Logger();
 
-    const consoleMock = mock.method(console, 'log', () => {});
+    const consoleMock = mock.method(console, 'log', () => {}).mock;
 
     logger.error('Hello world', {});
 
-    strictEqual(consoleMock.mock.callCount(), 1);
+    strictEqual(consoleMock.callCount(), 1);
     strictEqual(
-      consoleMock.mock.calls[0].arguments[0].includes('[ERROR]'),
+      consoleMock.calls[0].arguments[0].includes('[ERROR]'),
       true,
     );
   });

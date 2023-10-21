@@ -643,13 +643,13 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       }));
 
       const logger = services.get(Logger);
-      const loggerMock = mock.method(logger, 'addLogContext', () => {});
+      const loggerMock = mock.method(logger, 'addLogContext', () => {}).mock;
 
       await hook(ctx, services);
 
-      strictEqual(loggerMock.mock.callCount(), 1);
+      strictEqual(loggerMock.callCount(), 1);
       deepStrictEqual(
-        loggerMock.mock.calls[0].arguments,
+        loggerMock.calls[0].arguments,
         ['userId', 123],
       );
     })

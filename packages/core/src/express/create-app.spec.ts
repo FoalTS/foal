@@ -683,7 +683,7 @@ describe('createApp', () => {
       const serviceManager = new ServiceManager();
 
       const logger = serviceManager.get(Logger);
-      const loggerMock = mock.method(logger, 'info', () => {});
+      const loggerMock = mock.method(logger, 'info', () => {}).mock;
 
       const app = await createApp(AppController, {
         serviceManager
@@ -693,10 +693,10 @@ describe('createApp', () => {
         .get('/a?apiKey=a_secret_api_key')
         .expect(200);
 
-      strictEqual(loggerMock.mock.callCount(), 1);
+      strictEqual(loggerMock.callCount(), 1);
 
-      const message = loggerMock.mock.calls[0].arguments[0];
-      const params = loggerMock.mock.calls[0].arguments[1];
+      const message = loggerMock.calls[0].arguments[0];
+      const params = loggerMock.calls[0].arguments[1];
 
       strictEqual(message, 'HTTP request - GET /a');
       strictEqual(typeof params?.responseTime, 'number')
@@ -726,14 +726,14 @@ describe('createApp', () => {
       const serviceManager = new ServiceManager();
 
       const logger = serviceManager.get(Logger);
-      const loggerMock = mock.method(logger, 'warn', () => {});
+      const loggerMock = mock.method(logger, 'warn', () => {}).mock;
 
       await createApp(AppController, {
         serviceManager
       });
 
-      strictEqual(loggerMock.mock.callCount(), 1);
-      strictEqual(loggerMock.mock.calls[0].arguments[0], '[CONFIG] Using another format than "foal" for "settings.loggerFormat" is deprecated.');
+      strictEqual(loggerMock.callCount(), 1);
+      strictEqual(loggerMock.calls[0].arguments[0], '[CONFIG] Using another format than "foal" for "settings.loggerFormat" is deprecated.');
     });
   });
 
@@ -757,7 +757,7 @@ describe('createApp', () => {
 
     const serviceManager = new ServiceManager();
 
-    const consoleMock = mock.method(console, 'log', () => {});
+    const consoleMock = mock.method(console, 'log', () => {}).mock;
 
     const app = await createApp(AppController, {
       serviceManager
@@ -767,7 +767,7 @@ describe('createApp', () => {
       .get('/')
       .expect(200);
 
-    const messages = consoleMock.mock.calls.map(call => JSON.parse(call.arguments[0]));
+    const messages = consoleMock.calls.map(call => JSON.parse(call.arguments[0]));
 
     strictEqual(messages.some(message => message.foo === 'bar'), true);
   });
@@ -839,7 +839,7 @@ describe('createApp', () => {
 
     const serviceManager = new ServiceManager();
     const logger = serviceManager.get(Logger);
-    const loggerMock = mock.method(logger, 'addLogContext', () => {});
+    const loggerMock = mock.method(logger, 'addLogContext', () => {}).mock;
 
     const app = await createApp(AppController, {
       serviceManager
@@ -853,9 +853,9 @@ describe('createApp', () => {
         requestId = response.body.requestId;
       })
 
-    strictEqual(loggerMock.mock.callCount(), 1);
+    strictEqual(loggerMock.callCount(), 1);
 
-    const [key, value] = loggerMock.mock.calls[0].arguments;
+    const [key, value] = loggerMock.calls[0].arguments;
 
     strictEqual(key, 'requestId');
     strictEqual(value, requestId);
