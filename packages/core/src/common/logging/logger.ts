@@ -1,7 +1,26 @@
+// std
+import { AsyncLocalStorage } from 'node:async_hooks';
+
+// FoalTS
 import { Config } from '../../core';
 import { Level, formatMessage, shouldLog } from './logger.utils';
 
 export class Logger {
+  private asyncLocalStorage = new AsyncLocalStorage<Record<string, any>>();
+
+  initLogContext(callback: () => void): void {
+    this.asyncLocalStorage.run({}, callback);
+  }
+
+  addLogContext(name: string, value: any): void {
+    const store = this.asyncLocalStorage.getStore();
+    if (!store) {
+      this.log('warn', 'Impossible to add log context information. The logger context has not been initialized.');
+      return;
+    }
+    store[name] = value;
+  }
+
   log(
     level: Level,
     message: string,
@@ -18,10 +37,14 @@ export class Logger {
     };
 
     const now = new Date();
+    const contextParams = this.asyncLocalStorage.getStore();
     const formattedMessage = formatMessage(
       level,
       message,
-      params,
+      {
+        ...contextParams,
+        ...params,
+      },
       format,
       now,
     );

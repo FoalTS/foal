@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { notStrictEqual, strictEqual } from 'assert';
 import { mock } from 'node:test';
 
 // FoalTS
@@ -16,18 +16,85 @@ describe('Logger', () => {
 
   describe('has a "log" method that', () => {
 
-    context('given the configuration "settings.logger.format" is NOT defined', () => {
-      it('should log the message to a raw text.', () => {
+    context('given the log context has been initialized', () => {
+      it('should log the message with the context.', () => {
         const consoleMock = mock.method(console, 'log', () => {});
 
         const logger = new Logger();
-        logger.log('error', 'Hello world', {});
+        logger.initLogContext(() => {
+          logger.addLogContext('foo', 'bar');
+          logger.log('error', 'Hello world', {});
+        });
+        logger.initLogContext(() => {
+          logger.addLogContext('foo2', 'bar2');
+          logger.log('error', 'Hello world 2', {});
+        });
+
+        strictEqual(consoleMock.mock.callCount(), 2);
+
+        const loggedMessage = consoleMock.mock.calls[0].arguments[0];
+
+        strictEqual(loggedMessage.includes('[ERROR]'), true);
+        strictEqual(loggedMessage.includes('foo: "bar"'), true);
+        notStrictEqual(loggedMessage.includes('foo2: "bar2"'), true);
+
+        const loggedMessage2 = consoleMock.mock.calls[1].arguments[0];
+
+        strictEqual(loggedMessage2.includes('[ERROR]'), true);
+        strictEqual(loggedMessage2.includes('foo2: "bar2"'), true);
+        notStrictEqual(loggedMessage2.includes('foo: "bar"'), true);
+      });
+
+      it('should let given params override the context.', () => {
+        const consoleMock = mock.method(console, 'log', () => {});
+
+        const logger = new Logger();
+        logger.initLogContext(() => {
+          logger.addLogContext('foo', 'bar');
+          logger.log('error', 'Hello world', { foo: 'bar2' });
+        });
 
         strictEqual(consoleMock.mock.callCount(), 1);
 
         const loggedMessage = consoleMock.mock.calls[0].arguments[0];
 
         strictEqual(loggedMessage.includes('[ERROR]'), true);
+        strictEqual(loggedMessage.includes('foo: "bar2"'), true);
+      });
+    });
+
+    context('given the log context has NOT been initialized', () => {
+      it('should log a warning message when adding log context.', () => {
+        const consoleMock = mock.method(console, 'log', () => {});
+
+        const logger = new Logger();
+        logger.addLogContext('foo', 'bar');
+
+        strictEqual(consoleMock.mock.callCount(), 1);
+
+        const loggedMessage = consoleMock.mock.calls[0].arguments[0];
+
+        strictEqual(loggedMessage.includes('[WARN]'), true);
+        strictEqual(
+          loggedMessage.includes('Impossible to add log context information. The logger context has not been initialized.'),
+          true
+        );
+      });
+    });
+
+    context('given the configuration "settings.logger.format" is NOT defined', () => {
+      it('should log the message to a raw text.', () => {
+        const consoleMock = mock.method(console, 'log', () => {});
+
+        const logger = new Logger();
+        logger.log('error', 'Hello world', { foobar: 'bar' });
+
+        strictEqual(consoleMock.mock.callCount(), 1);
+
+        const loggedMessage = consoleMock.mock.calls[0].arguments[0];
+
+        strictEqual(loggedMessage.includes('[ERROR]'), true);
+        strictEqual(loggedMessage.includes('foobar: "bar"'), true);
       })
     });
 
@@ -38,7 +105,7 @@ describe('Logger', () => {
         const consoleMock = mock.method(console, 'log', () => {});
 
         const logger = new Logger();
-        logger.log('error', 'Hello world', {});
+        logger.log('error', 'Hello world', { foobar: 'bar' });
 
         strictEqual(consoleMock.mock.callCount(), 1);
 
@@ -46,6 +113,7 @@ describe('Logger', () => {
         const json = JSON.parse(loggedMessage);
 
         strictEqual(json.level, 'error');
+        strictEqual(json.foobar, 'bar');
       });
     });
 

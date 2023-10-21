@@ -16,6 +16,7 @@ import {
   dependency,
   Get,
   Head,
+  Hook,
   HttpResponseOK,
   OpenApi,
   Options,
@@ -56,6 +57,7 @@ describe('createApp', () => {
     Config.remove('settings.bodyParser.limit');
     Config.remove('settings.cookieParser.secret');
     Config.remove('settings.loggerFormat');
+    Config.remove('settings.logger.format');
   });
 
   const cookieSecret = 'strong-secret';
@@ -733,6 +735,41 @@ describe('createApp', () => {
       strictEqual(loggerMock.mock.callCount(), 1);
       strictEqual(loggerMock.mock.calls[0].arguments[0], '[CONFIG] Using another format than "foal" for "settings.loggerFormat" is deprecated.');
     });
+  });
+
+  it('should allow to add log context information.', async () => {
+    Config.set('settings.logger.format', 'json');
+
+    class AppController {
+      @dependency
+      logger: Logger;
+
+      @Get('/')
+      @Hook((ctx, services) => {
+        const logger = services.get(Logger);
+        logger.addLogContext('foo', 'bar');
+      })
+      getA(ctx: Context) {
+        this.logger.info('Hello world');
+        return new HttpResponseOK();
+      }
+    }
+
+    const serviceManager = new ServiceManager();
+
+    const consoleMock = mock.method(console, 'log', () => {});
+
+    const app = await createApp(AppController, {
+      serviceManager
+    });
+
+    await request(app)
+      .get('/')
+      .expect(200);
+
+    const messages = consoleMock.mock.calls.map(call => JSON.parse(call.arguments[0]));
+
+    strictEqual(messages.some(message => message.foo === 'bar'), true);
   });
 
   context('given a "X-Request-ID" header is present in the request', () => {
