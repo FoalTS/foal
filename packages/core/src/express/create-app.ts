@@ -28,6 +28,7 @@ type ErrorMiddleware = (err: any, req: any, res: any, next: (err?: any) => any) 
 export interface CreateAppOptions {
   expressInstance?: any;
   serviceManager?: ServiceManager;
+  getHttpLogParams?: (tokens: any, req: any, res: any) => Record<string, any>;
   preMiddlewares?: (Middleware|ErrorMiddleware)[];
   afterPreMiddlewares?: (Middleware|ErrorMiddleware)[];
   postMiddlewares?: (Middleware|ErrorMiddleware)[];
@@ -51,6 +52,16 @@ function protectionHeaders(req: any, res: any, next: (err?: any) => any) {
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   next();
+}
+
+export function getHttpLogParamsDefault(tokens: any, req: any, res: any): Record<string, any> {
+  return {
+    method: tokens.method(req, res),
+    url: tokens.url(req, res).split('?')[0],
+    statusCode: parseInt(tokens.status(req, res), 10),
+    contentLength: tokens.res(req, res, 'content-length'),
+    responseTime: parseFloat(tokens['response-time'](req, res)),
+  };
 }
 
 /**
@@ -112,16 +123,9 @@ export async function createApp(
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
   if (loggerFormat === 'foal') {
+    const getHttpLogParams = options.getHttpLogParams || getHttpLogParamsDefault;
     app.use(morgan(
-      (tokens: any, req: any, res: any) => {
-        return JSON.stringify({
-          method: tokens.method(req, res),
-          url: tokens.url(req, res).split('?')[0],
-          statusCode: parseInt(tokens.status(req, res), 10),
-          contentLength: tokens.res(req, res, 'content-length'),
-          responseTime: parseFloat(tokens['response-time'](req, res)),
-        });
-      },
+      (tokens: any, req: any, res: any) => JSON.stringify(getHttpLogParams(tokens, req, res)),
       {
         stream: {
           write: (message: string) => {

@@ -218,6 +218,7 @@ export {
 export {
   OPENAPI_SERVICE_ID,
   createApp,
+  getHttpLogParamsDefault,
 } from './express';
 export {
   Session,

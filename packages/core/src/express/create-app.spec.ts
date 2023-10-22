@@ -709,7 +709,50 @@ describe('createApp', () => {
         statusCode: 200,
         contentLength: '1',
       });
-    })
+    });
+
+    it('should use the options.getHttpLogParams if provided', async () => {
+      Config.set('settings.loggerFormat', 'foal');
+
+      class AppController {
+        @Get('/a')
+        getA(ctx: Context) {
+          return new HttpResponseOK('a');
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+
+      const logger = serviceManager.get(Logger);
+      const loggerMock = mock.method(logger, 'info', () => {}).mock;
+
+      const app = await createApp(AppController, {
+        serviceManager,
+        getHttpLogParams: (tokens: any, req: any, res: any) => ({
+          method: tokens.method(req, res),
+          url: tokens.url(req, res).split('?')[0],
+          myCustomHeader: req.get('my-custom-header')
+        }),
+      });
+
+      await request(app)
+        .get('/a')
+        .set('my-custom-header', 'my-custom-value')
+        .expect(200);
+
+      strictEqual(loggerMock.callCount(), 1);
+
+      const message = loggerMock.calls[0].arguments[0];
+      const params = loggerMock.calls[0].arguments[1];
+
+      strictEqual(message, 'HTTP request - GET /a');
+
+      deepStrictEqual(params, {
+        method: 'GET',
+        url: '/a',
+        myCustomHeader: 'my-custom-value',
+      });
+    });
   });
 
   context('given the configuration "settings.loggerFormat" is set to a value different from "none" or "foal"', () => {
