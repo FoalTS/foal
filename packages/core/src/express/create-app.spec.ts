@@ -493,9 +493,18 @@ describe('createApp', () => {
       .type('application/json')
       .send('{ "foo": "bar", }')
       .expect(400)
-      .expect({
-        body: '{ \"foo\": \"bar\", }',
-        message: 'Unexpected token } in JSON at position 16'
+      .then(response => {
+        try {
+          deepStrictEqual(response.body, {
+            body: '{ \"foo\": \"bar\", }',
+            message: 'Unexpected token } in JSON at position 16'
+          });
+        } catch (error) {
+          deepStrictEqual(response.body, {
+            body: '{ \"foo\": \"bar\", }',
+            message: 'Expected double-quoted property name in JSON at position 16'
+          })
+        }
       });
   });
 
