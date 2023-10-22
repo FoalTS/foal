@@ -7,6 +7,13 @@ import { Level, formatMessage, shouldLog } from './logger.utils';
 
 export class Logger {
   private asyncLocalStorage = new AsyncLocalStorage<Record<string, any>>();
+  private transports: ((level: Level, log: string) => void)[] = [
+    (level, log) => console.log(log),
+  ];
+
+  addTransport(transport: (level: Level, log: string) => void): void {
+    this.transports.push(transport);
+  }
 
   initLogContext(callback: () => void): void {
     this.asyncLocalStorage.run({}, callback);
@@ -49,7 +56,9 @@ export class Logger {
       now,
     );
 
-    console.log(formattedMessage);
+    for (const transport of this.transports) {
+      transport(level, formattedMessage);
+    }
   }
 
   debug(message: string, params: { error?: Error, [name: string]: any } = {}): void {

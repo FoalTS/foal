@@ -161,6 +161,26 @@ describe('Logger', () => {
         strictEqual(consoleMock.callCount(), 0);
       });
     });
+
+    context('given transports have been registered', () => {
+      it('should send them the logs and their levels.', () => {
+        const transport1 = mock.fn((level, log) => {});
+        const transport2 = mock.fn((level, log) => {});
+
+        const logger = new Logger();
+        logger.addTransport(transport1);
+        logger.addTransport(transport2);
+        logger.log('error', 'Hello world', {});
+
+        strictEqual(transport1.mock.callCount(), 1);
+        strictEqual(transport1.mock.calls[0].arguments[0], 'error');
+        strictEqual(transport1.mock.calls[0].arguments[1].includes('Hello world'), true);
+
+        strictEqual(transport2.mock.callCount(), 1);
+        strictEqual(transport2.mock.calls[0].arguments[0], 'error');
+        strictEqual(transport2.mock.calls[0].arguments[1].includes('Hello world'), true);
+      });
+    })
   });
 
   it('has a debug(...args) method which is an alias for log("debug", ...args)', () => {
