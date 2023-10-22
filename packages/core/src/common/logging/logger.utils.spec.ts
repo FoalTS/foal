@@ -22,8 +22,8 @@ function createTestParams() {
 
 describe('formatMessage', () => {
   const isoNow = '2023-02-03T01:12:03.000Z';
-  const localTimeNow = '2:12:03 AM';
   const now = new Date(isoNow);
+  const localeTimeNow = now.toLocaleTimeString();
 
   context('given format is "raw"', () => {
     it('should return a raw text with a full timestamp, detailed params but with no colors.', () => {
@@ -58,7 +58,7 @@ describe('formatMessage', () => {
         const params = createTestParams();
 
         const actual = formatMessage('debug', message, params, 'dev', now)
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[35mDEBUG\u001b[39m Hello world`
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[35mDEBUG\u001b[39m Hello world`
           + `\n    error: {`
           + `\n      name: "Error"`
           + `\n      message: "aaa"`
@@ -77,7 +77,7 @@ describe('formatMessage', () => {
         const params = createTestParams();
 
         const actual = formatMessage('info', message, params, 'dev', now)
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m Hello world`
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m Hello world`
           + `\n    error: {`
           + `\n      name: "Error"`
           + `\n      message: "aaa"`
@@ -96,7 +96,7 @@ describe('formatMessage', () => {
         const params = createTestParams();
 
         const actual = formatMessage('warn', message, params, 'dev', now)
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[33mWARN\u001b[39m Hello world`
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[33mWARN\u001b[39m Hello world`
           + `\n    error: {`
           + `\n      name: "Error"`
           + `\n      message: "aaa"`
@@ -115,7 +115,7 @@ describe('formatMessage', () => {
         const params = createTestParams();
 
         const actual = formatMessage('error', message, params, 'dev', now)
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[31mERROR\u001b[39m Hello world`
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[31mERROR\u001b[39m Hello world`
           + `\n    error: {`
           + `\n      name: "Error"`
           + `\n      message: "aaa"`
@@ -137,7 +137,7 @@ describe('formatMessage', () => {
         };
 
         const actual = formatMessage('info', message, params, 'dev', now);
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar 100 - 123 ms`
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar 100 - 123 ms`
 
         strictEqual(actual, expected);
       });
@@ -150,7 +150,7 @@ describe('formatMessage', () => {
         };
 
         const actual = formatMessage('info', message, params, 'dev', now);
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[32m200\u001b[39m - 123 ms`
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[32m200\u001b[39m - 123 ms`
 
         strictEqual(actual, expected);
       });
@@ -163,7 +163,7 @@ describe('formatMessage', () => {
         };
 
         const actual = formatMessage('info', message, params, 'dev', now);
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[36m300\u001b[39m - 123 ms`
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[36m300\u001b[39m - 123 ms`
 
         strictEqual(actual, expected);
       });
@@ -176,7 +176,7 @@ describe('formatMessage', () => {
         };
 
         const actual = formatMessage('info', message, params, 'dev', now);
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[33m400\u001b[39m - 123 ms`
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[33m400\u001b[39m - 123 ms`
 
         strictEqual(actual, expected);
       });
@@ -189,7 +189,7 @@ describe('formatMessage', () => {
         };
 
         const actual = formatMessage('info', message, params, 'dev', now);
-        const expected = `\u001b[90m[${localTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[31m500\u001b[39m - 123 ms`
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[31m500\u001b[39m - 123 ms`
 
         strictEqual(actual, expected);
       });
