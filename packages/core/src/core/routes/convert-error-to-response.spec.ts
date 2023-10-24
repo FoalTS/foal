@@ -22,12 +22,20 @@ describe('convertErrorToResponse', () => {
   context('given the configuration settings.logErrors is true or not defined', () => {
 
     it('should log the error stack.', async () => {
-      let message = '';
-      const log = (msg: string) => message = msg;
+      let actualMessage: string|undefined;
+      let actualError: Error|undefined;
 
-      await convertErrorToResponse(error, ctx, new AppController(), log);
+      const logger = {
+        error(message: string, { error }: { error: Error }): void {
+          actualMessage = message;
+          actualError = error;
+        }
+      }
 
-      strictEqual(message, error.stack);
+      await convertErrorToResponse(error, ctx, new AppController(), logger);
+
+      strictEqual(actualMessage, error.message);
+      strictEqual(actualError, error);
     });
 
   });
@@ -38,13 +46,21 @@ describe('convertErrorToResponse', () => {
 
     afterEach(() => Config.remove('settings.logErrors'));
 
-    it('should not log the error stack.', async () => {
-      let message = '';
-      const log = (msg: string) => message = msg;
+    it('should not log the error.', async () => {
+      let actualMessage: string|undefined;
+      let actualError: Error|undefined;
 
-      await convertErrorToResponse(error, ctx, new AppController(), log);
+      const logger = {
+        error(message: string, { error }: { error: Error }): void {
+          actualMessage = message;
+          actualError = error;
+        }
+      }
 
-      strictEqual(message, '');
+      await convertErrorToResponse(error, ctx, new AppController(), logger);
+
+      strictEqual(actualMessage, undefined);
+      strictEqual(actualError, undefined);
     });
 
   });
@@ -52,7 +68,7 @@ describe('convertErrorToResponse', () => {
   context('given appController.handleError is not defined', () => {
 
     it('should return an HttpResponseInternalServerError object created by renderError.', async () => {
-      const response = await convertErrorToResponse(error, ctx, new AppController(), () => {});
+      const response = await convertErrorToResponse(error, ctx, new AppController(), { error: () => {} });
 
       if (!isHttpResponseInternalServerError(response)) {
         throw new Error('An HttpResponseInternalServerError should have been returned.');
@@ -82,7 +98,7 @@ describe('convertErrorToResponse', () => {
       }
 
       it('should return the response returned by handleError.', async () => {
-        const response = await convertErrorToResponse(error, ctx, new AppController(), () => {});
+        const response = await convertErrorToResponse(error, ctx, new AppController(), { error: () => {} });
 
         if (!isHttpResponseInternalServerError(response)) {
           throw new Error('An HttpResponseInternalServerError should have been returned.');
@@ -102,7 +118,7 @@ describe('convertErrorToResponse', () => {
       }
 
       it('should return an HttpResponseInternalServerError object created by renderError.', async () => {
-        const response = await convertErrorToResponse(error, ctx, new AppController(), () => {});
+        const response = await convertErrorToResponse(error, ctx, new AppController(), { error: () => {} });
 
         if (!isHttpResponseInternalServerError(response)) {
           throw new Error('An HttpResponseInternalServerError should have been returned.');
@@ -123,7 +139,7 @@ describe('convertErrorToResponse', () => {
       }
 
       it('should return an HttpResponseInternalServerError object created by renderError.', async () => {
-        const response = await convertErrorToResponse(error, ctx, new AppController(), () => {});
+        const response = await convertErrorToResponse(error, ctx, new AppController(), { error: () => {} });
 
         if (!isHttpResponseInternalServerError(response)) {
           throw new Error('An HttpResponseInternalServerError should have been returned.');

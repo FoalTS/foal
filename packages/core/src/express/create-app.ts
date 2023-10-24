@@ -1,7 +1,10 @@
+// std
+import { randomUUID } from 'node:crypto';
+
 // 3p
 import * as cookieParser from 'cookie-parser';
 import * as express from 'express';
-import * as logger from 'morgan';
+import * as morgan from 'morgan';
 
 // FoalTS
 import {
@@ -15,6 +18,7 @@ import {
   ServiceManager,
 } from '../core';
 import { sendResponse } from './send-response';
+import { httpRequestMessagePrefix, Logger } from '../common';
 
 export const OPENAPI_SERVICE_ID = 'OPENAPI_SERVICE_ID_a5NWKbBNBxVVZ';
 
@@ -24,6 +28,7 @@ type ErrorMiddleware = (err: any, req: any, res: any, next: (err?: any) => any) 
 export interface CreateAppOptions {
   expressInstance?: any;
   serviceManager?: ServiceManager;
+  getHttpLogParams?: (tokens: any, req: any, res: any) => Record<string, any>;
   preMiddlewares?: (Middleware|ErrorMiddleware)[];
   afterPreMiddlewares?: (Middleware|ErrorMiddleware)[];
   postMiddlewares?: (Middleware|ErrorMiddleware)[];
@@ -47,6 +52,16 @@ function protectionHeaders(req: any, res: any, next: (err?: any) => any) {
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   next();
+}
+
+export function getHttpLogParamsDefault(tokens: any, req: any, res: any): Record<string, any> {
+  return {
+    method: tokens.method(req, res),
+    url: tokens.url(req, res).split('?')[0],
+    statusCode: parseInt(tokens.status(req, res), 10),
+    contentLength: tokens.res(req, res, 'content-length'),
+    responseTime: parseFloat(tokens['response-time'](req, res)),
+  };
 }
 
 /**
@@ -79,14 +94,50 @@ export async function createApp(
     app.use(middleware);
   }
 
+  // Create the service and controller manager.
+  const services = options.serviceManager || new ServiceManager();
+  app.foal = { services };
+
+  // Retrieve the logger.
+  const logger = services.get(Logger);
+
+  // Allow to add log context.
+  app.use((req: any, res: any, next: (err?: any) => any) => {
+    logger.initLogContext(next);
+  });
+
+  // Generate a unique ID for each request.
+  app.use((req: any, res: any, next: (err?: any) => any) => {
+    const requestId = req.get('x-request-id') || randomUUID();
+
+    req.id = requestId;
+    logger.addLogContext('requestId', requestId);
+
+    next();
+  });
+
   // Log requests.
   const loggerFormat = Config.get(
     'settings.loggerFormat',
     'string',
     '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
   );
-  if (loggerFormat !== 'none') {
-    app.use(logger(loggerFormat));
+  if (loggerFormat === 'foal') {
+    const getHttpLogParams = options.getHttpLogParams || getHttpLogParamsDefault;
+    app.use(morgan(
+      (tokens: any, req: any, res: any) => JSON.stringify(getHttpLogParams(tokens, req, res)),
+      {
+        stream: {
+          write: (message: string) => {
+            const data = JSON.parse(message);
+            logger.info(`${httpRequestMessagePrefix}${data.method} ${data.url}`, data);
+          },
+        },
+      }
+    ))
+  } else if (loggerFormat !== 'none') {
+    logger.warn('[CONFIG] Using another format than "foal" for "settings.loggerFormat" is deprecated.');
+    app.use(morgan(loggerFormat));
   }
 
   app.use(protectionHeaders);
@@ -112,10 +163,6 @@ export async function createApp(
     app.use(middleware);
   }
 
-  // Create the service and controller manager.
-  const services = options.serviceManager || new ServiceManager();
-  app.foal = { services };
-
   // Inject the OpenAPI service with an ID string to avoid duplicated singletons
   // across several npm packages.
   services.set(OPENAPI_SERVICE_ID, services.get(OpenApi));
@@ -131,7 +178,7 @@ export async function createApp(
         const ctx = new Context(req, route.controller.constructor.name, route.propertyKey);
         // TODO: better test this line.
         const response = await getResponse(route, ctx, services, appController);
-        sendResponse(response, res);
+        sendResponse(response, res, logger);
       } catch (error: any) {
         // This try/catch will never be called: the `getResponse` function catches any errors
         // thrown or rejected in the application and converts it into a response.

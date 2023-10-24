@@ -244,7 +244,6 @@ describe('[Acceptance test] GraphQLController', () => {
           data += chunk;
         });
         resp.on('end', () => {
-          console.log(data);
           resolve(JSON.parse(data));
         });
       }).on('error', err => {

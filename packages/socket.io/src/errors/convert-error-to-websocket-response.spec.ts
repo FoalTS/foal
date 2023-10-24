@@ -23,12 +23,20 @@ describe('convertErrorToWebsocketResponse', () => {
   context('given the configuration settings.logErrors is true or not defined', () => {
 
     it('should log the error stack.', async () => {
-      let message = '';
-      const log = (msg: string) => message = msg;
+      let actualMessage: string|undefined;
+      let actualError: Error|undefined;
 
-      await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), log);
+      const logger = {
+        error(message: string, { error }: { error: Error }): void {
+          actualMessage = message;
+          actualError = error;
+        }
+      }
 
-      strictEqual(message, error.stack);
+      await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), logger);
+
+      strictEqual(actualMessage, error.message);
+      strictEqual(actualError, error);
     });
 
   });
@@ -40,12 +48,19 @@ describe('convertErrorToWebsocketResponse', () => {
     afterEach(() => Config.remove('settings.logErrors'));
 
     it('should not log the error stack.', async () => {
-      let message = '';
-      const log = (msg: string) => message = msg;
+      let actualMessage: string|undefined;
+      let actualError: Error|undefined;
 
-      await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), log);
+      const logger = {
+        error(message: string, { error }: { error: Error }): void {
+          actualMessage = message;
+          actualError = error;
+        }
+      }
+      await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), logger);
 
-      strictEqual(message, '');
+      strictEqual(actualMessage, undefined);
+      strictEqual(actualError, undefined);
     });
 
   });
@@ -53,7 +68,7 @@ describe('convertErrorToWebsocketResponse', () => {
   context('given socketioController.handleError is not defined', () => {
 
     it('should return an WebsocketErrorResponse object created by renderWebsocketError.', async () => {
-      const response = await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), () => {});
+      const response = await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), { error: () => {} });
 
       if (!(response instanceof WebsocketErrorResponse)) {
         throw new Error('An WebsocketErrorResponse should have been returned.');
@@ -83,7 +98,7 @@ describe('convertErrorToWebsocketResponse', () => {
       }
 
       it('should return the response returned by handleError.', async () => {
-        const response = await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), () => {});
+        const response = await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), { error: () => {} });
 
         if (!(response instanceof WebsocketErrorResponse)) {
           throw new Error('An WebsocketErrorResponse should have been returned.');
@@ -103,7 +118,7 @@ describe('convertErrorToWebsocketResponse', () => {
       }
 
       it('should return an WebsocketErrorResponse object created by renderWebsocketError.', async () => {
-        const response = await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), () => {});
+        const response = await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), { error: () => {} });
 
         if (!(response instanceof WebsocketErrorResponse)) {
           throw new Error('An WebsocketErrorResponse should have been returned.');
@@ -124,7 +139,7 @@ describe('convertErrorToWebsocketResponse', () => {
       }
 
       it('should return an WebsocketErrorResponse object created by renderWebsocketError.', async () => {
-        const response = await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), () => {});
+        const response = await convertErrorToWebsocketResponse(error, ctx, new SocketIOController(), { error: () => {} });
 
         if (!(response instanceof WebsocketErrorResponse)) {
           throw new Error('An WebsocketErrorResponse should have been returned.');

@@ -1,1 +1,1 @@
-export { createApp, OPENAPI_SERVICE_ID } from './create-app';
+export { createApp, OPENAPI_SERVICE_ID, getHttpLogParamsDefault } from './create-app';

@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 import { Buffer } from 'buffer';
 
 // 3p
@@ -16,6 +16,7 @@ import {
   dependency,
   Get,
   Head,
+  Hook,
   HttpResponseOK,
   OpenApi,
   Options,
@@ -25,6 +26,8 @@ import {
   ServiceManager
 } from '../core';
 import { createApp, OPENAPI_SERVICE_ID } from './create-app';
+import { mock } from 'node:test';
+import { Logger } from '../common';
 
 describe('createApp', () => {
 
@@ -48,10 +51,13 @@ describe('createApp', () => {
   });
 
   afterEach(() => {
+    mock.reset();
     Config.remove('settings.staticPathPrefix');
     Config.remove('settings.debug');
     Config.remove('settings.bodyParser.limit');
     Config.remove('settings.cookieParser.secret');
+    Config.remove('settings.loggerFormat');
+    Config.remove('settings.logger.format');
   });
 
   const cookieSecret = 'strong-secret';
@@ -487,9 +493,18 @@ describe('createApp', () => {
       .type('application/json')
       .send('{ "foo": "bar", }')
       .expect(400)
-      .expect({
-        body: '{ \"foo\": \"bar\", }',
-        message: 'Unexpected token } in JSON at position 16'
+      .then(response => {
+        try {
+          deepStrictEqual(response.body, {
+            body: '{ \"foo\": \"bar\", }',
+            message: 'Unexpected token } in JSON at position 16'
+          });
+        } catch (error) {
+          deepStrictEqual(response.body, {
+            body: '{ \"foo\": \"bar\", }',
+            message: 'Expected double-quoted property name in JSON at position 16'
+          })
+        }
       });
   });
 
@@ -663,4 +678,238 @@ describe('createApp', () => {
     }
   });
 
+  context('given the configuration "settings.loggerFormat" is set to "foal"', () => {
+    it('should log the request with a detailed message and detail parameters.', async () => {
+      Config.set('settings.loggerFormat', 'foal');
+
+      class AppController {
+        @Get('/a')
+        getA(ctx: Context) {
+          return new HttpResponseOK('a');
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+
+      const logger = serviceManager.get(Logger);
+      const loggerMock = mock.method(logger, 'info', () => {}).mock;
+
+      const app = await createApp(AppController, {
+        serviceManager
+      });
+
+      await request(app)
+        .get('/a?apiKey=a_secret_api_key')
+        .expect(200);
+
+      strictEqual(loggerMock.callCount(), 1);
+
+      const message = loggerMock.calls[0].arguments[0];
+      const params = loggerMock.calls[0].arguments[1];
+
+      strictEqual(message, 'HTTP request - GET /a');
+      strictEqual(typeof params?.responseTime, 'number')
+
+      delete params?.responseTime;
+
+      deepStrictEqual(params, {
+        method: 'GET',
+        url: '/a',
+        statusCode: 200,
+        contentLength: '1',
+      });
+    });
+
+    it('should use the options.getHttpLogParams if provided', async () => {
+      Config.set('settings.loggerFormat', 'foal');
+
+      class AppController {
+        @Get('/a')
+        getA(ctx: Context) {
+          return new HttpResponseOK('a');
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+
+      const logger = serviceManager.get(Logger);
+      const loggerMock = mock.method(logger, 'info', () => {}).mock;
+
+      const app = await createApp(AppController, {
+        serviceManager,
+        getHttpLogParams: (tokens: any, req: any, res: any) => ({
+          method: tokens.method(req, res),
+          url: tokens.url(req, res).split('?')[0],
+          myCustomHeader: req.get('my-custom-header')
+        }),
+      });
+
+      await request(app)
+        .get('/a')
+        .set('my-custom-header', 'my-custom-value')
+        .expect(200);
+
+      strictEqual(loggerMock.callCount(), 1);
+
+      const message = loggerMock.calls[0].arguments[0];
+      const params = loggerMock.calls[0].arguments[1];
+
+      strictEqual(message, 'HTTP request - GET /a');
+
+      deepStrictEqual(params, {
+        method: 'GET',
+        url: '/a',
+        myCustomHeader: 'my-custom-value',
+      });
+    });
+  });
+
+  context('given the configuration "settings.loggerFormat" is set to a value different from "none" or "foal"', () => {
+    it('should log a warning message.', async () => {
+      Config.set('settings.loggerFormat', 'dev');
+
+      class AppController {
+        @Get('/a')
+        getA(ctx: Context) {
+          return new HttpResponseOK('a');
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+
+      const logger = serviceManager.get(Logger);
+      const loggerMock = mock.method(logger, 'warn', () => {}).mock;
+
+      await createApp(AppController, {
+        serviceManager
+      });
+
+      strictEqual(loggerMock.callCount(), 1);
+      strictEqual(loggerMock.calls[0].arguments[0], '[CONFIG] Using another format than "foal" for "settings.loggerFormat" is deprecated.');
+    });
+  });
+
+  it('should allow to add log context information.', async () => {
+    Config.set('settings.logger.format', 'json');
+
+    class AppController {
+      @dependency
+      logger: Logger;
+
+      @Get('/')
+      @Hook((ctx, services) => {
+        const logger = services.get(Logger);
+        logger.addLogContext('foo', 'bar');
+      })
+      getA(ctx: Context) {
+        this.logger.info('Hello world');
+        return new HttpResponseOK();
+      }
+    }
+
+    const serviceManager = new ServiceManager();
+
+    const consoleMock = mock.method(console, 'log', () => {}).mock;
+
+    const app = await createApp(AppController, {
+      serviceManager
+    });
+
+    await request(app)
+      .get('/')
+      .expect(200);
+
+    const messages = consoleMock.calls.map(call => JSON.parse(call.arguments[0]));
+
+    strictEqual(messages.some(message => message.foo === 'bar'), true);
+  });
+
+  context('given a "X-Request-ID" header is present in the request', () => {
+    it('should add the request ID to the request object.', async () => {
+      const requestId = 'a_request_id';
+
+      class AppController {
+        @Get('/')
+        get(ctx: Context) {
+          return new HttpResponseOK({
+            requestId: ctx.request.id
+          });
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+      const app = await createApp(AppController, {
+        serviceManager
+      });
+
+      await request(app)
+        .get('/')
+        .set('X-Request-ID', requestId)
+        .expect(200)
+        .expect({
+          requestId,
+        });
+    });
+  });
+
+  context('given a "X-Request-ID" header is NOT present in the request', () => {
+    it('should add a request ID to the request object.', async () => {
+      class AppController {
+        @Get('/')
+        get(ctx: Context) {
+          return new HttpResponseOK({
+            requestId: ctx.request.id
+          });
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+      const app = await createApp(AppController, {
+        serviceManager
+      });
+
+      await request(app)
+        .get('/')
+        .expect(200)
+        .expect(response => {
+          if (!response.body.requestId) {
+            throw new Error('The request ID should exist.');
+          }
+        });
+    });
+  });
+
+  it('should add the request ID to the log context.', async () => {
+    class AppController {
+      @Get('/')
+      get(ctx: Context) {
+        return new HttpResponseOK({
+          requestId: ctx.request.id
+        });
+      }
+    }
+
+    const serviceManager = new ServiceManager();
+    const logger = serviceManager.get(Logger);
+    const loggerMock = mock.method(logger, 'addLogContext', () => {}).mock;
+
+    const app = await createApp(AppController, {
+      serviceManager
+    });
+
+    let requestId: string|undefined;
+    await request(app)
+      .get('/')
+      .expect(200)
+      .then(response => {
+        requestId = response.body.requestId;
+      })
+
+    strictEqual(loggerMock.callCount(), 1);
+
+    const [key, value] = loggerMock.calls[0].arguments;
+
+    strictEqual(key, 'requestId');
+    strictEqual(value, requestId);
+  });
 });

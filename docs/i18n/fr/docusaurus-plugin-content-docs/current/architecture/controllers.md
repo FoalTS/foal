@@ -250,6 +250,11 @@ class AppController {
 
 > In order to use signed cookies, you must provide a secret with the configuration key `settings.cookieParser.secret`.
 
+#### Read the request ID
+
+On each request, a request ID is generated randomly. It can be read through `ctx.request.id`.
+
+If the `X-Request-ID` header exists, then the header value is used as the request identifier.
 
 #### The Controller Method Arguments
 

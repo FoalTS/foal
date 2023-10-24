@@ -1,4 +1,5 @@
 import { Context, Hook, HookDecorator } from '../../core';
+import { Logger } from '../logging';
 
 /**
  * Options of the `Log` hook.
@@ -25,13 +26,17 @@ export interface LogOptions {
  * Hook factory logging a message with optional information on the HTTP request.
  *
  * @export
+ * @deprecated Use the Logger service in a custom hook instead.
  * @param {string} message - The message to print on each request.
  * @param {LogOptions} [options={}] - Options to specify which information on the HTTP request should be printed.
  * @returns {HookDecorator} The hook.
  */
 export function Log(message: string, options: LogOptions = {}): HookDecorator {
   const logFn = options.logFn || console.log;
-  return Hook((ctx: Context) => {
+  return Hook((ctx: Context, services) => {
+    const logger = services.get(Logger);
+    logger.warn('Using the @Log hook is deprecated. Use the Logger service in a custom hook instead.');
+
     logFn(message);
     if (options.body) {
       logFn('Body: ', ctx.request.body);

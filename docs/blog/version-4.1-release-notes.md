@@ -1,0 +1,49 @@
+---
+title: Version 4.1 release notes
+author: Loïc Poullain
+author_title: Creator of FoalTS. Software engineer.
+author_url: https://loicpoullain.com
+author_image_url: https://avatars1.githubusercontent.com/u/13604533?v=4
+image: blog/twitter-banners/version-4.1-release-notes.png
+tags: [release]
+---
+
+![Banner](./assets/version-4.1-is-here/banner.png)
+
+Version 4.1 of [Foal](https://foalts.org/) is out!
+
+<!--truncate-->
+
+## Better logging
+
+Foal now features a true logging system. Full documentation can be found [here](../docs/common/logging).
+
+### New recommended configuration
+
+It is recommended to switch to this configuration to take full advantage of the new logging system.
+
+*config/default.json*
+```json
+{
+  "settings": {
+    "loggerFormat": "foal"
+  }
+}
+```
+
+*config/development.json*
+```json
+{
+  "settings": {
+    "logger": {
+      "format": "dev"
+    }
+  }
+}
+```
+
+## Request IDs
+
+On each request, a request ID is now generated randomly. It can be read through `ctx.request.id`.
+
+If the `X-Request-ID` header exists in the request, then the header value is used as the request identifier.
