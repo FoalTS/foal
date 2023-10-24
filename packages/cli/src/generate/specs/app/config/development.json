@@ -1,6 +1,8 @@
 {
   "settings": {
     "debug": true,
-    "loggerFormat": "dev"
+    "logger": {
+      "format": "dev"
+    }
   }
 }

@@ -16,7 +16,7 @@ import { sendResponse } from './send-response';
 
 function execSendResponse(response: HttpResponse): request.Test {
   const app = express()
-    .use((req: any, res: any) => sendResponse(response, res));
+    .use((req: any, res: any) => sendResponse(response, res, { error: () => {} }));
   return request(app).get('/');
 }
 

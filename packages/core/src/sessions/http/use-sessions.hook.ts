@@ -22,6 +22,7 @@ import { checkUserIdType } from './check-user-id-type';
 import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';
 import { createSession, readSession, SessionStore } from '../core';
 import { getCsrfTokenFromRequest, removeSessionCookie, setSessionCookie, shouldVerifyCsrfToken } from './utils';
+import { Logger } from '../../common';
 
 export type UseSessionOptions = {
   store?: Class<SessionStore>;
@@ -141,6 +142,9 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
     ctx.session = session;
 
     /* Set ctx.user */
+
+    const logger = services.get(Logger);
+    logger.addLogContext('userId', session.userId);
 
     if (session.userId !== null && options.user) {
       const userId = checkUserIdType(session.userId, options.userIdType);

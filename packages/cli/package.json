@@ -1,6 +1,6 @@
 {
   "name": "@foal/cli",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -61,12 +61,12 @@
     "ajv-formats": "~2.1.1",
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
-    "commander": "~11.0.0",
+    "commander": "~11.1.0",
     "node-fetch": "~2.6.7"
   },
   "devDependencies": {
     "@types/mocha": "10.0.1",
-    "@types/node": "18.11.9",
+    "@types/node": "18.18.6",
     "copyfiles": "~2.4.1",
     "mocha": "~10.2.0",
     "rimraf": "~5.0.1",

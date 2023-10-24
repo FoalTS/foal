@@ -4,6 +4,8 @@ import { strictEqual } from 'assert';
 // FoalTS
 import { Context, getHookFunction, ServiceManager } from '../../core';
 import { Log } from './log.hook';
+import { mock } from 'node:test';
+import { Logger } from '../logging';
 
 describe('Log', () => {
 
@@ -13,6 +15,28 @@ describe('Log', () => {
   beforeEach(() => {
     msgs = [];
     logFn = (...args) => msgs.push(args);
+  });
+
+  afterEach(() => {
+    mock.reset();
+  })
+
+  it('should log a deprecation message.', () => {
+    const hook = getHookFunction(Log('foo', { logFn }));
+
+    const ctx = new Context({});
+    const services = new ServiceManager();
+
+    const logger = services.get(Logger);
+    const loggerMock = mock.method(logger, 'warn').mock;
+
+    hook(ctx, services);
+
+    strictEqual(loggerMock.callCount(), 1);
+    strictEqual(
+      loggerMock.calls[0].arguments[0],
+      'Using the @Log hook is deprecated. Use the Logger service in a custom hook instead.'
+    );
   });
 
   it('should log the message.', () => {

@@ -58,6 +58,9 @@ interface Request extends IncomingMessage {
   // This line has been added based on @types/express in order not to make the url possibly undefined.
   url: string;
 
+  // Extra attribute added for Foal
+  id: string;
+
   // This line has been added based on @types/express but it is not present in Express official documentation.
   accepts(): string[];
   accepts(types: string|string[]): string|false;

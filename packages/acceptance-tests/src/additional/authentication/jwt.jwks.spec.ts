@@ -68,17 +68,13 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
 
     server = (await createApp(AppController)).listen(3000);
 
-    try {
-      const response = await superagent
-        .get('http://localhost:3000/api/users/me')
-        .set('Authorization', 'Bearer ' + sign({}, privateKey, { algorithm: 'RS256', header: { kid: 'aaa' } }));
-      deepStrictEqual(response.body, {
-        name: 'Alix'
-      });
-    } catch (error: any) {
-      console.log(error);
-      throw error;
-    }
+    const response = await superagent
+      .get('http://localhost:3000/api/users/me')
+      .set('Authorization', 'Bearer ' + sign({}, privateKey, { algorithm: 'RS256', header: { kid: 'aaa' } }));
+
+    deepStrictEqual(response.body, {
+      name: 'Alix'
+    });
   });
 
 });

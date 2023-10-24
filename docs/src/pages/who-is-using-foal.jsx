@@ -14,7 +14,7 @@ const posts = [
   },
 ];
 
-export default function Newsletter() {
+export default function WhoIsUsingFoal() {
   return (
     <Layout
       description='Who is using Foal'>

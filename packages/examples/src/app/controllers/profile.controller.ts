@@ -1,5 +1,5 @@
 import {
-  ApiInfo, ApiServer, Context, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Post, render, UserRequired
+  ApiInfo, ApiServer, Context, dependency, Get, Hook, HttpResponseNotFound, HttpResponseRedirect, Logger, Post, render, UserRequired
 } from '@foal/core';
 import { Disk, ParseAndValidateFiles } from '@foal/storage';
 
@@ -16,6 +16,9 @@ export class ProfileController {
   @dependency
   disk: Disk;
 
+  @dependency
+  logger: Logger;
+
   @Post('/image')
   @Hook(async ctx => { ctx.user = await User.findOneBy({ email: 'john@foalts.org' }); })
   @UserRequired()
@@ -28,7 +31,7 @@ export class ProfileController {
       try {
         await this.disk.delete(user.profile);
       } catch (error: any) {
-        console.log(error.message);
+        this.logger.error(error.message, { error });
       }
     }
 

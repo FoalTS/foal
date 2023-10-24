@@ -1,5 +1,5 @@
 // 3p
-import { ServiceManager } from '@foal/core';
+import { Logger, ServiceManager } from '@foal/core';
 
 // FoalTS
 import {
@@ -15,6 +15,8 @@ import { convertErrorToWebsocketResponse } from '../errors';
 export async function getWebsocketResponse(
   route: WebsocketRoute, ctx: WebsocketContext, services: ServiceManager, socketIOController: ISocketIOController
 ): Promise<WebsocketResponse | WebsocketErrorResponse> {
+  const logger = services.get(Logger);
+
   let response: undefined | WebsocketResponse | WebsocketErrorResponse;
 
   const hookPostFunctions: WebsocketHookPostFunction[] = [];
@@ -24,7 +26,7 @@ export async function getWebsocketResponse(
     try {
       result = await hook(ctx, services);
     } catch (error: any) {
-      result = await convertErrorToWebsocketResponse(error, ctx, socketIOController);
+      result = await convertErrorToWebsocketResponse(error, ctx, socketIOController, logger);
     }
     if ((result instanceof WebsocketResponse) || (result instanceof WebsocketErrorResponse)) {
       response = result;
@@ -38,20 +40,20 @@ export async function getWebsocketResponse(
     try {
       response = await route.controller[route.propertyKey](ctx, ctx.payload);
     } catch (error: any) {
-      response = await convertErrorToWebsocketResponse(error, ctx, socketIOController);
+      response = await convertErrorToWebsocketResponse(error, ctx, socketIOController, logger);
     }
   }
 
   if (!((response instanceof WebsocketResponse) || (response instanceof WebsocketErrorResponse))) {
     const error = new Error(`The controller method "${route.propertyKey}" should return a WebsocketResponse or a WebsocketErrorResponse.`);
-    response = await convertErrorToWebsocketResponse(error, ctx, socketIOController);
+    response = await convertErrorToWebsocketResponse(error, ctx, socketIOController, logger);
   }
 
   for (const postFn of hookPostFunctions) {
     try {
       await postFn(response);
     } catch (error: any) {
-      response = await convertErrorToWebsocketResponse(error, ctx, socketIOController);
+      response = await convertErrorToWebsocketResponse(error, ctx, socketIOController, logger);
     }
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "@foal/jwks-rsa",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Integration of the library jwks-rsa with FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -50,10 +50,10 @@
     "@foal/jwt": "^2.0.0"
   },
   "devDependencies": {
-    "@foal/core": "^4.0.0",
-    "@foal/jwt": "^4.0.0",
+    "@foal/core": "^4.1.0",
+    "@foal/jwt": "^4.1.0",
     "@types/mocha": "10.0.1",
-    "@types/node": "18.11.9",
+    "@types/node": "18.18.6",
     "mocha": "~10.2.0",
     "rimraf": "~5.0.1",
     "ts-node": "~10.9.1",

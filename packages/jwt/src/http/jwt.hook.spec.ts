@@ -1,5 +1,6 @@
 // std
 import { deepStrictEqual, notStrictEqual, rejects, strictEqual } from 'assert';
+import { mock } from 'node:test';
 
 // 3p
 import {
@@ -20,6 +21,7 @@ import {
   isHttpResponseBadRequest,
   isHttpResponseForbidden,
   isHttpResponseUnauthorized,
+  Logger,
   ServiceManager
 } from '@foal/core';
 import { sign } from 'jsonwebtoken';
@@ -630,6 +632,27 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
   });
 
   describe('should set Context.user', () => {
+
+    it('and shoud add the user ID to the log context.', async () => {
+      const jwt = sign({}, secret, { subject: '123' });
+      ctx = createContext({ Authorization: `Bearer ${jwt}` });
+
+      hook = getHookFunction(JWT({
+        user: async () => null,
+        userIdType: 'number'
+      }));
+
+      const logger = services.get(Logger);
+      const loggerMock = mock.method(logger, 'addLogContext', () => {}).mock;
+
+      await hook(ctx, services);
+
+      strictEqual(loggerMock.callCount(), 1);
+      deepStrictEqual(
+        loggerMock.calls[0].arguments,
+        ['userId', 123],
+      );
+    })
 
     context('given options.user is not defined', () => {
 
