@@ -54,13 +54,8 @@ function CompanyLogos() {
           Sponsored by
         </p>
         <div className="tw-flex tw-justify-center tw-flex-wrap">
-          <CompanyLogo imageSrc={useBaseUrl('img/trusted-by/erkoware_logo.svg')} companyName="erkoware solutions" href="https://www.erkoware.de/" />
+          {/* <CompanyLogo imageSrc={useBaseUrl('img/trusted-by/company.svg')} companyName="company" href="company" /> */}
           <PlusLogo />
-          {/* <CompanyLogo imageSrc="https://tailwindui.com/img/logos/mirage-logo-gray-400.svg" />
-          <CompanyLogo imageSrc="https://tailwindui.com/img/logos/tuple-logo-gray-400.svg" />
-          <CompanyLogo imageSrc="https://tailwindui.com/img/logos/laravel-logo-gray-400.svg" />
-          <CompanyLogo imageSrc="https://tailwindui.com/img/logos/statickit-logo-gray-400.svg" />
-          <CompanyLogo imageSrc="https://tailwindui.com/img/logos/statamic-logo-gray-400.svg" /> */}
         </div>
       </div>
     </div>
