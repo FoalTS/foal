@@ -40,19 +40,21 @@ export function connectAngular(path: string) {
     .modify('angular.json', content => {
       const config = JSON.parse(content);
 
+      const projectName = Object.keys(config.projects)[0];
+
       // Proxy configuration
-      config.projects[config.defaultProject].architect ||= {};
-      config.projects[config.defaultProject].architect.serve ||= {};
-      config.projects[config.defaultProject].architect.serve.options ||= {};
-      config.projects[config.defaultProject].architect.serve.options.proxyConfig = 'src/proxy.conf.json';
+      config.projects[projectName].architect ||= {};
+      config.projects[projectName].architect.serve ||= {};
+      config.projects[projectName].architect.serve.options ||= {};
+      config.projects[projectName].architect.serve.options.proxyConfig = 'src/proxy.conf.json';
 
       // Output build directory
       const outputPath = join(relative(path, process.cwd()), 'public')
         // Make projects generated on Windows build on Unix.
         .replace(/\\/g, '/');
-      config.projects[config.defaultProject].architect.build ||= {};
-      config.projects[config.defaultProject].architect.build.options ||= {};
-      config.projects[config.defaultProject].architect.build.options.outputPath = outputPath;
+      config.projects[projectName].architect.build ||= {};
+      config.projects[projectName].architect.build.options ||= {};
+      config.projects[projectName].architect.build.options.outputPath = outputPath;
 
       return JSON.stringify(config, null, 2);
     });
