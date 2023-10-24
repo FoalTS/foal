@@ -317,6 +317,28 @@ describe('createApp', () => {
       .expect({ body: '{ me { name } }' });
   });
 
+  it('should parse incoming request bodies (application/xml)', async () => {
+    class MyController {
+      @Post('/foo')
+      post(ctx: Context) {
+        return new HttpResponseOK({ body: ctx.request.body });
+      }
+    }
+    const app = await createApp(MyController);
+
+    const xml = `<?xml version="1.0" encoding="utf-8"?>
+    <Request>
+        <Login>login</Login>
+        <Password>password</Password>
+    </Request>`;
+
+    return request(app)
+      .post('/foo')
+      .type('application/xml')
+      .send(xml)
+      .expect({ body: xml });
+  });
+
   it('should accept higher or lower request body size if this is specified in the configuration.', async () => {
     Config.set('settings.bodyParser.limit', 10);
 
