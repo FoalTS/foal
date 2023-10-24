@@ -140,19 +140,19 @@ module.exports = {
           lastVersion: "current",
           versions: {
             current: {
-              "label": `${require('../lerna.json').version[0]}.x`,
+              "label": `v${require('../lerna.json').version[0]}`,
             },
             '3.x': {
-              'label': '3.x',
+              'label': 'v3',
               banner: 'none',
               noIndex: true
             },
             '2.x': {
-              'label': '2.x',
+              'label': 'v2',
               noIndex: true
             },
             '1.x': {
-              'label': '1.x',
+              'label': 'v1',
               noIndex: true
             }
           }
