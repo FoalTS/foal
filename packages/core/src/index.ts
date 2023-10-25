@@ -171,6 +171,9 @@ export {
   createService,
   dependency,
 
+  IConfig,
+  IConfigSchema,
+
   getApiCallbacks,
   getApiCompleteOperation,
   getApiComponents,
