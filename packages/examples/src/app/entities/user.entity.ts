@@ -6,9 +6,6 @@ import { UserWithPermissions } from '@foal/typeorm';
 @Entity()
 export class User extends UserWithPermissions {
 
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Column({ unique: true })
   email: string;
 
