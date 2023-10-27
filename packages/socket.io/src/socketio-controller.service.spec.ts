@@ -166,6 +166,8 @@ describe('SocketIOController', () => {
         notDeepStrictEqual(actualContext?.socket, {});
         deepStrictEqual(actualContext?.state, {});
         strictEqual(actualContext?.user, null);
+        notStrictEqual(actualContext?.messageId, null);
+        strictEqual(typeof actualContext?.messageId, 'string');
 
         strictEqual(actualContext?.controllerName, 'WebsocketController');
         strictEqual(actualContext?.controllerMethodName, 'createUser');

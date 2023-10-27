@@ -54,6 +54,7 @@ export abstract class SocketIOController implements ISocketIOController {
           }
 
           const ctx = new WebsocketContext(route.eventName, payload, socket, route.controller.constructor.name, route.propertyKey);
+          ctx.messageId = randomUUID();
           const response = await getWebsocketResponse(route, ctx, this.services, this);
 
           if (typeof cb !== 'function') {
