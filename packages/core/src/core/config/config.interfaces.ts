@@ -1,10 +1,10 @@
+export type IConfigSchemaLeaf = {
+  type: 'string' | 'number' | 'boolean' | 'boolean|string' | 'number|string',
+  required?: boolean
+}
+
 export type IConfigSchema = {
-  [key: string]:
-    IConfigSchema |
-    {
-      type: 'string' | 'number' | 'boolean' | 'boolean|string' | 'number|string',
-      required?: boolean
-    }
+  [key: string]: IConfigSchema | IConfigSchemaLeaf
 }
 
 export type IConfig<T extends IConfigSchema> = {

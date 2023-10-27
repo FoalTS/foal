@@ -6,6 +6,7 @@ import { join } from 'path';
 import { ConfigNotFoundError } from './config-not-found.error';
 import { ConfigTypeError } from './config-type.error';
 import { Env } from './env';
+import { IConfig, IConfigSchema, IConfigSchemaLeaf } from './config.interfaces';
 
 type ValueStringType = 'string'|'number'|'boolean'|'boolean|string'|'number|string'|'any';
 
@@ -17,6 +18,10 @@ type ValueType<T extends ValueStringType> =
   T extends 'number|string' ? number|string :
   any;
 
+function isConfigSchemaLeaf(value: IConfigSchema | IConfigSchemaLeaf): value is IConfigSchemaLeaf {
+  return typeof value.type === 'string';
+}
+
 /**
  * Static class to access environment variables and configuration files.
  *
@@ -26,6 +31,17 @@ type ValueType<T extends ValueStringType> =
  * @class Config
  */
 export class Config {
+  static load<T extends IConfigSchema>(configSchema: T): IConfig<T> {
+    return Object.fromEntries(Object.entries(configSchema).map(([key, value]) => {
+      if (isConfigSchemaLeaf(value)) {
+        if (value.required) {
+          return [key, Config.getOrThrow(key, value.type)];
+        }
+        return [key, Config.get(key, value.type)];
+      }
+      return [key, Config.load(value)];
+    }));
+  }
 
   /**
    * Read the configuration value associated with the given key. Optionaly check its type.
