@@ -4,6 +4,7 @@ import { createServer, Server } from 'http';
 import { AddressInfo } from 'net';
 // tslint:disable-next-line: no-duplicate-imports
 import * as http from 'http';
+import { mock } from 'node:test';
 
 // 3p
 import { io, ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
@@ -14,6 +15,7 @@ import {
   createController,
   dependency,
   IAppController,
+  Logger,
   ServiceManager
 } from '@foal/core';
 import { createAdapter } from '@socket.io/redis-adapter';
@@ -36,6 +38,8 @@ describe('SocketIOController', () => {
     let subClient: any;
 
     afterEach(async () => {
+      mock.reset();
+
       if (controller) {
         controller.wsServer.close();
       }
@@ -58,11 +62,11 @@ describe('SocketIOController', () => {
 
     afterEach(() => Config.remove('settings.logErrors'));
 
-    function createConnection(cls: Class<SocketIOController>, clientOptions?: Partial<ManagerOptions & SocketOptions>): Promise<void> {
+    function createConnection(cls: Class<SocketIOController>, clientOptions?: Partial<ManagerOptions & SocketOptions>, services: ServiceManager = new ServiceManager()): Promise<void> {
       return new Promise(resolve => {
         httpServer = createServer();
 
-        controller = createController(cls);
+        controller = services.get(cls);
         controller.attachHttpServer(httpServer);
 
         httpServer.listen(() => {
@@ -137,6 +141,40 @@ describe('SocketIOController', () => {
 
         strictEqual(error.message, 'hello');
         deepStrictEqual(error.data, { foo: 'bar' });
+      });
+
+      it('and should log a message  when a client establishes a connection', async () => {
+        let socketId: string|undefined;
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            socketId = ctx.socket.id;
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        const logger = services.get(Logger);
+
+        const loggerMock = mock.method(logger, 'info').mock;
+
+        await createConnection(WebsocketController, {}, services);
+
+        strictEqual(loggerMock.callCount(), 1);
+
+        const expectedMessage = 'Socket.io connection';
+        const actualMessage = loggerMock.calls[0].arguments[0];
+
+        strictEqual(actualMessage, expectedMessage);
+
+        const payload = { foo: 'bar' };
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        const expectedParameters = { socketId };
+        const actualParameters = loggerMock.calls[0].arguments[1];
+
+        deepStrictEqual(actualParameters, expectedParameters);
       });
 
       it('and should bind the routes to their respective handlers.', async () => {

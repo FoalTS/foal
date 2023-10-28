@@ -1,5 +1,8 @@
+// std
+import { randomUUID } from 'crypto';
+
 // 3p
-import { Class, dependency, ServiceManager } from '@foal/core';
+import { Class, dependency, Logger, ServiceManager } from '@foal/core';
 import { Server, ServerOptions } from 'socket.io';
 
 // FoalTS
@@ -16,6 +19,9 @@ import { WsServer } from './ws-server.service';
  * @implements {ISocketIOController}
  */
 export abstract class SocketIOController implements ISocketIOController {
+  @dependency
+  logger: Logger;
+
   @dependency
   services: ServiceManager;
 
@@ -46,6 +52,10 @@ export abstract class SocketIOController implements ISocketIOController {
     })
 
     this.wsServer.io.on('connection', socket => {
+      this.logger.info('Socket.io connection', {
+        socketId: socket.id,
+      });
+
       for (const route of routes) {
         socket.on(route.eventName, async (payload, cb) => {
           if (typeof payload === 'function') {
