@@ -71,6 +71,11 @@ export abstract class SocketIOController implements ISocketIOController {
 
           const status = response instanceof WebsocketErrorResponse ? 'error' : 'ok';
 
+          this.logger.info(`Socket.io message received - ${route.eventName}`, {
+            eventName: route.eventName,
+            status,
+          });
+
           if (typeof cb !== 'function') {
             return;
           }

@@ -310,6 +310,56 @@ describe('SocketIOController', () => {
         deepStrictEqual(payload, { status: 'error', error });
       });
 
+      it('and should log a message when the server receives a message.', async () => {
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            return new WebsocketResponse();
+          }
+
+          @EventName('create user with error')
+          createUserWithError() {
+            return new WebsocketErrorResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        await createConnection(WebsocketController, {}, services);
+
+        const logger = services.get(Logger);
+        const loggerMock = mock.method(logger, 'info').mock;
+
+        const payload = {};
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        strictEqual(loggerMock.callCount(), 1);
+
+        const expectedMessage = 'Socket.io message received - create user';
+        const actualMessage = loggerMock.calls[0].arguments[0];
+
+        strictEqual(actualMessage, expectedMessage);
+
+        const expectedParameters = {
+          eventName: 'create user',
+          status: 'ok'
+        };
+        const actualParameters = loggerMock.calls[0].arguments[1];
+
+        deepStrictEqual(actualParameters, expectedParameters);
+
+        await new Promise(resolve => clientSocket.emit('create user with error', payload, resolve));
+
+        strictEqual(loggerMock.callCount(), 2);
+
+        const expectedParameters2 = {
+          eventName: 'create user with error',
+          status: 'error'
+        };
+        const actualParameters2 = loggerMock.calls[1].arguments[1];
+
+        deepStrictEqual(actualParameters2, expectedParameters2);
+      });
+
       it('and should not throw an error if no callback is given in the client "emit" method', async () => {
         // This line is required because Mocha silently hides unhandled rejected promises.
         process.removeAllListeners('unhandledRejection');
