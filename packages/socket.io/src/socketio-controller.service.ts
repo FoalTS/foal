@@ -58,20 +58,24 @@ export abstract class SocketIOController implements ISocketIOController {
 
       for (const route of routes) {
         socket.on(route.eventName, async (payload, cb) => {
+          const messageId = randomUUID();
+
           if (typeof payload === 'function') {
             cb = payload;
             payload = undefined;
           }
 
           const ctx = new WebsocketContext(route.eventName, payload, socket, route.controller.constructor.name, route.propertyKey);
-          ctx.messageId = randomUUID();
+          ctx.messageId = messageId;
           const response = await getWebsocketResponse(route, ctx, this.services, this);
+
+          const status = response instanceof WebsocketErrorResponse ? 'error' : 'ok';
 
           if (typeof cb !== 'function') {
             return;
           }
 
-          if (response instanceof WebsocketErrorResponse) {
+          if (status === 'error') {
             return cb({
               status: 'error',
               error: response.payload
