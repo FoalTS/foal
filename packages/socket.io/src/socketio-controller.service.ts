@@ -58,38 +58,40 @@ export abstract class SocketIOController implements ISocketIOController {
 
       for (const route of routes) {
         socket.on(route.eventName, async (payload, cb) => {
-          const messageId = randomUUID();
+          this.logger.initLogContext(async () => {
+            const messageId = randomUUID();
 
-          if (typeof payload === 'function') {
-            cb = payload;
-            payload = undefined;
-          }
+            if (typeof payload === 'function') {
+              cb = payload;
+              payload = undefined;
+            }
 
-          const ctx = new WebsocketContext(route.eventName, payload, socket, route.controller.constructor.name, route.propertyKey);
-          ctx.messageId = messageId;
-          const response = await getWebsocketResponse(route, ctx, this.services, this);
+            const ctx = new WebsocketContext(route.eventName, payload, socket, route.controller.constructor.name, route.propertyKey);
+            ctx.messageId = messageId;
+            const response = await getWebsocketResponse(route, ctx, this.services, this);
 
-          const status = response instanceof WebsocketErrorResponse ? 'error' : 'ok';
+            const status = response instanceof WebsocketErrorResponse ? 'error' : 'ok';
 
-          this.logger.info(`Socket.io message received - ${route.eventName}`, {
-            eventName: route.eventName,
-            status,
-          });
-
-          if (typeof cb !== 'function') {
-            return;
-          }
-
-          if (status === 'error') {
-            return cb({
-              status: 'error',
-              error: response.payload
+            this.logger.info(`Socket.io message received - ${route.eventName}`, {
+              eventName: route.eventName,
+              status,
             });
-          }
 
-          return cb({
-            status: 'ok',
-            data: response.payload,
+            if (typeof cb !== 'function') {
+              return;
+            }
+
+            if (status === 'error') {
+              return cb({
+                status: 'error',
+                error: response.payload
+              });
+            }
+
+            return cb({
+              status: 'ok',
+              data: response.payload,
+            });
           });
         });
       }

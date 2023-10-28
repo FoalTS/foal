@@ -360,6 +360,32 @@ describe('SocketIOController', () => {
         deepStrictEqual(actualParameters2, expectedParameters2);
       });
 
+      it('and should allow to add log context information.', async () => {
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          @WebsocketHook((ctx, services) => {
+            const logger = services.get(Logger);
+            logger.addLogContext('foo', 'bar');
+          })
+          createUser(ctx: WebsocketContext, payload: any) {
+            this.logger.info('Hello world');
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        await createConnection(WebsocketController, {}, services);
+
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
+
+        const payload = {};
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        const messages = consoleMock.calls.map(call => call.arguments[0]);
+
+        strictEqual(messages.some(message => message.includes('foo: "bar"')), true);
+      });
+
       it('and should not throw an error if no callback is given in the client "emit" method', async () => {
         // This line is required because Mocha silently hides unhandled rejected promises.
         process.removeAllListeners('unhandledRejection');
