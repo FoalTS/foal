@@ -62,10 +62,11 @@ describe('SocketIOController', () => {
 
     afterEach(() => Config.remove('settings.logErrors'));
 
-    function createConnection(cls: Class<SocketIOController>, clientOptions?: Partial<ManagerOptions & SocketOptions>, services: ServiceManager = new ServiceManager()): Promise<void> {
+    function createConnection(cls: Class<SocketIOController>, clientOptions?: Partial<ManagerOptions & SocketOptions>, serviceManager?: ServiceManager): Promise<void> {
       return new Promise(resolve => {
         httpServer = createServer();
 
+        const services = serviceManager || new ServiceManager();
         controller = services.get(cls);
         controller.attachHttpServer(httpServer);
 
@@ -168,10 +169,50 @@ describe('SocketIOController', () => {
 
         strictEqual(actualMessage, expectedMessage);
 
-        const payload = { foo: 'bar' };
+        const payload = {};
         await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
 
         const expectedParameters = { socketId };
+        const actualParameters = loggerMock.calls[0].arguments[1];
+
+        deepStrictEqual(actualParameters, expectedParameters);
+      });
+
+      it('and should log a message when a client disconnects', async () => {
+        let socketId: string|undefined;
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            socketId = ctx.socket.id;
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        await createConnection(WebsocketController, {}, services);
+
+        const payload = {};
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        const logger = services.get(Logger);
+        const loggerMock = mock.method(logger, 'info').mock;
+
+        clientSocket.close();
+        await new Promise<void>(resolve => setTimeout(resolve, 200));
+        clientSocket = undefined as any;
+
+        strictEqual(loggerMock.callCount(), 1);
+
+        const expectedMessage = 'Socket.io disconnection';
+        const actualMessage = loggerMock.calls[0].arguments[0];
+
+        strictEqual(actualMessage, expectedMessage);
+
+        const expectedParameters = {
+          socketId,
+          reason: 'client namespace disconnect'
+        };
         const actualParameters = loggerMock.calls[0].arguments[1];
 
         deepStrictEqual(actualParameters, expectedParameters);

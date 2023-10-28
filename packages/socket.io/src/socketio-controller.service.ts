@@ -84,6 +84,13 @@ export abstract class SocketIOController implements ISocketIOController {
           });
         });
       }
+
+      socket.on('disconnect', reason => {
+        this.logger.info('Socket.io disconnection', {
+          socketId: socket.id,
+          reason
+        });
+      });
     });
 
     await this.services.boot();
