@@ -2,7 +2,7 @@
 import { randomUUID } from 'crypto';
 
 // 3p
-import { Class, dependency, Logger, ServiceManager } from '@foal/core';
+import { Class, Config, dependency, Logger, ServiceManager } from '@foal/core';
 import { Server, ServerOptions } from 'socket.io';
 
 // FoalTS
@@ -32,6 +32,16 @@ export abstract class SocketIOController implements ISocketIOController {
 
   options: Partial<ServerOptions> = {};
 
+  private log(message: string, params?: {
+    error?: Error;
+    [name: string]: any;
+  }): void {
+    if (!Config.get('settings.logger.logSocketioMessages', 'boolean', true)) {
+      return;
+    }
+    this.logger.info(message, params);
+  }
+
   async attachHttpServer(httpServer: any): Promise<void> {
     this.wsServer.io = new Server(httpServer, this.options);
     if (this.adapter) {
@@ -52,7 +62,7 @@ export abstract class SocketIOController implements ISocketIOController {
     })
 
     this.wsServer.io.on('connection', socket => {
-      this.logger.info('Socket.io connection', {
+      this.log('Socket.io connection', {
         socketId: socket.id,
       });
 
@@ -74,7 +84,7 @@ export abstract class SocketIOController implements ISocketIOController {
 
             const status = response instanceof WebsocketErrorResponse ? 'error' : 'ok';
 
-            this.logger.info(`Socket.io message received - ${route.eventName}`, {
+            this.log(`Socket.io message received - ${route.eventName}`, {
               eventName: route.eventName,
               status,
             });
@@ -99,7 +109,7 @@ export abstract class SocketIOController implements ISocketIOController {
       }
 
       socket.on('disconnect', reason => {
-        this.logger.info('Socket.io disconnection', {
+        this.log('Socket.io disconnection', {
           socketId: socket.id,
           reason
         });
