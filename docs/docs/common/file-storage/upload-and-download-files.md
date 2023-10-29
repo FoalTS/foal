@@ -468,3 +468,18 @@ module.exports = {
 | index.html | `/` and `/index.html` | `/static` and `/static/index.html` |
 | styles.css | `/styles.css` | `/static/styles.css` |
 | app.js | `/app.js` | `/static/app.js` |
+
+### Disabling the `Cache-Control` header
+
+If you need to disable the `Cache-Control` header, you can do so with this config:
+
+*config/default.json*
+```json
+{
+  "settings": {
+    "staticFiles": {
+      "cacheControl": false
+    }
+  }
+}
+```

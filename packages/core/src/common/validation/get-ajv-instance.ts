@@ -29,6 +29,7 @@ export function getAjvInstance(): Ajv {
       coerceTypes: Config.get('settings.ajv.coerceTypes', 'boolean|string', true) as boolean|'array'|undefined,
       removeAdditional: Config.get('settings.ajv.removeAdditional', 'boolean|string', true) as boolean|'all'|'failing',
       useDefaults: Config.get('settings.ajv.useDefaults', 'boolean|string', true) as boolean|'empty',
+      strict: Config.get('settings.ajv.strict', 'boolean|string') as boolean|'log'|undefined,
     });
     _instanceWrapper.instance.addKeyword({ keyword: 'components' });
     _instanceWrapper.instance.addKeyword({ keyword: 'example' });

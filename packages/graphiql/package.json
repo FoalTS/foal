@@ -1,6 +1,6 @@
 {
   "name": "@foal/graphiql",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "GraphiQL integration for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -40,7 +40,7 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^4.1.0"
+    "@foal/core": "^4.2.0"
   },
   "devDependencies": {
     "@types/mocha": "10.0.1",

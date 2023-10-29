@@ -30,6 +30,7 @@ Here is the list of AJV options that can be overridden with FoalTS configuration
 | coerceTypes | `settings.ajv.coerceType` | true |
 | removeAdditional | `settings.ajv.removeAdditional` | true |
 | useDefaults | `settings.ajv.useDefaults` | true |
+| strict | `settings.ajv.strict` | - |
 
 *Example*
 <Tabs

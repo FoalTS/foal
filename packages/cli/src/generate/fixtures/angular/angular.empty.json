@@ -3,8 +3,6 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "toto": {
-    }
-  },
-  "defaultProject": "toto"
+    "toto": {}
+  }
 }
