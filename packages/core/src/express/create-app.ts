@@ -145,7 +145,9 @@ export async function createApp(
   // Serve static files.
   app.use(
     Config.get('settings.staticPathPrefix', 'string', ''),
-    express.static(Config.get('settings.staticPath', 'string', 'public'))
+    express.static(Config.get('settings.staticPath', 'string', 'public'), {
+      cacheControl: Config.get('settings.staticFiles.cacheControl', 'boolean')
+    })
   );
 
   // Parse request body.

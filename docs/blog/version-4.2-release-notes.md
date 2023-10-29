@@ -1,0 +1,47 @@
+---
+title: Version 4.2 release notes
+author: Loïc Poullain
+author_title: Creator of FoalTS. Software engineer.
+author_url: https://loicpoullain.com
+author_image_url: https://avatars1.githubusercontent.com/u/13604533?v=4
+image: blog/twitter-banners/version-4.2-release-notes.png
+tags: [release]
+---
+
+![Banner](./assets/version-4.2-is-here/banner.png)
+
+Version 4.2 of [Foal](https://foalts.org/) is out!
+
+## AJV strict mode can be disabled
+
+AJV [strict mode](https://ajv.js.org/strict-mode.html) can be disabled thanks to the new config key `settings.ajv.strict`:
+
+*config/default.json*
+```json
+{
+  "settings": {
+    "ajv": {
+      "strict": false
+    }
+  }
+}
+```
+
+## `foal connect angular` command fixed
+
+The command that allows to set up a project with Angular and Foal has been fixed to support the latest versions of Angular. 
+
+## Cache control can be disabled for static files
+
+The `cacheControl` option of the `express.static` middleware can be passed through the configuration.
+
+*config/default.json*
+```json
+{
+  "settings": {
+    "staticFiles": {
+      "cacheControl": false
+    }
+  }
+}
+```

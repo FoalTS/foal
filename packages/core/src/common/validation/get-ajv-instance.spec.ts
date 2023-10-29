@@ -151,6 +151,7 @@ describe('getAjvInstance', () => {
       Config.set('settings.ajv.coerceTypes', false);
       Config.set('settings.ajv.removeAdditional', false);
       Config.set('settings.ajv.useDefaults', false);
+      Config.set('settings.ajv.strict', false);
     });
 
     it('should accept custom configuration from the Config.', () => {
@@ -181,6 +182,14 @@ describe('getAjvInstance', () => {
       const data3 = {};
       ajv.validate(schema, data3);
       strictEqual((data3 as any).foo, undefined);
+
+
+      // strict
+      const data4 = {}
+      const schema4 = {
+        unknownKeyword: 'unkwonValue',
+      }
+      doesNotThrow(() => ajv.validate(schema4, data4));
 
       // allErrors
       const schema5 = {
@@ -321,6 +330,7 @@ describe('getAjvInstance', () => {
       Config.remove('settings.ajv.coerceTypes');
       Config.remove('settings.ajv.removeAdditional');
       Config.remove('settings.ajv.useDefaults');
+      Config.remove('settings.ajv.strict');
     });
 
   });
