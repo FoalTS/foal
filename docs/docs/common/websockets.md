@@ -147,7 +147,7 @@ export class WebsocketController extends SocketIOController {
 The `Context` and `WebsocketContext` classes share common properties such as the `state`, the `user` and the `session`.
 
 
-However, unlike their HTTP version, instances of `WebsocketContext` do not have a `request` property but a `socket` property which is the object provided by socket.io. They also have two other attributes: the `eventName` and the `payload` of the request.
+However, unlike their HTTP version, instances of `WebsocketContext` do not have a `request` property but a `socket` property which is the object provided by socket.io. They also have three other attributes: the `eventName`, the `payload` of the request as well as a `messageId`.
 
 #### Responses
 

@@ -186,6 +186,30 @@ In some scenarios and environments, you might want to disable HTTP request loggi
 }
 ```
 
+## Socket.io Message Logging
+
+Each message, connection or disconnection is logged with the INFO level.
+
+When a client establishes a connection, `Socket.io connection` is logged with the socket ID as parameter.
+
+When a client disconnects, `Socket.io disconnection` is logged with the socket ID and the reason of the disconnection as parameters.
+
+When a message is received, `Socket.io message received - ${eventName}` is logged with the event name and the response status as parameters.
+
+### Disabling Socket.io Message Logging
+
+In some scenarios and environments, you might want to disable socket.io message logging. You can achieve this by setting the `settings.logger.logSocketioMessages` configuration option to `false`. 
+
+```json
+{
+  "settings": {
+    "logger": {
+      "logSocketioMessages": false
+    }
+  }
+}
+```
+
 ## Error Logging
 
 When an error is thrown (or rejected) in a hook, controller or service and is not caught, the error is logged using the `Logger.error` method.
@@ -206,7 +230,7 @@ In some scenarios, you might want to disable error logging. You can achieve this
 
 When logs are generated in large quantities, we often like to aggregate them by request or user. This can be done using Foal's log context.
 
-When receiving a request, Foal adds the request ID to the logger context. On each subsequent call to the logger, it will behave as if the request ID had been passed as a parameter.
+When receiving an HTTP request, Foal adds the request ID to the logger context. On each subsequent call to the logger, it will behave as if the request ID had been passed as a parameter.
 
 *Example*
 ```typescript
@@ -229,6 +253,8 @@ export class AppController {
 ```
 
 In the same way, the authentification hooks `@JWTRequired`, `@JWTOptional` and `@UseSessions` will add the `userId` (if any) to the logger context.
+
+When using a Socket.io controller, the socket ID and message ID are also added to the logger context.
 
 This mecanism helps filter logs of a specific request or specific user in a logging tool.
 
