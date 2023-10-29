@@ -58,6 +58,7 @@ describe('createApp', () => {
     Config.remove('settings.cookieParser.secret');
     Config.remove('settings.loggerFormat');
     Config.remove('settings.logger.format');
+    Config.remove('settings.staticFiles.cacheControl');
   });
 
   const cookieSecret = 'strong-secret';
@@ -107,7 +108,22 @@ describe('createApp', () => {
       .get('/hello-world.html')
       .expect(200, '<h1>Hello world!</h1>')
       .expect('Content-type', 'text/html; charset=UTF-8')
-      .expect('X-Content-Type-Options', 'nosniff');
+      .expect('X-Content-Type-Options', 'nosniff')
+      .expect('cache-control', 'public, max-age=0');
+  });
+
+  it('should allow to pass the cacheControl option to the static middleware.', async () => {
+    Config.set('settings.staticFiles.cacheControl', false);
+
+    const app = await createApp(class { });
+    await request(app)
+      .get('/hello-world.html')
+      .expect(200, '<h1>Hello world!</h1>')
+      .then(response => {
+        if (response.header['cache-control']) {
+          throw new Error('The header "cache-control" should not exist.');
+        }
+      });
   });
 
   it('should support custom path prefix when serving static files.', async () => {
