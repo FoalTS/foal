@@ -24,6 +24,8 @@ export class WebsocketContext<User = { [key: string]: any } | null, ContextState
   user: User;
   readonly state: ContextState;
 
+  messageId: string | null;
+
   readonly controllerName: string;
   readonly controllerMethodName: string;
 
@@ -42,6 +44,8 @@ export class WebsocketContext<User = { [key: string]: any } | null, ContextState
 
     this.user = null as any;
     this.state = {} as any;
+
+    this.messageId = null;
 
     this.controllerName = controllerName;
     this.controllerMethodName = controllerMethodName;

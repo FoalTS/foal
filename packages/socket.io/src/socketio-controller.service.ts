@@ -1,5 +1,8 @@
+// std
+import { randomUUID } from 'crypto';
+
 // 3p
-import { Class, dependency, ServiceManager } from '@foal/core';
+import { Class, Config, dependency, Logger, ServiceManager } from '@foal/core';
 import { Server, ServerOptions } from 'socket.io';
 
 // FoalTS
@@ -17,6 +20,9 @@ import { WsServer } from './ws-server.service';
  */
 export abstract class SocketIOController implements ISocketIOController {
   @dependency
+  logger: Logger;
+
+  @dependency
   services: ServiceManager;
 
   @dependency
@@ -25,6 +31,16 @@ export abstract class SocketIOController implements ISocketIOController {
   adapter: ServerOptions['adapter'] | undefined;
 
   options: Partial<ServerOptions> = {};
+
+  private log(message: string, params?: {
+    error?: Error;
+    [name: string]: any;
+  }): void {
+    if (!Config.get('settings.logger.logSocketioMessages', 'boolean', true)) {
+      return;
+    }
+    this.logger.info(message, params);
+  }
 
   async attachHttpServer(httpServer: any): Promise<void> {
     this.wsServer.io = new Server(httpServer, this.options);
@@ -46,33 +62,58 @@ export abstract class SocketIOController implements ISocketIOController {
     })
 
     this.wsServer.io.on('connection', socket => {
+      this.log('Socket.io connection', {
+        socketId: socket.id,
+      });
+
       for (const route of routes) {
         socket.on(route.eventName, async (payload, cb) => {
-          if (typeof payload === 'function') {
-            cb = payload;
-            payload = undefined;
-          }
+          this.logger.initLogContext(async () => {
+            const messageId = randomUUID();
+            this.logger.addLogContext('socketId', socket.id);
+            this.logger.addLogContext('messageId', messageId);
 
-          const ctx = new WebsocketContext(route.eventName, payload, socket, route.controller.constructor.name, route.propertyKey);
-          const response = await getWebsocketResponse(route, ctx, this.services, this);
+            if (typeof payload === 'function') {
+              cb = payload;
+              payload = undefined;
+            }
 
-          if (typeof cb !== 'function') {
-            return;
-          }
+            const ctx = new WebsocketContext(route.eventName, payload, socket, route.controller.constructor.name, route.propertyKey);
+            ctx.messageId = messageId;
+            const response = await getWebsocketResponse(route, ctx, this.services, this);
 
-          if (response instanceof WebsocketErrorResponse) {
-            return cb({
-              status: 'error',
-              error: response.payload
+            const status = response instanceof WebsocketErrorResponse ? 'error' : 'ok';
+
+            this.log(`Socket.io message received - ${route.eventName}`, {
+              eventName: route.eventName,
+              status,
             });
-          }
 
-          return cb({
-            status: 'ok',
-            data: response.payload,
+            if (typeof cb !== 'function') {
+              return;
+            }
+
+            if (status === 'error') {
+              return cb({
+                status: 'error',
+                error: response.payload
+              });
+            }
+
+            return cb({
+              status: 'ok',
+              data: response.payload,
+            });
           });
         });
       }
+
+      socket.on('disconnect', reason => {
+        this.log('Socket.io disconnection', {
+          socketId: socket.id,
+          reason
+        });
+      });
     });
 
     await this.services.boot();

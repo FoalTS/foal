@@ -12,6 +12,10 @@ tags: [release]
 
 Version 4.2 of [Foal](https://foalts.org/) is out!
 
+## Better logging for socket.io controllers
+
+Socket.io messages are now logged in the same way as HTTP requests.
+
 ## AJV strict mode can be disabled
 
 AJV [strict mode](https://ajv.js.org/strict-mode.html) can be disabled thanks to the new config key `settings.ajv.strict`:

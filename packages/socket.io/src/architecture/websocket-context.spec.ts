@@ -19,6 +19,7 @@ describe('WebsocketContext', () => {
     deepStrictEqual(actual.state, {});
     strictEqual(actual.user, null);
     strictEqual(actual.session, null);
+    strictEqual(actual.messageId, null);
     strictEqual(actual.controllerName, '');
     strictEqual(actual.controllerMethodName, '');
 

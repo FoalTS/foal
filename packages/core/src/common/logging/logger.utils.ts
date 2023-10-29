@@ -63,6 +63,13 @@ function getColoredStatusCode(statusCode: number): string {
   return statusCode.toString();
 }
 
+function getColoredStatus(status: 'ok'|'error'): string {
+  if (status === 'error') {
+    return `\u001b[31m${status}\u001b[39m`;
+  }
+  return `\u001b[32m${status}\u001b[39m`;
+}
+
 function formatMessageToDevText(
   level: Level,
   message: string,
@@ -81,6 +88,11 @@ function formatMessageToDevText(
   if (message.startsWith(httpRequestMessagePrefix)) {
     message = message.slice(httpRequestMessagePrefix.length);
     message += ` ${getColoredStatusCode(params.statusCode)} - ${params.responseTime} ms`;
+  }
+
+  const socketioMessagePrefix = 'Socket.io message received - ';
+  if (message.startsWith(socketioMessagePrefix)) {
+    message = `Socket.io ${message.slice(socketioMessagePrefix.length)} ${getColoredStatus(params.status)}`;
   }
 
   return `${timestamp} ${logLevel} ${message}` + formatParamsToText({ error: params.error });

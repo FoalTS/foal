@@ -194,6 +194,32 @@ describe('formatMessage', () => {
         strictEqual(actual, expected);
       });
     });
+
+    context('given the message is a socket.io log and is prefixed by "Socket.io message received -"', () => {
+      it('should return a text with a well-formatted message (status "ok").', () => {
+        const message = 'Socket.io message received - create user';
+        const params = {
+          status: 'ok'
+        };
+
+        const actual = formatMessage('info', message, params, 'dev', now);
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m Socket.io create user \u001b[32mok\u001b[39m`
+
+        strictEqual(actual, expected);
+      });
+
+      it('should return a text with a well-formatted message (status "error").', () => {
+        const message = 'Socket.io message received - create user';
+        const params = {
+          status: 'error'
+        };
+
+        const actual = formatMessage('info', message, params, 'dev', now);
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m Socket.io create user \u001b[31merror\u001b[39m`
+
+        strictEqual(actual, expected);
+      });
+    });
   });
 
   context('given format is "json"', () => {

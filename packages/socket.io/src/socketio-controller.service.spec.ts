@@ -4,6 +4,7 @@ import { createServer, Server } from 'http';
 import { AddressInfo } from 'net';
 // tslint:disable-next-line: no-duplicate-imports
 import * as http from 'http';
+import { mock } from 'node:test';
 
 // 3p
 import { io, ManagerOptions, Socket, SocketOptions } from 'socket.io-client';
@@ -14,6 +15,7 @@ import {
   createController,
   dependency,
   IAppController,
+  Logger,
   ServiceManager
 } from '@foal/core';
 import { createAdapter } from '@socket.io/redis-adapter';
@@ -36,6 +38,9 @@ describe('SocketIOController', () => {
     let subClient: any;
 
     afterEach(async () => {
+      mock.reset();
+      Config.remove('settings.logger.logSocketioMessages');
+
       if (controller) {
         controller.wsServer.close();
       }
@@ -58,11 +63,12 @@ describe('SocketIOController', () => {
 
     afterEach(() => Config.remove('settings.logErrors'));
 
-    function createConnection(cls: Class<SocketIOController>, clientOptions?: Partial<ManagerOptions & SocketOptions>): Promise<void> {
+    function createConnection(cls: Class<SocketIOController>, clientOptions?: Partial<ManagerOptions & SocketOptions>, serviceManager?: ServiceManager): Promise<void> {
       return new Promise(resolve => {
         httpServer = createServer();
 
-        controller = createController(cls);
+        const services = serviceManager || new ServiceManager();
+        controller = services.get(cls);
         controller.attachHttpServer(httpServer);
 
         httpServer.listen(() => {
@@ -139,6 +145,123 @@ describe('SocketIOController', () => {
         deepStrictEqual(error.data, { foo: 'bar' });
       });
 
+      it('and should log a message  when a client establishes a connection', async () => {
+        let socketId: string|undefined;
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            socketId = ctx.socket.id;
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        const logger = services.get(Logger);
+
+        const loggerMock = mock.method(logger, 'info').mock;
+
+        await createConnection(WebsocketController, {}, services);
+
+        strictEqual(loggerMock.callCount(), 1);
+
+        const expectedMessage = 'Socket.io connection';
+        const actualMessage = loggerMock.calls[0].arguments[0];
+
+        strictEqual(actualMessage, expectedMessage);
+
+        const payload = {};
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        const expectedParameters = { socketId };
+        const actualParameters = loggerMock.calls[0].arguments[1];
+
+        deepStrictEqual(actualParameters, expectedParameters);
+      });
+
+      it('and should NOT log a message when a client establishes a connection if the config settings.logger.logSocketioMessages is false', async () => {
+        Config.set('settings.logger.logSocketioMessages', false);
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        const logger = services.get(Logger);
+
+        const loggerMock = mock.method(logger, 'info').mock;
+
+        await createConnection(WebsocketController, {}, services);
+
+        strictEqual(loggerMock.callCount(), 0);
+      });
+
+      it('and should log a message when a client disconnects', async () => {
+        let socketId: string|undefined;
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            socketId = ctx.socket.id;
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        await createConnection(WebsocketController, {}, services);
+
+        const payload = {};
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        const logger = services.get(Logger);
+        const loggerMock = mock.method(logger, 'info').mock;
+
+        clientSocket.close();
+        await new Promise<void>(resolve => setTimeout(resolve, 200));
+        clientSocket = undefined as any;
+
+        strictEqual(loggerMock.callCount(), 1);
+
+        const expectedMessage = 'Socket.io disconnection';
+        const actualMessage = loggerMock.calls[0].arguments[0];
+
+        strictEqual(actualMessage, expectedMessage);
+
+        const expectedParameters = {
+          socketId,
+          reason: 'client namespace disconnect'
+        };
+        const actualParameters = loggerMock.calls[0].arguments[1];
+
+        deepStrictEqual(actualParameters, expectedParameters);
+      });
+
+      it('and should NOT log a message when a client disconnects if the config settings.logger.logSocketioMessages is false', async () => {
+        Config.set('settings.logger.logSocketioMessages', false);
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        await createConnection(WebsocketController, {}, services);
+
+        const logger = services.get(Logger);
+        const loggerMock = mock.method(logger, 'info').mock;
+
+        clientSocket.close();
+        await new Promise<void>(resolve => setTimeout(resolve, 200));
+        clientSocket = undefined as any;
+
+        strictEqual(loggerMock.callCount(), 0);
+      });
+
       it('and should bind the routes to their respective handlers.', async () => {
         let actualContext: WebsocketContext|undefined;
         let actualPayload: any;
@@ -166,6 +289,8 @@ describe('SocketIOController', () => {
         notDeepStrictEqual(actualContext?.socket, {});
         deepStrictEqual(actualContext?.state, {});
         strictEqual(actualContext?.user, null);
+        notStrictEqual(actualContext?.messageId, null);
+        strictEqual(typeof actualContext?.messageId, 'string');
 
         strictEqual(actualContext?.controllerName, 'WebsocketController');
         strictEqual(actualContext?.controllerMethodName, 'createUser');
@@ -227,6 +352,137 @@ describe('SocketIOController', () => {
         const payload = await new Promise(resolve => clientSocket.emit('create user', {}, resolve));
 
         deepStrictEqual(payload, { status: 'error', error });
+      });
+
+      it('and should log a message when the server receives a message.', async () => {
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            return new WebsocketResponse();
+          }
+
+          @EventName('create user with error')
+          createUserWithError() {
+            return new WebsocketErrorResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        await createConnection(WebsocketController, {}, services);
+
+        const logger = services.get(Logger);
+        const loggerMock = mock.method(logger, 'info').mock;
+
+        const payload = {};
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        strictEqual(loggerMock.callCount(), 1);
+
+        const expectedMessage = 'Socket.io message received - create user';
+        const actualMessage = loggerMock.calls[0].arguments[0];
+
+        strictEqual(actualMessage, expectedMessage);
+
+        const expectedParameters = {
+          eventName: 'create user',
+          status: 'ok'
+        };
+        const actualParameters = loggerMock.calls[0].arguments[1];
+
+        deepStrictEqual(actualParameters, expectedParameters);
+
+        await new Promise(resolve => clientSocket.emit('create user with error', payload, resolve));
+
+        strictEqual(loggerMock.callCount(), 2);
+
+        const expectedParameters2 = {
+          eventName: 'create user with error',
+          status: 'error'
+        };
+        const actualParameters2 = loggerMock.calls[1].arguments[1];
+
+        deepStrictEqual(actualParameters2, expectedParameters2);
+      });
+
+      it('and should NOT log a message when the server receives a message if the config settings.logger.logSocketioMessages is false', async () => {
+        Config.set('settings.logger.logSocketioMessages', false);
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        await createConnection(WebsocketController, {}, services);
+
+        const logger = services.get(Logger);
+        const loggerMock = mock.method(logger, 'info').mock;
+
+        const payload = {};
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        strictEqual(loggerMock.callCount(), 0);
+      });
+
+      it('and should allow to add log context information.', async () => {
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          @WebsocketHook((ctx, services) => {
+            const logger = services.get(Logger);
+            logger.addLogContext('foo', 'bar');
+          })
+          createUser(ctx: WebsocketContext, payload: any) {
+            this.logger.info('Hello world');
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        await createConnection(WebsocketController, {}, services);
+
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
+
+        const payload = {};
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        const messages = consoleMock.calls.map(call => call.arguments[0]);
+
+        strictEqual(messages.some(message => message.includes('foo: "bar"')), true);
+      });
+
+      it('and should add the socket ID and the message ID to the log context.', async () => {
+        let socketId: string|undefined;
+        let messageId: string|null = null;
+
+        class WebsocketController extends SocketIOController {
+          @EventName('create user')
+          createUser(ctx: WebsocketContext, payload: any) {
+            socketId = ctx.socket.id;
+            messageId = ctx.messageId;
+            return new WebsocketResponse();
+          }
+        }
+
+        const services = new ServiceManager();
+        await createConnection(WebsocketController, {}, services);
+
+        const logger = services.get(Logger);
+        const loggerMock = mock.method(logger, 'addLogContext', () => {}).mock;
+
+        const payload = {};
+        await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
+
+        strictEqual(loggerMock.callCount(), 2);
+
+        const actualParameters = loggerMock.calls.map(call => call.arguments);
+        const expectedParameters = [
+          ['socketId', socketId],
+          ['messageId', messageId]
+        ];
+
+        deepStrictEqual(actualParameters, expectedParameters);
       });
 
       it('and should not throw an error if no callback is given in the client "emit" method', async () => {
