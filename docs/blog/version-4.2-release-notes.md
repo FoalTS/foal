@@ -30,3 +30,18 @@ AJV [strict mode](https://ajv.js.org/strict-mode.html) can be disabled thanks to
 ## `foal connect angular` command fixed
 
 The command that allows to set up a project with Angular and Foal has been fixed to support the latest versions of Angular. 
+
+## Cache control can be disabled for static files
+
+The `cacheControl` option of the `express.static` middleware can be passed through the configuration.
+
+*config/default.json*
+```json
+{
+  "settings": {
+    "staticFiles": {
+      "cacheControl": false
+    }
+  }
+}
+```
