@@ -33,8 +33,6 @@ SETTINGS_CSRF_SECRET=YKvV281Z8nbkPowDLkMTTIrg
 
 Both formats, JSON and YAML, are supported. Choose the one that suits you the best.
 
-{% code-tabs %}
-{% code-tabs-item title="JSON" %}
 ```json
 {
   "port": 3001,
@@ -55,8 +53,7 @@ Both formats, JSON and YAML, are supported. Choose the one that suits you the be
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title="YAML" %}
+
 ```yaml
 port: 3001
 
@@ -73,8 +70,6 @@ settings:
 database:
   database: './db.sqlite3'
 ```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 > **YAML support**
 >
