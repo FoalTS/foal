@@ -1,124 +1,220 @@
 {
   "someSidebar": [
-    "version-1.x/README",
-    { "type": "category", "label": "TUTORIALS", "collapsed": false, "items": [
-      { "type": "category", "label": "Simple To-Do List", "items": [
-        "version-1.x/tutorials/simple-todo-list/tuto-1-installation",
-        "version-1.x/tutorials/simple-todo-list/tuto-2-introduction",
-        "version-1.x/tutorials/simple-todo-list/tuto-3-the-todo-model",
-        "version-1.x/tutorials/simple-todo-list/tuto-4-the-shell-script-create-todo",
-        "version-1.x/tutorials/simple-todo-list/tuto-5-the-rest-api",
-        "version-1.x/tutorials/simple-todo-list/tuto-6-validation-and-sanitization",
-        "version-1.x/tutorials/simple-todo-list/tuto-7-unit-testing"
-      ]},
-      { "type": "category", "label": "Multi-User To-Do List", "items": [
-        "version-1.x/tutorials/multi-user-todo-list/tuto-1-Introduction",
-        "version-1.x/tutorials/multi-user-todo-list/tuto-2-the-user-and-todo-models",
-        "version-1.x/tutorials/multi-user-todo-list/tuto-3-the-shell-scripts",
-        "version-1.x/tutorials/multi-user-todo-list/tuto-5-auth-controllers-and-hooks",
-        "version-1.x/tutorials/multi-user-todo-list/tuto-6-todos-and-ownership",
-        "version-1.x/tutorials/multi-user-todo-list/tuto-7-the-signup-page",
-        "version-1.x/tutorials/multi-user-todo-list/tuto-8-e2e-testing-and-authentication"
-      ]},
-      { "type": "category", "label": "MongoDB To-Do List", "items": [
-        "version-1.x/tutorials/mongodb-todo-list/tuto-1-installation",
-        "version-1.x/tutorials/mongodb-todo-list/tuto-2-introduction",
-        "version-1.x/tutorials/mongodb-todo-list/tuto-3-the-todo-model",
-        "version-1.x/tutorials/mongodb-todo-list/tuto-4-the-shell-script-create-todo",
-        "version-1.x/tutorials/mongodb-todo-list/tuto-5-the-rest-api",
-        "version-1.x/tutorials/mongodb-todo-list/tuto-6-validation-and-sanitization",
-        "version-1.x/tutorials/mongodb-todo-list/tuto-7-unit-testing"
-      ]}
-    ]},
-    { "type": "category", "label": "TOPIC GUIDES", "collapsed": false, "items": [
-      { "type": "category", "label": "Architecture", "items": [
-        "version-1.x/architecture/architecture-overview",
-        "version-1.x/architecture/controllers",
-        "version-1.x/architecture/services-and-dependency-injection",
-        "version-1.x/architecture/hooks",
-        "version-1.x/architecture/initialization"
-      ]},
-      { "type": "category", "label": "Databases", "items": [
-        "version-1.x/databases/typeorm",
-        "version-1.x/databases/create-models-and-queries",
-        "version-1.x/databases/generate-and-run-migrations",
-        "version-1.x/databases/mongodb",
-        "version-1.x/databases/using-another-orm"
-      ]},
-      { "type": "category", "label": "Authentication & Access Control", "items": [
-        "version-1.x/authentication-and-access-control/quick-start",
-        "version-1.x/authentication-and-access-control/user-class",
-        "version-1.x/authentication-and-access-control/password-management",
-        "version-1.x/authentication-and-access-control/session-tokens",
-        "version-1.x/authentication-and-access-control/jwt",
-        "version-1.x/authentication-and-access-control/social-auth",
-        "version-1.x/authentication-and-access-control/administrators-and-roles",
-        "version-1.x/authentication-and-access-control/groups-and-permissions"
-      ]},
-      "version-1.x/validation-and-sanitization",
-      "version-1.x/serializing-and-deserializing",
-      { "type": "category", "label": "API", "items": [
-        "version-1.x/api-section/rest-blueprints",
-        "version-1.x/api-section/openapi-and-swagger-ui",
-        "version-1.x/api-section/public-api-and-cors-requests",
-        "version-1.x/api-section/graphql"
-      ]},
-      { "type": "category", "label": "Frontend Integration", "items": [
-        "version-1.x/frontend-integration/single-page-applications",
-        "version-1.x/frontend-integration/angular-react-vue",
-        "version-1.x/frontend-integration/jsx-server-side-rendering",
-        "version-1.x/frontend-integration/nuxt.js"
-      ]},
-      { "type": "category", "label": "File System", "items": [
-        "version-1.x/file-system/local-and-cloud-storage",
-        "version-1.x/file-system/upload-and-download-files"
-      ]},
-      { "type": "category", "label": "CLI & Development Environment", "items": [
-        "version-1.x/development-environment/build-and-start-the-app",
-        "version-1.x/development-environment/create-and-run-scripts",
-        "version-1.x/development-environment/code-generation",
-        "version-1.x/development-environment/linting-and-code-style",
-        "version-1.x/development-environment/vscode"
-      ]},
-      { "type": "category", "label": "Testing", "items": [
-        "version-1.x/testing/introduction",
-        "version-1.x/testing/unit-testing",
-        "version-1.x/testing/e2e-testing"
-      ]},
-      { "type": "category", "label": "Cloud", "items": [
-        "version-1.x/cloud/aws-beanstalk",
-        "version-1.x/cloud/firebase"
-      ]},
-      { "type": "category", "label": "Security", "items": [
-        "version-1.x/security/http-headers-protection",
-        "version-1.x/security/csrf-protection",
-        "version-1.x/security/xss-protection"
-      ]},
-      { "type": "category", "label": "Utilities", "items": [
-        "version-1.x/utilities/templating",
-        "version-1.x/utilities/logging-and-debugging"
-      ]},
-      { "type": "category", "label": "Cookbook", "items": [
-        "version-1.x/cookbook/error-handling",
-        "version-1.x/cookbook/generate-tokens",
-        "version-1.x/cookbook/scheduling-jobs",
-        "version-1.x/cookbook/not-found-page",
-        "version-1.x/cookbook/request-body-size",
-        "version-1.x/cookbook/expressjs",
-        "version-1.x/cookbook/root-imports",
-        "version-1.x/cookbook/limit-repeated-requests"
-      ]},
-      { "type": "category", "label": "Deployment & Environments", "items": [
-        "version-1.x/deployment-and-environments/configuration",
-        "version-1.x/deployment-and-environments/ship-to-production"
-      ]}
-    ]},
-    { "type": "category", "label": "Upgrading", "collapsed": false, "items": [
-      { "type": "link", "label": "To v1", "href": "https://github.com/FoalTS/foal/releases/tag/v1.0.0" },
-      { "type": "link", "label": "To v0.8", "href": "https://github.com/FoalTS/foal/releases/tag/v0.8.0" }
-    ]},
-    { "type": "category", "label": "Community", "collapsed": false, "items": [
-      { "type": "link", "label": "Awesome Foal", "href": "https://github.com/FoalTS/awesome-foalts" }
-    ]}
+    "README",
+    {
+      "type": "category",
+      "label": "TUTORIALS",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "Simple To-Do List",
+          "items": [
+            "tutorials/simple-todo-list/tuto-1-installation",
+            "tutorials/simple-todo-list/tuto-2-introduction",
+            "tutorials/simple-todo-list/tuto-3-the-todo-model",
+            "tutorials/simple-todo-list/tuto-4-the-shell-script-create-todo",
+            "tutorials/simple-todo-list/tuto-5-the-rest-api",
+            "tutorials/simple-todo-list/tuto-6-validation-and-sanitization",
+            "tutorials/simple-todo-list/tuto-7-unit-testing"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Multi-User To-Do List",
+          "items": [
+            "tutorials/multi-user-todo-list/tuto-1-Introduction",
+            "tutorials/multi-user-todo-list/tuto-2-the-user-and-todo-models",
+            "tutorials/multi-user-todo-list/tuto-3-the-shell-scripts",
+            "tutorials/multi-user-todo-list/tuto-5-auth-controllers-and-hooks",
+            "tutorials/multi-user-todo-list/tuto-6-todos-and-ownership",
+            "tutorials/multi-user-todo-list/tuto-7-the-signup-page",
+            "tutorials/multi-user-todo-list/tuto-8-e2e-testing-and-authentication"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "MongoDB To-Do List",
+          "items": [
+            "tutorials/mongodb-todo-list/tuto-1-installation",
+            "tutorials/mongodb-todo-list/tuto-2-introduction",
+            "tutorials/mongodb-todo-list/tuto-3-the-todo-model",
+            "tutorials/mongodb-todo-list/tuto-4-the-shell-script-create-todo",
+            "tutorials/mongodb-todo-list/tuto-5-the-rest-api",
+            "tutorials/mongodb-todo-list/tuto-6-validation-and-sanitization",
+            "tutorials/mongodb-todo-list/tuto-7-unit-testing"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "TOPIC GUIDES",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "Architecture",
+          "items": [
+            "architecture/architecture-overview",
+            "architecture/controllers",
+            "architecture/services-and-dependency-injection",
+            "architecture/hooks",
+            "architecture/initialization"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Databases",
+          "items": [
+            "databases/typeorm",
+            "databases/create-models-and-queries",
+            "databases/generate-and-run-migrations",
+            "databases/mongodb",
+            "databases/using-another-orm"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Authentication & Access Control",
+          "items": [
+            "authentication-and-access-control/quick-start",
+            "authentication-and-access-control/user-class",
+            "authentication-and-access-control/password-management",
+            "authentication-and-access-control/session-tokens",
+            "authentication-and-access-control/jwt",
+            "authentication-and-access-control/social-auth",
+            "authentication-and-access-control/administrators-and-roles",
+            "authentication-and-access-control/groups-and-permissions"
+          ]
+        },
+        "validation-and-sanitization",
+        "serializing-and-deserializing",
+        {
+          "type": "category",
+          "label": "API",
+          "items": [
+            "api-section/rest-blueprints",
+            "api-section/openapi-and-swagger-ui",
+            "api-section/public-api-and-cors-requests",
+            "api-section/graphql"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Frontend Integration",
+          "items": [
+            "frontend-integration/single-page-applications",
+            "frontend-integration/angular-react-vue",
+            "frontend-integration/jsx-server-side-rendering",
+            "frontend-integration/nuxt.js"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "File System",
+          "items": [
+            "file-system/local-and-cloud-storage",
+            "file-system/upload-and-download-files"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "CLI & Development Environment",
+          "items": [
+            "development-environment/build-and-start-the-app",
+            "development-environment/create-and-run-scripts",
+            "development-environment/code-generation",
+            "development-environment/linting-and-code-style",
+            "development-environment/vscode"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Testing",
+          "items": [
+            "testing/introduction",
+            "testing/unit-testing",
+            "testing/e2e-testing"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Cloud",
+          "items": [
+            "cloud/aws-beanstalk",
+            "cloud/firebase"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Security",
+          "items": [
+            "security/http-headers-protection",
+            "security/csrf-protection",
+            "security/xss-protection"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Utilities",
+          "items": [
+            "utilities/templating",
+            "utilities/logging-and-debugging"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Cookbook",
+          "items": [
+            "cookbook/error-handling",
+            "cookbook/generate-tokens",
+            "cookbook/scheduling-jobs",
+            "cookbook/not-found-page",
+            "cookbook/request-body-size",
+            "cookbook/expressjs",
+            "cookbook/root-imports",
+            "cookbook/limit-repeated-requests"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Deployment & Environments",
+          "items": [
+            "deployment-and-environments/configuration",
+            "deployment-and-environments/ship-to-production"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Upgrading",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "link",
+          "label": "To v1",
+          "href": "https://github.com/FoalTS/foal/releases/tag/v1.0.0"
+        },
+        {
+          "type": "link",
+          "label": "To v0.8",
+          "href": "https://github.com/FoalTS/foal/releases/tag/v0.8.0"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Community",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "link",
+          "label": "Awesome Foal",
+          "href": "https://github.com/FoalTS/awesome-foalts"
+        }
+      ]
+    }
   ]
 }

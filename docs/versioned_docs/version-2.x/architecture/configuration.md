@@ -2,10 +2,6 @@
 title: Configuration
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-
 In FoalTS, _configuration_ refers to any parameter that may vary between deploy environments (production, development, test, etc). It includes sensitive information, such as your database credentials, or simple settings, such as the server port.
 
 The framework encourages a **strict separation between configuration and code** and allows you to define your configuration in environment variables, in `.env` files and in files in the `config/` directory.
@@ -27,17 +23,7 @@ The framework encourages a **strict separation between configuration and code** 
 
 Configuration values are provided using configuration files in the `config/` directory. Several formats are supported: YAML, JSON and JS files.
 
-*config/default.{yml|json|js}*
-
-<Tabs
-  defaultValue="yaml"
-  values={[
-    {label: 'YAML', value: 'yaml'},
-    {label: 'JSON', value: 'json'},
-    {label: 'JS', value: 'js'},
-  ]}
->
-<TabItem value="yaml">
+*config/default.yml*
 
 ```yaml
 settings:
@@ -45,8 +31,7 @@ settings:
     store: "@foal/typeorm"
 ```
 
-</TabItem>
-<TabItem value="json">
+*config/default.json*
 
 ```json
 {
@@ -58,8 +43,7 @@ settings:
 }
 ```
 
-</TabItem>
-<TabItem value="js">
+*config/default.js*
 
 ```javascript
 module.exports = {
@@ -70,9 +54,6 @@ module.exports = {
   }
 }
 ```
-
-</TabItem>
-</Tabs>
 
 > **YAML support**
 >
@@ -102,28 +83,6 @@ Configuration values can also be set or overridden for a specific environment us
 
 All parameters under the keyword `settings` are reserved for the operation of the framework. You can assign values to those given in the documentation, but you cannot create new ones.
 
-<Tabs
-  defaultValue="yaml"
-  values={[
-    {label: 'YAML', value: 'yaml'},
-    {label: 'JSON', value: 'json'},
-    {label: 'JS', value: 'js'},
-  ]}
->
-<TabItem value="yaml">
-
-```yaml
-settings:
-  session:
-    store: "@foal/typeorm"
-
-customConfiguration:
-  message: hello world
-```
-
-</TabItem>
-<TabItem value="json">
-
 ```json
 {
   "settings": {
@@ -136,25 +95,6 @@ customConfiguration:
   }
 }
 ```
-
-</TabItem>
-<TabItem value="js">
-
-```javascript
-module.exports = {
-  settings: {
-    session: {
-      store: "@foal/typeorm"
-    }
-  },
-  customConfiguration: {
-    message: "hello world"
-  }
-}
-```
-
-</TabItem>
-</Tabs>
 
 ## Accessing Configuration Values
 
@@ -226,26 +166,6 @@ The recommended approach to provide sensitive information to the application is 
 JWT_SECRET="Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8="
 ```
 
-<Tabs
-  defaultValue="yaml"
-  values={[
-    {label: 'YAML', value: 'yaml'},
-    {label: 'JSON', value: 'json'},
-    {label: 'JS', value: 'js'},
-  ]}
->
-<TabItem value="yaml">
-
-```yaml
-settings:
-  jwt:
-    secret: env(JWT_SECRET)
-    secretEncoding: base64
-```
-
-</TabItem>
-<TabItem value="json">
-
 ```json
 {
   "settings": {
@@ -256,25 +176,6 @@ settings:
   }
 }
 ```
-
-</TabItem>
-<TabItem value="js">
-
-```javascript
-const { Env } = require('@foal/core');
-
-module.exports = {
-  settings: {
-    jwt: {
-      secret: Env.get('JWT_SECRET'),
-      secretEncoding: 'base64'
-    }
-  }
-}
-```
-
-</TabItem>
-</Tabs>
 
 If the same variable is provided both as environment variable and in the `.env` file, then the value of the `.env` file is used.
 

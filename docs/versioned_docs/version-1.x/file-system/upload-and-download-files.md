@@ -14,17 +14,6 @@ npm install @foal/storage
 
 Then specify in your configuration the file storage to be used and its settings. In this example, we will use the local file system with the `uploaded` directory (you must create it at the root of your project).
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yaml
-settings:
-  disk:
-    driver: 'local'
-    local:
-      directory: 'uploaded'
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
@@ -37,14 +26,6 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=local
-SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 ## File Uploads
 
@@ -146,16 +127,6 @@ export class UserController {
 
 Optional settings can be provided in the configuration to limit the size or number of files uploaded.
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yaml
-settings:
-  multipartRequests:
-    fileSizeLimit: 1024
-    fileNumberLimit: 4
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
@@ -166,14 +137,6 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_MULTIPART_REQUESTS_FILE_SIZE_LIMIT=1024
-SETTINGS_MULTIPART_REQUESTS_FILE_NUMBER_LIMIT=4
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 | Setting | Type | Description |
 | --- | --- | --- |
@@ -313,14 +276,6 @@ Static files, such as HTML, CSS, images, and JavaScript, are served by default f
 
 If necessary, this directory can be modified using the configuration key `settings.staticPath`.
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yaml
-settings:
-  staticPath: assets
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
@@ -328,26 +283,11 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_STATIC_PATH=assets
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 ### Virtual prefix path
 
 In case you need to add a virtual prefix path to your static files, you can do so with the `staticPathPrefix` configuration key.
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yaml
-settings:
-  staticPathPrefix: /static
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
@@ -355,13 +295,6 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_STATIC_PATH_PREFIX=/static
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 *Example*
 | Static file | URL path with no prefix | URL path with the prefix `/static `|

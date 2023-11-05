@@ -37,17 +37,6 @@ settings:
 
 The name of the directory where the files are located is specified with the configuration key `settings.disk.local.directory`.
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yaml
-settings:
-  disk:
-    driver: 'local'
-    local:
-      directory: 'uploaded'
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
@@ -60,14 +49,6 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=local
-SETTINGS_DISK_LOCAL_DIRECTORY=uploaded
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 ### AWS S3
 
@@ -81,20 +62,6 @@ The bucket name is specified with the `settings.disk.s3.bucket` configuration ke
 
 AWS credentials are specified with the configuration keys `settings.aws.accessKeyId` and `settings.aws.secretAccessKey`  or using [AWS traditional techniques](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/loading-node-credentials-shared.html).
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yaml
-settings:
-  aws:
-    accessKeyId: xxx
-    secretAccessKey: yyy
-  disk:
-    driver: '@foal/aws-s3'
-    s3:
-      bucket: 'uploaded'
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
@@ -111,14 +78,6 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=@foal/aws-s3
-SETTINGS_DISK_S3_BUCKET=uploaded
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}
 
 ### DigitalOcean
 
@@ -270,15 +229,6 @@ If FoalTS does not support your favorite Cloud provider, you can also implement 
 
 If you want to use it through the `Disk` service, you need to specify its path in the configuration (or to publish it as an npm package and specify the package name). The name of the exported class should be `ConcreteDisk`.
 
-{% code-tabs %}
-{% code-tabs-item title="YAML" %}
-```yaml
-settings:
-  disk:
-    driver: './app/services/my-disk.service'
-```
-{% endcode-tabs-item %}
-{% code-tabs-item title="JSON" %}
 ```json
 {
   "settings": {
@@ -288,10 +238,3 @@ settings:
   }
 }
 ```
-{% endcode-tabs-item %}
-{% code-tabs-item title=".env or environment variables" %}
-```
-SETTINGS_DISK_DRIVER=./app/services/my-disk.service
-```
-{% endcode-tabs-item %}
-{% endcode-tabs %}

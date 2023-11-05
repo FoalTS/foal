@@ -45,4 +45,4 @@ The `verifyPassword` takes three arguments:
 Promise<boolean>
 ```
 
-> If you used the `parsePassword` function in previous versions of Foal (<0.7.0), you must pass the `legacy: true` option to `verifyPassword` and `hashPassword`.
+> If you used the `parsePassword` function in previous versions of Foal (< 0.7.0), you must pass the `legacy: true` option to `verifyPassword` and `hashPassword`.
