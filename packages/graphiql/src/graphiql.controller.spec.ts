@@ -1,7 +1,7 @@
 // std
 import { ok, strictEqual } from 'assert';
-import { stat, readFileSync } from 'fs';
-import { promisify } from 'util';
+import { readFileSync } from 'fs';
+import { stat } from 'node:fs/promises';
 import { join } from 'path';
 
 // 3p
@@ -103,7 +103,7 @@ describe('GraphiQLController', () => {
         strictEqual(response.stream, true);
 
         const filePath = join(__dirname, 'static', filename);
-        const stats = await promisify(stat)(filePath);
+        const stats = await stat(filePath);
         strictEqual(response.getHeader('Content-Length'), stats.size.toString());
 
         const content = await streamToBuffer(response.body);
