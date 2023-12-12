@@ -1,7 +1,7 @@
 // std
-import { createReadStream, readFile, stat } from 'fs';
+import { createReadStream } from 'fs';
+import { readFile, stat } from 'node:fs/promises';
 import { join } from 'path';
-import { promisify } from 'util';
 
 // 3p
 import { Context, Get, HttpResponseMovedPermanently, HttpResponseOK, renderToString } from '@foal/core';
@@ -43,7 +43,7 @@ export class GraphiQLController {
       return new HttpResponseMovedPermanently(ctx.request.path + '/');
     }
 
-    const template = await promisify(readFile)(join(__dirname, 'templates/index.html'), 'utf8');
+    const template = await readFile(join(__dirname, 'templates/index.html'), 'utf8');
 
     const page = renderToString(template, {
       options: JSON.stringify(this.options),
@@ -77,7 +77,7 @@ export class GraphiQLController {
     const filePath = join(__dirname, 'static', filename);
 
     const stream = createReadStream(filePath);
-    const stats = await promisify(stat)(filePath);
+    const stats = await stat(filePath);
 
     return new HttpResponseOK(stream, { stream: true })
       .setHeader('Content-Type', contentType)

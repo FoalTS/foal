@@ -1,7 +1,6 @@
 // std
-import { readFile } from 'fs';
+import { readFile } from 'node:fs/promises';
 import { basename, join } from 'path';
-import { promisify } from 'util';
 
 // FoalTS
 import { Config, Context, HttpResponseInternalServerError } from '../../core';
@@ -23,7 +22,7 @@ export async function renderError(error: Error, ctx: Context): Promise<HttpRespo
   + '<h1>500 - INTERNAL SERVER ERROR</h1></body></html>';
 
   if (Config.get('settings.debug', 'boolean')) {
-    const template = await promisify(readFile)(join(__dirname, '500.debug.html'), 'utf8');
+    const template = await readFile(join(__dirname, '500.debug.html'), 'utf8');
 
     const rex = /at (.*) \((.*):(\d+):(\d+)\)/;
     const [ , , path, line, column ] = Array.from(rex.exec(error.stack || '') || []);
