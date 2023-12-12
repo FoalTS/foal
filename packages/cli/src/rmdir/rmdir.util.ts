@@ -9,9 +9,8 @@ import { rm, readdir } from 'node:fs/promises';
  * @returns {Promise<void>}
  */
 export async function rmdir(path: string): Promise<void> {
-  let contents: string[];
   try {
-    contents = await readdir(path);
+    await readdir(path);
   } catch (error: any) {
     if (error.code === 'ENOENT') {
       return;
