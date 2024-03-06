@@ -67,14 +67,14 @@ describe('runScript', () => {
   it('should validate the process arguments with the schema if it is given.', async () => {
     mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
-    module.exports.schema = { type: 'object', properties: { email: { type: 'string', format: 'email' } } };
+    module.exports.schema = { type: 'object', properties: { email: { type: 'string', format: 'email', maxLength: 2 }, password: { type: 'string' }, n: { type: 'number', maximum: 10 } }, required: ['password'] };
     module.exports.main = function main(args) {
       writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
     }`;
     writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
 
-    let msg;
-    const log = (message: any) => msg = message;
+    const msgs: string[] = [];
+    const log = (message: any) => msgs.push(message);
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
@@ -84,11 +84,17 @@ describe('runScript', () => {
       'run-script',
       'my-script',
       'email=bar',
+      'n=11'
     ], log);
 
-    strictEqual(
-      msg,
-      'Error: The command line arguments must match format "email".'
+    deepStrictEqual(
+      msgs,
+      [
+        'Script error: arguments must have required property \'password\'.',
+        'Script error: the value of "email" must NOT have more than 2 characters.',
+        'Script error: the value of "email" must match format "email".',
+        'Script error: the value of "n" must be <= 10.',
+      ]
     );
   });
 

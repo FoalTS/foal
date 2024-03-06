@@ -71,4 +71,4 @@ foal run create-todo text="Write tests"
 
 > Note that if you try to create a new to-do without specifying the text argument, you'll get the error below.
 >
-> `Error: The command line arguments should have required property 'text'.`
+> `Script error: arguments must have required property 'text'.`
