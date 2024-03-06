@@ -55,12 +55,16 @@ function protectionHeaders(req: any, res: any, next: (err?: any) => any) {
 }
 
 export function getHttpLogParamsDefault(tokens: any, req: any, res: any): Record<string, any> {
+  const statusCode = tokens.status(req, res);
+  const contentLength = tokens.res(req, res, 'content-length');
+  const responseTime = tokens['response-time'](req, res);
+  
   return {
     method: tokens.method(req, res),
     url: tokens.url(req, res).split('?')[0],
-    statusCode: parseInt(tokens.status(req, res), 10),
-    contentLength: tokens.res(req, res, 'content-length'),
-    responseTime: parseFloat(tokens['response-time'](req, res)),
+    statusCode: statusCode === undefined ? null : parseInt(statusCode, 10),
+    contentLength: contentLength === undefined ? null : contentLength,
+    responseTime: responseTime === undefined ? null : parseFloat(responseTime),
   };
 }
 

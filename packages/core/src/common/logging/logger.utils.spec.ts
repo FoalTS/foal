@@ -193,6 +193,19 @@ describe('formatMessage', () => {
 
         strictEqual(actual, expected);
       });
+
+      it('should return a text with a well-formatted message (no status code).', () => {
+        const message = 'HTTP request - GET /foo/bar';
+        const params = {
+          statusCode: null,
+          responseTime: null,
+        };
+
+        const actual = formatMessage('info', message, params, 'dev', now);
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar null - null ms`
+
+        strictEqual(actual, expected);
+      });
     });
 
     context('given the message is a socket.io log and is prefixed by "Socket.io message received -"', () => {
