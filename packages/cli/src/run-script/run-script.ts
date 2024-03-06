@@ -32,11 +32,15 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
   const args = getCommandLineArguments(argv);
 
   if (schema) {
-    const ajv = new Ajv({ useDefaults: true });
+    const ajv = new Ajv({ useDefaults: true, allErrors: true });
     addFormats(ajv);
     if (!ajv.validate(schema, args)) {
       ajv.errors!.forEach(err => {
-        log(`Error: The command line arguments ${err.message}.`);
+        if (err.instancePath) {
+          log(`Script error: the value of "${err.instancePath.split('/')[1]}" ${err.message}.`);
+        } else {
+          log(`Script error: arguments ${err.message}.`);
+        }
       });
       return;
     }
