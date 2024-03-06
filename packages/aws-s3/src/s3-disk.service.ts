@@ -4,7 +4,7 @@ import { Readable } from 'stream';
 // 3p
 import { Config, generateToken, streamToBuffer } from '@foal/core';
 import { Disk, FileDoesNotExist } from '@foal/storage';
-import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, S3Client, S3ClientConfig } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, S3Client, S3ClientConfig, ServerSideEncryption } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 
 /**
@@ -37,7 +37,7 @@ export class S3Disk extends Disk {
         Body: content,
         Bucket: this.bucket,
         Key: path,
-        ServerSideEncryption: Config.get('settings.disk.s3.serverSideEncryption', 'string'),
+        ServerSideEncryption: Config.get('settings.disk.s3.serverSideEncryption', 'string') as ServerSideEncryption | undefined,
       }
     })
     await parallelUploads.done();
