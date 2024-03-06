@@ -58,7 +58,7 @@ export function getHttpLogParamsDefault(tokens: any, req: any, res: any): Record
   const statusCode = tokens.status(req, res);
   const contentLength = tokens.res(req, res, 'content-length');
   const responseTime = tokens['response-time'](req, res);
-  
+
   return {
     method: tokens.method(req, res),
     url: tokens.url(req, res).split('?')[0],
