@@ -47,7 +47,10 @@ function formatMessageToRawText(
   return `${timestamp} ${logLevel} ${message}` + formatParamsToText(params);
 }
 
-function getColoredStatusCode(statusCode: number): string {
+function getColoredStatusCode(statusCode: number | null): string {
+  if (statusCode === null) {
+    return 'null';
+  }
   if (statusCode >= 500) {
     return `\u001b[31m${statusCode}\u001b[39m`;
   }
