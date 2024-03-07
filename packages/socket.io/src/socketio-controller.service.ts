@@ -28,7 +28,9 @@ export abstract class SocketIOController implements ISocketIOController {
   @dependency
   wsServer: WsServer;
 
-  adapter: ServerOptions['adapter'] | undefined;
+  // There are often type issues with socket.io adapters coming from other packages (depending on their version).
+  // This is why the type "any" is used here.
+  adapter: any;
 
   options: Partial<ServerOptions> = {};
 

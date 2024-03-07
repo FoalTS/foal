@@ -1,6 +1,5 @@
-import { readFile } from 'fs';
+import { readFile } from 'node:fs/promises';
 import { GraphQLSchema } from 'graphql';
-import { promisify } from 'util';
 import { schemaFromTypeDefs } from './schema-from-type-defs';
 
 /**
@@ -12,7 +11,7 @@ import { schemaFromTypeDefs } from './schema-from-type-defs';
  */
 export async function schemaFromTypePaths(...paths: string[]): Promise<GraphQLSchema> {
   const files = await Promise.all(
-    paths.map(path => promisify(readFile)(path, 'utf8'))
+    paths.map(path => readFile(path, 'utf8'))
   );
   return schemaFromTypeDefs(...files);
 }

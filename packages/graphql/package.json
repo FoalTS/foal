@@ -42,16 +42,16 @@
   "dependencies": {
     "@foal/core": "^4.2.0",
     "ajv": "~8.12.0",
-    "glob": "~10.3.4"
+    "glob": "~10.3.10"
   },
   "devDependencies": {
-    "@types/mocha": "10.0.1",
+    "@types/mocha": "10.0.6",
     "@types/node": "18.18.6",
     "graphql": "~16.8.0",
     "graphql-request": "~6.1.0",
-    "mocha": "~10.2.0",
-    "rimraf": "~5.0.1",
-    "ts-node": "~10.9.1",
+    "mocha": "~10.3.0",
+    "rimraf": "~5.0.5",
+    "ts-node": "~10.9.2",
     "type-graphql": "2.0.0-beta.3",
     "typescript": "~4.9.5"
   },

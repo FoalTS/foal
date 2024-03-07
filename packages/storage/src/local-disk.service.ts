@@ -1,5 +1,6 @@
 // std
-import { createReadStream, createWriteStream, readFile, stat, unlink, writeFile } from 'fs';
+import { createReadStream, createWriteStream } from 'fs';
+import { readFile, stat, writeFile, unlink } from 'node:fs/promises';
 import { join } from 'path';
 import { pipeline, Readable } from 'stream';
 import { promisify } from 'util';
@@ -33,7 +34,7 @@ export class LocalDisk extends Disk {
     const path = join(dirname, name);
 
     if (content instanceof Buffer) {
-      await promisify(writeFile)(this.getPath(path), content);
+      await writeFile(this.getPath(path), content);
     } else {
       await promisify(pipeline)(content, createWriteStream(this.getPath(path)));
     }
@@ -46,11 +47,11 @@ export class LocalDisk extends Disk {
     content: C
   ): Promise<{ file: C extends 'buffer' ? Buffer : C extends 'stream' ? Readable : never; size: number; }> {
     try {
-      const { size } = await promisify(stat)(this.getPath(path));
+      const { size } = await stat(this.getPath(path));
 
       if (content === 'buffer') {
         return {
-          file: await promisify(readFile)(this.getPath(path)) as any,
+          file: await readFile(this.getPath(path)) as any,
           size
         };
       }
@@ -76,7 +77,7 @@ export class LocalDisk extends Disk {
 
   async readSize(path: string): Promise<number> {
     try {
-      const { size } = await promisify(stat)(this.getPath(path));
+      const { size } = await stat(this.getPath(path));
       return size;
     } catch (error: any) {
       if (error.code === 'ENOENT') {
@@ -90,7 +91,7 @@ export class LocalDisk extends Disk {
 
   async delete(path: string): Promise<void> {
     try {
-      await promisify(unlink)(this.getPath(path));
+      await unlink(this.getPath(path));
     } catch (error: any) {
       if (error.code === 'ENOENT') {
         throw new FileDoesNotExist(path);

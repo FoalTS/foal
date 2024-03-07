@@ -155,7 +155,7 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
       .expect(302)
       .expect('Location', '/products')
       .then(response => {
-        const cookies: string[] = response.header['set-cookie'];
+        const cookies = response.header['set-cookie'] as unknown as string[];
         strictEqual(cookies.length, 2, 'Expected two cookies in the response.');
 
         sessionToken = readCookie(cookies, 'sessionID').value;

@@ -1,8 +1,8 @@
 // std
 import { deepStrictEqual, ok, strictEqual } from 'assert';
-import { readFileSync, stat } from 'fs';
+import { readFileSync } from 'fs';
+import { stat }from 'node:fs/promises';
 import { join } from 'path';
-import { promisify } from 'util';
 
 // 3p
 import {
@@ -369,7 +369,7 @@ describe('SwaggerController', () => {
         strictEqual(response.stream, true);
 
         const filePath = `./node_modules/swagger-ui-dist/${filename}`;
-        const stats = await promisify(stat)(filePath);
+        const stats = await stat(filePath);
         strictEqual(response.getHeader('Content-Length'), stats.size.toString());
 
         const content = await streamToBuffer(response.body);

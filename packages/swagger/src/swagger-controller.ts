@@ -1,7 +1,7 @@
 // std
-import { createReadStream, readFile, stat } from 'fs';
+import { createReadStream } from 'fs';
+import { readFile, stat } from 'node:fs/promises';
 import { join } from 'path';
-import { promisify } from 'util';
 
 // 3p
 import {
@@ -101,14 +101,14 @@ export abstract class SwaggerController {
       return new HttpResponseMovedPermanently(ctx.request.path + '/');
     }
 
-    const page = await promisify(readFile)(join(__dirname, 'index.html'), 'utf8');
+    const page = await readFile(join(__dirname, 'index.html'), 'utf8');
     return new HttpResponseOK(page)
       .setHeader('Content-Type', 'text/html; charset=utf-8');
   }
 
   @Get('/main.js')
   async main(ctx: Context) {
-    const template = await promisify(readFile)(join(__dirname, 'main.tpl.js'), 'utf8');
+    const template = await readFile(join(__dirname, 'main.tpl.js'), 'utf8');
     let body = '';
 
     if (!Array.isArray(this.options)) {
@@ -156,7 +156,7 @@ export abstract class SwaggerController {
     const filePath = join(getAbsoluteFSPath(), filename);
 
     const stream = createReadStream(filePath);
-    const stats = await promisify(stat)(filePath);
+    const stats = await stat(filePath);
 
     return new HttpResponseOK(stream, { stream: true })
       .setHeader('Content-Type', contentType)

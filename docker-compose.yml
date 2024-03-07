@@ -3,6 +3,8 @@ services:
 
   mysql:
     image: "mysql:5.7.30"
+    # For MacBook with Apple chips, use the following platform instead.
+    # platform: linux/amd64
     ports:
       # Another version of MySQL is installed on the vm and already uses the port 3306.
       - "3308:3306"

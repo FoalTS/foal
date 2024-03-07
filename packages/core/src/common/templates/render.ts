@@ -1,9 +1,8 @@
 // std
-import { readFile } from 'fs';
+import { readFile } from 'node:fs/promises';
 import { join } from 'path';
 
 // FoalTS
-import { promisify } from 'util';
 import { Config, HttpResponseOK } from '../../core';
 
 /**
@@ -38,7 +37,7 @@ export function renderToString(template: string, locals: any): string {
  */
 export async function render(templatePath: string, locals: object = {}, dirname?: string): Promise<HttpResponseOK> {
   const path = dirname ? join(dirname, templatePath) : templatePath;
-  const template = await promisify(readFile)(path, 'utf8');
+  const template = await readFile(path, 'utf8');
 
   const templateEngine = Config.get('settings.templateEngine', 'string');
   if (templateEngine) {

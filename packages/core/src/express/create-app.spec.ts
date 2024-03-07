@@ -25,9 +25,57 @@ import {
   Put,
   ServiceManager
 } from '../core';
-import { createApp, OPENAPI_SERVICE_ID } from './create-app';
+import { createApp, getHttpLogParamsDefault, OPENAPI_SERVICE_ID } from './create-app';
 import { mock } from 'node:test';
 import { Logger } from '../common';
+
+describe('getHttpLogParamsDefault', () => {
+  context('the request has NOT been aborted', () => {
+    it('should return the request and response parameters.', () => {
+      const tokens = {
+        method: () => 'GET',
+        url: () => '/foobar',
+        status: () => '200',
+        res: () => '0',
+        'response-time': () => '0'
+      };
+
+      const actual = getHttpLogParamsDefault(tokens, {}, {});
+      const expected = {
+        method: 'GET',
+        url: '/foobar',
+        statusCode: 200,
+        contentLength: '0',
+        responseTime: 0
+      };
+
+      deepStrictEqual(actual, expected);
+    });
+  });
+
+  context('the request has been aborted', () => {
+    it('should return the request and response parameters.', () => {
+      const tokens = {
+        method: () => 'GET',
+        url: () => '/foobar',
+        status: () => undefined,
+        res: () => undefined,
+        'response-time': () => undefined
+      };
+
+      const actual = getHttpLogParamsDefault(tokens, {}, {});
+      const expected = {
+        method: 'GET',
+        url: '/foobar',
+        statusCode: null,
+        contentLength: null,
+        responseTime: null
+      };
+
+      deepStrictEqual(actual, expected);
+    });
+  });
+})
 
 describe('createApp', () => {
 

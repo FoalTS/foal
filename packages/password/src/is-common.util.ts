@@ -1,5 +1,5 @@
 // std
-import { readFile } from 'fs';
+import { readFile } from 'node:fs/promises';
 import { join } from 'path';
 import { promisify } from 'util';
 import { gunzip, InputType } from 'zlib';
@@ -15,7 +15,7 @@ let list: string[];
  */
 export async function isCommon(password: string): Promise<boolean> {
   if (!list) {
-    const fileContent = await promisify(readFile)(join(__dirname, './10-million-password-list-top-10000.txt.gz'));
+    const fileContent = await readFile(join(__dirname, './10-million-password-list-top-10000.txt.gz'));
     list =  (await promisify<InputType, Buffer>(gunzip)(fileContent)).toString().split('\n');
   }
   return list.includes(password);

@@ -71,4 +71,4 @@ foal run create-todo text="Write tests"
 
 > Notez que si vous essayez de créer une nouvelle tâche sans spécifier l'argument texte, vous obtiendrez l'erreur ci-dessous.
 >
-> `Error: The command line arguments should have required property 'text'.`
+> `Script error: arguments must have required property 'text'.`
