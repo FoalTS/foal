@@ -123,7 +123,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
       })
       .expect(204)
       .then(response => {
-        const cookies: string[] = response.header['set-cookie'];
+        const cookies = response.header['set-cookie'] as unknown as string[];
         strictEqual(cookies.length, 2, 'Expected two cookies in the response.');
 
         authToken = readCookie(cookies, 'auth').value;
