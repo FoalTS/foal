@@ -63,7 +63,7 @@ function getColoredStatusCode(statusCode: number | null): string {
   if (statusCode >= 200) {
     return `\u001b[32m${statusCode}\u001b[39m`;
   }
-  return statusCode.toString();
+  return `${statusCode}`;
 }
 
 function getColoredStatus(status: 'ok'|'error'): string {
