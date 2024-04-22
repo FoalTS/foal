@@ -79,7 +79,7 @@ Two packages are required to use TypeORM with FoalTS:
 npm install pg
 ```
 
-*config/default.{json|yml|js}*
+*config/default.\{json|yml|js\}*
 
 <Tabs
   defaultValue="yaml"
@@ -148,7 +148,7 @@ module.exports = {
 npm install mysql
 ```
 
-*config/default.{json|yml|js}*
+*config/default.\{json|yml|js\}*
 
 <Tabs
   defaultValue="yaml"
@@ -217,7 +217,7 @@ module.exports = {
 npm install mysql
 ```
 
-*config/default.{json|yml|js}*
+*config/default.\{json|yml|js\}*
 
 <Tabs
   defaultValue="yaml"
