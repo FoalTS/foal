@@ -42,7 +42,7 @@
     "socket.io-client": "~4.7.5",
     "sqlite3": "~5.1.7",
     "superagent": "~8.1.2",
-    "supertest": "~6.3.4",
+    "supertest": "~7.0.0",
     "typeorm": "0.3.17",
     "yamljs": "~0.3.0"
   },
