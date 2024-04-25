@@ -4,10 +4,19 @@
         <title>FoalTS Blog</title>
         <link>https://foalts.org/blog</link>
         <description>FoalTS Blog</description>
-        <lastBuildDate>Tue, 16 Apr 2024 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 25 Apr 2024 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[Version 4.4 release notes]]></title>
+            <link>https://foalts.org/blog/2024/04/25/version-4.4-release-notes</link>
+            <guid>/2024/04/25/version-4.4-release-notes</guid>
+            <pubDate>Thu, 25 Apr 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[Banner]]></description>
+            <content:encoded><![CDATA[<p><img loading="lazy" alt="Banner" src="/assets/images/banner-33e9e1af8b06d33e1bedef8fc0c5071c.png" width="914" height="315" class="img_ev3q"></p><p>Version 4.4 of <a href="https://foalts.org/" target="_blank" rel="noopener noreferrer">Foal</a> is out!</p><p>This release updates Foal's sub-dependencies, including the <code>express</code> library, which presents a moderate vulnerability in versions prior to 4.19.2.</p><p>Thanks to <a href="https://github.com/lcnvdl" target="_blank" rel="noopener noreferrer">Lucho</a> for reporting this vulnerability in the first place!</p>]]></content:encoded>
+            <category>release</category>
+        </item>
         <item>
             <title><![CDATA[Version 4.3 release notes]]></title>
             <link>https://foalts.org/blog/2024/04/16/version-4.3-release-notes</link>
