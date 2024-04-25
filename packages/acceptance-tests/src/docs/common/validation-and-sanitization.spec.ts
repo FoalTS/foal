@@ -1,6 +1,6 @@
 
 // 3p
-import { Contains, Length } from '@foal/typestack/node_modules/class-validator';
+import { Contains, Length } from 'class-validator';
 import * as request from 'supertest';
 
 // FoalTS

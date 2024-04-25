@@ -39,13 +39,13 @@ The framework development environment uses [lerna](https://lerna.js.org/) for ma
     ```sh
     npm run start-docker # use `npm run stop-docker` to stop them 
     ```
-3. Install the root dependencies.
+3. Install all dependencies.
     ```
     npm install
     ```
-4. Install the dependencies of each package and build each package.
+4. Build packages.
     ```
-    npm run bootstrap
+    npx lerna run build
     ```
 5. Check code format.
     ```

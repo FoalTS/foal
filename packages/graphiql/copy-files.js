@@ -26,7 +26,7 @@ const paths = [
 
 // Copy the static files to lib/static or src/static
 for (const path of paths) {
-  fs.copyFile(join(__dirname, 'node_modules', path), join(staticDirPath, basename(path)), err => {
+  fs.copyFile(join(__dirname, '../../node_modules', path), join(staticDirPath, basename(path)), err => {
     if (err) {
       console.log(err);
       process.exit(1);

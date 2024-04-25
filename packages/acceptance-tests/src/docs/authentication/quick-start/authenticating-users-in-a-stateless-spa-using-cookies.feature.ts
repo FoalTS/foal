@@ -152,7 +152,7 @@ describe('Feature: Authenticating users in a stateless SPA using cookies', () =>
   function setCookieInBrowser(response: request.Response): void {
     try {
       // There may not be a cookie in the response.
-      token = readCookie(response.get('Set-Cookie'), cookieName).value;
+      token = readCookie(response.get('Set-Cookie') || [], cookieName).value;
     } catch {}
   }
 
