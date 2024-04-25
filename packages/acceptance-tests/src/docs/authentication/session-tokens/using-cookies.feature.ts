@@ -91,7 +91,7 @@ describe('Feature: Using cookies', () => {
       .get('/api/products')
       .expect(200);
 
-    const token = readCookie(response.get('Set-Cookie'), cookieName).value;
+    const token = readCookie(response.get('Set-Cookie') || [], cookieName).value;
 
     notStrictEqual(session, null);
     strictEqual((session as unknown as Session).getToken(), token);
@@ -102,7 +102,7 @@ describe('Feature: Using cookies', () => {
       .send({})
       .expect(200);
 
-    const token2 = readCookie(response2.get('Set-Cookie'), cookieName).value;
+    const token2 = readCookie(response2.get('Set-Cookie') || [], cookieName).value;
     strictEqual(token2, token);
 
   });
@@ -143,7 +143,7 @@ describe('Feature: Using cookies', () => {
       .get('/api/products')
       .expect(200);
 
-    const token = readCookie(response.get('Set-Cookie'), cookieName).value;
+    const token = readCookie(response.get('Set-Cookie') || [], cookieName).value;
 
     await request(app)
       .get('/api/products')
