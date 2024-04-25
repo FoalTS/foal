@@ -1,6 +1,6 @@
 {
   "name": "@foal/typestack",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "FoalTS for validation and serialization using TypeStack classes",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -48,7 +48,7 @@
     "class-validator": "~0.14.0"
   },
   "dependencies": {
-    "@foal/core": "^4.3.0"
+    "@foal/core": "^4.4.0"
   },
   "devDependencies": {
     "@types/mocha": "10.0.6",
@@ -57,7 +57,7 @@
     "class-transformer": "~0.5.1",
     "class-validator": "~0.14.0",
     "copy": "~0.3.2",
-    "mocha": "~10.3.0",
+    "mocha": "~10.4.0",
     "rimraf": "~5.0.5",
     "ts-node": "~10.9.2",
     "typescript": "~4.9.5"

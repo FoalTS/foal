@@ -1,6 +1,6 @@
 {
   "name": "@foal/storage",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Storage components for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -44,19 +44,19 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^4.3.0",
+    "@foal/core": "^4.4.0",
     "busboy": "~1.6.0",
     "mime": "~3.0.0"
   },
   "devDependencies": {
-    "@foal/internal-test": "^4.3.0",
+    "@foal/internal-test": "^4.4.0",
     "@types/mocha": "10.0.6",
     "@types/node": "18.18.6",
     "@types/supertest": "6.0.2",
     "copy": "~0.3.2",
-    "mocha": "~10.3.0",
+    "mocha": "~10.4.0",
     "rimraf": "~5.0.5",
-    "supertest": "~6.3.4",
+    "supertest": "~7.0.0",
     "ts-node": "~10.9.2",
     "typescript": "~4.9.5"
   }

@@ -1,6 +1,6 @@
 {
   "name": "@foal/swagger",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "description": "Swagger UI for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -43,14 +43,14 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^4.3.0",
-    "swagger-ui-dist": "~5.11.10"
+    "@foal/core": "^4.4.0",
+    "swagger-ui-dist": "~5.17.0"
   },
   "devDependencies": {
     "@types/mocha": "10.0.6",
     "@types/node": "18.18.6",
     "copy": "~0.3.2",
-    "mocha": "~10.3.0",
+    "mocha": "~10.4.0",
     "rimraf": "~5.0.5",
     "ts-node": "~10.9.2",
     "typescript": "~4.9.5"

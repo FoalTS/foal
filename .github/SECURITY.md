@@ -2,13 +2,6 @@
 
 ## Supported Versions
 
-| Version      | Supported          |
-| ------------ | ------------------ |
-| 3.x          | :white_check_mark: |
-| 2.x          | maintenance        |
-| 1.x          | :x:                |
-| 0.8          | :x:                |
-
 See our [LTS policy](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#long-term-support-policy-and-schedule).
 
 ## Reporting a Vulnerability
