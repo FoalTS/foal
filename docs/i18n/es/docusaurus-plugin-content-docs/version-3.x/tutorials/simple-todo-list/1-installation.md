@@ -28,7 +28,7 @@ foal createapp my-app
 
 ¿Tiene problemas para instalar Foal? 👉 Revise nuestra [página de solución de problemas](./installation-troubleshooting).
 
-:::note
+:::
 
 Este comando genera un nuevo directorio con la estructura básica de la nueva aplicación. También instala todas las dependencias. Veamos lo que ha creado `createapp`:
 
