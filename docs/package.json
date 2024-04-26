@@ -13,9 +13,9 @@
     "write-translations": "docusaurus write-translations"
   },
   "dependencies": {
-    "@docusaurus/core": "~3.2.1",
-    "@docusaurus/plugin-google-analytics": "~3.2.1",
-    "@docusaurus/preset-classic": "~3.2.1",
+    "@docusaurus/core": "~3.1.1",
+    "@docusaurus/plugin-google-analytics": "~3.1.1",
+    "@docusaurus/preset-classic": "~3.1.1",
     "@mdx-js/react": "~3.0.1",
     "autoprefixer": "~10.4.8",
     "docusaurus-plugin-sass": "0.2.5",
