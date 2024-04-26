@@ -14,7 +14,6 @@ describe('isCommon util', () => {
         strictEqual(await isCommon('a bird in the sky'), false);
       });
     });
-  
     describe('10k datasource', () => {
       it('should return true if the given password is part of the 100000 most common passwords.', async () => {
         strictEqual(await isCommon('12345', 'TenMillionListTop10k'), true);
@@ -23,7 +22,6 @@ describe('isCommon util', () => {
         strictEqual(await isCommon('a bird in the sky', 'TenMillionListTop10k'), false);
       });
     });
-  
     describe('100k datasource', () => {
       it('should return true if the given password is part of the 100000 most common passwords.', async () => {
         strictEqual(await isCommon('Cinder', 'TenMillionListTop100k'), true);
