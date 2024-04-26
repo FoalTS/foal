@@ -17,7 +17,7 @@ import { dirname, join, parse } from 'path';
 import { cyan, green } from 'colors/safe';
 
 // npm
-import { PackageVersionPrefix } from './generators/upgrade/package-version-prefix';
+import { INpmPackage, IPrefixSettings, NodeDependencies } from './utils/node-dependencies';
 
 function rmDirAndFiles(path: string) {
   const files = readdirSync(path);
@@ -95,7 +95,7 @@ export class FileSystem {
    */
   cdProjectRootDir(): this {
     // "/" on Unix, C:\ on Windows
-    const root =  parse(process.cwd()).root;
+    const root = parse(process.cwd()).root;
 
     while (!this.exists('package.json')) {
       if (join(process.cwd(), this.parse('.')) === root) {
@@ -479,13 +479,13 @@ export class FileSystem {
    *
    * @returns {this}
    */
-  setOrUpdateProjectDependency(name: string, version: string, prefix: PackageVersionPrefix): this {
+  setOrUpdateProjectDependency(name: string, version: string, prefixSettings: IPrefixSettings): this {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8')) as INpmPackage;
 
-    pkg.dependencies[name] = `${prefix}${version}`;
+    pkg.dependencies = this.setOrUpdate(pkg.dependencies, name, version, prefixSettings);
 
     writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
 
@@ -498,9 +498,9 @@ export class FileSystem {
    *
    * @returns {this}
    */
-  setOrUpdateProjectDependencyOnlyIf(condition: boolean, name: string, version: string, prefix: PackageVersionPrefix): this {
+  setOrUpdateProjectDependencyOnlyIf(condition: boolean, name: string, version: string, prefixSettings: IPrefixSettings): this {
     if (condition) {
-      this.setOrUpdateProjectDependency(name, version, prefix);
+      this.setOrUpdateProjectDependency(name, version, prefixSettings);
     }
     return this;
   }
@@ -526,13 +526,13 @@ export class FileSystem {
    *
    * @returns {this}
    */
-  setOrUpdateProjectDevDependency(name: string, version: string, prefix: PackageVersionPrefix): this {
+  setOrUpdateProjectDevDependency(name: string, version: string, prefixSettings: IPrefixSettings): this {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8')) as INpmPackage;
 
-    pkg.devDependencies[name] = `${prefix}${version}`;
+    pkg.devDependencies = this.setOrUpdate(pkg.devDependencies, name, version, prefixSettings);
 
     writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
 
@@ -550,7 +550,7 @@ export class FileSystem {
    * @memberof FileSystem
    */
   setUp(): void {
-    const [ firstDir ] = this.testDir.split('/');
+    const [firstDir] = this.testDir.split('/');
     mkdirSync(firstDir);
     mkdirSync(this.testDir);
     this.currentDir = '';
@@ -562,7 +562,7 @@ export class FileSystem {
    * @memberof FileSystem
    */
   tearDown(): void {
-    const [ firstDir ] = this.testDir.split('/');
+    const [firstDir] = this.testDir.split('/');
     rmDirAndFiles(firstDir);
 
     this.currentDir = '';
@@ -668,6 +668,17 @@ export class FileSystem {
 
   private isTestingEnvironment(): boolean {
     return process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST === 'true';
+  }
+
+  private setOrUpdate(dependencies: Record<string, string>, name: string, version: string, prefixSettings: IPrefixSettings): Record<string, string> {
+    const dependenciesManager = new NodeDependencies(dependencies);
+
+    const defaultPrefix = prefixSettings.prefix;
+    const keepExistingPrefix = (prefixSettings.keepExistingPrefix === undefined || prefixSettings.keepExistingPrefix === true);
+
+    dependenciesManager.setOrUpdate(name, version, defaultPrefix, keepExistingPrefix);
+
+    return dependenciesManager.getDependencies();
   }
 
   private parse(path: string) {

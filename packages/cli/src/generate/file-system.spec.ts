@@ -952,11 +952,11 @@ describe('FileSystem', () => {
     });
 
     it('should return itself.', () => {
-      strictEqual(fs.setOrUpdateProjectDependency('foo', '1.0.0'), fs);
+      strictEqual(fs.setOrUpdateProjectDependency('foo', '1.0.0', { prefix: '' }), fs);
     });
 
     it('should add the dependency if it does not exist.', () => {
-      fs.setOrUpdateProjectDependency('foo', '1.0.0');
+      fs.setOrUpdateProjectDependency('foo', '1.0.0', { prefix: '~' });
 
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
@@ -964,18 +964,18 @@ describe('FileSystem', () => {
       deepStrictEqual(pkg.dependencies, {
         '@foal/core': '~1.0.1',
         'bar': '~2.2.0',
-        'foo': '1.0.0'
+        'foo': '~1.0.0'
       });
     });
 
     it('should update the dependency if it already exists.', () => {
-      fs.setOrUpdateProjectDependency('@foal/core', '2.0.0');
+      fs.setOrUpdateProjectDependency('@foal/core', '2.0.0', { prefix: '^', keepExistingPrefix: true });
 
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
 
       deepStrictEqual(pkg.dependencies, {
-        '@foal/core': '2.0.0',
+        '@foal/core': '~2.0.0',
         'bar': '~2.2.0'
       });
 
@@ -1006,12 +1006,12 @@ describe('FileSystem', () => {
     });
 
     it('should return itself.', () => {
-      strictEqual(fs.setOrUpdateProjectDependency('foo', '1.0.0'), fs);
+      strictEqual(fs.setOrUpdateProjectDependency('foo', '1.0.0', { prefix: '' }), fs);
     });
 
     context('given the condition is true', () => {
       it('should add the dependency if it does not exist.', () => {
-        fs.setOrUpdateProjectDependencyOnlyIf(true, 'foo', '1.0.0');
+        fs.setOrUpdateProjectDependencyOnlyIf(true, 'foo', '1.0.0', { prefix: '' });
 
         const fileContent = readFileSync('package.json', 'utf8');
         const pkg = JSON.parse(fileContent);
@@ -1026,7 +1026,7 @@ describe('FileSystem', () => {
 
     context('given the condition is false', () => {
       it('should not add the dependency if it does not exist.', () => {
-        fs.setOrUpdateProjectDependencyOnlyIf(false, 'foo', '1.0.0');
+        fs.setOrUpdateProjectDependencyOnlyIf(false, 'foo', '1.0.0', { prefix: '' });
 
         const fileContent = readFileSync('package.json', 'utf8');
         const pkg = JSON.parse(fileContent);
@@ -1108,11 +1108,11 @@ describe('FileSystem', () => {
     });
 
     it('should return itself.', () => {
-      strictEqual(fs.setOrUpdateProjectDevDependency('foo', '1.0.0'), fs);
+      strictEqual(fs.setOrUpdateProjectDevDependency('foo', '1.0.0', { prefix: '' }), fs);
     });
 
     it('should add the dependency if it does not exist.', () => {
-      fs.setOrUpdateProjectDevDependency('foo', '1.0.0');
+      fs.setOrUpdateProjectDevDependency('foo', '1.0.0', { prefix: '' });
 
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
@@ -1125,13 +1125,13 @@ describe('FileSystem', () => {
     });
 
     it('should update the dependency if it already exists.', () => {
-      fs.setOrUpdateProjectDevDependency('@foal/cli', '2.0.0');
+      fs.setOrUpdateProjectDevDependency('@foal/cli', '2.0.0', { prefix: '', keepExistingPrefix: true });
 
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
 
       deepStrictEqual(pkg.devDependencies, {
-        '@foal/cli': '2.0.0',
+        '@foal/cli': '~2.0.0',
         'bar': '~2.2.0'
       });
 
