@@ -37,7 +37,7 @@ describe('NodeDependencies', () => {
     manager = new NodeDependencies(npmPackage.dependencies);
     manager.setOrUpdate('lat', '5.0.0', '^', true);
 
-    const result = manager.getDependencies()['lat'];
+    const result = manager.getDependencies().lat;
     const expected = '^5.0.0';
 
     strictEqual(expected, result);
