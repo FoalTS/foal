@@ -16,6 +16,9 @@ import { dirname, join, parse } from 'path';
 // 3p
 import { cyan, green } from 'colors/safe';
 
+// npm
+import { PackageVersionPrefix } from './generators/upgrade/package-version-prefix';
+
 function rmDirAndFiles(path: string) {
   const files = readdirSync(path);
   for (const file of files) {
@@ -476,13 +479,13 @@ export class FileSystem {
    *
    * @returns {this}
    */
-  setOrUpdateProjectDependency(name: string, version: string): this {
+  setOrUpdateProjectDependency(name: string, version: string, prefix: PackageVersionPrefix): this {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
     const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
 
-    pkg.dependencies[name] = version;
+    pkg.dependencies[name] = `${prefix}${version}`;
 
     writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
 
@@ -495,9 +498,9 @@ export class FileSystem {
    *
    * @returns {this}
    */
-  setOrUpdateProjectDependencyOnlyIf(condition: boolean, name: string, version: string): this {
+  setOrUpdateProjectDependencyOnlyIf(condition: boolean, name: string, version: string, prefix: PackageVersionPrefix): this {
     if (condition) {
-      this.setOrUpdateProjectDependency(name, version);
+      this.setOrUpdateProjectDependency(name, version, prefix);
     }
     return this;
   }
@@ -523,13 +526,13 @@ export class FileSystem {
    *
    * @returns {this}
    */
-  setOrUpdateProjectDevDependency(name: string, version: string): this {
+  setOrUpdateProjectDevDependency(name: string, version: string, prefix: PackageVersionPrefix): this {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
     const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
 
-    pkg.devDependencies[name] = version;
+    pkg.devDependencies[name] = `${prefix}${version}`;
 
     writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
 
