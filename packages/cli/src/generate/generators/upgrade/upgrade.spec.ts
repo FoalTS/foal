@@ -19,8 +19,8 @@ describe('upgrade', () => {
 
       const actualDependencies = fs.getProjectDependencies();
       const expectedDependencies = [
-        { name: '@foal/core', version: '3.0.0' },
-        { name: '@foal/foobar', version: '3.0.0' },
+        { name: '@foal/core', version: '^3.0.0' },
+        { name: '@foal/foobar', version: '^3.0.0' },
         { name: 'another-dependency', version: '^1.0.0' }
       ];
       deepStrictEqual(actualDependencies, expectedDependencies);
@@ -34,7 +34,7 @@ describe('upgrade', () => {
 
         const actualDevDependencies = fs.getProjectDevDependencies();
         const expectedDevDependencies = [
-          { name: '@foal/cli', version: '3.0.0' },
+          { name: '@foal/cli', version: '^3.0.0' },
           { name: 'another-dependency2', version: '^2.0.0' }
         ];
         deepStrictEqual(actualDevDependencies, expectedDevDependencies);
@@ -50,8 +50,8 @@ describe('upgrade', () => {
 
       const actualDependencies = fs.getProjectDependencies();
       const expectedDependencies = [
-        { name: '@foal/core', version: '3.0.0' },
-        { name: '@foal/foobar', version: '3.0.0' },
+        { name: '@foal/core', version: '^3.0.0' },
+        { name: '@foal/foobar', version: '^3.0.0' },
         { name: 'another-dependency', version: '^1.0.0' }
       ];
       deepStrictEqual(actualDependencies, expectedDependencies);
@@ -65,7 +65,7 @@ describe('upgrade', () => {
 
         const actualDevDependencies = fs.getProjectDevDependencies();
         const expectedDevDependencies = [
-          { name: '@foal/cli', version: '3.0.0' },
+          { name: '@foal/cli', version: '^3.0.0' },
           { name: 'another-dependency2', version: '^2.0.0' }
         ];
         deepStrictEqual(actualDevDependencies, expectedDevDependencies);
