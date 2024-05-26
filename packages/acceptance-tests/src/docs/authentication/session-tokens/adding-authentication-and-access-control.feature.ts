@@ -346,7 +346,7 @@ describe('Feature: Adding authentication and access control', () => {
       .set('Cookie', writeCookie('sessionID', session.getToken()))
       .expect(401)
       .then(response => {
-        const { value } = readCookie(response.get('Set-Cookie'), 'user');
+        const { value } = readCookie(response.get('Set-Cookie') || [], 'user');
         strictEqual(value, 'null');
       });
 
@@ -358,7 +358,7 @@ describe('Feature: Adding authentication and access control', () => {
         { id: product2.id }
       ])
       .then(response => {
-        const { value } = readCookie(response.get('Set-Cookie'), 'user');
+        const { value } = readCookie(response.get('Set-Cookie') || [], 'user');
         strictEqual(
           value,
           encodeURIComponent(JSON.stringify({

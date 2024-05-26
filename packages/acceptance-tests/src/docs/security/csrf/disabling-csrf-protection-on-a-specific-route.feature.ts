@@ -71,7 +71,7 @@ describe('Feature: Disabling CSRF protection on a specific route.', () => {
     await request(app)
       .get('/')
       .then(response => {
-        const { value } = readCookie(response.get('Set-Cookie'), 'sessionID');
+        const { value } = readCookie(response.get('Set-Cookie') || [], 'sessionID');
         token = value;
       });
 

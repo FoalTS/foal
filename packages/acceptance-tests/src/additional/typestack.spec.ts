@@ -5,7 +5,7 @@ import { BaseEntity, Column, Entity, DataSource, PrimaryGeneratedColumn } from '
 // FoalTS
 import { Context, createApp, HttpResponseCreated, Post } from '@foal/core';
 import { ValidateBody } from '@foal/typestack';
-import { IsNumber, IsString } from '@foal/typestack/node_modules/class-validator';
+import { IsNumber, IsString } from 'class-validator';
 import { createAndInitializeDataSource } from '../common';
 
 describe('ValidateBody hook', () => {

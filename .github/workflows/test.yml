@@ -31,10 +31,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Use npm version 9.6
       run: npm install -g npm@9.6
-    - name: Install project dependencies
+    - name: Install project and package dependencies
       run: npm install
-    - name: Install package dependencies and build packages
-      run: npm run bootstrap
+    - name: Build packages
+      run: npx lerna run build
     - name: Create CLI symlink in the global folder
       run: npm link
       working-directory: packages/cli

@@ -58,12 +58,12 @@ describe('Feature: Overriding the cookie options', async () => {
       .get('/')
       .expect(200);
 
-    strictEqual(response.get('Set-Cookie')[0].startsWith('xxx='), true);
-    strictEqual(response.get('Set-Cookie')[0].includes('Domain=example.com'), true);
-    strictEqual(response.get('Set-Cookie')[0].includes('httpOnly'), false);
-    strictEqual(response.get('Set-Cookie')[0].includes('Path=/foo'), true);
-    strictEqual(response.get('Set-Cookie')[0].includes('SameSite=Lax'), true);
-    strictEqual(response.get('Set-Cookie')[0].includes('Secure;'), true);
+    strictEqual(response.get('Set-Cookie')?.[0].startsWith('xxx='), true);
+    strictEqual(response.get('Set-Cookie')?.[0].includes('Domain=example.com'), true);
+    strictEqual(response.get('Set-Cookie')?.[0].includes('httpOnly'), false);
+    strictEqual(response.get('Set-Cookie')?.[0].includes('Path=/foo'), true);
+    strictEqual(response.get('Set-Cookie')?.[0].includes('SameSite=Lax'), true);
+    strictEqual(response.get('Set-Cookie')?.[0].includes('Secure;'), true);
   });
 
 });
