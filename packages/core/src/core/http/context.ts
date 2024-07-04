@@ -27,14 +27,14 @@ interface IncomingMessage extends Readable {
 }
 
 /**
- * Express Request interface.
+ * Express Request interface with customizable params/body types.
  *
  * @interface Request
  */
-interface Request extends IncomingMessage {
+export interface Request<body = any, params = any> extends IncomingMessage {
   app: any;
   baseUrl: string;
-  body: any;
+  body: body;
   cookies: any;
   fresh: boolean;
   // This line is present in @types/express but not in Express official documentation.
@@ -44,7 +44,7 @@ interface Request extends IncomingMessage {
   ips: string[];
   method: string;
   originalUrl: string;
-  params: any;
+  params: params;
   path: string;
   // The type is a string in @types/express.
   procotol: 'http'|'https';
@@ -114,8 +114,8 @@ interface Request extends IncomingMessage {
  * @class Context
  * @template User
  */
-export class Context<User = { [key: string]: any } | null, ContextState = { [key: string]: any }> {
-  readonly request: Request;
+export class Context<User = { [key: string]: any } | null, ContextState = { [key: string]: any }, CustomRequest extends Request = Request> {
+  readonly request: CustomRequest;
   session: Session | null;
 
   user: User;
