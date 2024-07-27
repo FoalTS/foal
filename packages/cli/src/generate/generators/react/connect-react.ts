@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join, relative } from 'path';
 
 import { red } from 'colors/safe';
 import { FileSystem } from '../../file-system';
@@ -20,11 +20,17 @@ export function connectReact(path: string) {
     return;
   }
 
+  const outputPath = join(relative(path, process.cwd()), 'public')
+    // Make projects generated on Windows build on Unix.
+    .replace(/\\/g, '/');
+
   fs
     .cd(path)
     .modify('package.json', content => {
       const pkg = JSON.parse(content);
       pkg.proxy = 'http://localhost:3001';
       return JSON.stringify(pkg, null, 2);
-    });
+    })
+    .copy('react/env.development', '.env.development')
+    .render('react/env', '.env', { path: outputPath });
 }
