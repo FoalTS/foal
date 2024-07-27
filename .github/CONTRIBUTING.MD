@@ -146,7 +146,7 @@ All of major releases are supported for at least 18 months.
 
 ### `@foal/cli` Package Structure
 
-The directory `src/generate/` contains the source code of the commands `foal createapp` and `foal generate`.
+The directory `src/generate/` contains the source code of the commands `npx @foal/cli createapp` and `npx foal generate`.
 
 Here is the list of its sub-directories:
 

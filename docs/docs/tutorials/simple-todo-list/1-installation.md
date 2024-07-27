@@ -21,7 +21,7 @@ npm install -g @foal/cli
 Then create a new application.
 
 ```sh
-foal createapp my-app
+npx @foal/cli createapp my-app
 ```
 
 :::note

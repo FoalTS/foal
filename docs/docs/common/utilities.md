@@ -21,7 +21,7 @@ const token = await generateToken();
 You can also generate a token using a secret. The secret is used to *sign* the token to provide extra security. It must be encoded in base64. You can generate one with the following command:
 
 ```
-foal createsecret
+npx foal createsecret
 ```
 
 **Generate a signed token**

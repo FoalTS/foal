@@ -38,7 +38,7 @@ Then create the directory `assets/images/profiles/uploaded` where the profile im
 You are ready to create the controller. Generate a new one.
 
 ```bash
-foal generate controller api/profile --register
+npx foal generate controller api/profile --register
 ```
 
 Open the new file `profile.controller.ts` and add two new routes.

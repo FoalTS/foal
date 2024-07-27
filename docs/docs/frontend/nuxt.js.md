@@ -11,7 +11,7 @@ This document explains how to use it in conjunction with FoalTS.
 Create your frontend and backend projects in two different folders.
 
 ```
-foal createapp backend
+npx @foal/cli createapp backend
 npx create-nuxt-app frontend
 ```
 

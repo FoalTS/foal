@@ -21,7 +21,7 @@ describe('[Shell scripts] create-perm', () => {
   });
 
   it('should work as expected.', async () => {
-    // foal run create-group name="Administrators" codeName="admin" permissions='[ "delete-users" ]'
+    // npx foal run create-group name="Administrators" codeName="admin" permissions='[ "delete-users" ]'
     const args = {
       codeName: 'admin',
       name: 'Administrators',
