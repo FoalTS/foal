@@ -14,6 +14,7 @@ try {
 } finally {}
 
 export {
+  AsyncService,
   File,
   FileList,
   Log,
