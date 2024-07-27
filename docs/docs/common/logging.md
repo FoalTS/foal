@@ -85,7 +85,7 @@ By default, only the `info`, `warn` and `error` messages are logged in the conso
 {
   "settings": {
     "logger": {
-      "logLevel": "DEBUG"
+      "logLevel": "debug"
     }
   }
 }
@@ -93,10 +93,10 @@ By default, only the `info`, `warn` and `error` messages are logged in the conso
 
 | Value of `settings.logger.logLevel` | Levels of logs displayed |
 | --- | --- |
-| `DEBUG` | error, warn, info, debug |
-| `INFO` | error, warn, info |
-| `WARN` | error, warn |
-| `ERROR` | error |
+| `debug` | error, warn, info, debug |
+| `info` | error, warn, info |
+| `warn` | error, warn |
+| `error` | error |
 
 ## Log Ouput Formats
 

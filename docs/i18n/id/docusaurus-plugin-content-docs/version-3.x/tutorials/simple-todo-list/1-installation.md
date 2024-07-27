@@ -28,7 +28,7 @@ foal createapp my-app
 
 Ada kesulitan saat instalasi Foal? 👉 Silakan cek [halaman troubleshooting](./installation-troubleshooting).
 
-:::note
+:::
 
 Perintah `createapp` ini akan menghasilkan sebuah folder baru yang terstruktur. Sekaligus juga akan menginstal semua file dependency yang dibutuhkan. Mari kita lihat hasilnya:
 
