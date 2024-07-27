@@ -114,8 +114,9 @@ export interface ObjectType {
  * @class AbstractProvider
  * @template AuthParameters - Additional parameters to pass to the auth endpoint.
  * @template UserInfoParameters - Additional parameters to pass when retrieving user information.
+ * @template IUserInfo - Type of the user information.
  */
-export abstract class AbstractProvider<AuthParameters extends ObjectType, UserInfoParameters extends ObjectType> {
+export abstract class AbstractProvider<AuthParameters extends ObjectType, UserInfoParameters extends ObjectType, IUserInfo = any> {
 
   /**
    * Configuration paths from which the client ID, client secret and redirect URI must be retrieved.
@@ -379,7 +380,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @returns {Promise<UserInfoAndTokens<UserInfo>>} The access token and the user information
    * @memberof AbstractProvider
    */
-  async getUserInfo<UserInfo>(ctx: Context, params?: UserInfoParameters): Promise<UserInfoAndTokens<UserInfo>> {
+  async getUserInfo<UserInfo extends IUserInfo>(ctx: Context, params?: UserInfoParameters): Promise<UserInfoAndTokens<UserInfo>> {
     const tokens = await this.getTokens(ctx);
     const userInfo = await this.getUserInfoFromTokens(tokens, params);
     return { userInfo, tokens };
