@@ -22,16 +22,16 @@
   },
   "dependencies": {
     "@foal/core": "^4.0.0",
-    "mongodb": "~5.8.1",
+    "mongodb": "~5.9.2",
     "source-map-support": "~0.5.21",
     "typeorm": "0.3.17"
   },
   "devDependencies": {
     "@foal/cli": "^4.0.0",
-    "@types/mocha": "10.0.6",
+    "@types/mocha": "10.0.7",
     "@types/node": "18.18.6",
     "concurrently": "~8.2.2",
-    "mocha": "~10.4.0",
+    "mocha": "~10.7.0",
     "supertest": "~7.0.0",
     "supervisor": "~0.12.0",
     "eslint": "~8.48.0",
