@@ -1,5 +1,5 @@
 // 3p
-import { Config, createApp, displayServerURL } from '@foal/core';
+import { Config, createApp, Logger, ServiceManager } from '@foal/core';
 import * as express from 'express';
 import * as rateLimit from 'express-rate-limit';
 
@@ -28,9 +28,12 @@ it('[Docs] Cookbook > Limit Repeated Requests', () => {
       }
     }));
 
+    const serviceManager = new ServiceManager();
+    const logger = serviceManager.get(Logger);
+
     const app = await createApp(AppController, { expressInstance: expressApp });
 
     const port = Config.get('port', 'number', 3001);
-    app.listen(port, () => displayServerURL(port));
+    app.listen(port, () => logger.info(`Listening on port ${port}...`));
   }
 });
