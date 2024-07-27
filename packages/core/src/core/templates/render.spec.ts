@@ -4,7 +4,8 @@ import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs'
 import { join } from 'path';
 
 // FoalTS
-import { Config, HttpResponseOK } from '../../core';
+import { HttpResponseOK } from '../http';
+import { Config } from '../config';
 import { render, renderToString } from './render';
 
 const ejsTemplate = 'Hello <%= name %>! How are you?';

@@ -3,7 +3,8 @@ import { readFile } from 'node:fs/promises';
 import { basename, join } from 'path';
 
 // FoalTS
-import { Config, Context, HttpResponseInternalServerError } from '../../core';
+import { Context, HttpResponseInternalServerError } from '../http';
+import { Config } from '../config';
 import { renderToString } from './render';
 
 /**
