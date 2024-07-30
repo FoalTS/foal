@@ -54,7 +54,7 @@ function CompanyLogos() {
           Sponsored by
         </p>
         <div className="tw-flex tw-justify-center tw-flex-wrap">
-          {/* <CompanyLogo imageSrc={useBaseUrl('img/trusted-by/company.svg')} companyName="company" href="company" /> */}
+          <CompanyLogo imageSrc={useBaseUrl('img/trusted-by/linito.png')} companyName="Linito" href="https://linito.io" />
           <PlusLogo />
         </div>
       </div>
