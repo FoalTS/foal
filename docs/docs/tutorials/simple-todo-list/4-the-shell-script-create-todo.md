@@ -11,7 +11,7 @@ You could run the command line interface of your database (in that case *SQLite*
 That's why you are going to create and use a *shell script* instead.
 
 ```sh
-foal generate script create-todo
+npx foal generate script create-todo
 ```
 
 A *shell script* is a piece of code intended to be called from the command line. It has access to all the components of your application, including your models. A shell script is divided in two parts:
@@ -64,9 +64,9 @@ npm run build
 Then run the script to create tasks in the database.
 
 ```sh
-foal run create-todo text="Read the docs"
-foal run create-todo text="Create my first application"
-foal run create-todo text="Write tests"
+npx foal run create-todo text="Read the docs"
+npx foal run create-todo text="Create my first application"
+npx foal run create-todo text="Write tests"
 ```
 
 > Note that if you try to create a new to-do without specifying the text argument, you'll get the error below.

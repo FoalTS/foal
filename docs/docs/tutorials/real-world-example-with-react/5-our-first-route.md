@@ -13,7 +13,7 @@ The database is now filled with some stories. Let's implement the first route to
 First, generate the story controller.
 
 ```bash
-foal generate controller api/stories --register
+npx foal generate controller api/stories --register
 ```
 
 A new file appears in the `api` subdirectory. Open it and replace its contents.

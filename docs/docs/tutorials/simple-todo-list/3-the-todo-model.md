@@ -9,7 +9,7 @@ The next step is to take care of the database. By default, every new project in 
 Let&#8217;s start by creating your first model. The CLI provides a useful command to generate a new file with an empty model.
 
 ```sh
-foal generate entity todo
+npx foal generate entity todo
 ```
 
 :::info

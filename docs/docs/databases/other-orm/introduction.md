@@ -31,4 +31,4 @@ To do so, you will have to remove TypeORM and all its utilities.
 
 When using another ORM than TypeORM some features are not available:
 - the *Groups & Permissions* system,
-- and the `foal g rest-api` command.
+- and the `npx foal g rest-api` command.
