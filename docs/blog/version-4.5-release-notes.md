@@ -14,6 +14,12 @@ Version 4.5 of [Foal](https://foalts.org/) is out!
 
 <!--truncate-->
 
+## Logging improvements
+
+In previous versions, the util function `displayServerURL` and configuration errors printed logs on several lines, which was not appropriate for logging software.
+
+From version 4.5 onwards, configuration errors are displayed on a single line and the `displayServerURL` function is marked as deprecated.
+
 ## CLI fixes
 
 When running `npx foal connect react` to connect the React application to the Foal application in development, the following features did not work:
