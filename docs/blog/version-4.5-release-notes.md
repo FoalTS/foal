@@ -14,6 +14,14 @@ Version 4.5 of [Foal](https://foalts.org/) is out!
 
 <!--truncate-->
 
+## CLI fixes
+
+When running `npx foal connect react` to connect the React application to the Foal application in development, the following features did not work:
+- Proxify requests from the client to the server without needing to enable CORS or specify a different port in development.
+- Build the client application in the server application's public directory.
+
+This is fixed in v4.5.
+
 ## Global use of CLI deprecated
 
 In previous versions, the tutorial suggested installing the CLI globally to create a new application or generate files. However, it is considered bad practice to install a dependency globally for local use.
