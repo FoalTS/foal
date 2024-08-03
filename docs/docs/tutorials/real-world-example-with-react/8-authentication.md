@@ -47,7 +47,7 @@ When used with the `cookie` option, this hook ensures that `ctx.session` is alwa
 Create a new controller.
 
 ```bash
-foal generate controller api/auth --register
+npx foal generate controller api/auth --register
 ```
 
 Open the new created file and add two routes.

@@ -153,11 +153,11 @@ npm install cpx2  --save-dev
 ```json
 {
   "scripts": {
-    "build": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
+    "build": "npx foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.app.json",
     "dev": "npm run build && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.app.json -w\" \"supervisor -w ./build,./config -e js,json,yml,graphql --no-restart-on error ./build/index.js\"",
-    "build:test": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.test.json",
+    "build:test": "npx foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.test.json",
     "test": "npm run build:test && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.test.json -w\" \"mocha --file ./build/test.js -w --watch-files build \\\"./build/**/*.spec.js\\\"\"",
-    "build:e2e": "foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.e2e.json",
+    "build:e2e": "npx foal rmdir build && cpx \"src/**/*.graphql\" build && tsc -p tsconfig.e2e.json",
     "e2e": "npm run build:e2e && concurrently \"cpx \\\"src/**/*.graphql\\\" build -w\" \"tsc -p tsconfig.e2e.json -w\" \"mocha --file ./build/e2e.js -w --watch-files build \\\"./build/e2e/**/*.js\\\"\"",
     ...
   }

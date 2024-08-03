@@ -41,7 +41,7 @@ async function main() {
 
 Create a new script with this command:
 ```
-foal generate script create-perm
+npx foal generate script create-perm
 ```
 
 Replace the content of the new created file `src/scripts/create-perm.ts` with the following:
@@ -84,7 +84,7 @@ export async function main(args: { codeName: string, name: string }) {
 Then you can create a permission through the command line.
 ```sh
 npm run build
-foal run create-perm name="Permission to access the secret" codeName="access-secret"
+npx foal run create-perm name="Permission to access the secret" codeName="access-secret"
 ```
 
 ## Groups
@@ -125,7 +125,7 @@ async function main() {
 
 Create a new script with this command:
 ```
-foal generate script create-group
+npx foal generate script create-group
 ```
 
 Replace the content of the new created file `src/scripts/create-group.ts` with the following:
@@ -180,8 +180,8 @@ export async function main(args: { codeName: string, name: string, permissions: 
 Then you can create a group through the command line.
 ```sh
 npm run build
-foal run create-perm name="Permission to delete users" codeName="delete-users"
-foal run create-group name="Administrators" codeName="admin" permissions="[ \"delete-users\" ]"
+npx foal run create-perm name="Permission to delete users" codeName="delete-users"
+npx foal run create-group name="Administrators" codeName="admin" permissions="[ \"delete-users\" ]"
 ```
 
 ## Users
@@ -289,7 +289,7 @@ Then you can create a user with their permissions and groups through the command
 
 ```sh
 npm run build
-foal run create-user userPermissions="[ \"my-first-perm\" ]" groups="[ \"my-group\" ]"
+npx foal run create-user userPermissions="[ \"my-first-perm\" ]" groups="[ \"my-group\" ]"
 ```
 
 ## Fetching a User with their Permissions

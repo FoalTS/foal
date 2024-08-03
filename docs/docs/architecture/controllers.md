@@ -4,7 +4,7 @@ title: Controllers
 
 
 ```sh
-foal generate controller my-controller
+npx foal generate controller my-controller
 ```
 
 ```typescript

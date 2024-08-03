@@ -9,7 +9,7 @@ Sometimes we have to execute some tasks from the command line. These tasks can s
 
 A shell script is just a TypeScript file located in the `src/scripts`. It must export a `main` function that is then called when running the script.
 
-Let's create a new one with the command line: `foal g script display-users`. A new file with a default template should appear in you `src/scripts` directory.
+Let's create a new one with the command line: `npx foal g script display-users`. A new file with a default template should appear in you `src/scripts` directory.
 
 ## Write Scripts
 
@@ -55,9 +55,9 @@ npm run build
 Then you can execute it with this command:
 
 ```shell
-foal run my-script # or foal run-script my-script
+npx foal run my-script # or npx foal run-script my-script
 ```
 
-> You can also provide additionnal arguments to your script (for example: `foal run my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.
+> You can also provide additionnal arguments to your script (for example: `npx foal run my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.
 
 > If you want your script to recompile each time you save the file, you can run `npm run dev` in a separate terminal.

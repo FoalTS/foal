@@ -15,7 +15,7 @@ describe('[Shell scripts] create-perm', () => {
   });
 
   it('should work as expected.', async () => {
-    // foal run create-perm name="Permission to access the secret" codeName="access-secret"
+    // npx foal run create-perm name="Permission to access the secret" codeName="access-secret"
     const args = {
       codeName: 'access-secret',
       name: 'Permission to access the secret'

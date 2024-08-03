@@ -54,7 +54,7 @@ describe('Feature: Signing cookies', () => {
       .get('/set-cookie')
       .expect(200)
       .then(response => {
-        cookie1 = readCookie(response.get('Set-Cookie'), 'cookie1').value;
+        cookie1 = readCookie(response.get('Set-Cookie') || [], 'cookie1').value;
       });
 
     // Check that the value is signed (see cookie-parser spec.)

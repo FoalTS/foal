@@ -48,7 +48,7 @@ Generate the backend application.
 
 ```bash
 cd foal-react-tuto
-foal createapp backend-app
+npx @foal/cli createapp backend-app
 ```
 
 Then start the development server.

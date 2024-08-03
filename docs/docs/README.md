@@ -35,10 +35,9 @@ Great attention is paid to the stability of the product. You can find out more b
 ## Get Started
 
 ```
-> npm install -g @foal/cli
-> foal createapp my-app
-> cd my-app
-> npm run dev
+npx @foal/cli createapp my-app
+cd my-app
+npm run dev
 ```
 
 The development server is started! Go to `http://localhost:3001` and find our welcoming page!

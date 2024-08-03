@@ -48,7 +48,7 @@ export { DatabaseSession } from '@foal/typeorm';
 Then create your second entity.
 
 ```
-foal generate entity story
+npx foal generate entity story
 ```
 
 Open the new file and add three new properties: `author`, `title` and `link`.

@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 set -e
 
+rm -rf ./node_modules
+npm install -g @foal/cli
+
+rm -rf e2e-test-temp
+
 mkdir e2e-test-temp
 cd e2e-test-temp
 
 # Test app creation
-foal createapp my-app
+npx --yes @foal/cli createapp my-app
 cd my-app
 
 # Check some compilation errors
@@ -15,12 +20,12 @@ if grep -Rl "../../Users/loicp" .; then
 fi
 
 # Test the generators
-foal g entity flight
-foal g hook foo-bar
-foal g service foo
-foal g controller bar --register
-foal g rest-api product --register
-foal g script bar-script
+npx foal g entity flight
+npx foal g hook foo-bar
+npx foal g service foo
+npx foal g controller bar --register
+npx foal g rest-api product --register
+npx foal g script bar-script
 
 # Test linting
 npm run lint
@@ -118,7 +123,7 @@ test_rest_api DELETE "http://localhost:3001/products/ab" 400
 kill -9 $(ps aux | grep '\snode\s')
 
 # Test the default shell scripts to create users.
-foal run create-user
+npx foal run create-user
 
 #################################################################
 # Repeat (almost) the same tests with a MongoDB and YAML project
@@ -127,7 +132,7 @@ foal run create-user
 cd ..
 
 # Test app creation
-foal createapp my-mongodb-app --mongodb --yaml
+npx @foal/cli createapp my-mongodb-app --mongodb --yaml
 cd my-mongodb-app
 
 # Check some compilation errors
@@ -151,17 +156,17 @@ npm run start:e2e
 npm run build
 
 # Test the application when it is started
-# PORT=3001 pm2 start build/index.js
-# sleep 1
-# response=$(
-#     curl http://localhost:3001 \
-#         --write-out %{http_code} \
-#         --silent \
-#         --output /dev/null \
-# )
-# test "$response" -ge 200 && test "$response" -le 299
+node build/index.js &
+sleep 1
+response=$(
+    curl http://localhost:3001 \
+        --write-out %{http_code} \
+        --silent \
+        --output /dev/null \
+)
+test "$response" -ge 200 && test "$response" -le 299
 
-# pm2 delete index
+kill -9 $(ps aux | grep '\snode\s')
 
 # Test the default shell scripts to create users.
-foal run create-user
+npx foal run create-user

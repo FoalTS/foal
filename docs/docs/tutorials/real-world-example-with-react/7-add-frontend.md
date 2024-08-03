@@ -30,7 +30,7 @@ Another way to solve this problem is to *connect* your front-end development ser
 
 ```bash
 cd ../backend-app
-foal connect react ../frontend-app
+npx foal connect react ../frontend-app
 ```
 
 If you restart the frontend server, the stories should display correctly on the *feed* page (except for the images).

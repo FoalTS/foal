@@ -368,7 +368,7 @@ describe('SwaggerController', () => {
         strictEqual(response.getHeader('Content-Type'), contentType);
         strictEqual(response.stream, true);
 
-        const filePath = `./node_modules/swagger-ui-dist/${filename}`;
+        const filePath = `../../node_modules/swagger-ui-dist/${filename}`;
         const stats = await stat(filePath);
         strictEqual(response.getHeader('Content-Length'), stats.size.toString());
 

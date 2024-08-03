@@ -4,7 +4,7 @@ title: Models & Queries
 
 
 ```shell
-foal generate entity my-entity
+npx foal generate entity my-entity
 ```
 
 ## Entities

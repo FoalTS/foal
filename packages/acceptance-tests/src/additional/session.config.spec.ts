@@ -21,7 +21,7 @@ describe('The session store', () => {
 
   beforeEach(() => {
     // Use ".." to remove the "build/" directory.
-    Config.set('settings.session.store', './../node_modules/@foal/redis');
+    Config.set('settings.session.store', './../../../node_modules/@foal/redis');
     Config.set('settings.session.secret', 'secret');
     Config.set('settings.redis.uri', 'redis://localhost:6380');
     serviceManager = new ServiceManager();

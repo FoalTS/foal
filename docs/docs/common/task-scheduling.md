@@ -38,7 +38,7 @@ export async function main(args: any) {
 Schedule the job(s):
 ```sh
 npm run build
-foal run schedule-jobs arg1=value1
+npx foal run schedule-jobs arg1=value1
 ```
 
 ## Background Jobs with pm2

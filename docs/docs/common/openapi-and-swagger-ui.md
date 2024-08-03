@@ -384,7 +384,7 @@ class Service {
 #### from a shell script
 
 ```
-foal generate script generate-openapi-doc
+npx foal generate script generate-openapi-doc
 ```
 
 The `createOpenApiDocument` function can also be used in a shell script to generate the document. You can provide it with an optional serviceManager if needed.
@@ -414,7 +414,7 @@ export async function main() {
 
 ```bash
 npm run build
-foal run generate-openapi-doc
+npx foal run generate-openapi-doc
 ```
 
 
@@ -746,7 +746,7 @@ export class ApiController {
 ### Generate and Save a Specification File with a Shell Script
 
 ```
-foal generate script generate-openapi-doc
+npx foal generate script generate-openapi-doc
 ```
 
 *src/scripts/generate-openapi-doc.ts*
@@ -772,7 +772,7 @@ export async function main() {
 
 ```
 npm run build
-foal run generate-openapi-doc
+npx foal run generate-openapi-doc
 ```
 
 ### Common Errors

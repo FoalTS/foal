@@ -212,7 +212,7 @@ export class ApiController {
 First, generate a base64-encoded secret.
 
 ```bash
-foal createsecret
+npx foal createsecret
 ```
 
 Save this secret in a `.env` file.
@@ -516,7 +516,7 @@ export class ApiController {
 First, generate a base64-encoded secret.
 
 ```bash
-foal createsecret
+npx foal createsecret
 ```
 
 Save this secret in a `.env` file.

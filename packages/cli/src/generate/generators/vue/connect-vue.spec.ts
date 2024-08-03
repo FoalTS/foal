@@ -9,7 +9,7 @@ describe('connectVue', () => {
 
   afterEach(() => fs.tearDown());
 
-  it('should update package.json to set up the proxy, install ncp and change the output dir.', () => {
+  it('should update package.json to set up the proxy and change the output dir.', () => {
    fs
     .ensureDir('connector-test/vue')
     .copyFixture('vue/package.json', 'connector-test/vue/package.json');

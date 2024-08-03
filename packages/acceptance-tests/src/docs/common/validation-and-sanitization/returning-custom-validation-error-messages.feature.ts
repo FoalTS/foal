@@ -1,6 +1,5 @@
 // 3p
-// The "ajv" and "ajv-errors" dependencies must reside in the same "node_modules/" directory.
-import ajvErrors from '@foal/core/node_modules/ajv-errors';
+import ajvErrors from 'ajv-errors';
 import * as request from 'supertest';
 
 // FoalTS

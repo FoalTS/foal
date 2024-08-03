@@ -81,8 +81,8 @@ describe('Feature: Returning a response', () => {
       .get('/')
       .expect(200)
       .then(response => {
-        strictEqual(response.get('Set-Cookie')[0].startsWith('sessionID=xxxx; Max-Age=3600; Domain=example.com; Path=/; '), true);
-        strictEqual(response.get('Set-Cookie')[0].endsWith('; HttpOnly; Secure; SameSite=Lax'), true);
+        strictEqual(response.get('Set-Cookie')?.[0].startsWith('sessionID=xxxx; Max-Age=3600; Domain=example.com; Path=/; '), true);
+        strictEqual(response.get('Set-Cookie')?.[0].endsWith('; HttpOnly; Secure; SameSite=Lax'), true);
       });
   });
 

@@ -63,7 +63,7 @@ module.exports = {
 > When creating a new project, you can also add the flag `--yaml` to have all the configuration directly generated in YAML.
 >
 > ```
-> foal createapp my-app --yaml
+> npx @foal/cli createapp my-app --yaml
 > ```
 >
 > The extension of the YAML files must be `.yml`.

@@ -139,7 +139,7 @@ describe('Feature: Authenticating users in a stateful SPA using cookies', () => 
   });
 
   function setCookieInBrowser(response: request.Response): void {
-    token = readCookie(response.get('Set-Cookie'), cookieName).value;
+    token = readCookie(response.get('Set-Cookie') || [], cookieName).value;
   }
 
   beforeEach(() => response = undefined);

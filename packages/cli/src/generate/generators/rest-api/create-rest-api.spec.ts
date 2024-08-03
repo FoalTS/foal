@@ -19,7 +19,7 @@ describe('createRestApi', () => {
 
     throws(
       () => createRestApi({ name: 'test-fooBar', register: false }),
-      new ClientError('"foal generate|g rest-api <name>" cannot be used in a MongoDB project.')
+      new ClientError('"npx foal generate|g rest-api <name>" cannot be used in a MongoDB project.')
     );
   });
 

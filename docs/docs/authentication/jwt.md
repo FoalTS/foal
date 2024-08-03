@@ -20,10 +20,10 @@ Foal offers a package, named `@foal/jwt`, to manage authentication / authorizati
 
 ## Generate & Provide a Secret
 
-In order to use JWTs, you must provide a secret to *sign* your tokens. If you do not already have your own, you can generate one with the `foal createsecret` command.
+In order to use JWTs, you must provide a secret to *sign* your tokens. If you do not already have your own, you can generate one with the `npx foal createsecret` command.
 
 ```sh
-$ foal createsecret
+npx foal createsecret
 Ak0WcVcGuOoFuZ4oqF1tgqbW6dIAeSacIN6h7qEyJM8=
 ```
 

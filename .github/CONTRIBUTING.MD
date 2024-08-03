@@ -39,13 +39,13 @@ The framework development environment uses [lerna](https://lerna.js.org/) for ma
     ```sh
     npm run start-docker # use `npm run stop-docker` to stop them 
     ```
-3. Install the root dependencies.
+3. Install all dependencies.
     ```
     npm install
     ```
-4. Install the dependencies of each package and build each package.
+4. Build packages.
     ```
-    npm run bootstrap
+    npx lerna run build
     ```
 5. Check code format.
     ```
@@ -146,7 +146,7 @@ All of major releases are supported for at least 18 months.
 
 ### `@foal/cli` Package Structure
 
-The directory `src/generate/` contains the source code of the commands `foal createapp` and `foal generate`.
+The directory `src/generate/` contains the source code of the commands `npx @foal/cli createapp` and `npx foal generate`.
 
 Here is the list of its sub-directories:
 

@@ -6,7 +6,7 @@ import { getCommandLineArguments } from './get-command-line-arguments.util';
 
 describe('getCommandLineArguments', () => {
   it('should convert the arguments to an object.', () => {
-    // foal run-script foo foo=barfoo bar='hello world'
+    // npx foal run-script foo foo=barfoo bar='hello world'
     const argv = [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',

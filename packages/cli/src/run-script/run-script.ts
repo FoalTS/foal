@@ -17,7 +17,7 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
           + ' Please build your script by running the command "npm run build" or using "npm run dev".'
       );
     } else {
-      log(`The script "${name}" does not exist. You can create it by running the command "foal g script ${name}".`);
+      log(`The script "${name}" does not exist. You can create it by running the command "npx foal g script ${name}".`);
     }
     return;
   }

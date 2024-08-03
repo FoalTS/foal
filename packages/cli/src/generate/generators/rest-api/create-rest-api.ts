@@ -14,7 +14,7 @@ export function createRestApi({ name, register, auth }: { name: string, register
   const fs = new FileSystem();
 
   if (fs.projectHasDependency('mongodb')) {
-    throw new ClientError('"foal generate|g rest-api <name>" cannot be used in a MongoDB project.');
+    throw new ClientError('"npx foal generate|g rest-api <name>" cannot be used in a MongoDB project.');
   }
 
   if (fs.exists('src/app/entities') && fs.exists('src/app/controllers')) {

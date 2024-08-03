@@ -48,13 +48,14 @@ import * as http from 'http';
 
 async function main() {
   const serviceManager = new ServiceManager();
+  const logger = serviceManager.get(Logger);
 
   const app = await createApp(AppController, { serviceManager });
 
   const httpServer = http.createServer(app);
   // Instanciate, init and connect websocket controllers.
   await serviceManager.get(WebsocketController).attachHttpServer(httpServer);
-  httpServer.listen(port, () => displayServerURL(port));
+  httpServer.listen(port, () => logger.info(`Listening on port ${port}...`));
 }
 
 ```
