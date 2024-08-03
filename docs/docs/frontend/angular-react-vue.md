@@ -70,6 +70,4 @@ One way to get around this, keeping the policy and the same codebase, is to conf
 
 ### Build Outpath
 
-> *This feature only works with Angular and Vue.*
-
 The `connect` command also modifies the build output path of your front so that its bundles are saved in the `public/` directory. This way, you can run the frontend and the backend build commands and directly ship the application to production.

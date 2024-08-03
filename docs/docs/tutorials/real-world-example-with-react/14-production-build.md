@@ -14,11 +14,7 @@ In your frontend directory, run the following command:
 npm run build
 ```
 
-This command builds the React application for production and saves the files in the `build` directory.
-
-Open it and copy all its contents to the `public` directory of your Foal application.
-
-> When you use `npx foal connect` with Angular or Vue, the frontend build will automatically save the files in `public`.
+This command builds the React application for production and saves the files in the `public` directory of your Foal application.
 
 Now, if you navigate to [http://localhost:3001](http://localhost:3001), you will see the frontend application served by the backend server.
 
