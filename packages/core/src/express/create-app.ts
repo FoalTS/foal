@@ -16,9 +16,10 @@ import {
   makeControllerRoutes,
   OpenApi,
   ServiceManager,
+  httpRequestMessagePrefix,
+  Logger,
 } from '../core';
 import { sendResponse } from './send-response';
-import { httpRequestMessagePrefix, Logger } from '../common';
 
 export const OPENAPI_SERVICE_ID = 'OPENAPI_SERVICE_ID_a5NWKbBNBxVVZ';
 

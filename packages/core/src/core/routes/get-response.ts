@@ -1,4 +1,4 @@
-import { Logger } from '../../common';
+import { Logger } from '../logging';
 import { IAppController } from '../app.controller.interface';
 import { HookPostFunction } from '../hooks';
 import { Context, HttpResponse, isHttpResponse } from '../http';

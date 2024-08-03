@@ -2,10 +2,10 @@ const fs = require('fs');
 if (!fs.existsSync('./lib')) {
   fs.mkdirSync('./lib');
 }
-if (!fs.existsSync('./lib/common')) {
-  fs.mkdirSync('./lib/common');
+if (!fs.existsSync('./lib/core')) {
+  fs.mkdirSync('./lib/core');
 }
-if (!fs.existsSync('./lib/common/templates')) {
-  fs.mkdirSync('./lib/common/templates');
+if (!fs.existsSync('./lib/core/templates')) {
+  fs.mkdirSync('./lib/core/templates');
 }
-fs.copyFileSync('./src/common/templates/500.debug.html', './lib/common/templates/500.debug.html');
+fs.copyFileSync('./src/core/templates/500.debug.html', './lib/core/templates/500.debug.html');

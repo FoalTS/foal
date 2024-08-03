@@ -15,14 +15,14 @@ import {
   HttpResponseUnauthorized,
   IApiSecurityScheme,
   isHttpResponseInternalServerError,
-  ServiceManager
+  ServiceManager,
+  Logger
 } from '../../core';
 import { SESSION_DEFAULT_COOKIE_NAME } from './constants';
 import { checkUserIdType } from './check-user-id-type';
 import { getSessionIDFromRequest, RequestValidationError } from './get-session-id-from-request';
 import { createSession, readSession, SessionStore } from '../core';
 import { getCsrfTokenFromRequest, removeSessionCookie, setSessionCookie, shouldVerifyCsrfToken } from './utils';
-import { Logger } from '../../common';
 
 export type UseSessionOptions = {
   store?: Class<SessionStore>;

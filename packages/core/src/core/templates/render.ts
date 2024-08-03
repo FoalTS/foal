@@ -3,7 +3,8 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'path';
 
 // FoalTS
-import { Config, HttpResponseOK } from '../../core';
+import { HttpResponseOK } from '../http';
+import { Config } from '../config';
 
 /**
  * Util function to render a template. Minimalist built-in template engine for FoalTS.

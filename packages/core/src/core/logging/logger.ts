@@ -2,7 +2,7 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 
 // FoalTS
-import { Config } from '../../core';
+import { Config } from '../config';
 import { Level, formatMessage, shouldLog } from './logger.utils';
 
 export class Logger {

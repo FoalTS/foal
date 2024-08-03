@@ -1,4 +1,4 @@
-import { renderError } from '../../common';
+import { renderError } from '../templates';
 import { IAppController } from '../app.controller.interface';
 import { Config } from '../config';
 import { Context, HttpResponse } from '../http';

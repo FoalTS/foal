@@ -23,11 +23,11 @@ import {
   Patch,
   Post,
   Put,
-  ServiceManager
+  ServiceManager,
+  Logger,
 } from '../core';
 import { createApp, getHttpLogParamsDefault, OPENAPI_SERVICE_ID } from './create-app';
 import { mock } from 'node:test';
-import { Logger } from '../common';
 
 describe('getHttpLogParamsDefault', () => {
   context('the request has NOT been aborted', () => {

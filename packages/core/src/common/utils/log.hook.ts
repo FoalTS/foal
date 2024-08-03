@@ -1,5 +1,4 @@
-import { Context, Hook, HookDecorator } from '../../core';
-import { Logger } from '../logging';
+import { Context, Hook, HookDecorator, Logger } from '../../core';
 
 /**
  * Options of the `Log` hook.

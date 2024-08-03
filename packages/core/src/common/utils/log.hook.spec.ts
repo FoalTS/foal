@@ -1,11 +1,10 @@
 // std
 import { strictEqual } from 'assert';
+import { mock } from 'node:test';
 
 // FoalTS
-import { Context, getHookFunction, ServiceManager } from '../../core';
+import { Context, getHookFunction, ServiceManager, Logger } from '../../core';
 import { Log } from './log.hook';
-import { mock } from 'node:test';
-import { Logger } from '../logging';
 
 describe('Log', () => {
 
