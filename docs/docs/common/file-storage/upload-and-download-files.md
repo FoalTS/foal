@@ -80,7 +80,7 @@ Files can be uploaded using `multipart/form-data` requests. The `@ParseAndValida
 
 The `enctype` of your requests must be of type `multipart/form-data`. If needed, you can use a [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) object for this.
 
-:::info
+:::
 
 ### Using Buffers
 

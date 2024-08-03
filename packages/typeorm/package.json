@@ -53,9 +53,9 @@
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
-    "@types/mocha": "10.0.6",
-    "mocha": "~10.4.0",
-    "mongodb": "~5.8.1",
+    "@types/mocha": "10.0.7",
+    "mocha": "~10.7.0",
+    "mongodb": "~5.9.2",
     "mysql": "~2.18.1",
     "pg": "~8.11.3",
     "rimraf": "~5.0.5",
