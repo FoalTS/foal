@@ -100,7 +100,7 @@ GOOGLE_CLIENT_SECRET="your Google client secret"
 Create the controller.
 
 ```bash
-foal generate controller api/social-auth --register
+npx foal generate controller api/social-auth --register
 ```
 
 Open the file and add two new routes.

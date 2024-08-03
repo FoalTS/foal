@@ -7,7 +7,7 @@ import TabItem from '@theme/TabItem';
 
 
 ```sh
-foal generate service my-service
+npx foal generate service my-service
 ```
 
 ```typescript

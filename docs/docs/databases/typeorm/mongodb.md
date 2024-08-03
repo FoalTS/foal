@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 To generate a new project that uses MongoDB, run the command `createapp` with the flag `--mongodb`.
 
 ```
-foal createapp my-app --mongodb
+npx @foal/cli createapp my-app --mongodb
 ```
 
 ## Configuration
@@ -136,6 +136,6 @@ If you use sessions with `@UseSessions`, you must use the `MongoDBStore` from `@
 ## Limitations
 
 When using MongoDB, there are some features that are not available:
-- the `foal g rest-api <name>` command,
+- the `npx foal g rest-api <name>` command,
 - and the *Groups & Permissions* system.
 
