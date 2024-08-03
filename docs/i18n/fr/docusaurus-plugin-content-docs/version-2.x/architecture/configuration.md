@@ -27,7 +27,7 @@ The framework encourages a **strict separation between configuration and code** 
 
 Configuration values are provided using configuration files in the `config/` directory. Several formats are supported: YAML, JSON and JS files.
 
-*config/default.{yml|json|js}*
+*config/default.\{yml|json|js\}*
 
 <Tabs
   defaultValue="yaml"
