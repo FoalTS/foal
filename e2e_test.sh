@@ -2,6 +2,7 @@
 set -e
 
 rm -rf ./node_modules
+npm install -g @foal/cli
 
 rm -rf e2e-test-temp
 
