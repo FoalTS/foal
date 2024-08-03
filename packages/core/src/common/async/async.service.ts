@@ -9,10 +9,10 @@ export class AsyncService {
 
   /**
    * Run an asynchronous function without awaiting for it.
-   * 
+   *
    * If the function throws or rejects an error, the error is
    * properly caught and logged.
-   * 
+   *
    * @param fn - The function to run.
    */
   run(fn: () => Promise<any>): void {
