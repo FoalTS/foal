@@ -14,6 +14,35 @@ Version 4.5 of [Foal](https://foalts.org/) is out!
 
 <!--truncate-->
 
+## Asynchronous tasks
+
+In some situations, we need to execute a specific task without waiting for it and without blocking the request.
+
+This could be, for example, sending a specific message to the CRM or company chat. In this case, the user needs to be able to see his or her request completed as quickly as possible, even if the request to the CRM takes some time or fails.
+
+To this end, Foal version 4.5 provides an `AsyncService` to execute these tasks asynchronously, and correctly catch and log their errors where appropriate.
+
+```typescript
+import { AsyncService, dependency } from '@foal/core';
+
+import { CRMService } from './somewhere';
+
+export class SubscriptionService {
+  @dependency
+  asyncService: AsyncService;
+
+  @dependency
+  crmService: CRMService;
+
+  async subscribe(userId: number): Promise<void> {
+    // Do something
+
+    this.asyncService.run(() => this.crmService.updateUser(userId));
+  }
+}
+
+```
+
 ## Logging improvements
 
 In previous versions, the util function `displayServerURL` and configuration errors printed logs on several lines, which was not appropriate for logging software.
