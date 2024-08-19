@@ -218,7 +218,7 @@ export class AuthController {
     cookie: true,
   })
   async handleGoogleRedirection(ctx: Context<User>) {
-    const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
+    const { userInfo } = await this.google.getUserInfo(ctx);
 
     if (!userInfo.email) {
       throw new Error('Google should have returned an email address.');
@@ -290,7 +290,7 @@ export class AuthController {
 
   @Get('/signin/google/callback')
   async handleGoogleRedirection(ctx: Context) {
-    const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
+    const { userInfo } = await this.google.getUserInfo(ctx);
 
     if (!userInfo.email) {
       throw new Error('Google should have returned an email address.');
