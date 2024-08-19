@@ -17,8 +17,6 @@ export {
   AsyncService,
   File,
   FileList,
-  Log,
-  LogOptions,
   UserRequired,
   ValidateBody,
   ValidateCookie,

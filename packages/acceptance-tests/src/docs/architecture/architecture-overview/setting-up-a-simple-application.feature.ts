@@ -9,9 +9,9 @@ import {
   controller,
   createApp,
   Get,
+  // Hook,
   HttpResponseNotFound,
   HttpResponseOK,
-  // Log,
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired } from '@foal/jwt';
 
@@ -58,7 +58,9 @@ describe('Feature: Setting up a simple application', () => {
     }
 
     // Commented in this test to avoid noise in the terminal.
-    // @Log('Receiving a request...')
+    // @Hook(() => {
+    //   console.log('Receiving a request...')
+    // })
     class AppController {
       subControllers = [
         controller('/api', ApiController)

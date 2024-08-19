@@ -23,7 +23,6 @@ They improve code readability and make unit testing easier.
 Foal provides a number of hooks to handle the most common scenarios.
 
 - `ValidateBody`, `ValidateHeader`, `ValidatePathParam`, `ValidateCookie` and `ValidateQueryParam` validate the format of the incoming HTTP requests (see [Validation](../common/validation-and-sanitization.md)).
-- `Log` displays information on the request (see [Logging](../common/logging.md)).
 - `JWTRequired`, `JWTOptional`, `UseSessions` authenticate the user by filling the `ctx.user` property.
 - `PermissionRequired` restricts the route access to certain users.
 
@@ -73,7 +72,7 @@ If the user makes a POST request to `/products` whereas she/he is not authentica
 > If you need to apply a hook globally, you just have to make it decorate the root controller: `AppController`.
 >
 > ```typescript
-> @Log('Request body:', { body: true })
+> @UseSessions()
 > export class AppController {
 >  // ...
 > }

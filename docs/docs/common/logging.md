@@ -274,36 +274,3 @@ logger.addTransport((level: 'debug'|'warn'|'info'|'error', log: string) => {
   // Do something
 })
 ```
-
-## Logging Hook (deprecated)
-
-> This hook is deprecated and will be removed in a next release. Use the `Logger` service in a custom hook instead.
-
-FoalTS provides a convenient hook for logging debug messages: `Log(message: string, options: LogOptions = {})`.
-
-```typescript
-interface LogOptions {
-  body?: boolean;
-  params?: boolean;
-  headers?: string[]|boolean;
-  query?: boolean;
-}
-```
-
-*Example:*
-```typescript
-import { Get, HttpResponseOK, Log } from '@foal/core';
-
-@Log('AppController', {
-  body: true,
-  headers: [ 'X-CSRF-Token' ],
-  params: true,
-  query: true
-})
-export class AppController {
-  @Get()
-  index() {
-    return new HttpResponseOK();
-  }
-}
-```
