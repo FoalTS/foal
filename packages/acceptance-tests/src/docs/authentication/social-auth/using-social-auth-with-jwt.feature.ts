@@ -56,7 +56,7 @@ describe('Feature: Using social auth with JWT', () => {
 
       @Get('/signin/google')
       redirectToGoogle() {
-        return this.google.redirect();
+        return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
       }
 
       @Get('/signin/google/callback')

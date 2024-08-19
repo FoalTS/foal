@@ -137,7 +137,7 @@ export class AuthController {
   redirectToGoogle() {
     // Your "Login In with Google" button should point to this route.
     // The user will be redirected to Google auth page.
-    return this.google.redirect();
+    return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/google/callback')
@@ -210,7 +210,7 @@ export class AuthController {
 
   @Get('/signin/google')
   redirectToGoogle() {
-    return this.google.redirect();
+    return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/google/callback')
@@ -285,7 +285,7 @@ export class AuthController {
 
   @Get('/signin/google')
   redirectToGoogle() {
-    return this.google.redirect();
+    return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/google/callback')

@@ -132,7 +132,7 @@ export class SocialAuthController {
 
   @Get('/google')
   redirectToGoogle() {
-    return this.google.redirect();
+    return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/google/callback')
