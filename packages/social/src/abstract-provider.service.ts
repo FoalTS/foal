@@ -4,7 +4,6 @@ import * as crypto from 'crypto';
 
 // 3p
 import { Config, Context, generateToken, HttpResponseRedirect, convertBase64ToBase64url, CookieOptions, HttpResponseOK } from '@foal/core';
-import * as fetch from 'node-fetch';
 
 /**
  * Tokens returned by an OAuth2 authorization server.

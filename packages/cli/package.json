@@ -61,8 +61,7 @@
     "ajv-formats": "~2.1.1",
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
-    "commander": "~12.1.0",
-    "node-fetch": "~2.7.0"
+    "commander": "~12.1.0"
   },
   "devDependencies": {
     "@types/mocha": "10.0.7",
