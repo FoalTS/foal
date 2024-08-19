@@ -55,7 +55,7 @@ npm run build
 Then you can execute it with this command:
 
 ```shell
-npx foal run my-script # or npx foal run-script my-script
+npx foal run my-script
 ```
 
 > You can also provide additionnal arguments to your script (for example: `npx foal run my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.
