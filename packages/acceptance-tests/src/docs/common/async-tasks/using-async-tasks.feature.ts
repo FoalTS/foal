@@ -13,17 +13,17 @@ describe('Feature: Using async tasks', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    
+    // tslint:disable-next-line:no-unused-variable
     class SubscriptionService {
       @dependency
       asyncService: AsyncService;
-    
+
       @dependency
       crmService: CRMService;
-    
+
       async subscribe(userId: number): Promise<void> {
         // Do something
-    
+
         this.asyncService.run(() => this.crmService.updateUser(userId));
       }
     }
