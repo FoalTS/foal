@@ -632,7 +632,7 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       strictEqual(loggerMock.callCount(), 1);
       deepStrictEqual(
         loggerMock.calls[0].arguments,
-        ['userId', 123],
+        [{ userId: 123 }],
       );
     })
 

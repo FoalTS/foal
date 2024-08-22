@@ -116,7 +116,7 @@ export async function createApp(
     const requestId = req.get('x-request-id') || randomUUID();
 
     req.id = requestId;
-    logger.addLogContext('requestId', requestId);
+    logger.addLogContext({ requestId });
 
     next();
   });

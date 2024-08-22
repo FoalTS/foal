@@ -887,7 +887,7 @@ describe('createApp', () => {
       @Get('/')
       @Hook((ctx, services) => {
         const logger = services.get(Logger);
-        logger.addLogContext('foo', 'bar');
+        logger.addLogContext({ foo: 'bar' });
       })
       getA(ctx: Context) {
         this.logger.info('Hello world');
@@ -995,9 +995,8 @@ describe('createApp', () => {
 
     strictEqual(loggerMock.callCount(), 1);
 
-    const [key, value] = loggerMock.calls[0].arguments;
+    const args = loggerMock.calls[0].arguments;
 
-    strictEqual(key, 'requestId');
-    strictEqual(value, requestId);
+    deepStrictEqual(args, [{ requestId }]);
   });
 });
