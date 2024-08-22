@@ -361,7 +361,7 @@ export class GithubProvider extends AbstractProvider<GithubAuthParameter, Github
 
   protected defaultScopes: string[] = [ 'email' ]; // Optional
 
-  getUserInfoFromTokens(tokens: SocialTokens, params?: GithubUserInfoParameter): UserInfo | Promise<GithubUserInfo> {
+  getUserInfoFromTokens(tokens: SocialTokens, params?: GithubUserInfoParameter): GithubUserInfo | Promise<GithubUserInfo> {
     // ...
 
     // In case the server returns an error when requesting 
