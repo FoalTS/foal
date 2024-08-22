@@ -81,7 +81,7 @@ describe('runScript', () => {
     await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
-      'run-script',
+      'run',
       'my-script',
       'email=bar',
       'n=11'
@@ -111,7 +111,7 @@ describe('runScript', () => {
     await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
-      'run-script',
+      'run',
       'my-script',
       'foo=bar',
     ]);
@@ -146,7 +146,7 @@ describe('runScript', () => {
     await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
-      'run-script',
+      'run',
       'my-script',
       'foo=bar',
     ]);
@@ -178,7 +178,7 @@ describe('runScript', () => {
     await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
-      'run-script',
+      'run',
       'my-script',
     ], log);
 
@@ -201,7 +201,7 @@ describe('runScript', () => {
     await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
-      'run-script',
+      'run',
       'my-script',
     ], log);
 

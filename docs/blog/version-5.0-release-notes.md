@@ -17,3 +17,4 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 ## Removal of depreacted components
 
 - The deprecated hook `@Log` has been removed. To replace it, you can use the `Logger` service in a custom `@Hook`.
+- The command alias `npx foal run-script` has been removed. Use `npx foal run` instead.
