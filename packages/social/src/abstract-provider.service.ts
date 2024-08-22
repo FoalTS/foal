@@ -309,21 +309,6 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
   }
 
   /**
-   * Returns an HttpResponseRedirect object to redirect the user to the social provider's authorization page.
-   *
-   * This function is deprecated. Use createHttpResponseWithConsentPageUrl instead with isRedirection set to true.
-   *
-   * @param {{ scopes?: string[] }} [{ scopes }={}] - Custom scopes to override the default ones used by the provider.
-   * @param {AuthParameters} [params] - Additional parameters (specific to the social provider).
-   * @returns {Promise<HttpResponseRedirect>} The HttpResponseRedirect object.
-   * @memberof AbstractProvider
-   * @deprecated
-   */
-  async redirect({ scopes }: { scopes?: string[] } = {}, params?: AuthParameters): Promise<HttpResponseRedirect> {
-    return this.createHttpResponseWithConsentPageUrl({ scopes, isRedirection: true }, params) as Promise<HttpResponseRedirect>;
-  }
-
-  /**
    * Function to use in the controller method that handles the provider redirection.
    *
    * It returns an access token.
