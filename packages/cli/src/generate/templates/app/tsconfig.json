@@ -8,10 +8,10 @@
     "noImplicitAny": false,
     "strictPropertyInitialization": false,
     "module": "commonjs",
-    "target": "es2021",
+    "target": "es2023",
     "rootDir": "src",
     "lib": [
-      "es2021",
+      "es2023",
       "dom"
     ]
   },
