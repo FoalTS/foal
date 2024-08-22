@@ -6,15 +6,6 @@ Foal provides an advanced built-in logger. This page shows how to use it.
 
 ## Recommended Configuration
 
-*config/default.json*
-```json
-{
-  "settings": {
-    "loggerFormat": "foal"
-  }
-}
-```
-
 *config/development.json*
 ```json
 {
@@ -143,7 +134,7 @@ If you wish to completly mask logs, you can use the `none` format.
 
 Each request received by Foal is logged with the INFO level.
 
-With the configuration key `settings.loggerFormat` set to `"foal"`, the messages start with `HTTP request -` and end with the request method and URL. The log parameters include the response status code and content length as well as the response time and the request method and URL.
+The messages start with `HTTP request -` and end with the request method and URL. The log parameters include the response status code and content length as well as the response time and the request method and URL.
 
 > Note: the query parameters are not logged to avoid logging sensitive data (such as an API key).
 
@@ -162,26 +153,16 @@ const app = await createApp({
 })
 ```
 
-### Formatting the log message (deprecated)
-
-If you wish to customize the HTTP log messages, you can set the value of the `loggerFormat.loggerFormat` configuration to a format supported by [morgan](https://www.npmjs.com/package/morgan). With this technique, no parameters will be logged though.
-
-```json
-{
-  "settings": {
-    "loggerFormat": "tiny"
-  }
-}
-```
-
 ### Disabling HTTP Request Logging
 
-In some scenarios and environments, you might want to disable HTTP request logging. You can achieve this by setting the `loggerFormat` configuration option to `none`. 
+In some scenarios and environments, you might want to disable HTTP request logging. You can achieve this by setting the `logger.logHttpRequests` configuration option to `false`. 
 
 ```json
 {
   "settings": {
-    "loggerFormat": "none"
+    "logger": {
+      "logHttpRequests": false
+    }
   }
 }
 ```

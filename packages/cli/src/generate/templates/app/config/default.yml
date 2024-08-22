@@ -1,7 +1,6 @@
 port: env(PORT)
 
 settings:
-  loggerFormat: foal
   session:
     store: '@foal/typeorm'
 
