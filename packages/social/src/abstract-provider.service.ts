@@ -240,9 +240,9 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
 
   /**
    * Returns an HttpResponseOK or HttpResponseRedirect object to redirect the user to the social provider's authorization page.
-   * 
+   *
    * If the isRedirection parameter is undefined or set to false, the function returns an HttpResponseOK object. Its body contains the URL of the consent page.
-   * 
+   *
    * If the isRedirection parameter is set to true, the function returns an HttpResponseRedirect object.
    *
    * @param {{ scopes?: string[] }} [{ scopes }={}] - Custom scopes to override the default ones used by the provider.
@@ -311,7 +311,7 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
 
   /**
    * Returns an HttpResponseRedirect object to redirect the user to the social provider's authorization page.
-   * 
+   *
    * This function is deprecated. Use createHttpResponseWithConsentPageUrl instead with isRedirection set to true.
    *
    * @param {{ scopes?: string[] }} [{ scopes }={}] - Custom scopes to override the default ones used by the provider.
