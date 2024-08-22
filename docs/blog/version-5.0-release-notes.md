@@ -65,6 +65,10 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
 - The return value of the social services `getUserInfoFromTokens` method is now typed.
 
+## Logging
+
+- The `Logger.addLogContext(key, value)` method now accepts a record as argument: `Logger.addLogContext(params)`. This makes the function's signature more consistent with other logging methods (`info`, `warn`, etc.) and allows multiple parameters to be passed at once.
+
 ## Removal of deprecated components
 
 - The deprecated hook `@Log` has been removed. Use the `Logger` service in a custom `@Hook` instead.

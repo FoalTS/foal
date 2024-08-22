@@ -260,7 +260,7 @@ This mecanism helps filter logs of a specific request or specific user in a logg
 
 If needed, you call also add manually custom parameters to the logger context with this fonction:
 ```typescript
-logger.addLogContext('myKey', 'myValue');
+logger.addLogContext({ myKey: 'myValue' });
 ```
 
 ## Transports
