@@ -4,9 +4,9 @@ title: Angular, React & Vue
 
 
 ```
-foal connect angular ../frontend
-foal connect react ../frontend
-foal connect vue ../frontend
+npx foal connect angular ../frontend
+npx foal connect react ../frontend
+npx foal connect vue ../frontend
 ```
 
 Angular, React and Vue all provide powerful CLIs for creating frontend applications. These tools are widely used, regularly improved and extensively documented. That's why Foal CLI do not provide ready-made features to build the frontend in their place.
@@ -21,11 +21,11 @@ Instead, FoalTS offers a convenient command, named `connect`, to configure your 
 mkdir my-app
 cd my-app
 
-foal createapp backend
+npx @foal/cli createapp backend
 ng new frontend
 
 cd backend
-foal connect angular ../frontend
+npx foal connect angular ../frontend
 ```
 
 ### React
@@ -34,11 +34,11 @@ foal connect angular ../frontend
 mkdir my-app
 cd my-app
 
-foal createapp backend
+npx @foal/cli createapp backend
 npx create-react-app frontend --template typescript
 
 cd backend
-foal connect react ../frontend
+npx foal connect react ../frontend
 ```
 
 ### Vue
@@ -47,11 +47,11 @@ foal connect react ../frontend
 mkdir my-app
 cd my-app
 
-foal createapp backend
+npx @foal/cli createapp backend
 vue create frontend
 
 cd backend
-foal connect vue ../frontend
+npx foal connect vue ../frontend
 ```
 
 ## Problems Solved by the `connect` Command
@@ -69,7 +69,5 @@ This technique has some drawbacks however:
 One way to get around this, keeping the policy and the same codebase, is to configure a proxy to redirect `4200` requests to the port `3001`. The `connect` command does it for you.
 
 ### Build Outpath
-
-> *This feature only works with Angular and Vue.*
 
 The `connect` command also modifies the build output path of your front so that its bundles are saved in the `public/` directory. This way, you can run the frontend and the backend build commands and directly ship the application to production.

@@ -48,7 +48,7 @@ You can use the `create-user` shell script (located in `src/scripts`) to create 
 
 ```sh
 npm run build
-foal run create-user
+npx foal run create-user
 ```
 
 ## Example (email and password)
@@ -134,7 +134,7 @@ You can now create a new user with these commands:
 
 ```sh
 npm run build
-foal run create-user email=mary@foalts.org password=mary_password
+npx foal run create-user email=mary@foalts.org password=mary_password
 ```
 
 ## Using another ORM/ODM

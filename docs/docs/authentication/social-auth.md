@@ -137,7 +137,7 @@ export class AuthController {
   redirectToGoogle() {
     // Your "Login In with Google" button should point to this route.
     // The user will be redirected to Google auth page.
-    return this.google.redirect();
+    return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/google/callback')
@@ -157,10 +157,12 @@ export class AuthController {
 
 You can also override in the `redirect` method the scopes you want:
 ```typescript
-return this.google.redirect({ scopes: [ 'email' ] });
+return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true, scopes: [ 'email' ] });
 ```
 
 Additional parameters can passed to the `redirect` and `getUserInfo` methods depending on the provider.
+
+> If you want to manage the redirection on the client side manually, don't specify the `isRedirection` option. In this case, the `createHttpResponseWithConsentPageUrl` method returns an `HttpResponseOK` whose body contains the URL of the consent page. The name of the body property is `consentPageUrl`.
 
 ## Techniques
 
@@ -210,7 +212,7 @@ export class AuthController {
 
   @Get('/signin/google')
   redirectToGoogle() {
-    return this.google.redirect();
+    return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/google/callback')
@@ -218,7 +220,7 @@ export class AuthController {
     cookie: true,
   })
   async handleGoogleRedirection(ctx: Context<User>) {
-    const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
+    const { userInfo } = await this.google.getUserInfo(ctx);
 
     if (!userInfo.email) {
       throw new Error('Google should have returned an email address.');
@@ -285,12 +287,12 @@ export class AuthController {
 
   @Get('/signin/google')
   redirectToGoogle() {
-    return this.google.redirect();
+    return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/google/callback')
   async handleGoogleRedirection(ctx: Context) {
-    const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
+    const { userInfo } = await this.google.getUserInfo(ctx);
 
     if (!userInfo.email) {
       throw new Error('Google should have returned an email address.');
@@ -442,11 +444,11 @@ Visit the [Google API Console](https://console.developers.google.com/apis/creden
 
 #### Redirection parameters
 
-The `redirect` method of the `GoogleProvider` accepts additional parameters. These parameters and their description are listed [here](https://developers.google.com/identity/protocols/OpenIDConnect#authenticationuriparameters) and are all optional.
+The `createHttpResponseWithConsentPageUrl` method of the `GoogleProvider` accepts additional parameters. These parameters and their description are listed [here](https://developers.google.com/identity/protocols/OpenIDConnect#authenticationuriparameters) and are all optional.
 
 *Example*
 ```typescript
-this.google.redirect({ /* ... */ }, {
+this.google.createHttpResponseWithConsentPageUrl({ /* ... */ }, {
   access_type: 'offline'
 })
 ```
@@ -463,11 +465,11 @@ Visit [Facebook's developer website](https://developers.facebook.com/) to create
 
 #### Redirection parameters
 
-The `redirect` method of the `FacebookProvider` accepts an additional `auth_type` parameter which is optional.
+The `createHttpResponseWithConsentPageUrl` method of the `FacebookProvider` accepts an additional `auth_type` parameter which is optional.
 
 *Example*
 ```typescript
-this.facebook.redirect({ /* ... */ }, {
+this.facebook.createHttpResponseWithConsentPageUrl({ /* ... */ }, {
   auth_type: 'rerequest'
 });
 ```
@@ -505,11 +507,11 @@ Additional documentation on Github's redirect URLs can be found [here](https://d
 
 #### Redirection parameters
 
-The `redirect` method of the `GithubProvider` accepts additional parameters. These parameters and their description are listed below and are all optional.
+The `createHttpResponseWithConsentPageUrl` method of the `GithubProvider` accepts additional parameters. These parameters and their description are listed below and are all optional.
 
 *Example*
 ```typescript
-this.github.redirect({ /* ... */ }, {
+this.github.createHttpResponseWithConsentPageUrl({ /* ... */ }, {
   allow_signup: false
 })
 ```

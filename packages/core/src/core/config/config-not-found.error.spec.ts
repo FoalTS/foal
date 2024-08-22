@@ -4,65 +4,6 @@ import { strictEqual } from 'assert';
 // FoalTS
 import { ConfigNotFoundError } from './config-not-found.error';
 
-const errMessage = (msg: string) => `
-
-  --------------------------------------------------------
-|                                                          |
-|  JSON file (config/default.json, config/test.json, ...)  |
-|                                                          |
-| -------------------------------------------------------- |
-|                                                          |
-|  {                                                       |
-|    "settings": {                                         |
-|      "session": {                                        |
-|        "store": <your_value>                             |
-|        // OR with an environment variable:               |
-|        "store": "env(<YOUR_ENVIRONMENT_VARIABLE>)"       |
-|      }                                                   |
-|    }                                                     |
-|  }                                                       |
-|                                                          |
-  --------------------------------------------------------
-
-  --------------------------------------------------------
-|                                                          |
-|  YAML file (config/default.yml, config/test.yml, ...)    |
-|                                                          |
-| -------------------------------------------------------- |
-|                                                          |
-|  settings:                                               |
-|    session:                                              |
-|      store: <your_value>                                 |
-|      # OR with an environment variable:                  |
-|      store: env(<YOUR_ENVIRONMENT_VARIABLE>)             |
-|                                                          |
-  --------------------------------------------------------
-
-  --------------------------------------------------------
-|                                                          |
-|  JS file (config/default.js, config/test.js, ...)        |
-|                                                          |
-| -------------------------------------------------------- |
-|                                                          |
-|  const { Env } = require('@foal/core');                  |
-|                                                          |
-|  {                                                       |
-|    settings: {                                           |
-|      session: {                                          |
-|        store: <your_value>                               |
-|        // OR with an environment variable:               |
-|        store: Env.get('<YOUR_ENVIRONMENT_VARIABLE>')     |
-|      }                                                   |
-|    }                                                     |
-|  }                                                       |
-|                                                          |
-  --------------------------------------------------------
-
-No value found for the configuration key "settings.session.store".${msg}
-
-To pass a value, use one of the examples above.
-`;
-
 describe('ConfigNotFoundError', () => {
 
   it('should set the property "key" and "msg" from the constructor.', () => {
@@ -76,12 +17,12 @@ describe('ConfigNotFoundError', () => {
 
   it('should have the proper message.', () => {
     const err = new ConfigNotFoundError('settings.session.store');
-    strictEqual(err.message, errMessage(''));
+    strictEqual(err.message, `No value found for the configuration key "settings.session.store".`);
   });
 
   it('should have the proper message (custom message).', () => {
     const err = new ConfigNotFoundError('settings.session.store', 'Custom message');
-    strictEqual(err.message, errMessage('\n\nCustom message'));
+    strictEqual(err.message, `No value found for the configuration key "settings.session.store". Custom message`);
   });
 
 });

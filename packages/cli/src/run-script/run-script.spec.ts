@@ -27,7 +27,7 @@ describe('runScript', () => {
     await runScript({ name: 'my-script' }, [], log);
 
     strictEqual(
-      msg, 'The script "my-script" does not exist. You can create it by running the command "foal g script my-script".'
+      msg, 'The script "my-script" does not exist. You can create it by running the command "npx foal g script my-script".'
     );
   });
 

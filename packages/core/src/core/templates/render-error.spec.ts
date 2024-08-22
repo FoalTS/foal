@@ -2,8 +2,9 @@
 import { doesNotReject, strictEqual } from 'assert';
 
 // FoalTS
-import { Config, Context, isHttpResponseInternalServerError } from '../../core';
 import { renderError } from './render-error';
+import { Context, isHttpResponseInternalServerError } from '../http';
+import { Config } from '../config';
 
 describe('renderError', () => {
 

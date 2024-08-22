@@ -1,5 +1,5 @@
 import { GraphQLController } from '@foal/graphql';
-import { buildSchema } from '@foal/graphql/node_modules/graphql';
+import { buildSchema } from 'graphql';
 
 const schema = buildSchema(`
   type Query {

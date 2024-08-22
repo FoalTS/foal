@@ -24,17 +24,17 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Start up databases
-      run: docker-compose up -d
+      run: docker compose up -d
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - name: Use npm version 9.6
       run: npm install -g npm@9.6
-    - name: Install project dependencies
+    - name: Install project and package dependencies
       run: npm install
-    - name: Install package dependencies and build packages
-      run: npm run bootstrap
+    - name: Build packages
+      run: npx lerna run build
     - name: Create CLI symlink in the global folder
       run: npm link
       working-directory: packages/cli

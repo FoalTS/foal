@@ -9,6 +9,11 @@
     "strictPropertyInitialization": false,
     "sourceMap": true,
     "declaration": true,
+    "typeRoots": [
+      "./typings",
+      "../../typings",
+      "../../node_modules/@types",
+    ],
     "lib": [
       "es2021",
       "dom"

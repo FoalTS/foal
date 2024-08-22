@@ -83,7 +83,7 @@ describe('Feature: Do not Auto-Create the Session when using sessions with cooki
       .expect(200);
 
     strictEqual(alreadyExists, false);
-    strictEqual(response.get('Set-Cookie').length, 1);
+    strictEqual(response.get('Set-Cookie')?.length, 1);
   });
 
 });

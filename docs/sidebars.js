@@ -72,7 +72,7 @@ module.exports = {
         ]),
         'common/serialization',
         'common/logging',
-        'common/task-scheduling',
+        'common/async-tasks',
         'common/rest-blueprints',
         'common/openapi-and-swagger-ui',
         'common/graphql',

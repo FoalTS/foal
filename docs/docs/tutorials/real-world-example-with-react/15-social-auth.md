@@ -100,7 +100,7 @@ GOOGLE_CLIENT_SECRET="your Google client secret"
 Create the controller.
 
 ```bash
-foal generate controller api/social-auth --register
+npx foal generate controller api/social-auth --register
 ```
 
 Open the file and add two new routes.
@@ -132,7 +132,7 @@ export class SocialAuthController {
 
   @Get('/google')
   redirectToGoogle() {
-    return this.google.redirect();
+    return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/google/callback')

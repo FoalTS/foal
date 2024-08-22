@@ -1,7 +1,7 @@
 {
   "name": "@foal/examples",
   "private": true,
-  "version": "4.4.0",
+  "version": "4.5.0",
   "description": "FoalTs examples",
   "scripts": {
     "build": "tsc && copy-cli \"src/**/*.html\" build",
@@ -16,7 +16,7 @@
     "test": "npm run build:test && npm run start:test",
     "dev:test": "npm run build:test && concurrently \"npm run build:test:w\" \"npm run start:test:w\"",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "makemigrations": "foal rmdir build && tsc -p tsconfig.json && npx typeorm migration:generate src/migrations/migration -d build/db -p && tsc -p tsconfig.json",
+    "makemigrations": "npx foal rmdir build && tsc -p tsconfig.json && npx typeorm migration:generate src/migrations/migration -d build/db -p && tsc -p tsconfig.json",
     "migrations": "npx typeorm migration:run -d build/db",
     "revertmigration": "npx typeorm migration:revert -d build/db"
   },
@@ -44,27 +44,27 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/aws-s3": "^4.4.0",
-    "@foal/core": "^4.4.0",
-    "@foal/graphiql": "^4.4.0",
-    "@foal/graphql": "^4.4.0",
-    "@foal/social": "^4.4.0",
-    "@foal/storage": "^4.4.0",
-    "@foal/swagger": "^4.4.0",
-    "@foal/typeorm": "^4.4.0",
-    "graphql": "~16.8.0",
+    "@foal/aws-s3": "^4.5.0",
+    "@foal/core": "^4.5.0",
+    "@foal/graphiql": "^4.5.0",
+    "@foal/graphql": "^4.5.0",
+    "@foal/social": "^4.5.0",
+    "@foal/storage": "^4.5.0",
+    "@foal/swagger": "^4.5.0",
+    "@foal/typeorm": "^4.5.0",
+    "graphql": "~16.9.0",
     "source-map-support": "~0.5.21",
     "sqlite3": "~5.1.7",
     "typeorm": "0.3.17",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
-    "@foal/cli": "^4.4.0",
-    "@types/mocha": "10.0.6",
+    "@foal/cli": "^4.5.0",
+    "@types/mocha": "10.0.7",
     "@types/node": "18.18.6",
     "concurrently": "~8.2.2",
     "copy": "~0.3.2",
-    "mocha": "~10.4.0",
+    "mocha": "~10.7.0",
     "supervisor": "~0.12.0",
     "typescript": "~4.9.5"
   }

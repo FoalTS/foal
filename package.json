@@ -4,12 +4,14 @@
   "directories": {
     "doc": "docs"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "lint": "tslint -c tslint.json --project tsconfig.json",
     "lint:fix": "tslint -c tslint.json --project tsconfig.json --fix",
-    "start-docker": "docker-compose build && docker-compose up -d",
-    "stop-docker": "docker-compose down",
-    "bootstrap": "lerna bootstrap",
+    "start-docker": "docker compose build && docker compose up -d",
+    "stop-docker": "docker compose down",
     "clean": "lerna clean",
     "test": "lerna run --no-bail test"
   },
@@ -23,10 +25,10 @@
   },
   "homepage": "https://github.com/FoalTS/foal#readme",
   "devDependencies": {
-    "@types/mocha": "10.0.6",
-    "mocha": "~10.4.0",
+    "@types/mocha": "10.0.7",
+    "lerna": "~8.1.7",
+    "mocha": "~10.7.0",
     "tslint": "~6.1.3",
-    "typescript": "~4.9.5",
-    "lerna": "~6.0.1"
+    "typescript": "~4.9.5"
   }
 }

@@ -38,7 +38,7 @@ export class ApiController {
 Then generate a new controller. This one will be in charge of rendering the new page.
 
 ```bash
-foal generate controller openapi --register
+npx foal generate controller openapi --register
 ```
 
 Make the generated class extend the abstract class `SwaggerController`. And then provide the root controller of your API as an option to the controller.

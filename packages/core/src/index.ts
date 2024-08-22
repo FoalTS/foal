@@ -14,6 +14,7 @@ try {
 } finally {}
 
 export {
+  AsyncService,
   File,
   FileList,
   Log,
@@ -36,10 +37,6 @@ export {
   hashPassword,
   passwordHashNeedsToBeRefreshed,
   isInFile,
-  Logger,
-  render,
-  renderToString,
-  renderError,
   signToken,
   streamToBuffer,
   verifyPassword,
@@ -214,6 +211,11 @@ export {
   isHttpResponseSuccess,
   isHttpResponseTooManyRequests,
   isHttpResponseUnauthorized,
+
+  Logger,
+  render,
+  renderToString,
+  renderError,
 } from './core';
 export {
   OPENAPI_SERVICE_ID,

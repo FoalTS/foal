@@ -635,7 +635,7 @@ module.exports = {
 #### Revoking One Session
 
 ```
-foal g script revoke-session
+npx foal g script revoke-session
 ```
 
 Open `scripts/revoke-session.ts` and update its content.
@@ -675,13 +675,13 @@ npm run build
 Run the script.
 
 ```
-foal run revoke-session token="lfdkszjanjiznr"
+npx foal run revoke-session token="lfdkszjanjiznr"
 ```
 
 #### Revoking All Sessions
 
 ```
-foal g script revoke-all-sessions
+npx foal g script revoke-all-sessions
 ```
 
 Open `scripts/revoke-all-sessions.ts` and update its content.
@@ -709,7 +709,7 @@ npm run build
 Run the script.
 
 ```
-foal run revoke-all-sessions
+npx foal run revoke-all-sessions
 ```
 
 ### Query All Sessions of a User

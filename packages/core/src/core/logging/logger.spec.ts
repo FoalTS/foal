@@ -4,7 +4,7 @@ import { mock } from 'node:test';
 
 // FoalTS
 import { Logger } from './logger';
-import { Config } from '../../core';
+import { Config } from '../config';
 
 describe('Logger', () => {
 

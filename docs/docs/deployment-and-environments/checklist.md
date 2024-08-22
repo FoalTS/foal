@@ -49,7 +49,7 @@ SETTINGS_JWT_SECRET=YZP0iv6gM+VBTxk61l8nKUno2QxsQHO9hm8XfeedZUw
 You can generate 256-bit secrets encoded in base64 with the following command:
 
 ```bash
-foal createsecret
+npx foal createsecret
 ```
 
 ## Database Credentials & Migrations

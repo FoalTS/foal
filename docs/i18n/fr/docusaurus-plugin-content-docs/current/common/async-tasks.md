@@ -1,11 +1,41 @@
 ---
-title: Task Scheduling
+title: Async tasks
 ---
 
+## Running an asynchronous task
+
+In some situations, we need to execute a specific task without waiting for it and without blocking the request.
+
+This could be, for example, sending a specific message to the CRM or company chat. In this case, the user needs to be able to see his or her request completed as quickly as possible, even if the request to the CRM takes some time or fails.
+
+To this end, Foal provides an `AsyncService` to execute these tasks asynchronously, and correctly catch and log their errors where appropriate.
+
+```typescript
+import { AsyncService, dependency } from '@foal/core';
+
+import { CRMService } from './somewhere';
+
+export class SubscriptionService {
+  @dependency
+  asyncService: AsyncService;
+
+  @dependency
+  crmService: CRMService;
+
+  async subscribe(userId: number): Promise<void> {
+    // Do something
+
+    this.asyncService.run(() => this.crmService.updateUser(userId));
+  }
+}
+
+```
+
+## Scheduling a job
 
 You can schedule jobs using [shell scripts](../cli/shell-scripts.md) and the [node-schedule](https://www.npmjs.com/package/node-schedule) library.
 
-## Example
+### Example
 
 *scripts/fetch-metrics.ts*
 ```typescript
@@ -38,10 +68,10 @@ export async function main(args: any) {
 Schedule the job(s):
 ```sh
 npm run build
-foal run schedule-jobs arg1=value1
+npx foal run schedule-jobs arg1=value1
 ```
 
-## Background Jobs with pm2
+### Background Jobs with pm2
 
 While the above command works, it does not run the scheduler and the jobs in the background. To do this, you can use [pm2](http://pm2.keymetrics.io/), a popular process manager for Node.js.
 

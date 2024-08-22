@@ -13,6 +13,28 @@ export interface GoogleAuthParams {
   hd?: string;
 }
 
+// https://developers.google.com/identity/openid-connect/openid-connect#an-id-tokens-payload
+export interface GoogleUserInfo {
+  aud: string;
+  exp: number;
+  iat: number;
+  iss: string;
+  sub: string;
+  at_hash?: string;
+  azp?: string;
+  email?: string;
+  email_verified?: boolean;
+  family_name?: string;
+  given_name?: string;
+  hd?: string;
+  locale?: string;
+  name?: string;
+  nonce?: string;
+  picture?: string;
+  profile?: string;
+  [name: string]: unknown;
+}
+
 export class InvalidJWTError extends Error {
   readonly name = 'InvalidJWTError';
 }
@@ -24,7 +46,7 @@ export class InvalidJWTError extends Error {
  * @class GoogleProvider
  * @extends {AbstractProvider<GoogleAuthParams, never>}
  */
-export class GoogleProvider extends AbstractProvider<GoogleAuthParams, never> {
+export class GoogleProvider extends AbstractProvider<GoogleAuthParams, never, GoogleUserInfo> {
   protected configPaths = {
     clientId: 'settings.social.google.clientId',
     clientSecret: 'settings.social.google.clientSecret',

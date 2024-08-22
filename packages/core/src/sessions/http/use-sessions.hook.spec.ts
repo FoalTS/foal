@@ -22,7 +22,8 @@ import {
   isHttpResponseForbidden,
   isHttpResponseRedirect,
   isHttpResponseUnauthorized,
-  ServiceManager
+  ServiceManager,
+  Logger,
 } from '../../core';
 import {
   SESSION_DEFAULT_COOKIE_NAME,
@@ -37,7 +38,6 @@ import {
   SessionStore,
 } from '../core';
 import { UseSessions } from './use-sessions.hook';
-import { Logger } from '../../common';
 
 describe('UseSessions', () => {
 

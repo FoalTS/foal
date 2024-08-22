@@ -1,6 +1,6 @@
 {
   "name": "@foal/graphiql",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "description": "GraphiQL integration for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -40,13 +40,13 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^4.4.0"
+    "@foal/core": "^4.5.0"
   },
   "devDependencies": {
-    "@types/mocha": "10.0.6",
+    "@types/mocha": "10.0.7",
     "@types/node": "18.18.6",
     "graphiql": "~3.1.1",
-    "mocha": "~10.4.0",
+    "mocha": "~10.7.0",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "rimraf": "~5.0.5",

@@ -4,7 +4,7 @@ title: Hooks
 
 
 ```sh
-foal generate hook my-hook
+npx foal generate hook my-hook
 ```
 
 ## Description
