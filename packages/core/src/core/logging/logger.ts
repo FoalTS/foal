@@ -19,13 +19,13 @@ export class Logger {
     this.asyncLocalStorage.run({}, callback);
   }
 
-  addLogContext(params: Record<string, any>): void {
+  addLogContext(context: Record<string, any>): void {
     const store = this.asyncLocalStorage.getStore();
     if (!store) {
       this.log('warn', 'Impossible to add log context information. The logger context has not been initialized.');
       return;
     }
-    Object.assign(store, params);
+    Object.assign(store, context);
   }
 
   log(
