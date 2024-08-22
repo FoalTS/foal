@@ -1,4 +1,6 @@
-# Async tasks
+---
+title: Async tasks
+---
 
 ## Running an asynchronous task
 
