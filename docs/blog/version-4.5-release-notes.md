@@ -43,6 +43,36 @@ export class SubscriptionService {
 
 ```
 
+## Social authentication for SPAs
+
+If you wish to manually manage the redirection to the consent page on the client side (which is often necessary when developing an SPA), you can now do so with the `createHttpResponseWithConsentPageUrl` method. It returns an `HttpResponseOK` whose body contains the URL of the consent page.
+
+```typescript
+export class AuthController {
+  @dependency
+  google: GoogleProvider;
+
+  @Get('/signin/google')
+  getConsentPageURL() {
+    return this.google.createHttpResponseWithConsentPageUrl();
+  }
+  
+  // ...
+
+}
+
+```
+
+## Google social authentification
+
+The typing of the `GoogleProvider` service has been improved. The `userInfo` property returned by `getUserInfo` is now typed with the values returned by the Google server.
+
+```typescript
+const { userInfo } = await this.googleProvider.getUserInfo(...);
+
+// userInfo.email, userInfo.family_name, etc
+```
+
 ## Logging improvements
 
 In previous versions, the util function `displayServerURL` and configuration errors printed logs on several lines, which was not appropriate for logging software.

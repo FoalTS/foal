@@ -32,7 +32,7 @@ export class AuthController {
 
   @Get('/signin/google')
   redirectToGoogle() {
-    return this.google.redirect();
+    return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/google/cb')
@@ -43,7 +43,7 @@ export class AuthController {
 
   @Get('/signin/facebook')
   redirectToFacebook() {
-    return this.facebook.redirect();
+    return this.facebook.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/facebook/cb')
@@ -54,7 +54,7 @@ export class AuthController {
 
   @Get('/signin/github')
   redirectToGithub() {
-    return this.github.redirect();
+    return this.github.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/github/cb')
@@ -65,7 +65,7 @@ export class AuthController {
 
   @Get('/signin/linkedin')
   redirectToLinkedIn() {
-    return this.linkedin.redirect();
+    return this.linkedin.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/linkedin/cb')
@@ -76,7 +76,7 @@ export class AuthController {
 
   @Get('/signin/twitter')
   redirectToTwitter() {
-    return this.twitter.redirect();
+    return this.twitter.createHttpResponseWithConsentPageUrl({ isRedirection: true });
   }
 
   @Get('/signin/twitter/cb')

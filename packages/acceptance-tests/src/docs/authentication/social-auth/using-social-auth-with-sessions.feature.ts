@@ -59,7 +59,7 @@ describe('Feature: Using social auth with sessions', () => {
 
       @Get('/signin/google')
       redirectToGoogle() {
-        return this.google.redirect();
+        return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true });
       }
 
       @Get('/signin/google/callback')
@@ -67,7 +67,7 @@ describe('Feature: Using social auth with sessions', () => {
         cookie: true,
       })
       async handleGoogleRedirection(ctx: Context<User>) {
-        const { userInfo } = await this.google.getUserInfo<{ email: string }>(ctx);
+        const { userInfo } = await this.google.getUserInfo(ctx);
 
         if (!userInfo.email) {
           throw new Error('Google should have returned an email address.');

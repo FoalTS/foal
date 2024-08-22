@@ -27,6 +27,7 @@ export {
   GoogleProvider,
   InvalidJWTError,
   GoogleAuthParams,
+  GoogleUserInfo,
 } from './google-provider.service';
 export {
   LinkedInProvider,
