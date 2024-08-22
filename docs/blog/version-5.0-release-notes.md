@@ -68,6 +68,7 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 ## Logging
 
 - The `Logger.addLogContext(key, value)` method now accepts a record as parameter: `Logger.addLogContext(context)`. This makes the function's signature more consistent with other logging methods (`info`, `warn`, etc.) and allows multiple keys/values to be passed at once.
+- The deprecated `settings.loggerFormat` configuration has been removed. If you want to disable HTTP logging, set `settings.logger.logHttpRequests` to false instead.
 
 ## Removal of deprecated components
 

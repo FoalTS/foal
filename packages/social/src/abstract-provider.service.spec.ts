@@ -166,7 +166,7 @@ describe('AbstractProvider', () => {
     Config.set('settings.social.example.clientId', clientId);
     Config.set('settings.social.example.clientSecret', clientSecret);
     Config.set('settings.social.example.redirectUri', redirectUri);
-    Config.set('settings.loggerFormat', 'none');
+    Config.set('settings.logger.logHttpRequests', false);
 
     provider = createService(ConcreteProvider);
   });
@@ -175,6 +175,7 @@ describe('AbstractProvider', () => {
     Config.remove('settings.social.example.clientId');
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.logger.logHttpRequests');
     Config.remove('settings.social.cookie.secure');
     Config.remove('settings.social.cookie.domain');
   });
@@ -734,7 +735,7 @@ describe('Abstract Provider With PKCE', () => {
     Config.set('settings.social.example.clientId', clientId);
     Config.set('settings.social.example.clientSecret', clientSecret);
     Config.set('settings.social.example.redirectUri', redirectUri);
-    Config.set('settings.loggerFormat', 'none');
+    Config.set('settings.logger.logHttpRequests', false);
 
     provider = createService(ConcreteProvider);
   });
@@ -743,6 +744,7 @@ describe('Abstract Provider With PKCE', () => {
     Config.remove('settings.social.example.clientId');
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.logger.logHttpRequests');
     Config.remove('settings.social.cookie.secure');
     Config.remove('settings.social.cookie.domain');
   });
@@ -934,7 +936,7 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
     Config.set('settings.social.example.clientId', clientId);
     Config.set('settings.social.example.clientSecret', clientSecret);
     Config.set('settings.social.example.redirectUri', redirectUri);
-    Config.set('settings.loggerFormat', 'none');
+    Config.set('settings.logger.logHttpRequests', false);
 
     provider = createService(ConcreteProvider);
   });
@@ -943,6 +945,7 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
     Config.remove('settings.social.example.clientId');
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.logger.logHttpRequests');
     Config.remove('settings.social.cookie.secure');
     Config.remove('settings.social.cookie.domain');
   });
