@@ -100,7 +100,7 @@ It has seven properties:
 | Name | Type | Description |
 | --- | --- | --- |
 | `request` | `Request` | Gives information about the HTTP request. |
-| `state` | `{ [key: string]: any }` | Object which can be used to forward data accross several hooks (see [Hooks](./hooks.md)). |
+| `state` | `{ [key: string]: any } = {}` | Object which can be used to forward data accross several hooks (see [Hooks](./hooks.md)). |
 | `user` | `{ [key: string]: any }`\|`null` | The current user (see [Authentication](../authentication/quick-start.md)). | 
 | `session`| `Session`\|`null` | The session object if you use sessions. |
 | `files` | `FileList` | A list of file paths or buffers if you uploaded files (see [Upload and download files](../common/file-storage/upload-and-download-files.md)). |

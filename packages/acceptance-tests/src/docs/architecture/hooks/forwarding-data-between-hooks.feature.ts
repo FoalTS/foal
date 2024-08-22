@@ -21,7 +21,7 @@ describe('Feature: Forwarding data betweens hooks', () => {
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
     function AddOrgToContext() {
-      return Hook(async ctx => {
+      return Hook(async (ctx: Context<any, { org: Org }>) => {
         if (ctx.user) {
           ctx.state.org = await Org.findOneByOrFail({ id: ctx.user.orgId });
         }
@@ -33,7 +33,7 @@ describe('Feature: Forwarding data betweens hooks', () => {
       @Get('/org-name')
       @UserRequired()
       @AddOrgToContext()
-      readOrgName(ctx: Context) {
+      readOrgName(ctx: Context<any, { org: Org }>) {
         return new HttpResponseOK(ctx.state.org.name);
       }
 
