@@ -14,6 +14,10 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
 <!--truncate-->
 
+## Supported versions of Node
+
+- Support for Node 18 has been dropped and support for Node 22 has been added.
+
 ## Removal of depreacted components
 
 - The deprecated hook `@Log` has been removed. To replace it, you can use the `Logger` service in a custom `@Hook`.

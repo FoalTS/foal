@@ -136,10 +136,10 @@ describe('GraphQLController', () => {
         }
 
         try {
-          // Node 18
+          // Node 22
           strictEqual(
             response.body,
-            'The "variables" URL parameter is not a valid JSON-encoded string: Unexpected end of JSON input'
+            `The "variables" URL parameter is not a valid JSON-encoded string: Expected property name or '}' in JSON at position 1 (line 1 column 2)`
           );
         } catch {
           // Node 20
@@ -503,10 +503,10 @@ describe('GraphQLController', () => {
           }
 
           try {
-            // Node 18
+            // Node 22
             strictEqual(
               response.body,
-              'The "variables" URL parameter is not a valid JSON-encoded string: Unexpected end of JSON input'
+              `The "variables" URL parameter is not a valid JSON-encoded string: Expected property name or '}' in JSON at position 1 (line 1 column 2)`
             );
           } catch (error) {
             // Node 20
