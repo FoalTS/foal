@@ -136,7 +136,7 @@ All of major releases are supported for at least 18 months.
 
 | Release | Status | Active Start | Maintenance Start | End-of-life | Node versions | TS min version |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 5.x | *Active* | TODO |  |  | 20, 22 | 4.9 |
+| 5.x | *Active* | TODO |  |  | 20, 22 | 5.5 |
 | 4.x | *Maintenance* | 2023-09-06 | TODO | TODO | 18, 20 | 4.9 |
 | 3.x | *End-of-Life* | 2022-10-28 | 2023-09-06 | 2024-03-06 | 16, 18 | 4.7 |
 | 2.x | *End-of-Life* | 2020-12-03 | 2022-10-28 | 2023-04-30 | 10, 12, 14 | 4.0 |

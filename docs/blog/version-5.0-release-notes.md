@@ -14,9 +14,10 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
 <!--truncate-->
 
-## Supported versions of Node
+## Supported versions of Node and TypeScript
 
 - Support for Node 18 has been dropped and support for Node 22 has been added.
+- The supported version of TypeScript is version 5. Update your `package.json` file accordingly.
 
 ## Better typing
 
