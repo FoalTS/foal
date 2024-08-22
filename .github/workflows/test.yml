@@ -29,8 +29,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Use npm version 9.6
-      run: npm install -g npm@9.6
     - name: Install project and package dependencies
       run: npm install
     - name: Build packages
