@@ -155,12 +155,12 @@ export class AuthController {
 }
 ```
 
-You can also override in the `redirect` method the scopes you want:
+You can also override in the `createHttpResponseWithConsentPageUrl` method the scopes you want:
 ```typescript
 return this.google.createHttpResponseWithConsentPageUrl({ isRedirection: true, scopes: [ 'email' ] });
 ```
 
-Additional parameters can passed to the `redirect` and `getUserInfo` methods depending on the provider.
+Additional parameters can passed to the `createHttpResponseWithConsentPageUrl` and `getUserInfo` methods depending on the provider.
 
 > If you want to manage the redirection on the client side manually, don't specify the `isRedirection` option. In this case, the `createHttpResponseWithConsentPageUrl` method returns an `HttpResponseOK` whose body contains the URL of the consent page. The name of the body property is `consentPageUrl`.
 
@@ -495,7 +495,7 @@ const { userInfo } = await this.facebook.getUserInfo(ctx, {
 
 |Name|Type|Description|
 |---|---|---|
-|`fields`|`string[]`|List of fields that the returned user info object should contain. These fields may or may not be available depending on the permissions (`scopes`) that were requested with the `redirect` method. Default: `['id', 'name', 'email']`.|
+|`fields`|`string[]`|List of fields that the returned user info object should contain. These fields may or may not be available depending on the permissions (`scopes`) that were requested with the `createHttpResponseWithConsentPageUrl` method. Default: `['id', 'name', 'email']`.|
 
 ### Github
 
