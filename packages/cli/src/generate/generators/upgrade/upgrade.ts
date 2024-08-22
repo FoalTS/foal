@@ -1,6 +1,3 @@
-// 3p
-import * as fetch from 'node-fetch';
-
 // FoalTS
 import { FileSystem } from '../../file-system';
 import { installDependencies, logger } from '../../utils';
