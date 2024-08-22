@@ -216,12 +216,12 @@ When an error is thrown (or rejected) in a hook, controller or service and is no
 
 ### Disabling Error Logging
 
-In some scenarios, you might want to disable error logging. You can achieve this by setting the `allErrors` configuration option to false. 
+In some scenarios, you might want to disable error logging. You can achieve this by setting the `logErrors` configuration option to false. 
 
 ```json
 {
   "settings": {
-    "allErrors": false
+    "logErrors": false
   }
 }
 ```
