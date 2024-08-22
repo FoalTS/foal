@@ -143,7 +143,7 @@ describe('TokenError', () => {
 
 describe('AbstractProvider', () => {
 
-  class ConcreteProvider extends AbstractProvider<any, any> {
+  class ConcreteProvider extends AbstractProvider<any, any, any> {
     protected configPaths = {
       clientId: 'settings.social.example.clientId',
       clientSecret: 'settings.social.example.clientSecret',
@@ -151,7 +151,8 @@ describe('AbstractProvider', () => {
     };
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
-    getUserInfoFromTokens(tokens: SocialTokens) {
+
+    async getUserInfoFromTokens(tokens: SocialTokens): Promise<any> {
       throw new Error('Method not implemented.');
     }
   }
@@ -611,7 +612,7 @@ describe('AbstractProvider', () => {
       });
 
       class ConcreteProvider2 extends ConcreteProvider {
-        getUserInfoFromTokens(tokens: SocialTokens) {
+        async getUserInfoFromTokens(tokens: SocialTokens) {
           // Do not throw an error.
         }
       }
@@ -656,7 +657,7 @@ describe('AbstractProvider', () => {
       let calledWithTokens: null|SocialTokens = null;
       let calledWithParams: null|any = null;
       class ConcreteProvider2 extends ConcreteProvider {
-        getUserInfoFromTokens(tokens: SocialTokens, params?: any) {
+        async getUserInfoFromTokens(tokens: SocialTokens, params?: any) {
           calledWithTokens = tokens;
           calledWithParams = params || null;
         }
@@ -718,7 +719,8 @@ describe('Abstract Provider With PKCE', () => {
     protected usePKCE: boolean = true;
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
-    getUserInfoFromTokens(tokens: SocialTokens) {
+
+    async getUserInfoFromTokens(tokens: SocialTokens) {
       throw new Error('Method not implemented.');
     }
   }
@@ -917,7 +919,8 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
     protected useCodeVerifierAsCodeChallenge = true;
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
-    getUserInfoFromTokens(tokens: SocialTokens) {
+
+    async getUserInfoFromTokens(tokens: SocialTokens) {
       throw new Error('Method not implemented.');
     }
   }

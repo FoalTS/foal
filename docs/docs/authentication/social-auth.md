@@ -343,7 +343,11 @@ export interface GithubUserInfoParameter {
   // ...
 }
 
-export class GithubProvider extends AbstractProvider<GithubAuthParameter, GithubUserInfoParameter> {
+export interface GithubUserInfo {
+  // ...
+}
+
+export class GithubProvider extends AbstractProvider<GithubAuthParameter, GithubUserInfoParameter, GithubUserInfo> {
 
   protected configPaths = {
     clientId: 'social.github.clientId',
@@ -357,7 +361,7 @@ export class GithubProvider extends AbstractProvider<GithubAuthParameter, Github
 
   protected defaultScopes: string[] = [ 'email' ]; // Optional
 
-  async getUserInfoFromTokens(tokens: SocialTokens, params?: GithubUserInfoParameter) {
+  getUserInfoFromTokens(tokens: SocialTokens, params?: GithubUserInfoParameter): UserInfo | Promise<GithubUserInfo> {
     // ...
 
     // In case the server returns an error when requesting 
