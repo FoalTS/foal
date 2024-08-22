@@ -63,6 +63,8 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
     ```
 
+- The return value of the social services `getUserInfoFromTokens` method is now typed.
+
 ## Removal of deprecated components
 
 - The deprecated hook `@Log` has been removed. Use the `Logger` service in a custom `@Hook` instead.
