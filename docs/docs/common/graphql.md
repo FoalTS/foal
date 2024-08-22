@@ -194,7 +194,7 @@ export class ApiController extends GraphQLController {
   schema = // ...
 
   @dependency
-  resolvers: RootResolverService;
+  declare resolvers: RootResolverService;
 }
 ```
 
