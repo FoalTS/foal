@@ -465,7 +465,7 @@ import { Context, Get, Hook, HttpResponseOK, UserRequired } from '@foal/core';
 import { Org } from '../entities';
 
 function AddOrgToContext() {
-  return Hook(async ctx => {
+  return Hook(async (ctx: Context<any, { org: Org }>) => {
     if (ctx.user) {
       ctx.state.org = await Org.findOneByOrFail({ id: ctx.user.orgId });
     }
@@ -477,7 +477,7 @@ export class ApiController {
   @Get('/org-name')
   @UserRequired()
   @AddOrgToContext()
-  readOrgName(ctx: Context) {
+  readOrgName(ctx: Context<any, { org: Org }>) {
     return new HttpResponseOK(ctx.state.org.name);
   }
 
