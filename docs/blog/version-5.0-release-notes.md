@@ -74,3 +74,4 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
 - The deprecated hook `@Log` has been removed. Use the `Logger` service in a custom `@Hook` instead.
 - The command alias `npx foal run-script` has been removed. Use `npx foal run` instead.
+- The deprecated method `AbstractProvider.redirect` has been removed. Use `AbstractProvider.createHttpResponseWithConsentPageUrl({ isRedirection: true })` instead.
