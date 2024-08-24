@@ -24,7 +24,7 @@
     "@foal/core": "^4.0.0",
     "mongodb": "~5.9.2",
     "source-map-support": "~0.5.21",
-    "typeorm": "0.3.17"
+    "typeorm": "0.3.20"
   },
   "devDependencies": {
     "@foal/cli": "^4.0.0",

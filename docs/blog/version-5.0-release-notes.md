@@ -30,6 +30,10 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 > }
 > ```
 
+## TypeORM upgrade
+
+- The minimum required version of TypeORM is v0.3.20.
+
 ## Better typing
 
 - The default type of `Context.state` is now `{}`. This way, you'll get a compilation error if you forget to specify a type for the state.
