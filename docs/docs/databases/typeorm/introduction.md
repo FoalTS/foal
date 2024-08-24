@@ -59,7 +59,7 @@ When creating a new project, an `SQLite` database is used by default as it does 
 ### Packages
 
 ```
-npm install typeorm@0.3.17 @foal/typeorm
+npm install typeorm@0.3.20 @foal/typeorm
 ```
 
 Two packages are required to use TypeORM with FoalTS:
