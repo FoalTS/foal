@@ -19,7 +19,7 @@ export async function runScript({ name }: { name: string }, argv: string[]) {
     const services = new ServiceManager();
     const logger = services.get(Logger);
 
-    await execScript({ name }, argv, services, logger);
+    logger.initLogContext(() => execScript({ name }, argv, services, logger).catch(error => console.error(error)))
   } catch (error: any) {
     if (error.code === 'MODULE_NOT_FOUND') {
       console.error('@foal/core module not found. Are you sure you are in a FoalTS project?');
