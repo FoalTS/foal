@@ -5,7 +5,7 @@ import { notStrictEqual, strictEqual } from 'assert';
 import { DataSource } from 'typeorm';
 
 // FoalTS
-import { Config, createService, createSession, readSession, Store } from '@foal/core';
+import { Config, createSession, readSession, ServiceManager, Store } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
 import { createAndInitializeDataSource, getTypeORMStorePath } from '../../../common';
 
@@ -28,10 +28,10 @@ describe('Feature: Revoking sessions', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    async function main({ token }: { token: string }) {
+    async function main({ token }: { token: string }, services: ServiceManager) {
       // await dataSource.initialize();
 
-      const store = createService(Store);
+      const store = services.get(Store);
       await store.boot();
 
       const session = await readSession(store, token);
@@ -42,7 +42,8 @@ describe('Feature: Revoking sessions', () => {
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    const store = createService(Store);
+    const services = new ServiceManager();
+    const store = services.get(Store);
 
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
@@ -51,7 +52,7 @@ describe('Feature: Revoking sessions', () => {
 
     notStrictEqual(await readSession(store, session.getToken()), null);
 
-    await main({ token: session.getToken() });
+    await main({ token: session.getToken() }, services);
 
     strictEqual(await readSession(store, session.getToken()), null);
 
@@ -61,17 +62,18 @@ describe('Feature: Revoking sessions', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    async function main() {
+    async function main(args: any, services: ServiceManager) {
       // await dataSource.initialize();
 
-      const store = createService(Store);
+      const store = services.get(Store);
       await store.boot();
       await store.clear();
     }
 
     /* ======================= DOCUMENTATION END ========================= */
 
-    const store = createService(Store);
+    const services = new ServiceManager();
+    const store = services.get(Store);
 
     dataSource = await createAndInitializeDataSource([ DatabaseSession ]);
 
@@ -83,7 +85,7 @@ describe('Feature: Revoking sessions', () => {
     notStrictEqual(await readSession(store, session.getToken()), null);
     notStrictEqual(await readSession(store, session2.getToken()), null);
 
-    await main();
+    await main(undefined, services);
 
     strictEqual(await readSession(store, session.getToken()), null);
     strictEqual(await readSession(store, session2.getToken()), null);

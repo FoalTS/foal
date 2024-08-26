@@ -1,6 +1,5 @@
 // std
 import { existsSync } from 'fs';
-import { join } from 'path';
 
 // 3p
 import Ajv from 'ajv';
@@ -10,6 +9,12 @@ import addFormats from 'ajv-formats';
 import { getCommandLineArguments } from './get-command-line-arguments.util';
 
 export async function runScript({ name }: { name: string }, argv: string[], log = console.log) {
+  const { ServiceManager } = require(require.resolve('@foal/core', {
+    paths: [ process.cwd() ],
+  })) as typeof import('@foal/core');
+
+  const services = new ServiceManager();
+
   if (!existsSync(`build/scripts/${name}.js`)) {
     if (existsSync(`src/scripts/${name}.ts`)) {
       log(
@@ -22,7 +27,9 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
     return;
   }
 
-  const { main, schema } = require(join(process.cwd(), `./build/scripts/${name}`));
+  const { main, schema } = require(require.resolve(`./build/scripts/${name}`, {
+    paths: [ process.cwd() ],
+  }));
 
   if (!main) {
     log(`Error: No "main" function was found in build/scripts/${name}.js.`);
@@ -47,7 +54,7 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
   }
 
   try {
-    await main(args);
+    await main(args, services);
   } catch (error: any) {
     log(error);
   }

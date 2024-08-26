@@ -641,7 +641,7 @@ npx foal g script revoke-session
 Open `scripts/revoke-session.ts` and update its content.
 
 ```typescript
-import { createService, readSession, Store } from '@foal/core';
+import { readSession, ServiceManager, Store } from '@foal/core';
 
 import { dataSource } from '../db';
 
@@ -653,10 +653,10 @@ export const schema = {
   required: [ 'token' ]
 }
 
-export async function main({ token }: { token: string }) {
+export async function main({ token }: { token: string }, services: ServiceManager) {
   await dataSource.initialize();
 
-  const store = createService(Store);
+  const store = services.get(Store);
   await store.boot();
 
   const session = await readSession(store, token);
@@ -687,14 +687,14 @@ npx foal g script revoke-all-sessions
 Open `scripts/revoke-all-sessions.ts` and update its content.
 
 ```typescript
-import { createService, Store } from '@foal/core';
+import { ServiceManager, Store } from '@foal/core';
 
 import { dataSource } from '../db';
 
-export async function main() {
+export async function main(args: any, services: ServiceManager) {
   await dataSource.initialize();
 
-  const store = createService(Store);
+  const store = services.get(Store);
   await store.boot();
   await store.clear();
 }

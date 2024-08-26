@@ -162,6 +162,38 @@ describe('runScript', () => {
     });
   });
 
+  it('should call the "main" function of build/scripts/my-script.js with a ServiceManager.', async () => {
+    mkdirIfDoesNotExist('build/scripts');
+    const scriptContent = `const { writeFileSync } = require('fs');
+    const { ServiceManager } = require('@foal/core');
+    module.exports.main = function main(args, services) {
+      const isServiceManager = services instanceof ServiceManager;
+      writeFileSync('my-script-temp', JSON.stringify({
+        isServiceManager
+      }), 'utf8');
+    }`;
+    writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
+
+    delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
+
+    await runScript({ name: 'my-script' }, [
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+      'run',
+      'my-script',
+      'foo=bar',
+    ]);
+
+    if (!existsSync('my-script-temp')) {
+      throw new Error('The script was not executed');
+    }
+    const actual = JSON.parse(readFileSync('my-script-temp', 'utf8'));
+
+    deepStrictEqual(actual, {
+      isServiceManager: true,
+    });
+  });
+
   it('should catch and log errors thrown in the "main" function.', async () => {
     mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
