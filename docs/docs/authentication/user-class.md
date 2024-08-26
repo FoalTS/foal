@@ -120,8 +120,6 @@ export async function main(args) {
     user.password = await hashPassword(args.password);
 
     console.log(await user.save());
-  } catch (error: any) {
-    console.error(error.message);
   } finally {
     await dataSource.destroy();
   }

@@ -4,25 +4,25 @@ import { existsSync } from 'fs';
 // 3p
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
+import type { ServiceManager } from '@foal/core';
 
 // FoalTS
 import { getCommandLineArguments } from './get-command-line-arguments.util';
 
-export async function runScript({ name }: { name: string }, argv: string[], log = console.log) {
-  const { ServiceManager } = require(require.resolve('@foal/core', {
+export async function runScript({ name }: { name: string }, argv: string[], services?: ServiceManager) {
+  const { Logger, ServiceManager } = require(require.resolve('@foal/core', {
     paths: [ process.cwd() ],
   })) as typeof import('@foal/core');
 
-  const services = new ServiceManager();
+  services = services || new ServiceManager();
+
+  const logger = services.get(Logger);
 
   if (!existsSync(`build/scripts/${name}.js`)) {
     if (existsSync(`src/scripts/${name}.ts`)) {
-      log(
-        `The script "${name}" does not exist in build/scripts/. But it exists in src/scripts/.`
-          + ' Please build your script by running the command "npm run build" or using "npm run dev".'
-      );
+      logger.error(`Script "${name}" not found in build/scripts/ but found in src/scripts/. Did you forget to build it?`);
     } else {
-      log(`The script "${name}" does not exist. You can create it by running the command "npx foal g script ${name}".`);
+      logger.error(`Script "${name}" not found.`);
     }
     return;
   }
@@ -32,7 +32,7 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
   }));
 
   if (!main) {
-    log(`Error: No "main" function was found in build/scripts/${name}.js.`);
+    logger.error(`No "main" function found in script "${name}".`);
     return;
   }
 
@@ -44,9 +44,9 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
     if (!ajv.validate(schema, args)) {
       ajv.errors!.forEach(err => {
         if (err.instancePath) {
-          log(`Script error: the value of "${err.instancePath.split('/')[1]}" ${err.message}.`);
+          logger.error(`Script argument "${err.instancePath.split('/')[1]}" ${err.message}.`);
         } else {
-          log(`Script error: arguments ${err.message}.`);
+          logger.error(`Script arguments ${err.message}.`);
         }
       });
       return;
@@ -56,6 +56,6 @@ export async function runScript({ name }: { name: string }, argv: string[], log 
   try {
     await main(args, services);
   } catch (error: any) {
-    log(error);
+    logger.error(error.message, { error });
   }
 }

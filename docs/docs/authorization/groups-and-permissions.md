@@ -73,8 +73,6 @@ export async function main(args: { codeName: string, name: string }) {
     console.log(
       await permission.save()
     );
-  } catch (error: any) {
-    console.log(error.message);
   } finally {
     await dataSource.destroy();
   }
@@ -168,8 +166,6 @@ export async function main(args: { codeName: string, name: string, permissions: 
     console.log(
       await group.save()
     );
-  } catch (error: any) {
-    console.log(error.message);
   } finally {
     await dataSource.destroy();
   }
@@ -277,8 +273,6 @@ export async function main(args) {
     console.log(
       await user.save()
     );
-  } catch (error: any) {
-    console.log(error.message);
   } finally {
     await dataSource.destroy();
   }

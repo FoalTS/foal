@@ -42,8 +42,6 @@ export async function main(args: { email: string, password: string, name?: strin
 
   try {
     console.log(await user.save());
-  } catch (error: any) {
-    console.log(error.message);
   } finally {
     await dataSource.destroy();
   }
@@ -113,8 +111,6 @@ export async function main(args: { author: string, title: string, link: string }
 
   try {
     console.log(await story.save());
-  } catch (error: any) {
-    console.error(error);
   } finally {
     await dataSource.destroy();
   }

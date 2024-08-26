@@ -1,11 +1,13 @@
 // std
 import { deepStrictEqual, strictEqual } from 'assert';
 import { join } from 'path';
+import { mock } from 'node:test';
 
 // FoalTS
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { mkdirIfDoesNotExist, rmDirAndFilesIfExist } from '../generate/utils';
 import { runScript } from './run-script';
+import { Logger, ServiceManager } from '@foal/core';
 
 function rmfileIfExists(path: string) {
   if (existsSync(path)) {
@@ -19,16 +21,22 @@ describe('runScript', () => {
     rmDirAndFilesIfExist('src/scripts');
     rmDirAndFilesIfExist('build/scripts');
     rmfileIfExists('my-script-temp');
+
+    mock.reset();
   });
 
   it('should log a suitable message if build/scripts/my-script.js and src/scripts/my-script.ts do not exist.', async () => {
-    let msg;
-    const log = (message: any) => msg = message;
-    await runScript({ name: 'my-script' }, [], log);
+    const services = new ServiceManager();
+    const logger = services.get(Logger);
+    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
-    strictEqual(
-      msg, 'The script "my-script" does not exist. You can create it by running the command "npx foal g script my-script".'
-    );
+    await runScript({ name: 'my-script' }, [], services);
+    strictEqual(loggerErrorMock.callCount(), 1);
+
+    const actual = loggerErrorMock.calls[0].arguments[0];
+    const expected = 'Script "my-script" not found.';
+
+    strictEqual(actual, expected);
   });
 
   it('should log a suitable message if build/scripts/my-script.js does not exist but '
@@ -36,32 +44,38 @@ describe('runScript', () => {
     mkdirIfDoesNotExist('src/scripts');
     writeFileSync('src/scripts/my-script.ts', '', 'utf8');
 
-    let msg;
-    const log = (message: any) => msg = message;
-    await runScript({ name: 'my-script' }, [], log);
+    const services = new ServiceManager();
+    const logger = services.get(Logger);
+    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
-    strictEqual(
-      msg,
-      'The script "my-script" does not exist in build/scripts/. But it exists in src/scripts/.'
-        + ' Please build your script by running the command "npm run build" or using "npm run dev".'
-    );
+    await runScript({ name: 'my-script' }, [], services);
+
+    strictEqual(loggerErrorMock.callCount(), 1);
+
+    const actual = loggerErrorMock.calls[0].arguments[0];
+    const expected = 'Script "my-script" not found in build/scripts/ but found in src/scripts/. Did you forget to build it?';
+
+    strictEqual(actual, expected);
   });
 
   it('should log a suitable message if no function called "main" was found in build/scripts/my-script.js.', async () => {
     mkdirIfDoesNotExist('build/scripts');
     writeFileSync('build/scripts/my-script.js', '', 'utf8');
 
-    let msg;
-    const log = (message: any) => msg = message;
+    const services = new ServiceManager();
+    const logger = services.get(Logger);
+    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await runScript({ name: 'my-script' }, [], log);
+    await runScript({ name: 'my-script' }, [], services);
 
-    strictEqual(
-      msg,
-      'Error: No "main" function was found in build/scripts/my-script.js.'
-    );
+    strictEqual(loggerErrorMock.callCount(), 1);
+
+    const actual = loggerErrorMock.calls[0].arguments[0];
+    const expected = 'No "main" function found in script "my-script".';
+
+    strictEqual(actual, expected);
   });
 
   it('should validate the process arguments with the schema if it is given.', async () => {
@@ -73,8 +87,9 @@ describe('runScript', () => {
     }`;
     writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
 
-    const msgs: string[] = [];
-    const log = (message: any) => msgs.push(message);
+    const services = new ServiceManager();
+    const logger = services.get(Logger);
+    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
@@ -85,17 +100,16 @@ describe('runScript', () => {
       'my-script',
       'email=bar',
       'n=11'
-    ], log);
+    ], services);
 
-    deepStrictEqual(
-      msgs,
-      [
-        'Script error: arguments must have required property \'password\'.',
-        'Script error: the value of "email" must NOT have more than 2 characters.',
-        'Script error: the value of "email" must match format "email".',
-        'Script error: the value of "n" must be <= 10.',
-      ]
-    );
+    strictEqual(loggerErrorMock.callCount(), 4);
+
+    deepStrictEqual(loggerErrorMock.calls.map(call => call.arguments[0]), [
+      'Script arguments must have required property \'password\'.',
+      'Script argument "email" must NOT have more than 2 characters.',
+      'Script argument "email" must match format "email".',
+      'Script argument "n" must be <= 10.',
+    ]);
   });
 
   it('should call the "main" function of build/scripts/my-script.js with the script arguments (no schema).', async () => {
@@ -204,17 +218,24 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    let msg: any;
-    const log = (message: any) => msg = message;
+    const services = new ServiceManager();
+    const logger = services.get(Logger);
+    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
     await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
       'my-script',
-    ], log);
+    ], services);
 
-    deepStrictEqual(msg, new Error('Hello world'));
+    strictEqual(loggerErrorMock.callCount(), 1);
+
+    const actualMessage = loggerErrorMock.calls[0].arguments[0];
+    const actualParameters = loggerErrorMock.calls[0].arguments[1];
+
+    strictEqual(actualMessage, 'Hello world');
+    deepStrictEqual(actualParameters?.error, new Error('Hello world'));
   });
 
   it('should catch and log errors rejected in the "main" function.', async () => {
@@ -227,17 +248,24 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    let msg: any;
-    const log = (message: any) => msg = message;
+    const services = new ServiceManager();
+    const logger = services.get(Logger);
+    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
     await runScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
       'my-script',
-    ], log);
+    ], services);
 
-    deepStrictEqual(msg, new Error('Hello world'));
+    strictEqual(loggerErrorMock.callCount(), 1);
+
+    const actualMessage = loggerErrorMock.calls[0].arguments[0];
+    const actualParameters = loggerErrorMock.calls[0].arguments[1];
+
+    strictEqual(actualMessage, 'Hello world');
+    deepStrictEqual(actualParameters?.error, new Error('Hello world'));
   });
 
 });

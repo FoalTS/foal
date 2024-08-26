@@ -20,8 +20,6 @@ export async function main() {
     const user = new User();
 
     console.log(await user.save());
-  } catch (error: any) {
-    console.error(error.message);
   } finally {
     await dataSource.destroy();
   }

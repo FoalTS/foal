@@ -23,8 +23,6 @@ export async function main(args: { codeName: string, name: string }) {
     console.log(
       await permission.save()
     );
-  } catch (error: any) {
-    console.log(error.message);
   } finally {
     await dataSource.destroy();
   }

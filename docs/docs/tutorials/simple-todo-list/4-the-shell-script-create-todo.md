@@ -45,8 +45,6 @@ export async function main(args: { text: string }) {
 
     // Save the task in the database and then display it in the console.
     console.log(await todo.save());
-  } catch (error: any) {
-    console.log(error.message);
   } finally {
     // Close the connection to the database.
     await dataSource.destroy();
