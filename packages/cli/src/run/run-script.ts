@@ -4,20 +4,33 @@ import { existsSync } from 'fs';
 // 3p
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import type { ServiceManager } from '@foal/core';
+import type { Logger, ServiceManager } from '@foal/core';
 
 // FoalTS
 import { getCommandLineArguments } from './get-command-line-arguments.util';
 
-export async function runScript({ name }: { name: string }, argv: string[], services?: ServiceManager) {
-  const { Logger, ServiceManager } = require(require.resolve('@foal/core', {
-    paths: [ process.cwd() ],
-  })) as typeof import('@foal/core');
+// TODO: test this function
+export async function runScript({ name }: { name: string }, argv: string[]) {
+  try {
+    const { Logger, ServiceManager } = require(require.resolve('@foal/core', {
+      paths: [ process.cwd() ],
+    })) as typeof import('@foal/core');
 
-  services = services || new ServiceManager();
+    const services = new ServiceManager();
+    const logger = services.get(Logger);
 
-  const logger = services.get(Logger);
+    await execScript({ name }, argv, services, logger);
+  } catch (error: any) {
+    if (error.code === 'MODULE_NOT_FOUND') {
+      console.error('@foal/core module not found. Are you sure you are in a FoalTS project?');
+      return;
+    }
 
+    throw error;
+  }
+}
+
+export async function execScript({ name }: { name: string }, argv: string[], services: ServiceManager, logger: Logger) {
   if (!existsSync(`build/scripts/${name}.js`)) {
     if (existsSync(`src/scripts/${name}.ts`)) {
       logger.error(`Script "${name}" not found in build/scripts/ but found in src/scripts/. Did you forget to build it?`);

@@ -6,7 +6,7 @@ import { mock } from 'node:test';
 // FoalTS
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { mkdirIfDoesNotExist, rmDirAndFilesIfExist } from '../generate/utils';
-import { runScript } from './run-script';
+import { execScript } from './run-script';
 import { Logger, ServiceManager } from '@foal/core';
 
 function rmfileIfExists(path: string) {
@@ -15,7 +15,15 @@ function rmfileIfExists(path: string) {
   }
 }
 
-describe('runScript', () => {
+describe('execScript', () => {
+
+  let services: ServiceManager;
+  let logger: Logger;
+
+  beforeEach(() => {
+    services = new ServiceManager();
+    logger = services.get(Logger);
+  });
 
   afterEach(() => {
     rmDirAndFilesIfExist('src/scripts');
@@ -26,11 +34,9 @@ describe('runScript', () => {
   });
 
   it('should log a suitable message if build/scripts/my-script.js and src/scripts/my-script.ts do not exist.', async () => {
-    const services = new ServiceManager();
-    const logger = services.get(Logger);
     const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
-    await runScript({ name: 'my-script' }, [], services);
+    await execScript({ name: 'my-script' }, [], services, logger);
     strictEqual(loggerErrorMock.callCount(), 1);
 
     const actual = loggerErrorMock.calls[0].arguments[0];
@@ -44,11 +50,9 @@ describe('runScript', () => {
     mkdirIfDoesNotExist('src/scripts');
     writeFileSync('src/scripts/my-script.ts', '', 'utf8');
 
-    const services = new ServiceManager();
-    const logger = services.get(Logger);
     const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
-    await runScript({ name: 'my-script' }, [], services);
+    await execScript({ name: 'my-script' }, [], services, logger);
 
     strictEqual(loggerErrorMock.callCount(), 1);
 
@@ -62,13 +66,11 @@ describe('runScript', () => {
     mkdirIfDoesNotExist('build/scripts');
     writeFileSync('build/scripts/my-script.js', '', 'utf8');
 
-    const services = new ServiceManager();
-    const logger = services.get(Logger);
     const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await runScript({ name: 'my-script' }, [], services);
+    await execScript({ name: 'my-script' }, [], services, logger);
 
     strictEqual(loggerErrorMock.callCount(), 1);
 
@@ -87,20 +89,18 @@ describe('runScript', () => {
     }`;
     writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
 
-    const services = new ServiceManager();
-    const logger = services.get(Logger);
     const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await runScript({ name: 'my-script' }, [
+    await execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
       'my-script',
       'email=bar',
       'n=11'
-    ], services);
+    ], services, logger);
 
     strictEqual(loggerErrorMock.callCount(), 4);
 
@@ -122,13 +122,13 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await runScript({ name: 'my-script' }, [
+    await execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
       'my-script',
       'foo=bar',
-    ]);
+    ], services, logger);
 
     if (!existsSync('my-script-temp')) {
       throw new Error('The script was not executed');
@@ -157,13 +157,13 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await runScript({ name: 'my-script' }, [
+    await execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
       'my-script',
       'foo=bar',
-    ]);
+    ], services, logger);
 
     if (!existsSync('my-script-temp')) {
       throw new Error('The script was not executed');
@@ -190,13 +190,13 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await runScript({ name: 'my-script' }, [
+    await execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
       'my-script',
       'foo=bar',
-    ]);
+    ], services, logger);
 
     if (!existsSync('my-script-temp')) {
       throw new Error('The script was not executed');
@@ -218,16 +218,14 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    const services = new ServiceManager();
-    const logger = services.get(Logger);
     const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
-    await runScript({ name: 'my-script' }, [
+    await execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
       'my-script',
-    ], services);
+    ], services, logger);
 
     strictEqual(loggerErrorMock.callCount(), 1);
 
@@ -248,16 +246,14 @@ describe('runScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    const services = new ServiceManager();
-    const logger = services.get(Logger);
     const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
-    await runScript({ name: 'my-script' }, [
+    await execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
       'my-script',
-    ], services);
+    ], services, logger);
 
     strictEqual(loggerErrorMock.callCount(), 1);
 
