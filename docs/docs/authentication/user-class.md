@@ -37,8 +37,7 @@ import { User } from './src/app/entities';
 async function main() {
   const user = new User();
   user.foo = 1;
-  await user.save(); 1
-  });
+  await user.save();
 }
 ```
 

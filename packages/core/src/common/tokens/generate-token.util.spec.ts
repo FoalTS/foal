@@ -6,7 +6,7 @@ import { generateToken } from './generate-token.util';
 
 describe('generateToken', () => {
 
-  it('should generate a random base64url-encoded string which size is 128 bits.', async () => {
+  it('should generate a random base64url-encoded string which size is 256 bits.', async () => {
     const token = await generateToken();
 
     const buffer = Buffer.from(token, 'base64');

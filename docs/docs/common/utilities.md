@@ -8,7 +8,7 @@ In many situations, we need to generate tokens and then verify them. If your tok
 
 ### Unsigned Tokens
 
-The `generateToken` function generates a cryptographically secure random token encoded in base64url (128 bits).
+The `generateToken` function generates a cryptographically secure random token encoded in base64url (256 bits).
 
 ```typescript
 import { generateToken } from '@foal/core';
