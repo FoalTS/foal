@@ -74,6 +74,16 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 - The `Logger.addLogContext(key, value)` method now accepts a record as parameter: `Logger.addLogContext(context)`. This makes the function's signature more consistent with other logging methods (`info`, `warn`, etc.) and allows multiple keys/values to be passed at once.
 - The deprecated `settings.loggerFormat` configuration has been removed. If you want to disable HTTP logging, set `settings.logger.logHttpRequests` to false instead.
 
+## Shell scripts
+
+- The `main` function of shell scripts now receives an instance of `ServiceManager` as second argument:
+    ```typescript
+    export async function main(args: any, services: ServiceManager) {
+      // ...
+    }
+    ```
+
+
 ## Removal of deprecated components
 
 - The deprecated hook `@Log` has been removed. Use the `Logger` service in a custom `@Hook` instead.
