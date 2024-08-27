@@ -1,7 +1,7 @@
 // std
 import { deepStrictEqual, strictEqual } from 'assert';
 import { join } from 'path';
-import { mock } from 'node:test';
+import { mock, Mock } from 'node:test';
 
 // FoalTS
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
@@ -19,10 +19,14 @@ describe('execScript', () => {
 
   let services: ServiceManager;
   let logger: Logger;
+  let loggerErrorMock: Mock<Logger['error']>['mock'];
+  let loggerAddLogContextMock: Mock<Logger['addLogContext']>['mock'];
 
   beforeEach(() => {
     services = new ServiceManager();
     logger = services.get(Logger);
+    loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
+    loggerAddLogContextMock = mock.method(logger, 'addLogContext', () => {}).mock;
   });
 
   afterEach(() => {
@@ -33,9 +37,24 @@ describe('execScript', () => {
     mock.reset();
   });
 
-  it('should log a suitable message if build/scripts/my-script.js and src/scripts/my-script.ts do not exist.', async () => {
-    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
+  it('should add a log context with the script ID and name.', async () => {
+    mkdirIfDoesNotExist('build/scripts');
+    writeFileSync('build/scripts/my-script.js', '', 'utf8');
 
+    delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
+
+    await execScript({ name: 'my-script' }, [], services, logger);
+
+    strictEqual(loggerAddLogContextMock.callCount(), 1);
+
+    const actual = loggerAddLogContextMock.calls[0].arguments[0];
+    const expected = { scriptName: 'my-script' };
+
+    strictEqual(actual.scriptName, expected.scriptName);
+    strictEqual(actual.scriptId.length, 36);
+  });
+
+  it('should log a suitable message if build/scripts/my-script.js and src/scripts/my-script.ts do not exist.', async () => {
     await execScript({ name: 'my-script' }, [], services, logger);
     strictEqual(loggerErrorMock.callCount(), 1);
 
@@ -50,8 +69,6 @@ describe('execScript', () => {
     mkdirIfDoesNotExist('src/scripts');
     writeFileSync('src/scripts/my-script.ts', '', 'utf8');
 
-    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
-
     await execScript({ name: 'my-script' }, [], services, logger);
 
     strictEqual(loggerErrorMock.callCount(), 1);
@@ -65,8 +82,6 @@ describe('execScript', () => {
   it('should log a suitable message if no function called "main" was found in build/scripts/my-script.js.', async () => {
     mkdirIfDoesNotExist('build/scripts');
     writeFileSync('build/scripts/my-script.js', '', 'utf8');
-
-    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
@@ -88,8 +103,6 @@ describe('execScript', () => {
       writeFileSync('my-script-temp', JSON.stringify(args), 'utf8');
     }`;
     writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
-
-    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
@@ -218,8 +231,6 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
-
     await execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
@@ -245,8 +256,6 @@ describe('execScript', () => {
     writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
-
-    const loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
 
     await execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',

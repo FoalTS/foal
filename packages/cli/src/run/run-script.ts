@@ -1,5 +1,6 @@
 // std
 import { existsSync } from 'fs';
+import { randomUUID } from 'crypto';
 
 // 3p
 import Ajv from 'ajv';
@@ -31,6 +32,11 @@ export async function runScript({ name }: { name: string }, argv: string[]) {
 }
 
 export async function execScript({ name }: { name: string }, argv: string[], services: ServiceManager, logger: Logger) {
+  logger.addLogContext({
+    scriptId: randomUUID(),
+    scriptName: name
+  });
+
   if (!existsSync(`build/scripts/${name}.js`)) {
     if (existsSync(`src/scripts/${name}.ts`)) {
       logger.error(`Script "${name}" not found in build/scripts/ but found in src/scripts/. Did you forget to build it?`);
