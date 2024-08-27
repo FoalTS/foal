@@ -223,6 +223,38 @@ describe('execScript', () => {
     });
   });
 
+  it('should call the "main" function of build/scripts/my-script.js with a logger.', async () => {
+    mkdirIfDoesNotExist('build/scripts');
+    const scriptContent = `const { writeFileSync } = require('fs');
+    const { Logger } = require('@foal/core');
+    module.exports.main = function main(args, services, logger) {
+      const isLogger = logger instanceof Logger;
+      writeFileSync('my-script-temp', JSON.stringify({
+        isLogger
+      }), 'utf8');
+    }`;
+    writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
+
+    delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
+
+    await execScript({ name: 'my-script' }, [
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+      '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+      'run',
+      'my-script',
+      'foo=bar',
+    ], services, logger);
+
+    if (!existsSync('my-script-temp')) {
+      throw new Error('The script was not executed');
+    }
+    const actual = JSON.parse(readFileSync('my-script-temp', 'utf8'));
+
+    deepStrictEqual(actual, {
+      isLogger: true,
+    });
+  });
+
   it('should catch and log errors thrown in the "main" function.', async () => {
     mkdirIfDoesNotExist('build/scripts');
     const scriptContent = `const { writeFileSync } = require('fs');
@@ -289,9 +321,9 @@ describe('execScript', () => {
       const scriptContent = `const { writeFileSync } = require('fs');
       module.exports.main = function main(args) {}`;
       writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
-  
+
       delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
-  
+
       await execScript({ name: 'my-script' }, [
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
@@ -312,9 +344,9 @@ describe('execScript', () => {
       const scriptContent = `const { writeFileSync } = require('fs');
       module.exports.main = function main(args) {}`;
       writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
-  
+
       delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
-  
+
       await execScript({ name: 'my-script' }, [
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
@@ -334,9 +366,9 @@ describe('execScript', () => {
         throw new Error('Hello world');
       }`;
       writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
-  
+
       delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
-  
+
       await execScript({ name: 'my-script' }, [
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',

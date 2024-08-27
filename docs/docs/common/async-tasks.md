@@ -48,11 +48,12 @@ export function main(args: any) {
 *scripts/schedule-jobs.ts*
 ```typescript
 // 3p
+import { Logger, ServiceManager } from '@foal/core';
 import { scheduleJob } from 'node-schedule';
 import { main as fetchMetrics } from './fetch-metrics';
 
-export async function main(args: any) {
-  console.log('Scheduling the job...');
+export async function main(args: any, services: ServiceManager, logger: Logger) {
+  logger.info('Scheduling the job...');
 
   // Run the fetch-metrics script every day at 10:00 AM.
   scheduleJob(
@@ -60,7 +61,7 @@ export async function main(args: any) {
     () => fetchMetrics(args)
   );
 
-  console.log('Job scheduled!');
+  logger.info('Job scheduled!');
 }
 
 ```

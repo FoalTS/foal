@@ -73,7 +73,7 @@ export async function execScript({ name }: { name: string }, argv: string[], ser
   }
 
   try {
-    await main(args, services);
+    await main(args, services, logger);
     logger.info(`Script "${name}" completed.`);
   } catch (error: any) {
     logger.error(error.message, { error });

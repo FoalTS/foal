@@ -22,6 +22,9 @@ A *shell script* is a piece of code intended to be called from the command line.
 Open the new generated file in the `src/scripts` directory and update its content.
 
 ```typescript
+// 3p
+import { Logger, ServiceManager } from '@foal/core';
+
 // App
 import { Todo } from '../app/entities';
 import { dataSource } from '../db';
@@ -34,7 +37,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: { text: string }) {
+export async function main(args: { text: string }, services: ServiceManager, logger: Logger) {
   // Connect to the database.
   await dataSource.initialize();
 
@@ -44,7 +47,9 @@ export async function main(args: { text: string }) {
     todo.text = args.text;
 
     // Save the task in the database and then display it in the console.
-    console.log(await todo.save());
+    await todo.save();
+
+    logger.info(`Todo created: ${JSON.stringify(todo, null, 2)}`);
   } finally {
     // Close the connection to the database.
     await dataSource.destroy();

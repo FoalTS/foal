@@ -17,20 +17,19 @@ Remove the content of `src/scripts/display-users.ts` and replace it with the cod
 
 ```typescript
 // 3p
-import { ServiceManager } from '@foal/core';
+import { Logger, ServiceManager } from '@foal/core';
 
 // App
 import { dataSource } from '../db';
 import { User } from '../app/entities';
-import { Logger } from '../app/services';
 
-export async function main(args: any, services: ServiceManager) {
+export async function main(args: any, services: ServiceManager, logger: Logger) {
   await dataSource.initialize();
 
   try {
     const users = await User.find();
-    const logger = services.get(Logger);
-    logger.log(users);
+
+    logger.info(`Users: ${JSON.stringify(users, null, 2)}`);
   } finally {
     dataSource.destroy();
   }

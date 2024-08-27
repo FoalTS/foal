@@ -76,9 +76,9 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
 ## Shell scripts
 
-- The `main` function of shell scripts now receives an instance of `ServiceManager` as second argument:
+- The `main` function of shell scripts now receives an instance of `ServiceManager` as second argument and the logger as third argument:
     ```typescript
-    export async function main(args: any, services: ServiceManager) {
+    export async function main(args: any, services: ServiceManager, logger: Logger) {
       // ...
     }
     ```
