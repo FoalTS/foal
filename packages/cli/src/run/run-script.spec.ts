@@ -19,12 +19,14 @@ describe('execScript', () => {
 
   let services: ServiceManager;
   let logger: Logger;
+  let loggerInfoMock: Mock<Logger['info']>['mock'];
   let loggerErrorMock: Mock<Logger['error']>['mock'];
   let loggerAddLogContextMock: Mock<Logger['addLogContext']>['mock'];
 
   beforeEach(() => {
     services = new ServiceManager();
     logger = services.get(Logger);
+    loggerInfoMock = mock.method(logger, 'info', () => {}).mock;
     loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
     loggerAddLogContextMock = mock.method(logger, 'addLogContext', () => {}).mock;
   });
@@ -238,13 +240,17 @@ describe('execScript', () => {
       'my-script',
     ], services, logger);
 
-    strictEqual(loggerErrorMock.callCount(), 1);
+    strictEqual(loggerErrorMock.callCount(), 2);
 
     const actualMessage = loggerErrorMock.calls[0].arguments[0];
     const actualParameters = loggerErrorMock.calls[0].arguments[1];
 
     strictEqual(actualMessage, 'Hello world');
     deepStrictEqual(actualParameters?.error, new Error('Hello world'));
+
+    const actualMessage2 = loggerErrorMock.calls[1].arguments[0];
+
+    strictEqual(actualMessage2, 'Script "my-script" failed.');
   });
 
   it('should catch and log errors rejected in the "main" function.', async () => {
@@ -264,13 +270,81 @@ describe('execScript', () => {
       'my-script',
     ], services, logger);
 
-    strictEqual(loggerErrorMock.callCount(), 1);
+    strictEqual(loggerErrorMock.callCount(), 2);
 
     const actualMessage = loggerErrorMock.calls[0].arguments[0];
     const actualParameters = loggerErrorMock.calls[0].arguments[1];
 
     strictEqual(actualMessage, 'Hello world');
     deepStrictEqual(actualParameters?.error, new Error('Hello world'));
+
+    const actualMessage2 = loggerErrorMock.calls[1].arguments[0];
+
+    strictEqual(actualMessage2, 'Script "my-script" failed.');
   });
 
+  context('given the "main" does NOT reject or throw an error', () => {
+    it('should log a message saying the script completed.', async () => {
+      mkdirIfDoesNotExist('build/scripts');
+      const scriptContent = `const { writeFileSync } = require('fs');
+      module.exports.main = function main(args) {}`;
+      writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
+  
+      delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
+  
+      await execScript({ name: 'my-script' }, [
+        '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+        '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+        'run',
+        'my-script',
+      ], services, logger);
+
+      strictEqual(loggerInfoMock.callCount(), 1);
+
+      const actual = loggerInfoMock.calls[0].arguments[0];
+      const expected = 'Script "my-script" completed.';
+
+      strictEqual(actual, expected);
+    });
+
+    it('should NOT log a message saying the script failed.', async () => {
+      mkdirIfDoesNotExist('build/scripts');
+      const scriptContent = `const { writeFileSync } = require('fs');
+      module.exports.main = function main(args) {}`;
+      writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
+  
+      delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
+  
+      await execScript({ name: 'my-script' }, [
+        '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+        '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+        'run',
+        'my-script',
+      ], services, logger);
+
+      strictEqual(loggerErrorMock.callCount(), 0);
+    });
+  });
+
+  context('given the "main" rejects or throws an error', () => {
+    it('should NOT log a message saying the script completed.', async () => {
+      mkdirIfDoesNotExist('build/scripts');
+      const scriptContent = `const { writeFileSync } = require('fs');
+      module.exports.main = function main(args) {
+        throw new Error('Hello world');
+      }`;
+      writeFileSync('build/scripts/my-script.js', scriptContent, 'utf8');
+  
+      delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
+  
+      await execScript({ name: 'my-script' }, [
+        '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
+        '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
+        'run',
+        'my-script',
+      ], services, logger);
+
+      strictEqual(loggerInfoMock.callCount(), 0);
+    });
+  });
 });
