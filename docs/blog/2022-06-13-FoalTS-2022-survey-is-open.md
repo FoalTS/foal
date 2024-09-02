@@ -1,13 +1,12 @@
 ---
 title: FoalTS 2022 survey is open!
-author: Loïc Poullain
-author_title: Creator of FoalTS. Software engineer.
-author_url: https://loicpoullain.com
-author_image_url: https://avatars1.githubusercontent.com/u/13604533?v=4
+authors: LoicPoullain
 tags: [survey]
 ---
 
 FoalTS 2022 survey is now open (yes, a few months late 🙃)!
+
+<!-- truncate -->
 
 Your responses to these questions are really valuable as they help me better understand what you need and how to improve the framework going forward 👌.
 
