@@ -5,7 +5,7 @@ export default function Newsletter() {
   return (
     <Layout
       description='Subscribe to FoalTS newsletter'>
-      <iframe data-w-type="embedded" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://x7u6p.mjt.lu/wgt/x7u6p/8um/form?c=3d124ddc" width="100%" style={{ height: 0 }}></iframe>
+      <iframe data-w-type="embedded" frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0" src="https://x7u6p.mjt.lu/wgt/x7u6p/8um/form?c=3d124ddc" width="100%" style={{ height: 0 }}></iframe>
       <script type="text/javascript" src="https://app.mailjet.com/pas-nc-embedded-v1.js"></script>
     </Layout>
   );
