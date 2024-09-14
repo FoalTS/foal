@@ -49,7 +49,7 @@
     "@types/node": "18.18.6",
     "graphql": "~16.9.0",
     "graphql-request": "~6.1.0",
-    "mocha": "~10.7.0",
+    "mocha": "~10.7.2",
     "rimraf": "~5.0.5",
     "ts-node": "~10.9.2",
     "type-graphql": "2.0.0-beta.3",
