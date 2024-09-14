@@ -29,9 +29,10 @@ interface IncomingMessage extends Readable {
 /**
  * Express Request interface.
  *
+ * @export
  * @interface Request
  */
-interface Request extends IncomingMessage {
+export interface Request extends IncomingMessage {
   app: any;
   baseUrl: string;
   body: any;

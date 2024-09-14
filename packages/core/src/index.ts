@@ -73,6 +73,7 @@ export {
   ConfigNotFoundError,
   ConfigTypeError,
   Context,
+  Request,
   CookieOptions,
   Delete,
   Dependency,
