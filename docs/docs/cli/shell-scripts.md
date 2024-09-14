@@ -86,7 +86,7 @@ export function main(args: any, services: ServiceManager) {
 
 ## Logging
 
-When a script is executed, a script ID is created and added to the log context. Like the request ID in an HTTP request, the script ID is added as a parameter to every log printed during script execution, including any errors. In this way, it is possible to aggregate all logs from a single script execution in a logging program.
+When a script is executed, the script name as well as a script ID are added to the log context. Like the request ID in an HTTP request, the script ID is added as a parameter to every log printed during script execution, including any errors. In this way, it is possible to aggregate all logs from a single script execution in a logging program.
 
 If you wish to access the logger in the script, it is passed as the third argument to the main function.
 
