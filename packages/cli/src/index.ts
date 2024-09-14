@@ -26,7 +26,7 @@ import {
 } from './generate';
 import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
-import { runScript } from './run-script';
+import { runScript } from './run';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -67,7 +67,6 @@ program
 program
   .command('run')
   .argument('<name>', 'Name of the script to run')
-  .alias('run-script')
   .description('Run a shell script.')
   .action((name: string) => {
     runScript({ name }, process.argv);

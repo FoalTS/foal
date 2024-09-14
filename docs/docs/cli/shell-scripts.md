@@ -17,19 +17,19 @@ Remove the content of `src/scripts/display-users.ts` and replace it with the cod
 
 ```typescript
 // 3p
-import { createService } from '@foal/core';
+import { ServiceManager } from '@foal/core';
 
 // App
 import { dataSource } from '../db';
 import { User } from '../app/entities';
 import { Logger } from '../app/services';
 
-export async function main() {
+export async function main(args: any, services: ServiceManager) {
   await dataSource.initialize();
 
   try {
     const users = await User.find();
-    const logger = createService(Logger);
+    const logger = services.get(Logger);
     logger.log(users);
   } finally {
     dataSource.destroy();
@@ -55,7 +55,7 @@ npm run build
 Then you can execute it with this command:
 
 ```shell
-npx foal run my-script # or npx foal run-script my-script
+npx foal run my-script
 ```
 
 > You can also provide additionnal arguments to your script (for example: `npx foal run my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.

@@ -144,7 +144,7 @@ export function UseSessions(options: UseSessionOptions = {}): HookDecorator {
     /* Set ctx.user */
 
     const logger = services.get(Logger);
-    logger.addLogContext('userId', session.userId);
+    logger.addLogContext({ userId: session.userId });
 
     if (session.userId !== null && options.user) {
       const userId = checkUserIdType(session.userId, options.userIdType);

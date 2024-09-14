@@ -17,7 +17,7 @@ import { Session } from '@foal/core';
  * @template ContextSession
  * @template ContextState
  */
-export class WebsocketContext<User = { [key: string]: any } | null, ContextState = { [key: string]: any }> {
+export class WebsocketContext<User = { [key: string]: any } | null, ContextState extends { [key: string]: any } = {}> {
   readonly socket: Socket;
   session: Session | null;
 

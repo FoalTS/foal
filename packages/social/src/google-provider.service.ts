@@ -57,7 +57,7 @@ export class GoogleProvider extends AbstractProvider<GoogleAuthParams, never, Go
 
   protected defaultScopes: string[] = [ 'openid', 'profile', 'email' ];
 
-  getUserInfoFromTokens(tokens: SocialTokens): object {
+  getUserInfoFromTokens(tokens: SocialTokens): GoogleUserInfo {
     try {
       const encodedPayload = tokens.id_token.split('.')[1];
       const decodedPayload = Buffer.from(convertBase64urlToBase64(encodedPayload), 'base64')

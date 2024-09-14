@@ -1,6 +1,3 @@
-// 3p
-import * as fetch from 'node-fetch';
-
 // FoalTS
 import { AbstractProvider, SocialTokens } from './abstract-provider.service';
 import { UserInfoError } from './user-info.error';

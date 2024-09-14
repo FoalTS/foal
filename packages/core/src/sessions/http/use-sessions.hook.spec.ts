@@ -615,7 +615,7 @@ describe('UseSessions', () => {
 
         strictEqual(loggerMock.callCount(), 1);
 
-        deepStrictEqual(loggerMock.calls[0].arguments, ['userId', null]);
+        deepStrictEqual(loggerMock.calls[0].arguments, [{ userId: null }]);
       });
 
     });
@@ -632,7 +632,7 @@ describe('UseSessions', () => {
 
         strictEqual(loggerMock.callCount(), 1);
 
-        deepStrictEqual(loggerMock.calls[0].arguments, ['userId', userId]);
+        deepStrictEqual(loggerMock.calls[0].arguments, [{ userId }]);
       });
 
       context('given options.user is not defined', () => {

@@ -114,7 +114,7 @@ interface Request extends IncomingMessage {
  * @class Context
  * @template User
  */
-export class Context<User = { [key: string]: any } | null, ContextState = { [key: string]: any }> {
+export class Context<User = { [key: string]: any } | null, ContextState extends { [key: string]: any } = {}> {
   readonly request: Request;
   session: Session | null;
 
