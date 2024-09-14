@@ -1,6 +1,6 @@
 {
   "name": "@foal/cli",
-  "version": "4.5.0",
+  "version": "4.5.1",
   "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -68,7 +68,7 @@
     "@types/mocha": "10.0.7",
     "@types/node": "18.18.6",
     "copyfiles": "~2.4.1",
-    "mocha": "~10.7.0",
+    "mocha": "~10.7.2",
     "rimraf": "~5.0.5",
     "ts-node": "~10.9.2",
     "typescript": "~4.9.5"
