@@ -8,6 +8,7 @@ import Ajv from 'ajv';
 import { Group, Permission } from '@foal/typeorm';
 import { main as createGroup, schema } from './create-group';
 import { createAndInitializeDataSource } from '../../common';
+import { Logger, ServiceManager } from '@foal/core';
 
 describe('[Shell scripts] create-perm', () => {
 
@@ -35,7 +36,10 @@ describe('[Shell scripts] create-perm', () => {
       });
     }
 
-    await createGroup(args);
+    const services = new ServiceManager();
+    const logger = services.get(Logger);
+
+    await createGroup(args, services, logger);
 
     const dataSource = await createAndInitializeDataSource([ Permission, Group ], { dropSchema: false });
 

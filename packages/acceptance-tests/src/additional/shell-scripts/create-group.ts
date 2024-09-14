@@ -1,6 +1,7 @@
 // 3p
 import { Group, Permission } from '@foal/typeorm';
 import { createAndInitializeDataSource } from '../../common';
+import { Logger, ServiceManager } from '@foal/core';
 
 export const schema = {
   additionalProperties: false,
@@ -13,7 +14,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: { codeName: string, name: string, permissions: string[] }) {
+export async function main(args: { codeName: string, name: string, permissions: string[] }, services: ServiceManager, logger: Logger) {
   const group = new Group();
   group.permissions = [];
   group.codeName = args.codeName;
@@ -25,17 +26,14 @@ export async function main(args: { codeName: string, name: string, permissions: 
     for (const codeName of args.permissions) {
       const permission = await Permission.findOneBy({ codeName });
       if (!permission) {
-        console.log(`No permission with the code name "${codeName}" was found.`);
-        return;
+        throw new Error(`No permission with the code name "${codeName}" was found.`);
       }
       group.permissions.push(permission);
     }
 
-    console.log(
-      await group.save()
-    );
-  } catch (error: any) {
-    console.log(error.message);
+    await group.save();
+
+    logger.info(`Group created: ${group.codeName}`);
   } finally {
     await dataSource.destroy();
   }

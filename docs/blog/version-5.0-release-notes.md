@@ -73,13 +73,16 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
 ## Shell scripts
 
-- The `main` function of shell scripts now receives an instance of `ServiceManager` as second argument:
+- The `main` function of shell scripts now receives an instance of `ServiceManager` as second argument and the logger as third argument:
     ```typescript
-    export async function main(args: any, services: ServiceManager) {
+    export async function main(args: any, services: ServiceManager, logger: Logger) {
       // ...
     }
     ```
-
+- Log context are supported.
+- When running a script, the script name as well as a script ID are added to the log context.
+- At the end of script execution, as with an HTTP request, a log is printed to indicate whether the execution was successful or unsuccessful.
+- Any error thrown in the `main` function is now logged with the framework logger.
 
 ## Removal of deprecated components
 
