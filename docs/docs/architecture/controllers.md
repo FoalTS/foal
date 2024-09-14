@@ -253,14 +253,14 @@ class AppController {
 
 #### The Controller Method Arguments
 
-The path paramaters and request body are also passed as second and third arguments to the controller method.
+The request body is also passed as second argument to the controller method.
 
 ```typescript
-import { Context, HttpResponseCreated, Put } from '@foal/core';
+import { Context, HttpResponseCreated, Put, Request } from '@foal/core';
 
 class AppController {
   @Put('/products/:id')
-  updateProduct(ctx: Context, { id }, body) {
+  updateProduct(ctx: Context, request: Request) {
     // Do something.
     return new HttpResponseCreated();
   }

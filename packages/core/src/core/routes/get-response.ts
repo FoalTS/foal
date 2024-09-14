@@ -32,7 +32,7 @@ export async function getResponse(
 
   if (!isHttpResponse(response)) {
     try {
-      response = await route.controller[route.propertyKey](ctx, ctx.request.params, ctx.request.body);
+      response = await route.controller[route.propertyKey](ctx, ctx.request);
     } catch (error: any) {
       response = await convertErrorToResponse(error, ctx, appController, logger);
     }

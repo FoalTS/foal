@@ -66,6 +66,51 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
 - The return value of the social services `getUserInfoFromTokens` method is now typed.
 
+## Controller parameters
+
+To facilitate the typing of the request body, path parameters and request parameters in controllers, the request object is now passed as a second argument to controller methods.
+
+```typescript
+    interface MyQuery {
+      // ...
+    }
+
+    interface MyBody {
+      // ...
+    }
+
+    interface MyParams {
+      // ...
+    }
+
+    // Version 4
+    class MyController {
+      @Get('/foobar')
+      foobar(ctx: Context) {
+        const query = ctx.request.query as MyQuery;
+        const body = ctx.request.body as MyQuery;
+        const params = ctx.request.params as MyParams;
+
+        // Do something
+      }
+      // OR
+      @Get('/foobar')
+      foobar(ctx: Context, params: MyParams, body: MyBody) {
+        const query = ctx.request.query as MyQuery;
+
+        // Do something
+      }
+    }
+
+    // Version 5
+    class MyController {
+      @Get('/foobar')
+      foobar(ctx: Context, { query, body, params }: { query: MyQuery, body: MyBody, params: MyParams }) {
+        // Do something
+      }
+    }
+```
+
 ## Logging
 
 - The `Logger.addLogContext(key, value)` method now accepts a record as parameter: `Logger.addLogContext(context)`. This makes the function's signature more consistent with other logging methods (`info`, `warn`, etc.) and allows multiple keys/values to be passed at once.
