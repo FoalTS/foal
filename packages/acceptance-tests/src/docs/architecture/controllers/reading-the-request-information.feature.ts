@@ -150,9 +150,9 @@ describe('Feature: Reading the request information', () => {
 
     class AppController {
       @Put('/products/:id')
-      updateProduct(ctx: Context, { id }: any, body: any) {
+      updateProduct(ctx: Context, request: Request) {
         // Do something.
-        return new HttpResponseCreated({ id, body });
+        return new HttpResponseCreated({ id, body: request.body });
       }
     }
 
