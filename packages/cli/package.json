@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret && npm run test:rmdir && npm run test:fs",
+    "test": "npm run test:generators && npm run test:run-script && npm run test:create-secret && npm run test:rmdir && npm run test:fs && npm run test:utils",
     "test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/file-system.spec.ts\"",
     "dev:test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/file-system.spec.ts\"",
     "test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/generators/**/*.spec.ts\"",
@@ -16,6 +16,8 @@
     "dev:test:run-script": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/run-script/**/*.spec.ts\"",
     "test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/create-secret/**/*.spec.ts\"",
     "dev:test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/create-secret/**/*.spec.ts\"",
+    "test:utils": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/utils/**/*.spec.ts\"",
+    "dev:test:utils": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/utils/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -a -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
     "prepublish": "npm run build"
   },

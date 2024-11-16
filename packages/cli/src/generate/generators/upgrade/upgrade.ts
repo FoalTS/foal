@@ -26,14 +26,14 @@ export async function upgrade(
   const dependencies = fs.getProjectDependencies();
   for (const dependency of dependencies) {
     if (dependency.name.startsWith('@foal/')) {
-      fs.setOrUpdateProjectDependency(dependency.name, version);
+      fs.setOrUpdateProjectDependency(dependency.name, version, { prefix: '^', keepExistingPrefix: true });
     }
   }
 
   const devDependencies = fs.getProjectDevDependencies();
   for (const devDependency of devDependencies) {
     if (devDependency.name.startsWith('@foal/')) {
-      fs.setOrUpdateProjectDevDependency(devDependency.name, version);
+      fs.setOrUpdateProjectDevDependency(devDependency.name, version, { prefix: '^', keepExistingPrefix: true });
     }
   }
 
