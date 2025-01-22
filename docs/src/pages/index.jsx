@@ -62,6 +62,28 @@ function CompanyLogos() {
   )
 }
 
+function sendGA4EventOnLink(
+  event,
+  eventName,
+) {
+  event.preventDefault()
+
+  window.dataLayer?.push([
+    'event',
+    eventName,
+    {
+      event_callback: function () {
+        window.location.href
+      },
+    },
+  ])
+
+  // Fallback
+  setTimeout(() => {
+    window.location.href = event.target.href
+  }, 300)
+}
+
 function Home() {
   const context = useDocusaurusContext();
   return (
@@ -79,6 +101,7 @@ function Home() {
           </h3>
           <div>
             <Link
+              onClick={(event) => sendGA4EventOnLink(event, 'click_get_started')}
               className={styles.btn}
               to={useBaseUrl("docs/tutorials/simple-todo-list/1-installation")}>
               Get started
