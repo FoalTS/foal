@@ -1,8 +1,5 @@
 {
   "port": "env(PORT)",
-  "settings": {
-    "loggerFormat": "foal"
-  },
   "database": {
     "type": "mongodb",
     "url": "mongodb://localhost:27017//* kebabName */"

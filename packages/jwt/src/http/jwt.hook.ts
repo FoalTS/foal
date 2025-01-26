@@ -201,7 +201,7 @@ export function JWT(required: boolean, options: JWTOptions, verifyOptions: Verif
     const userId = checkAndConvertUserIdType(payload.sub, options.userIdType);
 
     const logger = services.get(Logger);
-    logger.addLogContext('userId', userId);
+    logger.addLogContext({ userId });
 
     const user = await options.user(userId as never, services);
     if (!user) {

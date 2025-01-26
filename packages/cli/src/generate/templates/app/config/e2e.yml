@@ -1,5 +1,6 @@
 settings:
-  loggerFormat: 'none'
+  logger:
+    logHttpRequests: false
 
 database:
   database: './e2e_db.sqlite3'

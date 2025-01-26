@@ -70,7 +70,7 @@ describe('[Acceptance test] GraphQLController', () => {
       schema = buildSchema(typeDefs);
 
       @dependency
-      resolvers: AppResolver;
+      declare resolvers: AppResolver;
     }
 
     class AppController {
@@ -109,7 +109,7 @@ describe('[Acceptance test] GraphQLController', () => {
       schema = schemaFromTypeGlob('./test-dir/*.graphql');
 
       @dependency
-      resolvers: AppResolver;
+      declare resolvers: AppResolver;
     }
 
     class AppController {
@@ -158,7 +158,7 @@ describe('[Acceptance test] GraphQLController', () => {
       schema = buildSchema(typeDefs);
 
       @dependency
-      resolvers: Resolvers;
+      declare resolvers: Resolvers;
     }
 
     class AppController {

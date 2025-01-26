@@ -143,7 +143,7 @@ describe('TokenError', () => {
 
 describe('AbstractProvider', () => {
 
-  class ConcreteProvider extends AbstractProvider<any, any> {
+  class ConcreteProvider extends AbstractProvider<any, any, any> {
     protected configPaths = {
       clientId: 'settings.social.example.clientId',
       clientSecret: 'settings.social.example.clientSecret',
@@ -151,7 +151,8 @@ describe('AbstractProvider', () => {
     };
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
-    getUserInfoFromTokens(tokens: SocialTokens) {
+
+    async getUserInfoFromTokens(tokens: SocialTokens): Promise<any> {
       throw new Error('Method not implemented.');
     }
   }
@@ -165,7 +166,7 @@ describe('AbstractProvider', () => {
     Config.set('settings.social.example.clientId', clientId);
     Config.set('settings.social.example.clientSecret', clientSecret);
     Config.set('settings.social.example.redirectUri', redirectUri);
-    Config.set('settings.loggerFormat', 'none');
+    Config.set('settings.logger.logHttpRequests', false);
 
     provider = createService(ConcreteProvider);
   });
@@ -174,6 +175,7 @@ describe('AbstractProvider', () => {
     Config.remove('settings.social.example.clientId');
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.logger.logHttpRequests');
     Config.remove('settings.social.cookie.secure');
     Config.remove('settings.social.cookie.domain');
   });
@@ -351,32 +353,6 @@ describe('AbstractProvider', () => {
         notStrictEqual(httpResponseRedirect.getCookie(STATE_COOKIE_NAME), undefined);
       });
 
-    });
-
-  });
-
-  describe('has a "redirect" method that', () => {
-
-    it('should behave like the "createHttpResponseWithConsentPageUrl" method with the isRedirection option set to true.', async () => {
-      const actual = await provider.redirect({ scopes: ['foo'] });
-      const expected = await provider.createHttpResponseWithConsentPageUrl({ scopes: ['foo'], isRedirection: true });
-
-      if (!isHttpResponseRedirect(actual)) {
-        throw new Error('The response should be an HttpResponseRedirect object.');
-      }
-
-      if (!isHttpResponseRedirect(expected)) {
-        throw new Error('The response should be an HttpResponseRedirect object.');
-      }
-
-      const actualConsentPageUrl = new URL(actual.path);
-      const expectedConsentPageUrl = new URL(expected.path);
-
-      // Remove values generated randomly.
-      actualConsentPageUrl.searchParams.delete('state');
-      expectedConsentPageUrl.searchParams.delete('state');
-
-      strictEqual(actualConsentPageUrl.href, expectedConsentPageUrl.href);
     });
 
   });
@@ -611,7 +587,7 @@ describe('AbstractProvider', () => {
       });
 
       class ConcreteProvider2 extends ConcreteProvider {
-        getUserInfoFromTokens(tokens: SocialTokens) {
+        async getUserInfoFromTokens(tokens: SocialTokens) {
           // Do not throw an error.
         }
       }
@@ -656,7 +632,7 @@ describe('AbstractProvider', () => {
       let calledWithTokens: null|SocialTokens = null;
       let calledWithParams: null|any = null;
       class ConcreteProvider2 extends ConcreteProvider {
-        getUserInfoFromTokens(tokens: SocialTokens, params?: any) {
+        async getUserInfoFromTokens(tokens: SocialTokens, params?: any) {
           calledWithTokens = tokens;
           calledWithParams = params || null;
         }
@@ -718,7 +694,8 @@ describe('Abstract Provider With PKCE', () => {
     protected usePKCE: boolean = true;
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
-    getUserInfoFromTokens(tokens: SocialTokens) {
+
+    async getUserInfoFromTokens(tokens: SocialTokens) {
       throw new Error('Method not implemented.');
     }
   }
@@ -732,7 +709,7 @@ describe('Abstract Provider With PKCE', () => {
     Config.set('settings.social.example.clientId', clientId);
     Config.set('settings.social.example.clientSecret', clientSecret);
     Config.set('settings.social.example.redirectUri', redirectUri);
-    Config.set('settings.loggerFormat', 'none');
+    Config.set('settings.logger.logHttpRequests', false);
 
     provider = createService(ConcreteProvider);
   });
@@ -741,15 +718,16 @@ describe('Abstract Provider With PKCE', () => {
     Config.remove('settings.social.example.clientId');
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.logger.logHttpRequests');
     Config.remove('settings.social.cookie.secure');
     Config.remove('settings.social.cookie.domain');
   });
 
-  describe('has a "redirect" method that', () => {
+  describe('has a "createHttpResponseWithConsentPageUrl" method that', () => {
 
     it('should fail if secret is not configured', async () => {
       try {
-        await provider.redirect();
+        await provider.createHttpResponseWithConsentPageUrl();
       } catch(error) {
         if(!(error instanceof ConfigNotFoundError)){
           throw error;
@@ -757,7 +735,7 @@ describe('Abstract Provider With PKCE', () => {
       }
     });
 
-    describe('should return an HttpResponseRedirect object', () => {
+    describe('should return an HttpResponse object', () => {
 
       beforeEach(() => {
         Config.set('settings.social.secret.codeVerifierSecret', 'SECRET');
@@ -767,21 +745,21 @@ describe('Abstract Provider With PKCE', () => {
         Config.remove('settings.social.secret.codeVerifierSecret');
       });
 
-      it('with a redirect path which contains a client ID, a response type, a redirect URI, code_challenge and code_challenge_method (S256) if pkce enabled.', async () => {
-        const response = await provider.redirect();
-        ok(response.path.startsWith(
+      it('with a consentPageUrl which contains a client ID, a response type, a redirect URI, code_challenge and code_challenge_method (S256) if pkce enabled.', async () => {
+        const response = await provider.createHttpResponseWithConsentPageUrl();
+        ok(response.body.consentPageUrl.startsWith(
           'https://example2.com/auth?'
           + 'response_type=code&'
           + 'client_id=clientIdXXX&'
           + 'redirect_uri=https%3A%2F%2Fexample.com%2Fcallback'
         ));
-        const searchParams = new URLSearchParams(response.path);
+        const searchParams = new URLSearchParams(response.body.consentPageUrl);
         ok(searchParams.get('code_challenge'));
         strictEqual(searchParams.get('code_challenge_method'), 'S256');
       });
 
       it('that sets a cookie containing the code verifier encrypted.', async () =>{
-        const response = await provider.redirect();
+        const response = await provider.createHttpResponseWithConsentPageUrl();
 
         const stateCookieValue = response.getCookie(CODE_VERIFIER_COOKIE_NAME).value;
         const stateCookieOptions = response.getCookie(CODE_VERIFIER_COOKIE_NAME).options;
@@ -800,7 +778,7 @@ describe('Abstract Provider With PKCE', () => {
       it('that sets a cookie that can have a custom domain.', async () =>{
         Config.set('settings.social.cookie.domain', 'foalts.org');
 
-        const response = await provider.redirect();
+        const response = await provider.createHttpResponseWithConsentPageUrl();
         const { options } = response.getCookie(CODE_VERIFIER_COOKIE_NAME);
 
         strictEqual(options.domain, 'foalts.org');
@@ -917,7 +895,8 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
     protected useCodeVerifierAsCodeChallenge = true;
     protected authEndpoint = 'https://example2.com/auth';
     protected tokenEndpoint = 'http://localhost:3000/token';
-    getUserInfoFromTokens(tokens: SocialTokens) {
+
+    async getUserInfoFromTokens(tokens: SocialTokens) {
       throw new Error('Method not implemented.');
     }
   }
@@ -931,7 +910,7 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
     Config.set('settings.social.example.clientId', clientId);
     Config.set('settings.social.example.clientSecret', clientSecret);
     Config.set('settings.social.example.redirectUri', redirectUri);
-    Config.set('settings.loggerFormat', 'none');
+    Config.set('settings.logger.logHttpRequests', false);
 
     provider = createService(ConcreteProvider);
   });
@@ -940,12 +919,13 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
     Config.remove('settings.social.example.clientId');
     Config.remove('settings.social.example.clientSecret');
     Config.remove('settings.social.example.redirectUri');
+    Config.remove('settings.logger.logHttpRequests');
     Config.remove('settings.social.cookie.secure');
     Config.remove('settings.social.cookie.domain');
   });
 
-  describe('has a "redirect" method that', () => {
-    describe('should return an HttpResponseRedirect object', () => {
+  describe('has a "createHttpResponseWithConsentPageUrl" method that', () => {
+    describe('should return an HttpResponse object', () => {
 
       beforeEach(() => {
         Config.set('settings.social.secret.codeVerifierSecret', 'SECRET');
@@ -955,15 +935,15 @@ describe('Abstract Provider With PKCE and Plain Method', () => {
         Config.remove('settings.social.secret.codeVerifierSecret');
       });
 
-      it('with a redirect path which contains a client ID, a response type, a redirect URI, code_challenge and code_challenge_method (plain) if pkce enabled.', async () => {
-        const response = await provider.redirect();
-        ok(response.path.startsWith(
+      it('with a consentPageUrl which contains a client ID, a response type, a redirect URI, code_challenge and code_challenge_method (plain) if pkce enabled.', async () => {
+        const response = await provider.createHttpResponseWithConsentPageUrl();
+        ok(response.body.consentPageUrl.startsWith(
           'https://example2.com/auth?'
           + 'response_type=code&'
           + 'client_id=clientIdXXX&'
           + 'redirect_uri=https%3A%2F%2Fexample.com%2Fcallback'
         ));
-        const searchParams = new URLSearchParams(response.path);
+        const searchParams = new URLSearchParams(response.body.consentPageUrl);
         ok(searchParams.get('code_challenge'));
         strictEqual(searchParams.get('code_challenge_method'), 'plain');
       });
