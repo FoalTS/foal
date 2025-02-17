@@ -87,7 +87,7 @@ module.exports = {
         },
         {
           to: 'who-is-using-foal',
-          label: 'Who\'s using Foal?',
+          label: 'Showcase',
           position: 'right'
         },
         {
