@@ -109,6 +109,12 @@ module.exports = {
           'aria-label': 'Discord chat',
         },
         {
+          href: 'https://www.linkedin.com/company/foalts/',
+          position: 'right',
+          className: 'ri-linkedin-fill',
+          'aria-label': 'LinkedIn page',
+        },
+        {
           type: 'localeDropdown',
           position: 'right',
         },
