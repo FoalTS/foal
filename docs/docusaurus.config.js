@@ -87,26 +87,32 @@ module.exports = {
         },
         {
           to: 'who-is-using-foal',
-          label: 'Who\'s using Foal?',
+          label: 'Showcase',
           position: 'right'
         },
         {
           href: 'https://github.com/FoalTS/foal',
           position: 'right',
-          className: 'header-github-link',
+          className: 'ri-github-fill',
           'aria-label': 'GitHub repository',
         },
         {
           href: 'https://twitter.com/FoalTs',
           position: 'right',
-          className: 'header-twitter-link',
+          className: 'ri-twitter-fill',
           'aria-label': 'Twitter profile',
         },
         {
           href: 'https://discord.gg/QUrJv98',
           position: 'right',
-          className: 'header-discord-link',
+          className: 'ri-discord-fill',
           'aria-label': 'Discord chat',
+        },
+        {
+          href: 'https://www.linkedin.com/company/foalts/',
+          position: 'right',
+          className: 'ri-linkedin-fill',
+          'aria-label': 'LinkedIn page',
         },
         {
           type: 'localeDropdown',
@@ -167,7 +173,10 @@ module.exports = {
           anonymizeIP: true,
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.scss'),
+          customCss: [
+            './node_modules/remixicon/fonts/remixicon.css',
+            './src/css/custom.scss',
+          ]
         },
       },
     ],
