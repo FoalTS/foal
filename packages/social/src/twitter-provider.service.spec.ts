@@ -23,11 +23,11 @@ describe('TwitterProvider', () => {
 
     beforeEach(() => {
       provider = createService(TwitterProvider2);
-      Config.set('settings.loggerFormat', 'none');
+      Config.set('settings.logger.logHttpRequests', false);
     });
 
     afterEach(() => {
-      Config.remove('settings.loggerFormat');
+      Config.remove('settings.logger.logHttpRequests');
       if (server) {
         server.close();
       }

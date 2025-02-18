@@ -72,8 +72,11 @@ export abstract class SocketIOController implements ISocketIOController {
         socket.on(route.eventName, async (payload, cb) => {
           this.logger.initLogContext(async () => {
             const messageId = randomUUID();
-            this.logger.addLogContext('socketId', socket.id);
-            this.logger.addLogContext('messageId', messageId);
+
+            this.logger.addLogContext({
+              socketId: socket.id,
+              messageId,
+            });
 
             if (typeof payload === 'function') {
               cb = payload;

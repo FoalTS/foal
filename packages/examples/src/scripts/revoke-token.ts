@@ -1,5 +1,5 @@
 // 3p
-import { createService } from '@foal/core';
+import { ServiceManager } from '@foal/core';
 import { TypeORMStore } from '@foal/typeorm';
 
 // App
@@ -14,8 +14,8 @@ export const schema = {
   type: 'object',
 };
 
-export async function main({ token }: { token: string }) {
+export async function main({ token }: { token: string }, services: ServiceManager) {
   await dataSource.initialize();
 
-  await createService(TypeORMStore).destroy(token);
+  await services.get(TypeORMStore).destroy(token);
 }
