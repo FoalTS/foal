@@ -115,6 +115,12 @@ module.exports = {
           'aria-label': 'LinkedIn page',
         },
         {
+          href: 'https://bsky.app/profile/foalts.org',
+          position: 'right',
+          className: 'ri-bluesky-fill',
+          'aria-label': 'Bluesky page',
+        },
+        {
           type: 'localeDropdown',
           position: 'right',
         },
