@@ -116,12 +116,6 @@ import { GoogleProvider } from '@foal/social';
 import { User } from '../../entities';
 import { Disk } from '@foal/storage';
 
-interface GoogleUserInfo {
-  email: string;
-  name?: string;
-  picture?: string;
-}
-
 export class SocialAuthController {
   @dependency
   google: GoogleProvider;
@@ -136,7 +130,7 @@ export class SocialAuthController {
 
   @Get('/google/callback')
   async handleGoogleRedirection(ctx: Context<User>) {
-    const { userInfo } = await this.google.getUserInfo<GoogleUserInfo>(ctx);
+    const { userInfo } = await this.google.getUserInfo(ctx);
 
     if (!userInfo.email) {
       throw new Error('Google should have returned an email address.');
