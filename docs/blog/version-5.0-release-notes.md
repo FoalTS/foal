@@ -13,7 +13,7 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
 ## Supported versions of Node and TypeScript
 
-- Support for Node 18 has been dropped and support for Node 22 has been added. Foal code is now compiled to ES2023.
+- Support for Node 18 and Node 20 has been dropped and support for Node 22 has been added. Foal code is now compiled to ES2023.
 - The supported version of TypeScript is version 5. Update your `package.json` file accordingly.
 
 > If you're using the `GraphQLController` with the `resolvers` property, you need to add the `declare` keyword before the property name:

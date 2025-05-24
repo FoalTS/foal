@@ -14,7 +14,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.7",
-    "@types/node": "20.14.8",
+    "@types/node": "22.15.21",
     "graphql": "~16.9.0",
     "graphql-request": "~6.1.0",
     "mocha": "~10.7.2",

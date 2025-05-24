@@ -11,7 +11,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "@foal/core": "^4.5.1",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.7",
-    "@types/node": "20.14.8",
+    "@types/node": "22.15.21",
     "@types/react": "18.2.63",
     "@types/react-dom": "18.2.20",
     "@types/supertest": "6.0.2",

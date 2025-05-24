@@ -14,7 +14,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.7",
-    "@types/node": "20.14.8",
+    "@types/node": "22.15.21",
     "@types/validator": "13.12.0",
     "class-transformer": "~0.5.1",
     "class-validator": "~0.14.1",

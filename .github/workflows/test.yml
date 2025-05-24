@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20, 22]
+        node-version: [22]
 
     env:
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
