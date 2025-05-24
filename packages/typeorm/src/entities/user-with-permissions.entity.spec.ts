@@ -65,9 +65,9 @@ function testSuite(type: 'mysql' | 'postgres' | 'sqlite') {
     });
 
     beforeEach(async () => {
-      await Permission.delete({});
-      await Group.delete({});
-      await User.delete({});
+      await Permission.createQueryBuilder().delete().execute();
+      await Group.createQueryBuilder().delete().execute();
+      await User.createQueryBuilder().delete().execute();
     });
 
     it('should extend BaseEntity.', () => {
