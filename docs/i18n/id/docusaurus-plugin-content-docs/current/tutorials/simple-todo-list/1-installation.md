@@ -8,7 +8,7 @@ Pada tutorial kali ini kita akan coba membuat aplikasi web dengan Foal. Aplikasi
 
 > **Yang diperlukan:**
 >
-> [Node.js](https://nodejs.org/en/) versi 20 ke atas
+> [Node.js](https://nodejs.org/en/) versi 22 ke atas
 
 ## Memulai Proyek Baru
 
