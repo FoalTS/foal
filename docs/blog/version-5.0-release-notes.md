@@ -29,7 +29,7 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 
 ## TypeORM upgrade
 
-- The minimum required version of TypeORM is v0.3.20.
+- The minimum required version of TypeORM is v0.3.24.
 
 ## Better typing
 
