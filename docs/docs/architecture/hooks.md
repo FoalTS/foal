@@ -483,18 +483,3 @@ export class ApiController {
 
 }
 ```
-
-If needed, you can also define an interface for your state and pass it as type argument to the context.
-
-```typescript
-interface State {
-  org: Org;
-}
-
-export class ApiController {
-  // ...
-  readOrgName(ctx: Context<any, State>) {
-    // ...
-  }
-}
-```
