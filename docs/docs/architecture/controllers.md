@@ -107,7 +107,7 @@ It has seven properties:
 | `controllerName` | `string` | The name of the controller class. |
 | `controllerMethodName` | `string` | The name of the controller method. |
 
-The types of the `user` and `state` properties are generic. You override their types if needed:
+The types of the `user` and `state` properties are generic. You can override their types if needed:
 
 ```typescript
 import { Context, Get } from '@foal/core';
