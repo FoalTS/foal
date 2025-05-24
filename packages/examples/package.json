@@ -55,7 +55,7 @@
     "graphql": "~16.9.0",
     "source-map-support": "~0.5.21",
     "sqlite3": "~5.1.7",
-    "typeorm": "0.3.20",
+    "typeorm": "0.3.24",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {

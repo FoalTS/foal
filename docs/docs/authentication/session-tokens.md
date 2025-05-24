@@ -71,7 +71,7 @@ module.exports = {
 #### TypeORMStore
 
 ```
-npm install typeorm@0.3.20 @foal/typeorm
+npm install typeorm@0.3.24 @foal/typeorm
 ```
 
 This store uses the default TypeORM connection whose configuration is usually specified in `config/default.{json|yml|js}`.

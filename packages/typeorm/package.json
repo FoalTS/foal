@@ -50,7 +50,7 @@
     "@foal/core": "^4.5.1"
   },
   "peerDependencies": {
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.24"
   },
   "devDependencies": {
     "@types/mocha": "10.0.7",
@@ -61,7 +61,7 @@
     "rimraf": "~5.0.5",
     "sqlite3": "~5.1.7",
     "ts-node": "~10.9.2",
-    "typeorm": "0.3.20",
+    "typeorm": "0.3.24",
     "typescript": "~5.5.4"
   }
 }
