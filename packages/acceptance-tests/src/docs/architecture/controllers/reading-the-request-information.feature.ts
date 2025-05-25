@@ -10,6 +10,7 @@ import {
   HttpResponseOK,
   Post,
   Put,
+  Request,
 } from '@foal/core';
 
 describe('Feature: Reading the request information', () => {
