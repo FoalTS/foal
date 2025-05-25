@@ -46,7 +46,7 @@ export class StoriesController {
   @Delete('/:storyId')
   @ValidatePathParam('storyId', { type: 'number' })
   @UserRequired()
-  async deleteStory(ctx: Context<User>, { storyId }: { storyId: number }) {
+  async deleteStory(ctx: Context<User>, { params: { storyId } }: { params: { storyId: number } }) {
     // Only retrieve stories whose author is the current user.
     const story = await Story.findOneBy({ id: storyId, author: { id: ctx.user.id } });
 
