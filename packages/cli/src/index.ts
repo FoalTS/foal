@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * FoalTS
- * Copyright(c) 2017-2022 Loïc Poullain <loic.poullain@centraliens.net>
+ * Copyright(c) 2017-2025 Loïc Poullain
  * Released under the MIT License.
  */
 
