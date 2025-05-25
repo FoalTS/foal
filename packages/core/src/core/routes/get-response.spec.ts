@@ -89,17 +89,15 @@ describe('getResponse', () => {
     strictEqual(actualServices, services);
   });
 
-  it('should call the controller method with the proper context, request params and request body.', async () => {
+  it('should call the controller method with the proper context and request.', async () => {
     let actualCtx: Context|undefined;
-    let actualParams: any;
-    let actualBody: any;
+    let actualRequest: Request|undefined;
 
     const route = createRoute({
       controller: {
-        fn: (ctx: Context, params: any, body: any) => {
+        fn: (ctx: Context, request: Request) => {
           actualCtx = ctx;
-          actualParams = params;
-          actualBody = body;
+          actualRequest = request;
           return new HttpResponseOK();
         }
       },
@@ -113,8 +111,7 @@ describe('getResponse', () => {
     await getResponse(route, ctx, services, appController);
 
     strictEqual(actualCtx, ctx);
-    strictEqual(actualParams, ctx.request.params);
-    strictEqual(actualBody, ctx.request.body);
+    strictEqual(actualRequest, ctx.request);
   });
 
   context('given a hook returns an HttpResponse object', () => {
