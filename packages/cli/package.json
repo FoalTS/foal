@@ -57,7 +57,7 @@
     "bin/"
   ],
   "dependencies": {
-    "ajv": "~8.17.0",
+    "ajv": "~8.17.1",
     "ajv-formats": "~2.1.1",
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
@@ -65,11 +65,11 @@
   },
   "devDependencies": {
     "@foal/core": "^4.5.0",
-    "@types/mocha": "10.0.7",
+    "@types/mocha": "10.0.10",
     "@types/node": "22.15.21",
     "copyfiles": "~2.4.1",
-    "mocha": "~10.7.2",
-    "rimraf": "~5.0.5",
+    "mocha": "~11.5.0",
+    "rimraf": "~6.0.1",
     "ts-node": "~10.9.2",
     "typescript": "~5.5.4"
   }
