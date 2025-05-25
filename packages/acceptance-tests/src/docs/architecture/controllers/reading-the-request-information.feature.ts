@@ -153,7 +153,7 @@ describe('Feature: Reading the request information', () => {
       @Put('/products/:id')
       updateProduct(ctx: Context, request: Request) {
         // Do something.
-        return new HttpResponseCreated({ id, body: request.body });
+        return new HttpResponseCreated({ id: request.params.id, body: request.body });
       }
     }
 
