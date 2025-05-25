@@ -40,11 +40,11 @@
     "lib/"
   ],
   "devDependencies": {
-    "@types/mocha": "10.0.7",
+    "@types/mocha": "10.0.10",
     "@types/node": "22.15.21",
     "copy": "~0.3.2",
-    "mocha": "~10.7.2",
-    "rimraf": "~5.0.5",
+    "mocha": "~11.5.0",
+    "rimraf": "~6.0.1",
     "ts-node": "~10.9.2",
     "typescript": "~5.5.4"
   }
