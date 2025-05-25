@@ -11,7 +11,7 @@ A shell script file is divided into two parts: a `main` function, which contains
 *Example: src/scripts/create-user.ts*
 ```typescript
 // 3p
-import { Logger, ServiceManager } from '@foal/core';
+import { ServiceManager } from '@foal/core';
 
 // App
 import { dataSource } from '../db';
