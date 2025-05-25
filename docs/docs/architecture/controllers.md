@@ -253,7 +253,7 @@ class AppController {
 
 #### The Controller Method Arguments
 
-The request body is also passed as second argument to the controller method.
+The request is also passed as second argument to the controller method.
 
 ```typescript
 import { Context, HttpResponseCreated, Put, Request } from '@foal/core';
