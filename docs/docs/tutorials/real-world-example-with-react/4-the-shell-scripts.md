@@ -14,7 +14,7 @@ Open the file and replace its content with the following:
 
 ```typescript
 // 3p
-import { hashPassword } from '@foal/core';
+import { hashPassword, Logger, ServiceManager } from '@foal/core';
 
 // App
 import { User } from '../app/entities';
@@ -31,7 +31,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: { email: string, password: string, name?: string }) {
+export async function main(args: { email: string, password: string, name?: string }, services: ServiceManager, logger: Logger) {
   const user = new User();
   user.email = args.email;
   user.password = await hashPassword(args.password);
@@ -41,9 +41,9 @@ export async function main(args: { email: string, password: string, name?: strin
   await dataSource.initialize();
 
   try {
-    console.log(await user.save());
-  } catch (error: any) {
-    console.log(error.message);
+    await user.save();
+
+    logger.info(`User created: ${user.id}`);
   } finally {
     await dataSource.destroy();
   }
@@ -87,6 +87,7 @@ npx foal generate script create-story
 Open the `create-story.ts` file and replace its content.
 
 ```typescript
+import { Logger, ServiceManager } from '@foal/core';
 import { Story, User } from '../app/entities';
 import { dataSource } from '../db';
 
@@ -101,7 +102,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: { author: string, title: string, link: string }) {
+export async function main(args: { author: string, title: string, link: string }, services: ServiceManager, logger: Logger) {
   await dataSource.initialize();
 
   const user = await User.findOneByOrFail({ email: args.author });
@@ -112,9 +113,9 @@ export async function main(args: { author: string, title: string, link: string }
   story.link = args.link;
 
   try {
-    console.log(await story.save());
-  } catch (error: any) {
-    console.error(error);
+    await store.save();
+
+    logger.info(`Story created: ${story.id}`);
   } finally {
     await dataSource.destroy();
   }

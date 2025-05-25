@@ -47,6 +47,7 @@ npx foal generate script create-perm
 Replace the content of the new created file `src/scripts/create-perm.ts` with the following:
 ```typescript
 // 3p
+import { Logger, ServiceManager } from '@foal/core';
 import { Permission } from '@foal/typeorm';
 
 // App
@@ -62,7 +63,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: { codeName: string, name: string }) {
+export async function main(args: { codeName: string, name: string }, services: ServiceManager, logger: Logger) {
   const permission = new Permission();
   permission.codeName = args.codeName;
   permission.name = args.name;
@@ -70,11 +71,9 @@ export async function main(args: { codeName: string, name: string }) {
   await dataSource.initialize();
 
   try {
-    console.log(
-      await permission.save()
-    );
-  } catch (error: any) {
-    console.log(error.message);
+    await permission.save();
+
+    logger.info(`Permission created: ${permission.codeName}`);
   } finally {
     await dataSource.destroy();
   }
@@ -131,6 +130,7 @@ npx foal generate script create-group
 Replace the content of the new created file `src/scripts/create-group.ts` with the following:
 ```typescript
 // 3p
+import { Logger, ServiceManager } from '@foal/core';
 import { Group, Permission } from '@foal/typeorm';
 
 // App
@@ -147,7 +147,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: { codeName: string, name: string, permissions: string[] }) {
+export async function main(args: { codeName: string, name: string, permissions: string[] }, services: ServiceManager, logger: Logger) {
   const group = new Group();
   group.permissions = [];
   group.codeName = args.codeName;
@@ -159,17 +159,14 @@ export async function main(args: { codeName: string, name: string, permissions: 
     for (const codeName of args.permissions) {
       const permission = await Permission.findOneBy({ codeName });
       if (!permission) {
-        console.log(`No permission with the code name "${codeName}" was found.`);
-        return;
+        throw new Error(`No permission with the code name "${codeName}" was found.`);
       }
       group.permissions.push(permission);
     }
 
-    console.log(
-      await group.save()
-    );
-  } catch (error: any) {
-    console.log(error.message);
+    await group.save();
+
+    logger.info(`Group created: ${group.codeName}`);
   } finally {
     await dataSource.destroy();
   }
@@ -227,7 +224,7 @@ Replace the content of the new created file `src/scripts/create-user.ts` with th
 
 ```typescript
 // 3p
-import { hashPassword } from '@foal/core';
+import { hashPassword, Logger, ServiceManager } from '@foal/core';
 import { Group, Permission } from '@foal/typeorm';
 
 // App
@@ -246,7 +243,7 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args) {
+export async function main(args: any, services: ServiceManager, logger: Logger) {
   const user = new User();
   user.userPermissions = [];
   user.groups = [];
@@ -258,8 +255,7 @@ export async function main(args) {
   for (const codeName of args.userPermissions as string[]) {
     const permission = await Permission.findOneBy({ codeName });
     if (!permission) {
-      console.log(`No permission with the code name "${codeName}" was found.`);
-      return;
+      throw new Error(`No permission with the code name "${codeName}" was found.`);
     }
     user.userPermissions.push(permission);
   }
@@ -267,18 +263,15 @@ export async function main(args) {
   for (const codeName of args.groups as string[]) {
     const group = await Group.findOneBy({ codeName });
     if (!group) {
-      console.log(`No group with the code name "${codeName}" was found.`);
-      return;
+      throw new Error(`No group with the code name "${codeName}" was found.`);
     }
     user.groups.push(group);
   }
 
   try {
-    console.log(
-      await user.save()
-    );
-  } catch (error: any) {
-    console.log(error.message);
+    await user.save();
+
+    logger.info(`User created: ${user.id}`);
   } finally {
     await dataSource.destroy();
   }

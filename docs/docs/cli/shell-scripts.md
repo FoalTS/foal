@@ -2,19 +2,13 @@
 title: Shell Scripts
 ---
 
+Shell scripts are an easy way of executing a piece of code from the command line. They can be used in a variety of scenarios and can be a simple code snippet or be more complex and call application services.
 
-Sometimes we have to execute some tasks from the command line. These tasks can serve different purposes such as populating a database (user creation, etc) for instance. They often need to access some of the app classes and functions. This is when shell scripts come into play.
+## Structure
 
-## Create Scripts
+A shell script file is divided into two parts: a `main` function, which contains the code to be executed, and a `schema`, which parses and validates the arguments given on the command line and passes them on to the `main` function. The file must be located in the `src/scripts` directory.
 
-A shell script is just a TypeScript file located in the `src/scripts`. It must export a `main` function that is then called when running the script.
-
-Let's create a new one with the command line: `npx foal g script display-users`. A new file with a default template should appear in you `src/scripts` directory.
-
-## Write Scripts
-
-Remove the content of `src/scripts/display-users.ts` and replace it with the code below.
-
+*Example: src/scripts/create-user.ts*
 ```typescript
 // 3p
 import { ServiceManager } from '@foal/core';
@@ -22,15 +16,24 @@ import { ServiceManager } from '@foal/core';
 // App
 import { dataSource } from '../db';
 import { User } from '../app/entities';
-import { Logger } from '../app/services';
 
-export async function main(args: any, services: ServiceManager) {
+export const schema = {
+  type: 'object',
+  properties: {
+    email: { type: 'string' },
+  },
+  required: ['email'],
+  additionalProperties: false
+}
+
+export async function main(args: { email: string }) {
   await dataSource.initialize();
 
   try {
-    const users = await User.find();
-    const logger = services.get(Logger);
-    logger.log(users);
+    const user = new User();
+    user.email = args.email;
+
+    await user.save();
   } finally {
     dataSource.destroy();
   }
@@ -38,26 +41,60 @@ export async function main(args: any, services: ServiceManager) {
 
 ```
 
-As you can see, we can easily establish a connection to the database in the script as well as import some of the app components (the `User` in this case).
+## Generating, Building and Running Shell Scripts
 
-Encapsulating your code in a `main` function without calling it directly in the file has several benefits:
-- You can import and test your `main` function in a separate file.
-- Using a function lets you easily use async/await keywords when dealing with asynchronous code.
+To generate a new script, you can use the CLI `generate` command:
 
-## Build and Run Scripts
+```bash
+npx foal generate script create-user
+# or
+npx foal g script create-user
+```
 
-To run a script you first need to build it.
-
-```sh
+If you need to build the script once, run this command:
+```bash
 npm run build
 ```
 
-Then you can execute it with this command:
-
-```shell
-npx foal run my-script
+If you need to build and watch it in dev mode, use this command:
+```bash
+npm run dev
 ```
 
-> You can also provide additionnal arguments to your script (for example: `npx foal run my-script foo=1 bar='[ 3, 4 ]'`). The default template in the generated scripts shows you how to handle such behavior.
+Then you can run the script as follows:
+```bash
+npx foal run create-user email=foo@foalts.org
+```
 
-> If you want your script to recompile each time you save the file, you can run `npm run dev` in a separate terminal.
+## Accessing Services
+
+If you wish to access a service, you can use the `ServiceManager` instance passed as second argument to the `main` function.
+
+Example
+
+```typescript
+import { ServiceManager } from '@foal/core';
+
+import { MyService } from '../app/services';
+
+export function main(args: any, services: ServiceManager) {
+  const myService = services.get(MyService);
+
+  // Do something with myService.
+}
+```
+
+## Logging
+
+When a script is executed, the script name as well as a script ID are added to the log context. Like the request ID in an HTTP request, the script ID is added as a parameter to every log printed during script execution, including any errors. In this way, it is possible to aggregate all logs from a single script execution in a logging program.
+
+If you wish to access the logger in the script, it is passed as the third argument to the main function.
+
+```typescript
+import { Logger, ServiceManager } from '@foal/core';
+
+
+export function main(args: any, services: ServiceManager, logger: Logger) {
+  logger.info('Hello world!');
+}
+```
