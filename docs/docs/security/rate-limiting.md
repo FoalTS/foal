@@ -34,7 +34,6 @@ async function main() {
       res.removeHeader('X-Powered-By');
       res.setHeader('X-Content-Type-Options', 'nosniff');
       res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-      res.setHeader('X-XSS-Protection', '1; mode=block');
       res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
       
       // Send the response with the default statusCode and message from rateLimit
@@ -68,7 +67,6 @@ expressApp.use(rateLimit({
     res.removeHeader('X-Powered-By');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
     res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
 
     // Set CORS headers
