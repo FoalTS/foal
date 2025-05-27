@@ -22,11 +22,11 @@ describe('Logger', () => {
 
         const logger = new Logger();
         logger.initLogContext(() => {
-          logger.addLogContext('foo', 'bar');
+          logger.addLogContext({ foo: 'bar', jane: 'doe'});
           logger.log('error', 'Hello world', {});
         });
         logger.initLogContext(() => {
-          logger.addLogContext('foo2', 'bar2');
+          logger.addLogContext({ foo2: 'bar2' });
           logger.log('error', 'Hello world 2', {});
         });
 
@@ -36,6 +36,7 @@ describe('Logger', () => {
 
         strictEqual(loggedMessage.includes('[ERROR]'), true);
         strictEqual(loggedMessage.includes('foo: "bar"'), true);
+        strictEqual(loggedMessage.includes('jane: "doe"'), true);
         notStrictEqual(loggedMessage.includes('foo2: "bar2"'), true);
 
         const loggedMessage2 = consoleMock.calls[1].arguments[0];
@@ -43,6 +44,7 @@ describe('Logger', () => {
         strictEqual(loggedMessage2.includes('[ERROR]'), true);
         strictEqual(loggedMessage2.includes('foo2: "bar2"'), true);
         notStrictEqual(loggedMessage2.includes('foo: "bar"'), true);
+        notStrictEqual(loggedMessage2.includes('jane: "doe"'), true);
       });
 
       it('should let given params override the context.', () => {
@@ -50,7 +52,7 @@ describe('Logger', () => {
 
         const logger = new Logger();
         logger.initLogContext(() => {
-          logger.addLogContext('foo', 'bar');
+          logger.addLogContext({ foo: 'bar' });
           logger.log('error', 'Hello world', { foo: 'bar2' });
         });
 
@@ -68,7 +70,7 @@ describe('Logger', () => {
         const consoleMock = mock.method(console, 'log', () => {}).mock;
 
         const logger = new Logger();
-        logger.addLogContext('foo', 'bar');
+        logger.addLogContext({ foo: 'bar' });
 
         strictEqual(consoleMock.callCount(), 1);
 

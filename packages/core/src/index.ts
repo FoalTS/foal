@@ -1,13 +1,13 @@
 /**
  * FoalTS
- * Copyright(c) 2017-2022 Loïc Poullain <loic.poullain@centraliens.net>
+ * Copyright(c) 2017-2025 Loïc Poullain
  * Released under the MIT License.
  */
 
 try {
   const version = process.versions.node;
   const NODE_CURRENT_MAJOR_VERSION = parseInt(version.split('.')[0], 10);
-  const NODE_MINIMUM_MAJOR_VERSION = 18;
+  const NODE_MINIMUM_MAJOR_VERSION = 22;
   if (NODE_CURRENT_MAJOR_VERSION < NODE_MINIMUM_MAJOR_VERSION) {
     console.warn(`[Warning] You are using version ${version} of Node. FoalTS requires at least version ${NODE_MINIMUM_MAJOR_VERSION}.`);
   }
@@ -17,8 +17,6 @@ export {
   AsyncService,
   File,
   FileList,
-  Log,
-  LogOptions,
   UserRequired,
   ValidateBody,
   ValidateCookie,
@@ -75,6 +73,7 @@ export {
   ConfigNotFoundError,
   ConfigTypeError,
   Context,
+  Request,
   CookieOptions,
   Delete,
   Dependency,

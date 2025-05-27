@@ -1,3 +1,6 @@
+// 3p
+import { Logger, ServiceManager } from '@foal/core';
+
 // App
 import { User } from '../app/entities';
 import { dataSource } from '../db';
@@ -13,15 +16,15 @@ export const schema = {
   type: 'object',
 };
 
-export async function main() {
+export async function main(args: any, services: ServiceManager, logger: Logger) {
   await dataSource.initialize();
 
   try {
     const user = new User();
 
-    console.log(await user.save());
-  } catch (error: any) {
-    console.error(error.message);
+    await user.save();
+
+    logger.info(`User created: ${user.id}`);
   } finally {
     await dataSource.destroy();
   }

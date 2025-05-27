@@ -1,7 +1,7 @@
 {
   "name": "@foal/internal-test",
   "private": true,
-  "version": "4.6.0",
+  "version": "5.0.0",
   "description": "Unpublished package used to run some tests.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,7 +13,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -31,15 +31,15 @@
   },
   "homepage": "https://github.com/FoalTS",
   "contributors": [
-    "Loïc Poullain <loic.poullain@centraliens.net>"
+    "Loïc Poullain"
   ],
   "license": "MIT",
   "files": [
     "lib/"
   ],
   "devDependencies": {
-    "rimraf": "~5.0.5",
+    "rimraf": "~6.0.1",
     "ts-node": "~10.9.2",
-    "typescript": "~4.9.5"
+    "typescript": "~5.5.4"
   }
 }

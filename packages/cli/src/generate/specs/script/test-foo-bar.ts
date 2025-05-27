@@ -1,3 +1,5 @@
+import { Logger, ServiceManager } from '@foal/core';
+
 export const schema = {
   additionalProperties: false,
   properties: {
@@ -9,6 +11,6 @@ export const schema = {
   type: 'object',
 };
 
-export async function main(args: any) {
+export async function main(args: any, services: ServiceManager, logger: Logger) {
 
 }

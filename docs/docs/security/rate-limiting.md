@@ -9,7 +9,7 @@ To avoid brute force attacks or overloading your application, you can set up a r
 Foal does not provide a built-in utility for this, but you can use the [express-rate-limit](https://github.com/nfriedly/express-rate-limit) package to handle it.
 
 ```
-npm install express express-rate-limit
+npm install express-rate-limit
 ```
 
 *src/index.ts*

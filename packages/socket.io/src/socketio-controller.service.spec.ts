@@ -431,7 +431,7 @@ describe('SocketIOController', () => {
           @EventName('create user')
           @WebsocketHook((ctx, services) => {
             const logger = services.get(Logger);
-            logger.addLogContext('foo', 'bar');
+            logger.addLogContext({ foo: 'bar' });
           })
           createUser(ctx: WebsocketContext, payload: any) {
             this.logger.info('Hello world');
@@ -474,12 +474,14 @@ describe('SocketIOController', () => {
         const payload = {};
         await new Promise(resolve => clientSocket.emit('create user', payload, resolve));
 
-        strictEqual(loggerMock.callCount(), 2);
+        strictEqual(loggerMock.callCount(), 1);
 
         const actualParameters = loggerMock.calls.map(call => call.arguments);
         const expectedParameters = [
-          ['socketId', socketId],
-          ['messageId', messageId]
+          [{
+            socketId,
+            messageId,
+          }]
         ];
 
         deepStrictEqual(actualParameters, expectedParameters);

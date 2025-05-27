@@ -21,7 +21,7 @@ interface Actual {
 describe('ParseAndValidateFiles', () => {
 
   beforeEach(() => {
-    Config.set('settings.loggerFormat', 'none');
+    Config.set('settings.logger.logHttpRequests', false);
     Config.set('settings.disk.driver', 'local');
 
     Config.set('settings.disk.local.directory', 'uploaded');
@@ -31,7 +31,7 @@ describe('ParseAndValidateFiles', () => {
   });
 
   afterEach(() => {
-    Config.remove('settings.loggerFormat');
+    Config.remove('settings.logger.logHttpRequests');
     Config.remove('settings.disk.driver');
 
     Config.remove('settings.disk.local.directory');

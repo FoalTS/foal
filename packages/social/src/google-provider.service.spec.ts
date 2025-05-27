@@ -46,13 +46,7 @@ describe('GoogleProvider', () => {
         if (!(error instanceof InvalidJWTError)) {
           throw error;
         }
-        try {
-          // Node 18
-          strictEqual(error.message, 'The ID token returned by Google is not a valid JWT: Unexpected end of JSON input.');
-        } catch {
-          // Node 20
-          strictEqual(error.message, `The ID token returned by Google is not a valid JWT: Expected property name or '}' in JSON at position 1.`);
-        }
+        strictEqual(error.message, `The ID token returned by Google is not a valid JWT: Expected property name or '}' in JSON at position 1 (line 1 column 2).`);
       }
     });
 

@@ -115,18 +115,14 @@ export async function createApp(
     const requestId = req.get('x-request-id') || randomUUID();
 
     req.id = requestId;
-    logger.addLogContext('requestId', requestId);
+    logger.addLogContext({ requestId });
 
     next();
   });
 
   // Log requests.
-  const loggerFormat = Config.get(
-    'settings.loggerFormat',
-    'string',
-    '[:date] ":method :url HTTP/:http-version" :status - :response-time ms'
-  );
-  if (loggerFormat === 'foal') {
+  const shouldLogHttpRequests = Config.get('settings.logger.logHttpRequests', 'boolean', true);
+  if (shouldLogHttpRequests) {
     const getHttpLogParams = options.getHttpLogParams || getHttpLogParamsDefault;
     app.use(morgan(
       (tokens: any, req: any, res: any) => JSON.stringify(getHttpLogParams(tokens, req, res)),
@@ -139,9 +135,6 @@ export async function createApp(
         },
       }
     ))
-  } else if (loggerFormat !== 'none') {
-    logger.warn('[CONFIG] Using another format than "foal" for "settings.loggerFormat" is deprecated.');
-    app.use(morgan(loggerFormat));
   }
 
   app.use(protectionHeaders);

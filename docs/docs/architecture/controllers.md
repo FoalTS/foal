@@ -100,14 +100,14 @@ It has seven properties:
 | Name | Type | Description |
 | --- | --- | --- |
 | `request` | `Request` | Gives information about the HTTP request. |
-| `state` | `{ [key: string]: any }` | Object which can be used to forward data accross several hooks (see [Hooks](./hooks.md)). |
+| `state` | `{ [key: string]: any } = {}` | Object which can be used to forward data accross several hooks (see [Hooks](./hooks.md)). |
 | `user` | `{ [key: string]: any }`\|`null` | The current user (see [Authentication](../authentication/quick-start.md)). | 
 | `session`| `Session`\|`null` | The session object if you use sessions. |
 | `files` | `FileList` | A list of file paths or buffers if you uploaded files (see [Upload and download files](../common/file-storage/upload-and-download-files.md)). |
 | `controllerName` | `string` | The name of the controller class. |
 | `controllerMethodName` | `string` | The name of the controller method. |
 
-The types of the `user` and `state` properties are generic. You override their types if needed:
+The types of the `user` and `state` properties are generic. You can override their types if needed:
 
 ```typescript
 import { Context, Get } from '@foal/core';
@@ -253,14 +253,14 @@ class AppController {
 
 #### The Controller Method Arguments
 
-The path paramaters and request body are also passed as second and third arguments to the controller method.
+The request is also passed as second argument to the controller method.
 
 ```typescript
-import { Context, HttpResponseCreated, Put } from '@foal/core';
+import { Context, HttpResponseCreated, Put, Request } from '@foal/core';
 
 class AppController {
   @Put('/products/:id')
-  updateProduct(ctx: Context, { id }, body) {
+  updateProduct(ctx: Context, request: Request) {
     // Do something.
     return new HttpResponseCreated();
   }

@@ -104,7 +104,7 @@ describe('createApp', () => {
     Config.remove('settings.debug');
     Config.remove('settings.bodyParser.limit');
     Config.remove('settings.cookieParser.secret');
-    Config.remove('settings.loggerFormat');
+    Config.remove('settings.logger.logHttpRequests');
     Config.remove('settings.logger.format');
     Config.remove('settings.staticFiles.cacheControl');
   });
@@ -579,17 +579,10 @@ describe('createApp', () => {
       .send('{ "foo": "bar", }')
       .expect(400)
       .then(response => {
-        try {
-          deepStrictEqual(response.body, {
-            body: '{ \"foo\": \"bar\", }',
-            message: 'Unexpected token } in JSON at position 16'
-          });
-        } catch (error) {
-          deepStrictEqual(response.body, {
-            body: '{ \"foo\": \"bar\", }',
-            message: 'Expected double-quoted property name in JSON at position 16'
-          })
-        }
+        deepStrictEqual(response.body, {
+          body: '{ \"foo\": \"bar\", }',
+          message: 'Expected double-quoted property name in JSON at position 16 (line 1 column 17)'
+        });
       });
   });
 
@@ -763,9 +756,37 @@ describe('createApp', () => {
     }
   });
 
-  context('given the configuration "settings.loggerFormat" is set to "foal"', () => {
+  context('given the configuration "settings.logger.logHttpRequests" is set to false', () => {
+    it('should NOT log the request.', async () => {
+      Config.set('settings.logger.logHttpRequests', false);
+
+      class AppController {
+        @Get('/a')
+        getA(ctx: Context) {
+          return new HttpResponseOK('a');
+        }
+      }
+
+      const serviceManager = new ServiceManager();
+
+      const logger = serviceManager.get(Logger);
+      const loggerMock = mock.method(logger, 'info', () => {}).mock;
+
+      const app = await createApp(AppController, {
+        serviceManager
+      });
+
+      await request(app)
+        .get('/a')
+        .expect(200);
+
+      strictEqual(loggerMock.callCount(), 0);
+    });
+  });
+
+  context('given the configuration "settings.logger.logHttpRequests" is set to true', () => {
     it('should log the request with a detailed message and detail parameters.', async () => {
-      Config.set('settings.loggerFormat', 'foal');
+      Config.set('settings.logger.logHttpRequests', true);
 
       class AppController {
         @Get('/a')
@@ -806,7 +827,7 @@ describe('createApp', () => {
     });
 
     it('should use the options.getHttpLogParams if provided', async () => {
-      Config.set('settings.loggerFormat', 'foal');
+      Config.set('settings.logger.logHttpRequests', true);
 
       class AppController {
         @Get('/a')
@@ -849,10 +870,8 @@ describe('createApp', () => {
     });
   });
 
-  context('given the configuration "settings.loggerFormat" is set to a value different from "none" or "foal"', () => {
-    it('should log a warning message.', async () => {
-      Config.set('settings.loggerFormat', 'dev');
-
+  context('given the configuration "settings.logger.logHttpRequests" is not set', () => {
+    it('should behave like the configuration is set to true.', async () => {
       class AppController {
         @Get('/a')
         getA(ctx: Context) {
@@ -863,14 +882,17 @@ describe('createApp', () => {
       const serviceManager = new ServiceManager();
 
       const logger = serviceManager.get(Logger);
-      const loggerMock = mock.method(logger, 'warn', () => {}).mock;
+      const loggerMock = mock.method(logger, 'info', () => {}).mock;
 
-      await createApp(AppController, {
+      const app = await createApp(AppController, {
         serviceManager
       });
 
+      await request(app)
+        .get('/a')
+        .expect(200);
+
       strictEqual(loggerMock.callCount(), 1);
-      strictEqual(loggerMock.calls[0].arguments[0], '[CONFIG] Using another format than "foal" for "settings.loggerFormat" is deprecated.');
     });
   });
 
@@ -884,7 +906,7 @@ describe('createApp', () => {
       @Get('/')
       @Hook((ctx, services) => {
         const logger = services.get(Logger);
-        logger.addLogContext('foo', 'bar');
+        logger.addLogContext({ foo: 'bar' });
       })
       getA(ctx: Context) {
         this.logger.info('Hello world');
@@ -992,9 +1014,8 @@ describe('createApp', () => {
 
     strictEqual(loggerMock.callCount(), 1);
 
-    const [key, value] = loggerMock.calls[0].arguments;
+    const args = loggerMock.calls[0].arguments;
 
-    strictEqual(key, 'requestId');
-    strictEqual(value, requestId);
+    deepStrictEqual(args, [{ requestId }]);
   });
 });

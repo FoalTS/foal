@@ -4,7 +4,6 @@ import * as crypto from 'crypto';
 
 // 3p
 import { Config, Context, generateToken, HttpResponseRedirect, convertBase64ToBase64url, CookieOptions, HttpResponseOK } from '@foal/core';
-import * as fetch from 'node-fetch';
 
 /**
  * Tokens returned by an OAuth2 authorization server.
@@ -114,9 +113,9 @@ export interface ObjectType {
  * @class AbstractProvider
  * @template AuthParameters - Additional parameters to pass to the auth endpoint.
  * @template UserInfoParameters - Additional parameters to pass when retrieving user information.
- * @template IUserInfo - Type of the user information.
+ * @template UserInfo - Type of the user information.
  */
-export abstract class AbstractProvider<AuthParameters extends ObjectType, UserInfoParameters extends ObjectType, IUserInfo = any> {
+export abstract class AbstractProvider<AuthParameters extends ObjectType, UserInfoParameters extends ObjectType, UserInfo = any> {
 
   /**
    * Configuration paths from which the client ID, client secret and redirect URI must be retrieved.
@@ -233,10 +232,10 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    * @abstract
    * @param {SocialTokens} tokens - Tokens returned by the authorization server. It contains at least an access token.
    * @param {UserInfoParameters} [params] - Additional parameters to pass to the function.
-   * @returns {*} The user information.
+   * @returns {UserInfo | Promise<UserInfo>} The user information.
    * @memberof AbstractProvider
    */
-  abstract getUserInfoFromTokens(tokens: SocialTokens, params?: UserInfoParameters): any;
+  abstract getUserInfoFromTokens(tokens: SocialTokens, params?: UserInfoParameters): UserInfo | Promise<UserInfo>;
 
   /**
    * Returns an HttpResponseOK or HttpResponseRedirect object to redirect the user to the social provider's authorization page.
@@ -310,21 +309,6 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
   }
 
   /**
-   * Returns an HttpResponseRedirect object to redirect the user to the social provider's authorization page.
-   *
-   * This function is deprecated. Use createHttpResponseWithConsentPageUrl instead with isRedirection set to true.
-   *
-   * @param {{ scopes?: string[] }} [{ scopes }={}] - Custom scopes to override the default ones used by the provider.
-   * @param {AuthParameters} [params] - Additional parameters (specific to the social provider).
-   * @returns {Promise<HttpResponseRedirect>} The HttpResponseRedirect object.
-   * @memberof AbstractProvider
-   * @deprecated
-   */
-  async redirect({ scopes }: { scopes?: string[] } = {}, params?: AuthParameters): Promise<HttpResponseRedirect> {
-    return this.createHttpResponseWithConsentPageUrl({ scopes, isRedirection: true }, params) as Promise<HttpResponseRedirect>;
-  }
-
-  /**
    * Function to use in the controller method that handles the provider redirection.
    *
    * It returns an access token.
@@ -394,13 +378,12 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
    *
    * It retrieves the access token as well as the user information.
    *
-   * @template UserInfo
    * @param {Context} ctx - The request context.
    * @param {UserInfoParameters} [params] - Additional parameters to pass to the function.
    * @returns {Promise<UserInfoAndTokens<UserInfo>>} The access token and the user information
    * @memberof AbstractProvider
    */
-  async getUserInfo<UserInfo extends IUserInfo>(ctx: Context, params?: UserInfoParameters): Promise<UserInfoAndTokens<UserInfo>> {
+  async getUserInfo(ctx: Context, params?: UserInfoParameters): Promise<UserInfoAndTokens<UserInfo>> {
     const tokens = await this.getTokens(ctx);
     const userInfo = await this.getUserInfoFromTokens(tokens, params);
     return { userInfo, tokens };

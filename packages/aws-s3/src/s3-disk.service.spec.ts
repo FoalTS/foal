@@ -11,7 +11,7 @@ import { S3 } from '@aws-sdk/client-s3';
 import { S3Disk } from './s3-disk.service';
 
 // Isolate each job with a different S3 bucket.
-const bucketName = `foal-test-${process.env.NODE_VERSION?.slice(0,2) || 18}`;
+const bucketName = `foal-test-${process.env.NODE_VERSION?.slice(0,2) || 22}`;
 
 async function rmObjectsIfExist(s3: S3) {
   const response = await s3.listObjects({

@@ -3,7 +3,6 @@ port: 3001
 settings:
   openapi:
     useHooks: true
-  loggerFormat: foal
   session:
     secret: 'my secret'
   staticPath: 'public/'

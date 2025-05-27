@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "4.6.0",
+  "version": "5.0.0",
   "description": "Full-featured Node.js framework, with no complexity",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -18,7 +18,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -52,34 +52,34 @@
   },
   "homepage": "https://github.com/FoalTS",
   "contributors": [
-    "Loïc Poullain <loic.poullain@centraliens.net>"
+    "Loïc Poullain"
   ],
   "license": "MIT",
   "files": [
     "lib/"
   ],
   "dependencies": {
-    "ajv": "~8.17.0",
+    "ajv": "~8.17.1",
     "ajv-formats": "~2.1.1",
-    "cookie-parser": "~1.4.6",
-    "express": "~4.21.0",
+    "cookie-parser": "~1.4.7",
+    "express": "~4.21.2",
     "morgan": "~1.10.0",
-    "reflect-metadata": "~0.2.1"
+    "reflect-metadata": "~0.2.2"
   },
   "devDependencies": {
-    "@foal/internal-test": "^4.6.0",
-    "@types/mocha": "10.0.7",
-    "@types/node": "18.18.6",
+    "@foal/internal-test": "^5.0.0",
+    "@types/mocha": "10.0.10",
+    "@types/node": "22.15.21",
     "@types/supertest": "6.0.2",
     "ajv-errors": "~3.0.0",
     "ejs": "~3.1.10",
-    "mocha": "~10.7.2",
-    "rimraf": "~5.0.5",
+    "mocha": "~11.5.0",
+    "rimraf": "~6.0.1",
     "source-map-support": "~0.5.21",
-    "supertest": "~7.0.0",
+    "supertest": "~7.1.1",
     "ts-node": "~10.9.2",
     "twig": "~1.17.1",
-    "typescript": "~4.9.5",
+    "typescript": "~5.5.4",
     "yamljs": "~0.3.0"
   }
 }

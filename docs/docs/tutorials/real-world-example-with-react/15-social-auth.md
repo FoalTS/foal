@@ -66,7 +66,7 @@ if (!(await verifyPassword(password, user.password))) {
 Now that the password problem is solved, you can install the packages and provide your social credentials in the configuration.
 
 ```bash
-npm install @foal/social node-fetch@2
+npm install @foal/social
 ```
 
 *config/default.json*
@@ -114,14 +114,7 @@ Open the file and add two new routes.
 import { Context, dependency, Get, HttpResponseRedirect } from '@foal/core';
 import { GoogleProvider } from '@foal/social';
 import { User } from '../../entities';
-import * as fetch from 'node-fetch';
 import { Disk } from '@foal/storage';
-
-interface GoogleUserInfo {
-  email: string;
-  name?: string;
-  picture?: string;
-}
 
 export class SocialAuthController {
   @dependency
@@ -137,7 +130,7 @@ export class SocialAuthController {
 
   @Get('/google/callback')
   async handleGoogleRedirection(ctx: Context<User>) {
-    const { userInfo } = await this.google.getUserInfo<GoogleUserInfo>(ctx);
+    const { userInfo } = await this.google.getUserInfo(ctx);
 
     if (!userInfo.email) {
       throw new Error('Google should have returned an email address.');

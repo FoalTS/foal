@@ -1,6 +1,6 @@
 {
   "name": "@foal/aws-s3",
-  "version": "4.6.0",
+  "version": "5.0.0",
   "description": "AWS S3 storage components for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -13,7 +13,7 @@
     "url": "https://github.com/sponsors/LoicPoullain"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -36,25 +36,25 @@
   },
   "homepage": "https://github.com/FoalTS",
   "contributors": [
-    "Loïc Poullain <loic.poullain@centraliens.net>"
+    "Loïc Poullain"
   ],
   "license": "MIT",
   "files": [
     "lib/"
   ],
   "dependencies": {
-    "@aws-sdk/client-s3": "~3.651.1",
-    "@aws-sdk/lib-storage": "~3.651.1",
-    "@foal/core": "^4.6.0",
-    "@foal/storage": "^4.6.0"
+    "@aws-sdk/client-s3": "~3.817.0",
+    "@aws-sdk/lib-storage": "~3.817.0",
+    "@foal/core": "^5.0.0",
+    "@foal/storage": "^5.0.0"
   },
   "devDependencies": {
-    "@types/mocha": "10.0.7",
-    "@types/node": "18.18.6",
+    "@types/mocha": "10.0.10",
+    "@types/node": "22.15.21",
     "copy": "~0.3.2",
-    "mocha": "~10.7.2",
-    "rimraf": "~5.0.5",
+    "mocha": "~11.5.0",
+    "rimraf": "~6.0.1",
     "ts-node": "~10.9.2",
-    "typescript": "~4.9.5"
+    "typescript": "~5.5.4"
   }
 }

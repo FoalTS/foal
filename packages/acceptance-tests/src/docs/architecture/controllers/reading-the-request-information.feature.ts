@@ -10,6 +10,7 @@ import {
   HttpResponseOK,
   Post,
   Put,
+  Request,
 } from '@foal/core';
 
 describe('Feature: Reading the request information', () => {
@@ -150,9 +151,9 @@ describe('Feature: Reading the request information', () => {
 
     class AppController {
       @Put('/products/:id')
-      updateProduct(ctx: Context, { id }: any, body: any) {
+      updateProduct(ctx: Context, request: Request) {
         // Do something.
-        return new HttpResponseCreated({ id, body });
+        return new HttpResponseCreated({ id: request.params.id, body: request.body });
       }
     }
 
