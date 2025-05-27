@@ -24,7 +24,7 @@ export async function main(args: any, services: ServiceManager, logger: Logger) 
 
     await user.save();
 
-    logger.info(`User created: ${user.id}`);
+    logger.info(`User created: ${JSON.stringify(user, null, 2)}`);
   } finally {
     await dataSource.destroy();
   }
