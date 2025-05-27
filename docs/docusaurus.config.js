@@ -154,9 +154,13 @@ module.exports = {
             current: {
               "label": `v${require('../lerna.json').version[0]}`,
             },
+            '4.x': {
+              'label': 'v4',
+              banner: 'none',
+              noIndex: true
+            },
             '3.x': {
               'label': 'v3',
-              banner: 'none',
               noIndex: true
             },
             '2.x': {
