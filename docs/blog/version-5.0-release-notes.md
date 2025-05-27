@@ -14,22 +14,31 @@ Version 5.0 of [Foal](https://foalts.org/) is out!
 ## Supported versions of Node and TypeScript
 
 - Support for Node 18 and Node 20 has been dropped and support for Node 22 has been added. Foal code is now compiled to ES2023.
-- The supported version of TypeScript is version 5. Update your `package.json` file accordingly.
+- The minimum supported version of TypeScript is version 5.5. Update your `package.json` file accordingly.
 
-> If you're using the `GraphQLController` with the `resolvers` property, you need to add the `declare` keyword before the property name:
-> ```typescript
-> 
-> export class ApiController extends GraphQLController {
->   schema = // ...
->
->   @dependency
->   declare resolvers: RootResolverService;
-> }
-> ```
+  ```bash
+  npm install typescript@5.5
+  ```
+
+  > If you're using the `GraphQLController` with the `resolvers` property, you need to add the `declare` keyword before the property name:
+  >
+  > ```typescript
+  > 
+  > export class ApiController extends GraphQLController {
+  >   schema = // ...
+  >
+  >   @dependency
+  >   declare resolvers: RootResolverService;
+  > }
+  > ```
 
 ## TypeORM upgrade
 
 - The minimum required version of TypeORM is v0.3.24.
+
+  ```bash
+  npm install typeorm@0.3.24
+  ```
 
 ## Better typing
 
@@ -114,12 +123,61 @@ To facilitate the typing of the request body, path parameters and request parame
 ## Logging
 
 - The `Logger.addLogContext(key, value)` method now accepts a record as parameter: `Logger.addLogContext(context)`. This makes the function's signature more consistent with other logging methods (`info`, `warn`, etc.) and allows multiple keys/values to be passed at once.
-- The deprecated `settings.loggerFormat` configuration has been removed. If you want to disable HTTP logging, set `settings.logger.logHttpRequests` to false instead.
+
+  ```typescript
+  // Version 4
+  this.logger.addLogContext('foo', 'bar');
+  this.logger.addLogContext('barfoo', 'foobar');
+
+  // Version 5
+  this.logger.addLogContext({
+    foo: 'bar',
+    barfoo: 'foobar',
+  });
+  ```
+
+- The deprecated `settings.loggerFormat` configuration has been removed. If you want to disable HTTP logging, replace configuration `settings.loggerFormat: 'none'` with `settings.logger.logHttpRequests: false`.
+
+  ```json
+  // Version 4
+  {
+    "settings": {
+      "loggerFormat": "none"
+    }
+  }
+
+  // Version 5
+  {
+    "settings": {
+      "logger": {
+        "logHttpRequests": false
+      }
+    }
+  }
+
+  // Version 4
+  {
+    "settings": {
+      "loggerFormat": "any other value than 'none'"
+    }
+  }
+
+  // Version 5
+  {
+    "settings": {}
+  }
+  ```
 
 ## Shell scripts
 
 - The `main` function of shell scripts now receives an instance of `ServiceManager` as second argument and the logger as third argument:
     ```typescript
+    // Version 4
+    export async function main(args: any) {
+      // ...
+    }
+
+    // Version 5
     export async function main(args: any, services: ServiceManager, logger: Logger) {
       // ...
     }
@@ -129,8 +187,37 @@ To facilitate the typing of the request body, path parameters and request parame
 - At the end of script execution, as with an HTTP request, a log is printed to indicate whether the execution was successful or unsuccessful.
 - Any error thrown in the `main` function is now logged with the framework logger.
 
+    ```typescript
+    // Version 4
+    export async function main() {
+      const services = new ServiceManager();
+      const logger = services.get(Logger);
+
+      try {
+        // ...
+        throw new Error('Hello world');
+      } catch(error) {
+        logger.error(error.message { error });
+      }
+    }
+
+    // Version 5
+    export async function main() {
+      // ...
+      throw new Error('Hello world');
+    }
+    ```
+
 ## Removal of deprecated components
 
 - The deprecated hook `@Log` has been removed. Use the `Logger` service in a custom `@Hook` instead.
 - The command alias `npx foal run-script` has been removed. Use `npx foal run` instead.
 - The deprecated method `AbstractProvider.redirect` has been removed. Use `AbstractProvider.createHttpResponseWithConsentPageUrl({ isRedirection: true })` instead.
+
+  ```typescript
+  // Version 4
+  return this.googleProvider.redirect();
+
+  // Version 5
+  return this.googleProvider.createHttpResponseWithConsentPageUrl({ isRedirection: true });
+  ```
