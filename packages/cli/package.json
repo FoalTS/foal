@@ -1,6 +1,6 @@
 {
   "name": "@foal/cli",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "CLI tool for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -64,7 +64,7 @@
     "commander": "~12.1.0"
   },
   "devDependencies": {
-    "@foal/core": "^5.0.0",
+    "@foal/core": "^5.0.1",
     "@types/mocha": "10.0.10",
     "@types/node": "22.15.21",
     "copyfiles": "~2.4.1",
