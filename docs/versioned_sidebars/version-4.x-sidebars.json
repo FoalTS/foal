@@ -1,0 +1,226 @@
+{
+  "someSidebar": [
+    "README",
+    {
+      "type": "category",
+      "label": "TUTORIALS",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "Simple To-Do List",
+          "items": [
+            "tutorials/simple-todo-list/tuto-1-installation",
+            "tutorials/simple-todo-list/tuto-2-introduction",
+            "tutorials/simple-todo-list/tuto-3-the-todo-model",
+            "tutorials/simple-todo-list/tuto-4-the-shell-script-create-todo",
+            "tutorials/simple-todo-list/tuto-5-the-rest-api",
+            "tutorials/simple-todo-list/tuto-6-validation-and-sanitization",
+            "tutorials/simple-todo-list/tuto-7-unit-testing"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Full Example with React",
+          "items": [
+            "tutorials/real-world-example-with-react/tuto-1-introduction",
+            "tutorials/real-world-example-with-react/tuto-2-database-set-up",
+            "tutorials/real-world-example-with-react/tuto-3-the-models",
+            "tutorials/real-world-example-with-react/tuto-4-the-shell-scripts",
+            "tutorials/real-world-example-with-react/tuto-5-our-first-route",
+            "tutorials/real-world-example-with-react/tuto-6-swagger-interface",
+            "tutorials/real-world-example-with-react/tuto-7-add-frontend",
+            "tutorials/real-world-example-with-react/tuto-8-authentication",
+            "tutorials/real-world-example-with-react/tuto-9-authenticated-api",
+            "tutorials/real-world-example-with-react/tuto-10-auth-with-react",
+            "tutorials/real-world-example-with-react/tuto-11-sign-up",
+            "tutorials/real-world-example-with-react/tuto-12-file-upload",
+            "tutorials/real-world-example-with-react/tuto-13-csrf",
+            "tutorials/real-world-example-with-react/tuto-14-production-build",
+            "tutorials/real-world-example-with-react/tuto-15-social-auth"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "TOPIC GUIDES",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "category",
+          "label": "Architecture",
+          "items": [
+            "architecture/architecture-overview",
+            "architecture/controllers",
+            "architecture/services-and-dependency-injection",
+            "architecture/hooks",
+            "architecture/initialization",
+            "architecture/error-handling",
+            "architecture/configuration"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Common",
+          "items": [
+            "common/validation-and-sanitization",
+            {
+              "type": "category",
+              "label": "File Storage",
+              "items": [
+                "common/file-storage/local-and-cloud-storage",
+                "common/file-storage/upload-and-download-files"
+              ]
+            },
+            "common/serialization",
+            "common/logging",
+            "common/async-tasks",
+            "common/rest-blueprints",
+            "common/openapi-and-swagger-ui",
+            "common/graphql",
+            "common/websockets",
+            "common/gRPC",
+            "common/utilities",
+            "common/expressjs"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Databases",
+          "items": [
+            {
+              "type": "category",
+              "label": "With TypeORM",
+              "items": [
+                "databases/typeorm/introduction",
+                "databases/typeorm/create-models-and-queries",
+                "databases/typeorm/generate-and-run-migrations",
+                "databases/typeorm/mongodb"
+              ]
+            },
+            {
+              "type": "category",
+              "label": "With another ORM",
+              "items": [
+                "databases/other-orm/introduction",
+                "databases/other-orm/prisma"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Authentication",
+          "items": [
+            "authentication/quick-start",
+            "authentication/user-class",
+            "authentication/password-management",
+            "authentication/session-tokens",
+            "authentication/jwt",
+            "authentication/social-auth"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Authorization",
+          "items": [
+            "authorization/administrators-and-roles",
+            "authorization/groups-and-permissions"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Frontend",
+          "items": [
+            "frontend/single-page-applications",
+            "frontend/angular-react-vue",
+            "frontend/server-side-rendering",
+            "frontend/nuxt.js",
+            "frontend/not-found-page"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "CLI",
+          "items": [
+            "cli/commands",
+            "cli/shell-scripts",
+            "cli/code-generation",
+            "cli/linting-and-code-style"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Testing",
+          "items": [
+            "testing/introduction",
+            "testing/unit-testing",
+            "testing/e2e-testing"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Security",
+          "items": [
+            "security/http-headers-protection",
+            "security/csrf-protection",
+            "security/cors",
+            "security/rate-limiting",
+            "security/body-size-limiting"
+          ]
+        },
+        {
+          "type": "category",
+          "label": "Deployment",
+          "items": [
+            "deployment-and-environments/checklist"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Comparison with Other Frameworks",
+      "collapsed": false,
+      "items": [
+        "comparison-with-other-frameworks/express-fastify"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Upgrading",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "link",
+          "label": "To v4",
+          "href": "https://github.com/FoalTS/foal/releases/tag/v4.0.0"
+        },
+        {
+          "type": "link",
+          "label": "To v3",
+          "href": "https://foalts.org/docs/3.x/upgrade-to-v3/"
+        },
+        {
+          "type": "link",
+          "label": "To v2",
+          "href": "https://foalts.org/docs/2.x/upgrade-to-v2/"
+        },
+        {
+          "type": "link",
+          "label": "To v1",
+          "href": "https://github.com/FoalTS/foal/releases/tag/v1.0.0"
+        }
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Community",
+      "collapsed": false,
+      "items": [
+        "community/awesome-foal"
+      ]
+    }
+  ]
+}
