@@ -16,6 +16,7 @@ import {
   mergeTags,
   OpenApi
 } from '../openapi';
+import { getApiDisinheritTags } from '../openapi/metadata-getters/get-api-disinherit-tags';
 import { ServiceManager } from '../service-manager';
 import { Route } from './route.interface';
 import { getMetadata, join } from './utils';
@@ -26,7 +27,7 @@ import { getMetadata, join } from './utils';
  * @param {(object|null)} obj - The object.
  * @returns {string[]} The property names.
  */
-export function getMethods(obj: object|null): string[] {
+export function getMethods(obj: object | null): string[] {
   if (obj === Object.prototype) { return []; }
   return Object.getOwnPropertyNames(obj).concat(getMethods(Object.getPrototypeOf(obj)));
 }
@@ -56,7 +57,7 @@ function throwErrorIfDuplicatePaths(paths: IApiPaths): void {
 }
 
 function getPath(controllerClass: Class, propertyKey?: string): string {
-  return getMetadata('path', controllerClass, propertyKey) as string|undefined || '';
+  return getMetadata('path', controllerClass, propertyKey) as string | undefined || '';
 }
 
 function getHooks(controllerClass: Class, controller: object, propertyKey?: string): HookFunction[] {
@@ -78,7 +79,7 @@ function getHooks(controllerClass: Class, controller: object, propertyKey?: stri
 export function* makeControllerRoutes(
   controllerClass: Class, services: ServiceManager, openapi = false, documentControllers?: object[]
 ): Generator<{
-  route: Route, components: IApiComponents, operation: IApiOperation,  tags?: IApiTag[]
+  route: Route, components: IApiComponents, operation: IApiOperation, tags?: IApiTag[], routeDisinheritTags?: boolean
 }> {
   // FoalTS stores as well the controllers in the service manager.
   const controller = services.get(controllerClass);
@@ -103,7 +104,7 @@ export function* makeControllerRoutes(
 
   /* OpenAPI */
   const openApi = services.get(OpenApi);
-  let document: IOpenAPI|undefined;
+  let document: IOpenAPI | undefined;
 
   /* OpenAPI */
   if (info) {
@@ -133,13 +134,15 @@ export function* makeControllerRoutes(
     documentControllers.push(controller);
   }
 
-  function processRoute(route: Route, components: IApiComponents, operation: IApiOperation, tags?: IApiTag[]) {
+  function processRoute(route: Route, components: IApiComponents, operation: IApiOperation, tags?: IApiTag[], disinheritTags?: boolean) {
+    console.log(JSON.stringify({ disinheritTags: disinheritTags || false }, null, 2));
+
     /* OpenAPI */
     if (document) {
       const normalizedPath = normalizePath(route.path);
       document.paths[normalizedPath] = {
         ...document.paths[normalizedPath], // Potentially undefined
-        [route.httpMethod.toLowerCase()]: mergeOperations(controllerOperation, operation)
+        [route.httpMethod.toLowerCase()]: mergeOperations(controllerOperation, operation, disinheritTags)
       };
       document.tags = Array.from(new Set(mergeTags(document.tags, tags)));
       document.components = mergeComponents(document.components || {}, components);
@@ -149,7 +152,7 @@ export function* makeControllerRoutes(
       // OpenAPI
       components: openapi ? mergeComponents(controllerComponents, components) : {},
       // OpenAPI
-      operation: openapi ? mergeOperations(controllerOperation, operation) : { responses: {} },
+      operation: openapi ? mergeOperations(controllerOperation, operation, disinheritTags) : { responses: {} },
       route: {
         controller: route.controller,
         hooks: controllerHooks.concat(route.hooks),
@@ -158,18 +161,27 @@ export function* makeControllerRoutes(
         propertyKey: route.propertyKey,
       },
       // OpenAPI
-      tags: openapi ? mergeTags(controllerTags, tags) : undefined
+      tags: openapi ?
+        disinheritTags === true
+          ? tags
+          : mergeTags(controllerTags, tags)
+        : undefined,
+
+      routeDisinheritTags: disinheritTags
     };
   }
 
-  for (const controllerClass of controller.subControllers || []) {
+  for (const subControllerClass of controller.subControllers || []) {
+    const subDisinheritTags = getApiDisinheritTags(subControllerClass);
+
     for (
-      const { route, components, operation, tags } of
-      makeControllerRoutes(controllerClass, services, openapi, documentControllers)
+      const { route, components, operation, tags, routeDisinheritTags } of
+      makeControllerRoutes(subControllerClass, services, openapi, documentControllers)
     ) {
-      yield processRoute(route, components, operation, tags);
+      yield processRoute(route, components, operation, tags, subDisinheritTags || routeDisinheritTags);
     }
   }
+
 
   for (const propertyKey of getMethods(controllerClass.prototype)) {
     const httpMethod = getMetadata('httpMethod', controllerClass, propertyKey);
@@ -182,12 +194,14 @@ export function* makeControllerRoutes(
     const hooks = getHooks(controllerClass, controller, propertyKey);
     const route = { controller, hooks, httpMethod, path, propertyKey };
 
+
     /* OpenAPI */
     const components = openapi ? getApiComponents(controllerClass, controller, propertyKey) : {};
     const operation = openapi ? getApiCompleteOperation(controllerClass, controller, propertyKey) : { responses: {} };
     const tags = openapi ? getApiTags(controllerClass, propertyKey) : undefined;
+    const disinheritTagsProperty = getApiDisinheritTags(controllerClass, propertyKey);
 
-    yield processRoute(route, components, operation, tags);
+    yield processRoute(route, components, operation, tags, disinheritTagsProperty);
   }
 
   /* OpenAPI */
