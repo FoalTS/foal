@@ -109,6 +109,7 @@ Using the `@ApiOperation` decorator can sometimes be cumbersome. That is why Foa
 | `@ApiDefineTag` |
 | `@ApiExternalDoc` |
 | `@ApiUseTag` |
+| `@ApiDisinheritTags` |
 | `@ApiParameter` |
 | `@ApiResponse` |
 | `@ApiCallback` |
