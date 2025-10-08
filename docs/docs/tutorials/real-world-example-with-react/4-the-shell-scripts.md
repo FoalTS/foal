@@ -113,7 +113,7 @@ export async function main(args: { author: string, title: string, link: string }
   story.link = args.link;
 
   try {
-    await store.save();
+    await story.save();
 
     logger.info(`Story created: ${story.id}`);
   } finally {
