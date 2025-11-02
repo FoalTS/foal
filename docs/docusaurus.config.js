@@ -76,11 +76,6 @@ module.exports = {
           position: 'left'
         },
         {
-          to: 'newsletter',
-          label: 'Newsletter',
-          position: 'left'
-        },
-        {
           type: 'docsVersionDropdown',
           position: 'left',
           dropdownActiveClassDisabled: true,
