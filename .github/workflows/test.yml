@@ -13,7 +13,7 @@ jobs:
       matrix:
         node-version: [22]
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v4
     - name: Start up databases
       run: docker compose up -d
     - name: Use Node.js ${{ matrix.node-version }}
@@ -21,7 +21,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: package-lock.json
     - name: Install project and package dependencies
       run: npm install
     - name: Build packages
@@ -49,8 +48,6 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: package-lock.json
     - name: Check for the absence of "describe.only()" and "it.only()"
       run: if grep -Rl ".only(" ./packages/*/src ; then echo "Unexpected describe.only() or it.only() found.";  exit 1; else exit 0; fi
     - name: Check package linting
@@ -78,8 +75,6 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: package-lock.json
     - name: Run unit tests of @foal/${{ matrix.package }}
       run: cd packages/${{ matrix.package }} && npm run test
 
@@ -99,8 +94,6 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-        cache-dependency-path: package-lock.json
     - name: Create CLI symlink in the global folder
       run: npm link
       working-directory: packages/cli
