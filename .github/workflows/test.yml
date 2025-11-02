@@ -22,13 +22,14 @@ jobs:
       NODE_VERSION: ${{ matrix.node-version }}
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v5
     - name: Start up databases
       run: docker compose up -d
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
     - name: Install project and package dependencies
       run: npm install
     - name: Build packages
