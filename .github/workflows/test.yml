@@ -7,23 +7,6 @@ on:
   pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        node-version: [22]
-    steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Install project and package dependencies
-      run: npm install
-    - name: Build packages
-      run: npx lerna run build
-
   lint:
     runs-on: ubuntu-22.04
     strategy:
@@ -65,6 +48,8 @@ jobs:
         cache: 'npm'
     - name: Install project and package dependencies
       run: npm install
+    - name: Build packages
+      run: npx lerna run build
     - name: Run unit tests of @foal/${{ matrix.package }}
       run: cd packages/${{ matrix.package }} && npm run test
 
