@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-    needs: setup
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -26,7 +25,6 @@ jobs:
       run: npx lerna run build
 
   lint:
-    needs: setup
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -46,7 +44,6 @@ jobs:
       run: npm run lint
 
   unit-tests:
-    needs: build
     runs-on: ubuntu-latest
     env:
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
@@ -72,7 +69,6 @@ jobs:
       run: cd packages/${{ matrix.package }} && npm run test
 
   e2e-tests:
-    needs: setup
     runs-on: ubuntu-latest
     strategy:
       matrix:
