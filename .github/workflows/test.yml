@@ -23,8 +23,6 @@ jobs:
         cache: 'npm'
     - name: Install project and package dependencies
       run: npm install
-    - name: Build packages
-      run: npx lerna run build
     - name: Upload workspace
       uses: actions/upload-artifact@v4
       with:
@@ -32,7 +30,7 @@ jobs:
         path: .
         retention-days: 1
 
-  lint-and-checks:
+  build:
     needs: setup
     runs-on: ubuntu-latest
     strategy:
@@ -48,13 +46,38 @@ jobs:
       uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Build packages
+      run: npx lerna run build
+    - name: Upload built workspace
+      uses: actions/upload-artifact@v4
+      with:
+        name: built-workspace-${{ matrix.node-version }}
+        path: .
+        retention-days: 1
+
+  lint-and-checks:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22]
+    steps:
+    - name: Download workspace
+      uses: actions/download-artifact@v4
+      with:
+        name: built-workspace-${{ matrix.node-version }}
+        path: .
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ matrix.node-version }}
     - name: Check for the absence of "describe.only()" and "it.only()"
       run: if grep -Rl ".only(" ./packages/*/src ; then echo "Unexpected describe.only() or it.only() found.";  exit 1; else exit 0; fi
     - name: Check package linting
       run: npm run lint
 
   unit-tests:
-    needs: setup
+    needs: build
     runs-on: ubuntu-latest
     env:
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
@@ -69,7 +92,7 @@ jobs:
     - name: Download workspace
       uses: actions/download-artifact@v4
       with:
-        name: workspace-${{ matrix.node-version }}
+        name: built-workspace-${{ matrix.node-version }}
         path: .
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v6
@@ -79,7 +102,7 @@ jobs:
       run: cd packages/${{ matrix.package }} && npm run test
 
   e2e-tests:
-    needs: setup
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -88,7 +111,7 @@ jobs:
     - name: Download workspace
       uses: actions/download-artifact@v4
       with:
-        name: workspace-${{ matrix.node-version }}
+        name: built-workspace-${{ matrix.node-version }}
         path: .
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v6
