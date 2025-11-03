@@ -22,7 +22,7 @@ jobs:
     - name: Check for the absence of "describe.only()" and "it.only()"
       run: if grep -Rl ".only(" ./packages/*/src ; then echo "Unexpected describe.only() or it.only() found.";  exit 1; else exit 0; fi
     - name: Install project and package dependencies
-      run: npm install
+      run: npm ci
     - name: Check package linting
       run: npm run lint
 
@@ -47,7 +47,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - name: Install project and package dependencies
-      run: npm install
+      run: npm ci
     - name: Build packages
       run: npx lerna run build
     - name: Run unit tests of @foal/${{ matrix.package }}
@@ -68,7 +68,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - name: Install project and package dependencies
-      run: npm install
+      run: npm ci
     - name: Build CLI package
       run: cd packages/cli && npm run build
     - name: Create CLI symlink in the global folder
