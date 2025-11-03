@@ -30,8 +30,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: package-lock.json
     - name: Install project and package dependencies
-      run: npm install
+      run: npm ci
     - name: Build packages
       run: npx lerna run build
     - name: Create CLI symlink in the global folder
