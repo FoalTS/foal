@@ -7,38 +7,22 @@ on:
   pull_request:
 
 jobs:
-  lint:
-    runs-on: ubuntu-22.04
+  build:
+
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
         node-version: [22]
-    steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Check for the absence of "describe.only()" and "it.only()"
-      run: if grep -Rl ".only(" ./packages/*/src ; then echo "Unexpected describe.only() or it.only() found.";  exit 1; else exit 0; fi
-    - name: Install project and package dependencies
-      run: npm install
-    - name: Check package linting
-      run: npm run lint
 
-  unit-tests:
-    runs-on: ubuntu-22.04
     env:
       SETTINGS_AWS_ACCESS_KEY_ID: ${{ secrets.SETTINGS_AWS_ACCESS_KEY_ID }}
       SETTINGS_AWS_SECRET_ACCESS_KEY: ${{ secrets.SETTINGS_AWS_SECRET_ACCESS_KEY }}
       SETTINGS_AWS_REGION: ${{ secrets.SETTINGS_AWS_REGION }}
       NODE_VERSION: ${{ matrix.node-version }}
-    strategy:
-      matrix:
-        node-version: [22]
-        package: [acceptance-tests, aws-s3, cli, core, examples, graphiql, graphql, jwks-rsa, jwt, mongodb, password, redis, social, socket.io, storage, swagger, typeorm, typestack]
+
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Start up databases
       run: docker compose up -d
     - name: Use Node.js ${{ matrix.node-version }}
@@ -50,29 +34,48 @@ jobs:
       run: npm install
     - name: Build packages
       run: npx lerna run build
-    - name: Run unit tests of @foal/${{ matrix.package }}
-      run: cd packages/${{ matrix.package }} && npm run test
-
-  e2e-tests:
-    runs-on: ubuntu-22.04
-    strategy:
-      matrix:
-        node-version: [22]
-    steps:
-    - uses: actions/checkout@v4
-    - name: Start up databases
-      run: docker compose up -d
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v6
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Install project and package dependencies
-      run: npm install
-    - name: Build CLI package
-      run: cd packages/cli && npm run build
     - name: Create CLI symlink in the global folder
       run: npm link
       working-directory: packages/cli
+    - name: Check for the absence of "describe.only()" and "it.only()"
+      run: if grep -Rl ".only(" ./packages/*/src ; then echo "Unexpected describe.only() or it.only() found.";  exit 1; else exit 0; fi
+    - name: Check package linting
+      run: npm run lint
+    - name: Run unit tests of @foal/acceptance-tests
+      run: cd packages/acceptance-tests && npm run test
+    - name: Run unit tests of @foal/aws-s3
+      run: cd packages/aws-s3 && npm run test
+    - name: Run unit tests of @foal/cli
+      run: cd packages/cli && npm run test
+    - name: Run unit tests of @foal/examples
+      run: cd packages/examples && npm run test
+    - name: Run unit tests of @foal/graphiql
+      run: cd packages/graphiql && npm run test
+    - name: Run unit tests of @foal/graphql
+      run: cd packages/graphql && npm run test
+    - name: Run unit tests of @foal/jwks-rsa
+      run: cd packages/jwks-rsa && npm run test
+    - name: Run unit tests of @foal/jwt
+      run: cd packages/jwt && npm run test
+    - name: Run unit tests of @foal/mongodb
+      run: cd packages/mongodb && npm run test
+    - name: Run unit tests of @foal/password
+      run: cd packages/password && npm run test
+    - name: Run unit tests of @foal/redis
+      run: cd packages/redis && npm run test
+    - name: Run unit tests of @foal/social
+      run: cd packages/social && npm run test
+    - name: Run unit tests of @foal/socket.io
+      run: cd packages/socket.io && npm run test
+    - name: Run unit tests of @foal/storage
+      run: cd packages/storage && npm run test
+    - name: Run unit tests of @foal/swagger
+      run: cd packages/swagger && npm run test
+    - name: Run unit tests of @foal/typeorm
+      run: cd packages/typeorm && npm run test
+    - name: Run unit tests of @foal/typestack
+      run: cd packages/typestack && npm run test
+    - name: Run unit tests of @foal/core
+      run: cd packages/core && npm run test
     - name: Run acceptance tests (Bash)
       run: ./e2e_test.sh
