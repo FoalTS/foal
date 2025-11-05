@@ -47,8 +47,8 @@ describe('Feature: Using buffers in file uploads', () => {
 
     const app = await createApp(UserController);
 
-    const path1 = join(__dirname, './assets/image.test.png');
-    const path2 = join(__dirname, './assets/image.test2.png');
+    const path1 = join(process.cwd(), './assets/docs/common/file-storage/upload-and-download-files/image.test.png');
+    const path2 = join(process.cwd(), './assets/docs/common/file-storage/upload-and-download-files/image.test2.png');
 
     await request(app)
       .post('/profile')

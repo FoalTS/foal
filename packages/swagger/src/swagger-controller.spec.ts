@@ -237,7 +237,7 @@ describe('SwaggerController', () => {
 
       strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-      const expected = readFileSync(join(__dirname, 'specs/main.url.spec.js'), 'utf8');
+      const expected = readFileSync(join(process.cwd(), 'specs/main.url.spec.js'), 'utf8');
       strictEqual(response.body, expected);
     });
 
@@ -254,7 +254,7 @@ describe('SwaggerController', () => {
 
       strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-      const expected = readFileSync(join(__dirname, 'specs/main.controller.spec.js'), 'utf8');
+      const expected = readFileSync(join(process.cwd(), 'specs/main.controller.spec.js'), 'utf8');
       strictEqual(response.body, expected);
     });
 
@@ -275,7 +275,7 @@ describe('SwaggerController', () => {
 
         strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-        const expected = readFileSync(join(__dirname, 'specs/main.no-primary.spec.js'), 'utf8');
+        const expected = readFileSync(join(process.cwd(), 'specs/main.no-primary.spec.js'), 'utf8');
         strictEqual(response.body, expected);
     });
 
@@ -296,7 +296,7 @@ describe('SwaggerController', () => {
 
         strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-        const expected = readFileSync(join(__dirname, 'specs/main.primary.spec.js'), 'utf8');
+        const expected = readFileSync(join(process.cwd(), 'specs/main.primary.spec.js'), 'utf8');
         strictEqual(response.body, expected);
 
     });
@@ -318,7 +318,7 @@ describe('SwaggerController', () => {
 
         strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-        const expected = readFileSync(join(__dirname, 'specs/main.url.ui-options.spec.js'), 'utf8');
+        const expected = readFileSync(join(process.cwd(), 'specs/main.url.ui-options.spec.js'), 'utf8');
         strictEqual(response.body, expected);
     });
 
@@ -339,7 +339,7 @@ describe('SwaggerController', () => {
 
         strictEqual(response.getHeader('Content-Type'), 'application/javascript');
 
-        const expected = readFileSync(join(__dirname, 'specs/main.no-primary.ui-options.spec.js'), 'utf8');
+        const expected = readFileSync(join(process.cwd(), 'specs/main.no-primary.ui-options.spec.js'), 'utf8');
         strictEqual(response.body, expected);
     });
 

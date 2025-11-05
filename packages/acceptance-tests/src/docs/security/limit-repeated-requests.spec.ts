@@ -1,7 +1,7 @@
 // 3p
 import { Config, createApp, Logger, ServiceManager } from '@foal/core';
 import * as express from 'express';
-import * as rateLimit from 'express-rate-limit';
+import { rateLimit } from 'express-rate-limit';
 
 it('[Docs] Cookbook > Limit Repeated Requests', () => {
   class AppController {}

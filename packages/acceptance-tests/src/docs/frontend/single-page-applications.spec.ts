@@ -24,7 +24,7 @@ describe('[Docs] Frontend Integration > Single Page Applications (SPA)', () => {
           return new HttpResponseNotFound();
         }
 
-        return render(join(__dirname, 'public/index.html'));
+        return render(join(process.cwd(), 'assets/docs/frontend/public/index.html'));
       }
     }
 

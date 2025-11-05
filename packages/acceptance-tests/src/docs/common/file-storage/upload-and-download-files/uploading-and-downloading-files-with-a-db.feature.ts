@@ -114,8 +114,8 @@ describe('Feature: Uploading and downloading files with a database.', () => {
       .get('/profile')
       .expect(404);
 
-    const imageBuffer = readFileSync(join(__dirname, 'assets/image.test.png'));
-    const image2Buffer = readFileSync(join(__dirname, 'assets/image.test2.png'));
+    const imageBuffer = readFileSync(join(process.cwd(), 'assets/docs/common/file-storage/upload-and-download-files/image.test.png'));
+    const image2Buffer = readFileSync(join(process.cwd(), 'assets/docs/common/file-storage/upload-and-download-files/image.test2.png'));
 
     strictEqual(imageBuffer.equals(image2Buffer), false);
 

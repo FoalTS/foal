@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "node copy-files src && mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "test": "rimraf lib && node copy-files lib && tsc -p tsconfig.json && mocha \"./lib/**/*.spec.js\"",
     "dev:test": "node copy-files src && mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && node copy-files lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
@@ -47,6 +47,7 @@
     "@types/node": "22.15.21",
     "graphiql": "~3.1.1",
     "mocha": "~11.5.0",
+    "copy": "~0.3.2",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "rimraf": "~6.0.1",

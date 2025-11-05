@@ -80,7 +80,13 @@ describe('renderWebsocketError', () => {
         const response = await renderWebsocketError(error, ctx);
 
         const { filename } = response.payload;
-        strictEqual(filename, 'render-websocket-error.spec.ts');
+        try {
+          // When running the tests with ts-node
+          strictEqual(filename, 'render-websocket-error.spec.ts');
+        } catch (error) {
+          // When running the tests after compilation to JavaScript
+          strictEqual(filename, 'render-websocket-error.spec.js');
+        }
       });
 
       it('should contain the line and the column where the error was thrown.', async () => {

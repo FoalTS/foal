@@ -5,5 +5,5 @@ Because of the way lerna and npm manage dependencies, we must add this file to u
 export { TypeORMStore as ConcreteSessionStore } from '@foal/typeorm';
 
 export function getTypeORMStorePath(): string {
-  return './../src/common/typeorm-store';
+  return './../lib/common/typeorm-store';
 }

@@ -594,7 +594,7 @@ describe('ServiceManager', () => {
 
         function testLocal() {
 
-          const filePath = join(__dirname, './service-manager.test.ts');
+          const filePath = join(__dirname, './service-manager.test.js');
 
           beforeEach(() => {
             writeFileSync(
