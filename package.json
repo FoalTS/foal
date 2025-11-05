@@ -5,7 +5,9 @@
     "doc": "docs"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "tests/*",
+    "examples/*"
   ],
   "scripts": {
     "lint": "tslint -c tslint.json --project tsconfig.json",

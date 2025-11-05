@@ -42,8 +42,8 @@ jobs:
       run: if grep -Rl ".only(" ./packages/*/src ; then echo "Unexpected describe.only() or it.only() found.";  exit 1; else exit 0; fi
     - name: Check package linting
       run: npm run lint
-    - name: Run unit tests of @foal/acceptance-tests
-      run: cd packages/acceptance-tests && npm run test
+    - name: Run unit tests of e2e-tests
+      run: cd tests/e2e-tests && npm run test
     - name: Run unit tests of @foal/aws-s3
       run: cd packages/aws-s3 && npm run test
     - name: Run unit tests of @foal/cli
@@ -78,5 +78,5 @@ jobs:
       run: cd packages/typestack && npm run test
     - name: Run unit tests of @foal/core
       run: cd packages/core && npm run test
-    - name: Run acceptance tests (Bash)
+    - name: Run E2E tests (Bash)
       run: ./e2e_test.sh
