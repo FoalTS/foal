@@ -63,7 +63,6 @@
     "@foal/core": "^5.0.1",
     "@types/mocha": "10.0.10",
     "@types/node": "22.15.21",
-    "copyfiles": "~2.4.1",
     "mocha": "~11.5.0",
     "rimraf": "~6.0.1",
     "ts-node": "~10.9.2",
