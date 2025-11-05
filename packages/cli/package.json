@@ -5,18 +5,13 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "npm run test:generators && npm run test:run && npm run test:create-secret && npm run test:rmdir && npm run test:fs",
-    "test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/file-system.spec.ts\"",
+    "test": "rimraf lib && tsc -p tsconfig.json && mocha --file \"./lib/test.js\" \"./lib/**/*.spec.js\"",
     "dev:test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/file-system.spec.ts\"",
-    "test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/generate/generators/**/*.spec.ts\"",
     "dev:test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/generators/**/*.spec.ts\"",
-    "test:rmdir": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/rmdir/**/*.spec.ts\"",
     "dev:test:rmdir": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/rmdir/**/*.spec.ts\"",
-    "test:run": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/run/**/*.spec.ts\"",
     "dev:test:run": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/run/**/*.spec.ts\"",
-    "test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register \"./src/create-secret/**/*.spec.ts\"",
     "dev:test:create-secret": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/create-secret/**/*.spec.ts\"",
-    "build": "rimraf lib && tsc -p tsconfig-build.json && copyfiles -a -u 3 \"src/generate/templates/**/*\" lib/generate/templates",
+    "build": "rimraf lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "funding": {
@@ -54,7 +49,8 @@
   "license": "MIT",
   "files": [
     "lib/",
-    "bin/"
+    "bin/",
+    "templates/"
   ],
   "dependencies": {
     "ajv": "~8.17.1",
@@ -67,7 +63,6 @@
     "@foal/core": "^5.0.1",
     "@types/mocha": "10.0.10",
     "@types/node": "22.15.21",
-    "copyfiles": "~2.4.1",
     "mocha": "~11.5.0",
     "rimraf": "~6.0.1",
     "ts-node": "~10.9.2",

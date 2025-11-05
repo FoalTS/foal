@@ -35,7 +35,6 @@ You can also pass global Express middlewares as options to the `createApp` funct
 
 ```typescript
 import { createApp } from '@foal/core';
-import * as rateLimit from 'express-rate-limit';
 
 const app = await createApp(AppController, {
   preMiddlewares: [

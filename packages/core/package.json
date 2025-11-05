@@ -5,7 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "mocha --parallel --require ts-node/register --require source-map-support/register \"./src/**/*.spec.ts\"",
+    "test": "rimraf lib && node copy-debug-page && tsc -p tsconfig.json && mocha --parallel \"./lib/**/*.spec.js\"",
     "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
     "dev:test:common": "mocha --require ts-node/register --watch --extension ts \"./src/common/**/*.spec.ts\"",
     "dev:test:core": "mocha --require ts-node/register --watch --extension ts \"./src/core/**/*.spec.ts\"",

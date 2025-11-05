@@ -5,8 +5,5 @@
   },
   "exclude": [
     "./src/**/*.spec.ts",
-    "./src/generate/fixtures/**/*.ts",
-    "./src/generate/specs/**/*.ts",
-    "./src/generate/templates/**/*.ts"
   ]
 } 

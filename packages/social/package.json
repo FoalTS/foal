@@ -5,9 +5,9 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "test": "rimraf lib && tsc -p tsconfig.json && mocha \"./lib/**/*.spec.js\"",
     "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
-    "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
+    "build": "rimraf lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "funding": {
@@ -57,7 +57,6 @@
   "devDependencies": {
     "@types/mocha": "10.0.10",
     "@types/node": "22.15.21",
-    "copy": "~0.3.2",
     "jsonwebtoken": "~9.0.2",
     "mocha": "~11.5.0",
     "rimraf": "~6.0.1",

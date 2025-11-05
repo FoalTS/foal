@@ -34,7 +34,7 @@ describe('GraphiQLController', () => {
     });
 
     async function compareSpecAndTemplate(controller: GraphiQLController, specFileName: string) {
-      const expected = readFileSync(join(__dirname, 'specs', specFileName), 'utf8');
+      const expected = readFileSync(join(process.cwd(), 'specs', specFileName), 'utf8');
 
       const ctx = new Context({ path: 'graphql/' });
       const response = await controller.index(ctx);

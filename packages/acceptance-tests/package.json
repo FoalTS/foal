@@ -4,8 +4,8 @@
   "version": "5.0.1",
   "description": "Acceptance tests of the framework",
   "scripts": {
-    "test": "rimraf build && tsc -p tsconfig.json && mocha \"./build/**/*.{spec,feature}.js\"",
-    "dev:test": "concurrently -r \"tsc -p tsconfig.json -w\" \"node -e 'setTimeout(() => {}, 1000)' && mocha -w \\\"./build/**/*.{spec,feature}.js\\\"\""
+    "test": "rimraf build && tsc -p tsconfig.json && mocha \"./lib/**/*.{spec,feature}.{js,jsx}\"",
+    "dev:test": "mocha --require ts-node/register --watch --extension ts,tsx \"./src/**/*.{spec,feature}.{ts,tsx}\""
   },
   "funding": {
     "url": "https://github.com/sponsors/LoicPoullain"

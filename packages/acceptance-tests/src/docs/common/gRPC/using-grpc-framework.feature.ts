@@ -26,7 +26,7 @@ describe('Feature: Using gRPC framework', () => {
 
   async function getMessageFromServer(): Promise<string> {
     const packageDefinition = protoLoader.loadSync(
-      join(__dirname, './spec.proto'),
+      join(process.cwd(), './assets/docs/common/gRPC/spec.proto'),
       {
         keepCase: true,
         longs: String,
@@ -68,7 +68,7 @@ describe('Feature: Using gRPC framework', () => {
       greeter: Greeter;
 
       boot(): Promise<void> {
-        const PROTO_PATH = join(__dirname, './spec.proto');
+        const PROTO_PATH = join(process.cwd(), './assets/docs/common/gRPC/spec.proto');
         const packageDefinition = protoLoader.loadSync(
           PROTO_PATH,
           {
@@ -137,7 +137,7 @@ describe('Feature: Using gRPC framework', () => {
       greeter: Greeter;
 
       boot(): Promise<void> {
-        const PROTO_PATH = join(__dirname, './spec.proto');
+        const PROTO_PATH = join(process.cwd(), './assets/docs/common/gRPC/spec.proto');
         const packageDefinition = protoLoader.loadSync(
           PROTO_PATH,
           {

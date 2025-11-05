@@ -22,7 +22,4 @@
   "include": [
     "./src/**/*.ts"
   ],
-  "exclude": [
-    "./src/generate/templates/**/*.ts"
-  ]
 }
