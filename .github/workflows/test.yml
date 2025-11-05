@@ -44,12 +44,12 @@ jobs:
       run: npm run lint
     - name: Run unit tests of e2e-tests
       run: cd tests/e2e-tests && npm run test
+    - name: Run unit tests of demo-app
+      run: cd examples/demo-app && npm run test
     - name: Run unit tests of @foal/aws-s3
       run: cd packages/aws-s3 && npm run test
     - name: Run unit tests of @foal/cli
       run: cd packages/cli && npm run test
-    - name: Run unit tests of @foal/examples
-      run: cd packages/examples && npm run test
     - name: Run unit tests of @foal/graphiql
       run: cd packages/graphiql && npm run test
     - name: Run unit tests of @foal/graphql
