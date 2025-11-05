@@ -22,15 +22,17 @@ jobs:
       NODE_VERSION: ${{ matrix.node-version }}
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v5
     - name: Start up databases
       run: docker compose up -d
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: package-lock.json
     - name: Install project and package dependencies
-      run: npm install
+      run: npm ci
     - name: Build packages
       run: npx lerna run build
     - name: Create CLI symlink in the global folder

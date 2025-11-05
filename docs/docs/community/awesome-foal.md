@@ -38,6 +38,3 @@ A collection of official and unofficial libraries and resources about Foal.
 - [How to build a REST API with FoalTS](https://medium.com/@poullain.loic/how-to-build-a-rest-api-with-foalts-5fcd72d10a83)
 - [How to add pagination in FoalTS ](https://dev.to/loicpoullain/how-to-add-pagination-in-foalts-2cef)
 
-## Newsletter
-
-- [The offical newsletter](https://foalts.org/newsletter)
