@@ -25,7 +25,7 @@ describe('[Authentication|JWT|JWKS] Users can be authenticated with a JWKS retre
 
   it('from a local server.', async () => {
     // RSA keys taken from https://github.com/auth0/node-jsonwebtoken/tree/master/test
-    const privateKey = readFileSync(join(process.cwd(), 'assets/additional/authentication/rsa-private.pem'), 'utf8');
+    const privateKey = readFileSync(join(process.cwd(), 'assets/authentication/rsa-private.pem'), 'utf8');
     // const publicKey = readFileSync(join(__dirname, 'rsa-public-key.pem'), 'utf8');
 
     const jwks = {

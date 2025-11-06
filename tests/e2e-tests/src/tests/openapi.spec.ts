@@ -794,7 +794,7 @@ it('OpenAPI', async () => {
 
   }
 
-  const yamlDocument = readFileSync(join(process.cwd(), './assets/additional/openapi.yml'), 'utf8');
+  const yamlDocument = readFileSync(join(process.cwd(), './assets/openapi.yml'), 'utf8');
   const expectedDocument = parse(yamlDocument);
 
   const actualDocument = createOpenApiDocument(ApiController);

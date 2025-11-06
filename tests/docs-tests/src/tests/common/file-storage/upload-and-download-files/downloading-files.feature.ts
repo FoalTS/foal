@@ -19,7 +19,7 @@ describe('Feature: Downloading files', () => {
     mkdirSync('uploaded');
     mkdirSync('uploaded/avatars');
 
-    copyFileSync(join(process.cwd(), 'assets/docs/common/file-storage/upload-and-download-files/image.test.png'), 'uploaded/avatars/foo.png')
+    copyFileSync(join(process.cwd(), 'assets/common/file-storage/upload-and-download-files/image.test.png'), 'uploaded/avatars/foo.png')
   });
 
   afterEach(() => {
@@ -62,7 +62,7 @@ describe('Feature: Downloading files', () => {
 
     const app = await createApp(ApiController);
 
-    const expectedBuffer = readFileSync(join(process.cwd(), 'assets/docs/common/file-storage/upload-and-download-files/image.test.png'));
+    const expectedBuffer = readFileSync(join(process.cwd(), 'assets/common/file-storage/upload-and-download-files/image.test.png'));
 
     await request(app)
       .get('/download')
