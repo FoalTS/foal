@@ -1,5 +1,5 @@
 {
-  "name": "@foal/examples",
+  "name": "demo-app",
   "private": true,
   "version": "5.0.1",
   "description": "FoalTs examples",

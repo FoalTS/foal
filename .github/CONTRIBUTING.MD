@@ -103,7 +103,7 @@ This method may seem cumbersome at first glance, but it ensures that every line 
 
 A PR without robust tests is automatically rejected.
 
-### Structure of the `acceptance-tests` directory
+### Structure of the `tests/e2e-tests` directory
 
 | Directory | Description |
 | --- | --- |

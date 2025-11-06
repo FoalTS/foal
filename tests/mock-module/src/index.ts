@@ -7,11 +7,11 @@
 // Used in @foal/storage:
 export class ConcreteDisk {
   write() {
-    throw new Error('internal-test package: write called');
+    throw new Error('mock-module package: write called');
   }
 
   read() {
-    throw new Error('internal-test package: read called');
+    throw new Error('mock-module package: read called');
   }
 
   readSize() {
@@ -19,7 +19,7 @@ export class ConcreteDisk {
   }
 
   delete() {
-    throw new Error('internal-test package: delete called');
+    throw new Error('mock-module package: delete called');
   }
 }
 
