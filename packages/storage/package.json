@@ -49,7 +49,7 @@
     "mime": "~3.0.0"
   },
   "devDependencies": {
-    "@foal/internal-test": "^5.0.1",
+    "mock-module": "^5.0.1",
     "@types/mocha": "10.0.10",
     "@types/node": "22.15.21",
     "@types/supertest": "6.0.2",

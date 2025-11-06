@@ -140,7 +140,7 @@ describe('UseSessions', () => {
     });
 
     it('should use the session store package provided in settings.session.store.', () => {
-      Config.set('settings.session.store', '@foal/internal-test');
+      Config.set('settings.session.store', 'mock-module');
 
       return doesNotReject(async () => hook(ctx, services));
     });
