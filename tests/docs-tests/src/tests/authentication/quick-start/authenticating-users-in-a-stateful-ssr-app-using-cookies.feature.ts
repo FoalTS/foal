@@ -131,13 +131,13 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
     @UserRequired({ redirectTo: '/login' })
     index() {
       // Not in the documentation: process.cwd()
-      return render('./assets/docs/authentication/quick-start/templates/index.html', {}, process.cwd());
+      return render('./assets/authentication/quick-start/templates/index.html', {}, process.cwd());
     }
 
     @Get('/login')
     login(ctx: Context) {
       // Not in the documentation: process.cwd()
-      return render('./assets/docs/authentication/quick-start/templates/login.html', {
+      return render('./assets/authentication/quick-start/templates/login.html', {
         errorMessage: ctx.session!.get<string>('errorMessage', '')
       }, process.cwd());
     }

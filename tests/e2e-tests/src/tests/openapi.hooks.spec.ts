@@ -31,7 +31,7 @@ describe('Foal', () => {
       createProduct() {}
     }
 
-    const yamlDocument = readFileSync(join(process.cwd(), './assets/additional/openapi.hooks.yml'), 'utf8');
+    const yamlDocument = readFileSync(join(process.cwd(), './assets/openapi.hooks.yml'), 'utf8');
     const expectedDocument = parse(yamlDocument);
 
     const actualDocument = createOpenApiDocument(ApiController);
@@ -60,7 +60,7 @@ describe('Foal', () => {
       createProduct() {}
     }
 
-    const yamlDocument2 = readFileSync(join(process.cwd(), './assets/additional/openapi.hooks2.yml'), 'utf8');
+    const yamlDocument2 = readFileSync(join(process.cwd(), './assets/openapi.hooks2.yml'), 'utf8');
     const expectedDocument2 = parse(yamlDocument2);
 
     const actualDocument2 = createOpenApiDocument(ApiController2);

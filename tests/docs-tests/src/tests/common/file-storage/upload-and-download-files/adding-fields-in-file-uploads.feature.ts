@@ -45,7 +45,7 @@ describe('Feature: Adding fields in file uploads', () => {
 
     const app = await createApp(UserController);
 
-    const path1 = join(process.cwd(), './assets/docs/common/file-storage/upload-and-download-files/image.test.png');
+    const path1 = join(process.cwd(), './assets/common/file-storage/upload-and-download-files/image.test.png');
     const description = 'hello world'
 
     await request(app)

@@ -56,7 +56,7 @@ describe('Feature: Using streaming in file upload', () => {
 
     const app = await createApp(UserController);
 
-    const path1 = join(process.cwd(), './assets/docs/common/file-storage/upload-and-download-files/image.test.png');
+    const path1 = join(process.cwd(), './assets/common/file-storage/upload-and-download-files/image.test.png');
 
     await request(app)
       .post('/profile')
