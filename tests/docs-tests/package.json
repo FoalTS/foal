@@ -48,7 +48,7 @@
     "@types/react-dom": "18.2.20",
     "@types/supertest": "6.0.2",
     "concurrently": "~9.2.1",
-    "mocha": "~11.5.0",
+    "mocha": "~11.7.5",
     "rimraf": "~6.0.1",
     "ts-node": "~10.9.2",
     "typescript": "~5.5.4"

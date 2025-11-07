@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.10",
-    "mocha": "~11.5.0",
+    "mocha": "~11.7.5",
     "mongodb": "~5.9.2",
     "mysql": "~2.18.1",
     "pg": "~8.16.0",
