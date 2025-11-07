@@ -36,7 +36,7 @@
     "react-dom": "~19.2.0",
     "redis": "~4.7.0",
     "socket.io-client": "~4.7.5",
-    "superagent": "~9.0.1",
+    "superagent": "~10.2.3",
     "supertest": "~7.1.4",
     "typeorm": "0.3.24",
     "yamljs": "~0.3.0"
