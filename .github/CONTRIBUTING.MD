@@ -103,15 +103,14 @@ This method may seem cumbersome at first glance, but it ensures that every line 
 
 A PR without robust tests is automatically rejected.
 
-### Structure of the `tests/e2e-tests` directory
+### Structure of the `tests/docs-tests` directory
 
 | Directory | Description |
 | --- | --- |
-| additional | Additional tests which code does not appear in the documentation. |
 | common | Utilities used in the tests. |
-| docs | Tests using the code given of the documentation. |
+| tests | Tests using the code given of the documentation. |
 
-The `docs/` directory is organized as follows:
+The `tests/` directory is organized as follows:
 - The directory structure is the same as in the documentation.
 - The last sub-directory represents a page of the documentation.
 - Each file must test a feature. A feature can contain several examples/scenarios.
@@ -136,7 +135,7 @@ All of major releases are supported for at least 18 months.
 
 | Release | Status | Active Start | Maintenance Start | End-of-life | Node versions | TS min version |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| 5.x | *Active* | 2025-05-27 |  |  | 22 | 5.5 |
+| 5.x | *Active* | 2025-05-27 |  |  | 22, 24 | 5.5 |
 | 4.x | *Maintenance* | 2023-09-06 | 2025-05-27 | 2025-11-27 | 18, 20 | 4.9 |
 | 3.x | *End-of-Life* | 2022-10-28 | 2023-09-06 | 2024-03-06 | 16, 18 | 4.7 |
 | 2.x | *End-of-Life* | 2020-12-03 | 2022-10-28 | 2023-04-30 | 10, 12, 14 | 4.0 |
