@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.10",
-    "@types/node": "22.15.21",
+    "@types/node": "24.10.0",
     "graphql": "~16.9.0",
     "graphql-request": "~6.1.0",
     "mocha": "~11.7.5",

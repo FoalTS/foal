@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/mocha": "10.0.10",
-    "@types/node": "22.15.21",
+    "@types/node": "24.10.0",
     "@types/supertest": "6.0.2",
     "concurrently": "~9.2.1",
     "mocha": "~11.7.5",

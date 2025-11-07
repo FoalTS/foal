@@ -34,7 +34,7 @@
   "devDependencies": {
     "@foal/cli": "^5.0.0",
     "@types/mocha": "10.0.10",
-    "@types/node": "22.15.21",
+    "@types/node": "24.10.0",
     "concurrently": "~9.1.2",
     "mocha": "~11.7.5",
     "supertest": "~7.1.1",
