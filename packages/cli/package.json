@@ -57,14 +57,14 @@
     "ajv-formats": "~2.1.1",
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
-    "commander": "~12.1.0"
+    "commander": "~14.0.2"
   },
   "devDependencies": {
     "@foal/core": "^5.0.1",
     "@types/mocha": "10.0.10",
-    "@types/node": "22.15.21",
-    "mocha": "~11.5.0",
-    "rimraf": "~6.0.1",
+    "@types/node": "24.10.0",
+    "mocha": "~11.7.5",
+    "rimraf": "~6.1.0",
     "ts-node": "~10.9.2",
     "typescript": "~5.5.4"
   }
