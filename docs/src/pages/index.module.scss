@@ -110,7 +110,6 @@ $max-content-width: 1280px;
 
   background-color: $light-blue;
   background-size: cover;
-  background-image: url('../img/background8.png');
 
   .content {
     padding-top: 90px;
@@ -212,7 +211,7 @@ $max-content-width: 1280px;
 .allInOneSection {
   @include section();
 
-  background-image: url('../img/bg5.svg');
+  background-color: $light-blue;
   background-size: cover;
 
 
