@@ -28,14 +28,14 @@
     "mongodb": "~5.9.2",
     "redis": "~4.7.0",
     "superagent": "~9.0.1",
-    "supertest": "~7.1.1",
+    "supertest": "~7.1.4",
     "typeorm": "0.3.24",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
     "@types/mocha": "10.0.10",
     "@types/node": "24.10.0",
-    "@types/supertest": "6.0.2",
+    "@types/supertest": "6.0.3",
     "concurrently": "~9.2.1",
     "mocha": "~11.7.5",
     "rimraf": "~6.1.0",
