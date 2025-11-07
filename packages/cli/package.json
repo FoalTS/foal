@@ -57,7 +57,7 @@
     "ajv-formats": "~2.1.1",
     "cli-spinner": "~0.2.10",
     "colors": "1.4.0",
-    "commander": "~12.1.0"
+    "commander": "~14.0.2"
   },
   "devDependencies": {
     "@foal/core": "^5.0.1",
