@@ -33,62 +33,12 @@ main>div {
 }
 
 .navbar {
-  background-image: url('../img/background8.png');
   box-shadow: rgba(0, 0, 0, 0.1) 0px 6px 24px 0px, rgba(0, 0, 0, 0.16) 0px 0px 0px 1px;
-
-  --ifm-navbar-link-color: #f0f2fa;
-
-  // This makes the searchbar looks like in the dark mode.
-  --docsearch-text-color: #fff;
-  --docsearch-muted-color: rgb(164, 166, 168);
-  --docsearch-container-background: rgba(47, 55, 69, 0.7);
-
-  --docsearch-key-gradient: linear-gradient(-26.5deg, #565872, #31355b);
-  --docsearch-key-shadow: inset 0 -2px 0 0 #282d55, inset 0 0 1px 1px #51577d, 0 2px 2px 0 rgba(3, 4, 9, 0.3);
-
-  --docsearch-searchbox-background: var(--ifm-background-color);
-  --docsearch-searchbox-focus-background: var(--ifm-color-black);
-
-  // --ifm-navbar-background-color: #1b7cf2;
-}
-
-/*
- * Main navbar
- */
-.navbar__link:hover,
-.navbar__link--active {
-  color: var(--ifm-navbar-link-color);
-  background-color: #166ad0;
-  border-radius: 3px;
-}
-
-.docusaurus-highlight-code-line {
-  background-color: rgb(72, 77, 91);
-  display: block;
-  margin: 0 calc(-1 * var(--ifm-pre-padding));
-  padding: 0 var(--ifm-pre-padding);
-}
-
-/*
- * Algolia search
- */
-
-.DocSearch-Button:hover {
-  background-color: #166ad0 !important;
-}
-
-.DocSearch-Button,
-.DocSearch-Button-Key {
-  color: var(--docsearch-text-color) !important;
 }
 
 /*
  * Docs sidebar
  */
-
-:root {
-  --doc-sidebar-width: 280px !important;
-}
 
 .menu {
   font-size: 0.85rem;
