@@ -54,7 +54,7 @@
     "@types/node": "24.10.0",
     "@types/supertest": "6.0.2",
     "mocha": "~11.7.5",
-    "rimraf": "~6.0.1",
+    "rimraf": "~6.1.0",
     "supertest": "~7.1.1",
     "ts-node": "~10.9.2",
     "typescript": "~5.5.4"
