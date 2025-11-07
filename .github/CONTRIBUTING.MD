@@ -103,15 +103,14 @@ This method may seem cumbersome at first glance, but it ensures that every line 
 
 A PR without robust tests is automatically rejected.
 
-### Structure of the `tests/e2e-tests` directory
+### Structure of the `tests/docs-tests` directory
 
 | Directory | Description |
 | --- | --- |
-| additional | Additional tests which code does not appear in the documentation. |
 | common | Utilities used in the tests. |
-| docs | Tests using the code given of the documentation. |
+| tests | Tests using the code given of the documentation. |
 
-The `docs/` directory is organized as follows:
+The `tests/` directory is organized as follows:
 - The directory structure is the same as in the documentation.
 - The last sub-directory represents a page of the documentation.
 - Each file must test a feature. A feature can contain several examples/scenarios.
