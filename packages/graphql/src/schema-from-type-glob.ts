@@ -11,7 +11,7 @@ import { schemaFromTypePaths } from './schema-from-type-paths';
  */
 export async function schemaFromTypeGlob(pattern: string): Promise<GraphQLSchema> {
   const files: string[] = [];
-  
+
   for await (const file of glob(pattern)) {
     files.push(file);
   }
