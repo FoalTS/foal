@@ -92,7 +92,7 @@ describe('Feature: Upgrading passwords', () => {
 
     await user.reload();
     notStrictEqual(user.password, passwordHash);
-    strictEqual(user.password.split('$')[1], '310000');
+    strictEqual(user.password.split('$')[1], '600000');
 
     const passwordHash2 = user.password;
     const result2 = await login(user.email, plainTextPassword);
