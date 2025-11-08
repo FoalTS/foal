@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, doesNotThrow, strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import { ServiceManager, Logger } from '../../core';
@@ -31,27 +31,35 @@ describe('AsyncService', () => {
       actualLoggedParams = undefined;
     });
 
-    it('should call the function passed as argument.', () => {
+    it('should call the function passed as argument asynchronously.', async () => {
       let hasBeenCalled = false;
       const fn = async () => { hasBeenCalled = true; };
 
       asyncService.run(fn);
 
-      strictEqual(hasBeenCalled, true);
+      strictEqual(hasBeenCalled, false, 'The function has been called synchronously.');
+
+      await new Promise(resolve => setImmediate(resolve));
+
+      strictEqual(hasBeenCalled, true, 'The function has not been called.');
     });
 
     context('given the function passed as argument throws an error', () => {
-      it('should catch it.', () => {
+      it('should catch it.', async () => {
         const fn = () => { throw new Error('This is an error.'); };
 
-        doesNotThrow(() => asyncService.run(fn));
+        asyncService.run(fn);
+
+        await new Promise(resolve => setImmediate(resolve));
       });
 
-      it('should log the error.', () => {
+      it('should log the error.', async () => {
         const error = new Error('This is an error.');
         const fn = () => { throw error; };
 
         asyncService.run(fn);
+
+        await new Promise(resolve => setImmediate(resolve));
 
         strictEqual(actualLoggedMessage, error.message);
         deepStrictEqual(actualLoggedParams, { error });
@@ -65,7 +73,7 @@ describe('AsyncService', () => {
 
         asyncService.run(fn);
 
-        await new Promise(resolve => setTimeout(resolve, 0));
+        await new Promise(resolve => setImmediate(resolve));
 
         strictEqual(actualLoggedMessage, error.message);
         deepStrictEqual(actualLoggedParams, { error });
