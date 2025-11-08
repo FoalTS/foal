@@ -1,15 +1,17 @@
 // std
-import { ok, strictEqual, throws } from 'assert';
+import { deepStrictEqual, ok, strictEqual, throws } from 'assert';
 
 // FoalTS
 import {
   Context,
+  getApiResponses,
   getHookFunction,
   HookFunction,
   HttpResponse,
   HttpResponseForbidden,
   HttpResponseRedirect,
   HttpResponseUnauthorized,
+  IApiResponses,
   ServiceManager,
 } from '../../../core';
 import { PermissionRequired } from './permission-required.hook';
@@ -17,7 +19,7 @@ import { IUserWithPermissions } from './user-with-permissions.interface';
 
 describe('PermissionRequired', () => {
 
-  let preHook: HookFunction;
+  let hook: HookFunction;
 
   class User implements IUserWithPermissions {
     constructor(private readonly permissions: string[]) {}
@@ -28,12 +30,12 @@ describe('PermissionRequired', () => {
   }
 
   before(() => {
-    preHook = getHookFunction(PermissionRequired('bar'));
+    hook = getHookFunction(PermissionRequired('bar'));
   });
 
   it('should return an HttpResponseUnauthorized if the user is not authenticated.', () => {
     const ctx = new Context({});
-    const actual = preHook(ctx, new ServiceManager());
+    const actual = hook(ctx, new ServiceManager());
     ok(actual instanceof HttpResponseUnauthorized);
   });
 
@@ -52,7 +54,7 @@ describe('PermissionRequired', () => {
     ctx.user = {};
 
     throws(
-      () => preHook(ctx, new ServiceManager()),
+      () => hook(ctx, new ServiceManager()),
       new Error('ctx.user does not have a "hasPerm" method. Are you sure it implements the IUserWithPermissions interface?')
     );
   });
@@ -63,7 +65,7 @@ describe('PermissionRequired', () => {
     const ctx = new Context({});
     ctx.user = new User([ permission ]);
 
-    const actual = preHook(ctx, new ServiceManager());
+    const actual = hook(ctx, new ServiceManager());
     ok(actual instanceof HttpResponseForbidden);
   });
 
@@ -73,8 +75,59 @@ describe('PermissionRequired', () => {
     const ctx = new Context({});
     ctx.user = new User([ permission ]);
 
-    const actual = preHook(ctx, new ServiceManager());
+    const actual = hook(ctx, new ServiceManager());
     strictEqual(actual instanceof HttpResponse, false);
+  });
+
+  describe('should define an API specification', () => {
+
+    it('unless options.openapi is false', () => {
+      @PermissionRequired('bar', { openapi: false })
+      class Foobar {}
+
+      strictEqual(getApiResponses(Foobar), undefined);
+    });
+
+    context('given options.redirect is not defined', () => {
+
+      it('with the proper API responses', () => {
+        @PermissionRequired('bar')
+        class Foobar {}
+
+        const expected: IApiResponses = {
+          401: {
+            description: 'Unauthenticated request.'
+          },
+          403: {
+            description: 'Permission denied.'
+          }
+        };
+
+        deepStrictEqual(getApiResponses(Foobar), expected);
+      });
+
+    });
+
+    context('given options.redirect is defined', () => {
+
+      it('with the proper API responses', () => {
+        @PermissionRequired('bar', { redirect: '/login' })
+        class Foobar {}
+
+        const expected: IApiResponses = {
+          302: {
+            description: 'Unauthenticated request.'
+          },
+          403: {
+            description: 'Permission denied.'
+          }
+        };
+
+        deepStrictEqual(getApiResponses(Foobar), expected);
+      });
+
+    });
+
   });
 
 });
