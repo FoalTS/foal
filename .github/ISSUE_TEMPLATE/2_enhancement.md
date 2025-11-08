@@ -1,15 +1,13 @@
 ---
-name: Feature request
-about: Suggest an idea.
+name: Feature enhancement
+about: Suggest an enhancement to an existing feature
 title: ''
-labels: feature request
+labels: enhancement
 assignees: ''
-
 ---
 
 <!--
-If you wish to share code, please use indentation and syntax highlighting.
-The easier an issue is to read, the faster you will get an answer.
+If you share code:
 
 DON'T DO:
 ```
