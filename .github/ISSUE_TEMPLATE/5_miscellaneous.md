@@ -1,15 +1,13 @@
 ---
-name: Question
-about: Ask a question.
+name: Miscellaneous
+about: Submit an issue that does not fit other categories.
 title: ''
-labels: question
+labels:
 assignees: ''
-
 ---
 
 <!--
-If you wish to share code, please use indentation and syntax highlighting.
-The easier an issue is to read, the faster you will get an answer.
+If you share code:
 
 DON'T DO:
 ```
