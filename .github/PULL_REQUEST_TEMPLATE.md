@@ -1,12 +1,11 @@
-<!--
-Please read the contribution guidelines first. A PR without (robust) tests will not be approved.
--->
-# Issue
+## Problem
 
-# Solution and steps
 
-# Checklist
+## Solution
 
-- [ ] Add/update/check docs (code comments and docs/ folder).
-- [ ] Add/update/check tests.
-- [ ] Update/check the cli generators.
+
+## Checklist
+
+- [ ] I have read the [contribution guidelines](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD).
+- [ ] I have added or updated tests for any code changes.
+- [ ] I have updated documentation if needed, keeping it concise.
