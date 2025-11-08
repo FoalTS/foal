@@ -58,6 +58,19 @@ export abstract class Disk {
   static readonly defaultConcreteClassPath = join(__dirname, './local-disk.service');
 
   /**
+   * Create a directory if it does not exist.
+   *
+   * Depending on the storage system, the concept of directory may not exist. In this case,
+   * the method should do nothing, which is the default behavior.
+   *
+   * @param dirname Name or path of the directory to create.
+   * @returns {Promise<void>}
+   */
+  async mkdirIfNotExists(dirname: string): Promise<void> {
+    // Do nothing by default.
+  }
+
+  /**
    * Asynchronously write a file. If the file already exists, it is replaced.
    *
    *

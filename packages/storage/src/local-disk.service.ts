@@ -1,9 +1,10 @@
 // std
 import { createReadStream, createWriteStream } from 'fs';
-import { readFile, stat, writeFile, unlink } from 'node:fs/promises';
+import { readFile, stat, writeFile, unlink, mkdir } from 'node:fs/promises';
 import { join } from 'path';
 import { pipeline, Readable } from 'stream';
 import { promisify } from 'util';
+import { existsSync } from 'node:fs';
 
 // 3p
 import { Config, generateToken } from '@foal/core';
@@ -19,6 +20,13 @@ import { Disk, FileDoesNotExist } from './disk.service';
  * @extends {Disk}
  */
 export class LocalDisk extends Disk {
+
+  async mkdirIfNotExists(dirname: string): Promise<void> {
+    const dirPath = this.getPath(dirname);
+    if (!existsSync(dirPath)) {
+      await mkdir(dirPath, { recursive: true });
+    }
+  }
 
   async write(
     dirname: string,
