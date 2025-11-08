@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { doesNotReject, strictEqual } from 'assert';
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync, statSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { Readable } from 'stream';
@@ -49,6 +49,41 @@ describe('LocalDisk', () => {
   afterEach(() => {
     Config.remove('settings.disk.local.directory');
     rmDirAndFilesIfExist('uploaded');
+  });
+
+  describe('has a "mkdirIfNotExists" method that', () => {
+
+    it('should create the directory if it does not exist.', async () => {
+      strictEqual(existsSync('uploaded/new-dir'), false);
+
+      await disk.mkdirIfNotExists('new-dir');
+
+      strictEqual(existsSync('uploaded/new-dir'), true);
+    });
+
+    it('should not throw if the directory already exists.', async () => {
+      strictEqual(existsSync('uploaded/foo'), true);
+
+      await doesNotReject(() => disk.mkdirIfNotExists('foo'));
+    });
+
+    it('should not erase existing files in the directory if it exists.', async () => {
+      writeFileSync('uploaded/foo/test.txt', 'hello', 'utf8');
+      strictEqual(existsSync('uploaded/foo/test.txt'), true);
+
+      await disk.mkdirIfNotExists('foo');
+
+      strictEqual(existsSync('uploaded/foo/test.txt'), true);
+    });
+
+    it('should create parent directories if they do not exist.', async () => {
+      strictEqual(existsSync('uploaded/a/b/c'), false);
+
+      await disk.mkdirIfNotExists('a/b/c');
+
+      strictEqual(existsSync('uploaded/a/b/c'), true);
+    });
+
   });
 
   describe('has a "write" method that', () => {

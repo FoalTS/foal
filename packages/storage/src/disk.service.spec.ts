@@ -1,5 +1,5 @@
 // std
-import { strictEqual } from 'assert';
+import { doesNotReject, strictEqual } from 'assert';
 import { Readable } from 'stream';
 
 // 3p
@@ -94,6 +94,14 @@ describe('AbstractDisk', () => {
 
   it('should define LocalDisk as default concrete service.', () => {
     strictEqual(AbstractDisk.defaultConcreteClassPath, join(__dirname, './local-disk.service'));
+  });
+
+  describe('have a "mkdirIfNotExists" method that', () => {
+
+    it('should do nothing by default.', async () => {
+      await doesNotReject(() => disk.mkdirIfNotExists('foo/bar'));
+    });
+
   });
 
   describe('has a "createHttpResponse" method that', () => {
