@@ -1,5 +1,5 @@
 // std
-import { deepStrictEqual, doesNotThrow, strictEqual } from 'assert';
+import { deepStrictEqual, strictEqual } from 'assert';
 
 // FoalTS
 import { ServiceManager, Logger } from '../../core';
