@@ -1,8 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Security vulnerability
-    url: https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#security-vulnerabilities
-    about: Report a security vulnerability.
   - name: Community chat
     url: https://discord.gg/QUrJv98
     about: Join Discord chat and ask a question.
