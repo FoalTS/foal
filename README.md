@@ -1,23 +1,7 @@
 <p align="center">
   <img src="./docs/static/img/logo.png">
-  <br>
-  <a href="https://foalts.org">https://foalts.org</a>
 </p>
 
-<p align="center">
-  <a href="https://github.com/FoalTS/foal/blob/master/LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
-  </a>
-  <a href="https://snyk.io/test/npm/@foal/core">
-    <img src="https://snyk.io/test/npm/@foal/core/badge.svg" alt="Known Vulnerabilities">
-  </a>
-  <a href="https://github.com/FoalTS/foal/commits/master">
-    <img src="https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg" alt="Commit activity">
-  </a>
-  <a href="https://github.com/FoalTS/foal/commits/master">
-    <img src="https://img.shields.io/github/last-commit/FoalTS/foal.svg" alt="Last commit">
-  </a>
-</p>
 
 
 ## What is Foal?
@@ -44,10 +28,6 @@ Testing FoalTS is put on a very high priority. Providing a reliable product is r
 
 New features, no matter what they offer, are useless if they are not well documented. Maintaining complete and quality documentation is key to the framework. If you think something is missing or unclear, feel free to open an issue on Github!
 
-### Product Stability
-
-Great attention is paid to the stability of the product. You can find out more by consulting our [dependency policy](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#dependency-policy), [semantic versioning rules](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#semantic-versioning) and [long-term support policy](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD#long-term-support-policy-and-schedule).
-
 ## :city_sunrise: Get started
 
 First install [Node.Js and npm](https://nodejs.org/en/download/).
@@ -63,10 +43,6 @@ npm run dev
 The development server is started! Go to `http://localhost:3001` and find our welcoming page!
 
 :point_right: [Continue with the tutorial](https://foalts.org/docs) :seedling:
-
-## Backers
-
-[![backers](./backers.png)](https://github.com/sponsors/LoicPoullain)
 
 ## Community Chat
 
@@ -88,6 +64,3 @@ See the [contribution guidelines](https://github.com/FoalTS/foal/blob/master/.gi
 
 **Maintenance (LTS)** means that only critical fixes and security patches are provided.
 
-## License
-
-MIT 
