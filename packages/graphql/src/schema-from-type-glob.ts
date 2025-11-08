@@ -1,4 +1,4 @@
-import { glob } from 'glob';
+import { glob } from 'node:fs/promises';
 import { GraphQLSchema } from 'graphql';
 import { schemaFromTypePaths } from './schema-from-type-paths';
 
@@ -10,7 +10,11 @@ import { schemaFromTypePaths } from './schema-from-type-paths';
  * @returns {Promise<GraphQLSchema>} The GraphQL schema.
  */
 export async function schemaFromTypeGlob(pattern: string): Promise<GraphQLSchema> {
-  const files = await glob(pattern, {});
+  const files: string[] = [];
+
+  for await (const file of glob(pattern)) {
+    files.push(file);
+  }
 
   if (files.length === 0) {
     throw new Error(`No file found for the pattern "${pattern}".`);
