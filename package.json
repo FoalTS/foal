@@ -11,11 +11,7 @@
   ],
   "scripts": {
     "lint": "tslint -c tslint.json --project tsconfig.json",
-    "lint:fix": "tslint -c tslint.json --project tsconfig.json --fix",
-    "start-docker": "docker compose build && docker compose up -d",
-    "stop-docker": "docker compose down",
-    "clean": "lerna clean",
-    "test": "lerna run --no-bail test"
+    "lint:fix": "tslint -c tslint.json --project tsconfig.json --fix"
   },
   "repository": {
     "type": "git",
