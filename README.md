@@ -76,6 +76,18 @@ You can join the community chat [here](https://discord.gg/QUrJv98).
 
 See the [contribution guidelines](https://github.com/FoalTS/foal/blob/master/.github/CONTRIBUTING.MD).
 
+## Long-Term Support Schedule
+
+| Release | Status | Active Start | Maintenance Start | End-of-life | Node versions | TS min version |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 5.x | *Active* | 2025-05-27 |  |  | 22, 24 | 5.5 |
+| 4.x | *Maintenance* | 2023-09-06 | 2025-05-27 | 2025-11-27 | 18, 20 | 4.9 |
+| 3.x | *End-of-Life* | 2022-10-28 | 2023-09-06 | 2024-03-06 | 16, 18 | 4.7 |
+
+**Active support** means that the release is actively maintained: new features, bug fixes, and so on.
+
+**Maintenance (LTS)** means that only critical fixes and security patches are provided.
+
 ## License
 
 MIT 
