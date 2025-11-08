@@ -1,7 +1,7 @@
 import { pbkdf2, randomBytes } from 'crypto';
 import { promisify } from 'util';
 
-export const PASSWORD_ITERATIONS = 310000;
+export const PASSWORD_ITERATIONS = 600000;
 
 /**
  * Hash a password using the PBKDF2 algorithm.
@@ -10,7 +10,7 @@ export const PASSWORD_ITERATIONS = 310000;
  * The result is a 64 byte binary string.
  *
  * The random salt is 16 bytes long.
- * The number of iterations is 310000.
+ * The number of iterations is 600,000.
  * The length key is 32 bytes long.
  *
  * @export
