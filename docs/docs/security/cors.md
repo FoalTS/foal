@@ -59,12 +59,19 @@ If your API requires a token to be sent in the `Authorization` header, then the 
 
 ## CORS Requests and Cookies
 
-If your API uses cookies (for authentication for example), then you should specify it in the hook with the `Access-Control-Allow-Credentials` header.
+If your API uses cookies (for authentication for example), then you should specify it in the hook with the `Access-Control-Allow-Credentials` header. You should use a whitelist of allowed origins in this case.
 
 ```typescript
 @Hook(ctx => response => {
-  response.setHeader('Access-Control-Allow-Origin', ctx.request.get('Origin') || '*');
-  response.setHeader('Access-Control-Allow-Credentials', 'true');
+    const whitelist = ['http://localhost:8000']; // get this data from Config / Env
+    const origin = ctx.request.get('Origin') || 'null';
+    if (whitelist.includes(origin)) {
+        response.setHeader('Access-Control-Allow-Origin', origin);
+        response.setHeader('Access-Control-Allow-Credentials', 'true');
+    } else {
+        response.setHeader('Access-Control-Allow-Origin', '*');
+        response.setHeader('Access-Control-Allow-Credentials', 'false');
+    }
 })
 ```
 
