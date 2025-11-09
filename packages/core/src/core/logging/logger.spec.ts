@@ -63,6 +63,81 @@ describe('Logger', () => {
         strictEqual(loggedMessage.includes('[ERROR]'), true);
         strictEqual(loggedMessage.includes('foo: "bar2"'), true);
       });
+
+      it('should log the message with error context for error-level logs.', () => {
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
+
+        const logger = new Logger();
+        logger.initLogContext(() => {
+          logger.addErrorContext({ errorKey: 'errorValue', foo: 'errorBar' });
+          logger.log('error', 'Hello world', {});
+        });
+
+        strictEqual(consoleMock.callCount(), 1);
+
+        const loggedMessage = consoleMock.calls[0].arguments[0];
+
+        strictEqual(loggedMessage.includes('[ERROR]'), true);
+        strictEqual(loggedMessage.includes('foo: "errorBar"'), true);
+        strictEqual(loggedMessage.includes('errorKey: "errorValue"'), true);
+      });
+
+      it('should not include error context for non error-level logs.', () => {
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
+
+        const logger = new Logger();
+        logger.initLogContext(() => {
+          logger.addErrorContext({ errorKey: 'errorValue', foo: 'errorBar' });
+          logger.log('info', 'Hello world', {});
+        });
+
+        strictEqual(consoleMock.callCount(), 1);
+
+        const loggedMessage = consoleMock.calls[0].arguments[0];
+
+        strictEqual(loggedMessage.includes('[INFO]'), true);
+        notStrictEqual(loggedMessage.includes('foo: "errorBar"'), true);
+        notStrictEqual(loggedMessage.includes('errorKey: "errorValue"'), true);
+      });
+
+      it('should let error context override the context for the same keys.', () => {
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
+
+        const logger = new Logger();
+        logger.initLogContext(() => {
+          logger.addLogContext({ foo: 'bar', commonKey: 'contextValue' });
+          logger.addErrorContext({ errorKey: 'errorValue', commonKey: 'errorValue2' });
+          logger.log('error', 'Hello world', {});
+        });
+
+        strictEqual(consoleMock.callCount(), 1);
+
+        const loggedMessage = consoleMock.calls[0].arguments[0];
+
+        strictEqual(loggedMessage.includes('[ERROR]'), true);
+        strictEqual(loggedMessage.includes('foo: "bar"'), true);
+        strictEqual(loggedMessage.includes('errorKey: "errorValue"'), true);
+        strictEqual(loggedMessage.includes('commonKey: "errorValue2"'), true);
+      });
+
+      it('should let given params override the error context.', () => {
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
+
+        const logger = new Logger();
+        logger.initLogContext(() => {
+          logger.addErrorContext({ errorKey: 'errorValue', commonKey: 'errorValue' });
+          logger.log('error', 'Hello world', { foo: 'baz', commonKey: 'newValue' });
+        });
+
+        strictEqual(consoleMock.callCount(), 1);
+
+        const loggedMessage = consoleMock.calls[0].arguments[0];
+
+        strictEqual(loggedMessage.includes('[ERROR]'), true);
+        strictEqual(loggedMessage.includes('foo: "baz"'), true);
+        strictEqual(loggedMessage.includes('errorKey: "errorValue"'), true);
+        strictEqual(loggedMessage.includes('commonKey: "newValue"'), true);
+      });
     });
 
     context('given the log context has NOT been initialized', () => {
@@ -79,6 +154,23 @@ describe('Logger', () => {
         strictEqual(loggedMessage.includes('[WARN]'), true);
         strictEqual(
           loggedMessage.includes('Impossible to add log context information. The logger context has not been initialized.'),
+          true
+        );
+      });
+
+      it('should log a warning message when adding error context.', () => {
+        const consoleMock = mock.method(console, 'log', () => {}).mock;
+
+        const logger = new Logger();
+        logger.addErrorContext({ foo: 'bar' });
+
+        strictEqual(consoleMock.callCount(), 1);
+
+        const loggedMessage = consoleMock.calls[0].arguments[0];
+
+        strictEqual(loggedMessage.includes('[WARN]'), true);
+        strictEqual(
+          loggedMessage.includes('Impossible to add error context information. The logger context has not been initialized.'),
           true
         );
       });

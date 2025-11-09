@@ -239,9 +239,10 @@ When using a Socket.io controller, the socket ID and message ID are also added t
 
 This mecanism helps filter logs of a specific request or specific user in a logging tool.
 
-If needed, you call also add manually custom parameters to the logger context with this fonction:
+If needed, you call also add manually custom parameters to the logger context with these functions:
 ```typescript
-logger.addLogContext({ myKey: 'myValue' });
+logger.addLogContext({ myKey: 'myValue' }); // Will add this parameter to all logs.
+logger.addErrorContext({ myKey2: 'myValue2' }); // Will add this parameter to all error-level logs.
 ```
 
 ## Transports

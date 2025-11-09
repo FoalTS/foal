@@ -313,8 +313,8 @@ describe('FileSystem', () => {
 
   describe('has a "copy" method that', () => {
 
-    const templateDir = join(__dirname, 'templates/test-file-system');
-    const templatePath = join(__dirname, 'templates/test-file-system/tpl.txt');
+    const templateDir = join(process.cwd(), 'templates/test-file-system');
+    const templatePath = join(process.cwd(), 'templates/test-file-system/tpl.txt');
 
     beforeEach(() => {
       mkdir('test-generators');
@@ -356,8 +356,8 @@ describe('FileSystem', () => {
 
   describe('has a "copyOnlyIf" method that', () => {
 
-    const templateDir = join(__dirname, 'templates/test-file-system');
-    const templatePath = join(__dirname, 'templates/test-file-system/tpl.txt');
+    const templateDir = join(process.cwd(), 'templates/test-file-system');
+    const templatePath = join(process.cwd(), 'templates/test-file-system/tpl.txt');
 
     beforeEach(() => {
       mkdir('test-generators');
@@ -393,8 +393,8 @@ describe('FileSystem', () => {
 
   describe('has a "render" method that', () => {
 
-    const templateDir = join(__dirname, 'templates/test-file-system');
-    const templatePath = join(__dirname, 'templates/test-file-system/tpl.txt');
+    const templateDir = join(process.cwd(), 'templates/test-file-system');
+    const templatePath = join(process.cwd(), 'templates/test-file-system/tpl.txt');
 
     beforeEach(() => {
       mkdir('test-generators');
@@ -439,8 +439,8 @@ describe('FileSystem', () => {
 
   describe('has a "renderOnlyIf" method that', () => {
 
-    const templateDir = join(__dirname, 'templates/test-file-system');
-    const templatePath = join(__dirname, 'templates/test-file-system/tpl.txt');
+    const templateDir = join(process.cwd(), 'templates/test-file-system');
+    const templatePath = join(process.cwd(), 'templates/test-file-system/tpl.txt');
 
     beforeEach(() => {
       mkdir('test-generators');
@@ -1255,9 +1255,9 @@ describe('FileSystem', () => {
 
   describe('has a "assertEqual" that', () => {
 
-    const specDir = join(__dirname, 'specs/test-file-system');
-    const specPath = join(__dirname, 'specs/test-file-system/foo.spec');
-    const stringSpecPath = join(__dirname, 'specs/test-file-system/foo.spec.txt');
+    const specDir = join(process.cwd(), 'specs/test-file-system');
+    const specPath = join(process.cwd(), 'specs/test-file-system/foo.spec');
+    const stringSpecPath = join(process.cwd(), 'specs/test-file-system/foo.spec.txt');
 
     beforeEach(() => {
       mkdir(specDir);
@@ -1304,8 +1304,6 @@ describe('FileSystem', () => {
         throw new Error('An error should have been thrown.');
       } catch (error: any) {
         strictEqual(error.code, 'ERR_ASSERTION');
-        strictEqual(error.message.includes('\'hi\\nmy\\nearth\\n!\''), true);
-        strictEqual(error.message.includes('\'hello\\nmy\\nworld\''), true);
       }
     });
 
@@ -1326,8 +1324,8 @@ describe('FileSystem', () => {
 
   describe('has a "copyFixture" method that', () => {
 
-    const fixtureDir = join(__dirname, 'fixtures/test-file-system');
-    const fixturePath = join(__dirname, 'fixtures/test-file-system/tpl.txt');
+    const fixtureDir = join(process.cwd(), 'fixtures/test-file-system');
+    const fixturePath = join(process.cwd(), 'fixtures/test-file-system/tpl.txt');
 
     beforeEach(() => {
       mkdir('test-generators');

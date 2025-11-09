@@ -1,0 +1,56 @@
+{
+  "name": "docs-tests",
+  "private": true,
+  "version": "5.1.0",
+  "description": "Tests of the documentation of the framework",
+  "scripts": {
+    "test": "rimraf lib && tsc -p tsconfig.json && mocha \"./lib/**/*.{spec,feature}.{js,jsx}\"",
+    "dev:test": "mocha --require ts-node/register --watch --extension ts,tsx \"./src/**/*.{spec,feature}.{ts,tsx}\""
+  },
+  "funding": {
+    "url": "https://github.com/sponsors/LoicPoullain"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "@foal/core": "^5.1.0",
+    "@foal/graphiql": "^5.1.0",
+    "@foal/jwt": "^5.1.0",
+    "@foal/mongodb": "^5.1.0",
+    "@foal/redis": "^5.1.0",
+    "@foal/social": "^5.1.0",
+    "@foal/socket.io": "^5.1.0",
+    "@foal/storage": "^5.1.0",
+    "@foal/typeorm": "^5.1.0",
+    "@foal/typestack": "^5.1.0",
+    "@grpc/grpc-js": "~1.14.1",
+    "@grpc/proto-loader": "~0.8.0",
+    "@socket.io/redis-adapter": "~8.3.0",
+    "class-validator": "~0.14.0",
+    "express": "~4.21.2",
+    "express-rate-limit": "~8.2.1",
+    "jsonwebtoken": "~9.0.2",
+    "mongodb": "~5.9.2",
+    "react": "~19.2.0",
+    "react-dom": "~19.2.0",
+    "redis": "~4.7.0",
+    "socket.io-client": "~4.7.5",
+    "superagent": "~10.2.3",
+    "supertest": "~7.1.4",
+    "typeorm": "0.3.24",
+    "yamljs": "~0.3.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "10.0.10",
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@types/supertest": "6.0.3",
+    "concurrently": "~9.2.1",
+    "mocha": "~11.7.5",
+    "rimraf": "~6.1.0",
+    "ts-node": "~10.9.2",
+    "typescript": "~5.5.4"
+  }
+}

@@ -312,6 +312,28 @@ class FileService {
 } 
 ```
 
+### Create directories
+
+In the case your storage system requires to create directories before writing files into them (such as the local filesystem), you can use the `mkdirIfNotExists` method. This method creates the directory if it does not exist yet. If the directory already exists, the method does nothing.
+
+```typescript
+import { dependency } from '@foal/core';
+import { Disk } from '@foal/storage';
+
+class FileService {
+
+  @dependency
+  disk: Disk;
+
+  async createDirectory() {
+    await this.disk.mkdirIfNotExists('avatars');
+
+    // ...
+  }
+
+} 
+```
+
 ### Create an HttpResponse
 
 The service also provides a special method `createHttpResponse` for creating an `HttpResponse`. The returned object is optimized for downloading a (large) file in streaming.

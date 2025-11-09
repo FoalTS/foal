@@ -1,13 +1,13 @@
 {
   "name": "@foal/storage",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "Storage components for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "test": "rimraf lib && tsc -p tsconfig.json && mocha \"./lib/**/*.spec.js\"",
     "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
-    "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
+    "build": "rimraf lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "funding": {
@@ -44,19 +44,18 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^5.0.1",
+    "@foal/core": "^5.1.0",
     "busboy": "~1.6.0",
     "mime": "~3.0.0"
   },
   "devDependencies": {
-    "@foal/internal-test": "^5.0.1",
     "@types/mocha": "10.0.10",
-    "@types/node": "22.15.21",
-    "@types/supertest": "6.0.2",
-    "copy": "~0.3.2",
-    "mocha": "~11.5.0",
-    "rimraf": "~6.0.1",
-    "supertest": "~7.1.1",
+    "@types/node": "24.10.0",
+    "@types/supertest": "6.0.3",
+    "mocha": "~11.7.5",
+    "mock-module": "^5.1.0",
+    "rimraf": "~6.1.0",
+    "supertest": "~7.1.4",
     "ts-node": "~10.9.2",
     "typescript": "~5.5.4"
   }

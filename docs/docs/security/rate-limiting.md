@@ -17,7 +17,7 @@ npm install express-rate-limit
 // 3p
 import { Config, createApp, Logger, ServiceManager } from '@foal/core';
 import * as express from 'express';
-import * as rateLimit from 'express-rate-limit';
+import { rateLimit } from 'express-rate-limit';
 
 // App
 import { AppController } from './app/app.controller';
@@ -51,7 +51,7 @@ async function main() {
 }
 
 main()
-  .catch(err => { console.error(err.stack); process.exit(1); });
+  .catch(err => { console.error(err); process.exit(1); });
 ```
 
 

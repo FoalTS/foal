@@ -1,12 +1,12 @@
 {
   "name": "@foal/aws-s3",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "AWS S3 storage components for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
-    "build": "rimraf lib && copy-cli \"./src/**.tpl.html\" lib && tsc -p tsconfig-build.json",
+    "test": "rimraf lib && tsc -p tsconfig.json && mocha \"./lib/**/*.spec.js\"",
+    "build": "rimraf lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },
   "funding": {
@@ -43,17 +43,16 @@
     "lib/"
   ],
   "dependencies": {
-    "@aws-sdk/client-s3": "~3.817.0",
-    "@aws-sdk/lib-storage": "~3.817.0",
-    "@foal/core": "^5.0.1",
-    "@foal/storage": "^5.0.1"
+    "@aws-sdk/client-s3": "~3.926.0",
+    "@aws-sdk/lib-storage": "~3.926.0",
+    "@foal/core": "^5.1.0",
+    "@foal/storage": "^5.1.0"
   },
   "devDependencies": {
     "@types/mocha": "10.0.10",
-    "@types/node": "22.15.21",
-    "copy": "~0.3.2",
-    "mocha": "~11.5.0",
-    "rimraf": "~6.0.1",
+    "@types/node": "24.10.0",
+    "mocha": "~11.7.5",
+    "rimraf": "~6.1.0",
     "ts-node": "~10.9.2",
     "typescript": "~5.5.4"
   }

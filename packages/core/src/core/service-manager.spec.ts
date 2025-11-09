@@ -2,7 +2,7 @@
 import { deepStrictEqual, notStrictEqual, ok, strictEqual, throws } from 'assert';
 
 // 3p
-import { ConcreteSessionStore } from '@foal/internal-test';
+import { ConcreteSessionStore } from 'mock-module';
 
 // FoalTS
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
@@ -497,7 +497,7 @@ describe('ServiceManager', () => {
         });
 
         it('should throw an Error if Service.concreteClassName is not defined.', () => {
-          Config.set('settings.toto', '@foal/internal-test');
+          Config.set('settings.toto', 'mock-module');
 
           abstract class Foobar {
             static concreteClassConfigPath = 'settings.toto';
@@ -512,7 +512,7 @@ describe('ServiceManager', () => {
         });
 
         it('should throw an Error if Service.concreteClassName is not a string.', () => {
-          Config.set('settings.toto', '@foal/internal-test');
+          Config.set('settings.toto', 'mock-module');
 
           abstract class Foobar {
             static concreteClassConfigPath = 'settings.toto';
@@ -546,7 +546,7 @@ describe('ServiceManager', () => {
           });
 
           it('should throw an Error if the specified concrete class is not found in the package.', () => {
-            Config.set('settings.toto', '@foal/internal-test');
+            Config.set('settings.toto', 'mock-module');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -556,14 +556,14 @@ describe('ServiceManager', () => {
             throws(
               () => serviceManager.get(Foobar),
               {
-                message: '[CONFIG] @foal/internal-test is not a valid package or file for Foobar:'
+                message: '[CONFIG] mock-module is not a valid package or file for Foobar:'
                   + ' class Foobar2 not found.'
               } as any
             );
           });
 
           it('should throw an Error if the specified concrete class is actually not a class.', () => {
-            Config.set('settings.toto', '@foal/internal-test');
+            Config.set('settings.toto', 'mock-module');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -573,13 +573,13 @@ describe('ServiceManager', () => {
             throws(
               () => serviceManager.get(Foobar),
               {
-                message: '[CONFIG] @foal/internal-test is not a valid package or file for Foobar: aNum is not a class.'
+                message: '[CONFIG] mock-module is not a valid package or file for Foobar: aNum is not a class.'
               } as any
             );
           });
 
           it('should return the concrete class instance.', () => {
-            Config.set('settings.toto', '@foal/internal-test');
+            Config.set('settings.toto', 'mock-module');
 
             abstract class Foobar {
               static concreteClassConfigPath = 'settings.toto';
@@ -594,7 +594,7 @@ describe('ServiceManager', () => {
 
         function testLocal() {
 
-          const filePath = join(__dirname, './service-manager.test.ts');
+          const filePath = join(__dirname, './service-manager.test.js');
 
           beforeEach(() => {
             writeFileSync(

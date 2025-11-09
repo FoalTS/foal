@@ -26,14 +26,14 @@
         "exclude": [
             "**/src/migrations/*.ts",
             "**/src/generate/fixtures/**/*.ts",
-            "**/src/generate/templates/model/*.ts",
-            "**/src/generate/templates/rest-api/**/*.ts",
-            "**/src/generate/specs/**/app.controller.ts",
-            "**/src/generate/specs/**/api.controller.ts",
-            "**/src/generate/specs/entity/test-foo-bar.entity.ts",
-            "**/src/generate/specs/entity/test-foo-bar.entity.mongodb.ts",
-            "**/src/generate/templates/entity/entity.ts",
-            "**/src/generate/templates/entity/entity.mongodb.ts"
+            "packages/cli/templates/model/*.ts",
+            "packages/cli/templates/rest-api/**/*.ts",
+            "packages/cli/specs/**/app.controller.ts",
+            "packages/cli/specs/**/api.controller.ts",
+            "packages/cli/specs/entity/test-foo-bar.entity.ts",
+            "packages/cli/specs/entity/test-foo-bar.entity.mongodb.ts",
+            "packages/cli/templates/entity/entity.ts",
+            "packages/cli/templates/entity/entity.mongodb.ts"
         ]
     }
 }

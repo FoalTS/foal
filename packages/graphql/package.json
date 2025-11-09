@@ -1,11 +1,11 @@
 {
   "name": "@foal/graphql",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "GraphQL integration for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "mocha --require ts-node/register \"./src/**/*.spec.ts\"",
+    "test": "rimraf lib && tsc -p tsconfig.json && mocha \"./lib/**/*.spec.js\"",
     "dev:test": "mocha --require ts-node/register --watch --extension ts \"./src/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
@@ -40,17 +40,16 @@
     "lib/"
   ],
   "dependencies": {
-    "@foal/core": "^5.0.1",
-    "ajv": "~8.17.1",
-    "glob": "~11.0.0"
+    "@foal/core": "^5.1.0",
+    "ajv": "~8.17.1"
   },
   "devDependencies": {
     "@types/mocha": "10.0.10",
-    "@types/node": "22.15.21",
+    "@types/node": "24.10.0",
     "graphql": "~16.9.0",
     "graphql-request": "~6.1.0",
-    "mocha": "~11.5.0",
-    "rimraf": "~6.0.1",
+    "mocha": "~11.7.5",
+    "rimraf": "~6.1.0",
     "ts-node": "~10.9.2",
     "type-graphql": "2.0.0-rc.2",
     "typescript": "~5.5.4"

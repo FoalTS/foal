@@ -1,4 +1,4 @@
-// This acceptance test is not located in the @foal/acceptance-test package because of a bug
+// This e2e test is not located in the e2e-tests package because of a bug
 // with lerna and peerDependencies. If we move the test to this package, we get the below error.
 //
 // Error: Cannot use GraphQLSchema "[object GraphQLSchema]" from another module or realm.
@@ -39,7 +39,7 @@ type User {
   name: String
 }`;
 
-describe('[Acceptance test] GraphQLController', () => {
+describe('[E2E test] GraphQLController', () => {
 
   let server: Server;
 

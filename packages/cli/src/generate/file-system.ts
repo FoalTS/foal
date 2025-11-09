@@ -192,7 +192,7 @@ export class FileSystem {
    * @memberof FileSystem
    */
   copy(src: string, dest: string): this {
-    const templatePath = join(__dirname, 'templates', src);
+    const templatePath = join(__dirname, '../..', 'templates', src);
     if (!existsSync(templatePath)) {
       throw new Error(`The template "${src}" does not exist.`);
     }
@@ -230,7 +230,7 @@ export class FileSystem {
    * @memberof FileSystem
    */
   render(src: string, dest: string, locals: any): this {
-    const templatePath = join(__dirname, 'templates', src);
+    const templatePath = join(__dirname, '../..', 'templates', src);
     if (!existsSync(templatePath)) {
       throw new Error(`The template "${src}" does not exist.`);
     }
@@ -615,7 +615,7 @@ export class FileSystem {
    * @memberof FileSystem
    */
   assertEqual(actual: string, expected: string, { binary }: { binary: boolean } = { binary: false }): this {
-    const specPath = join(__dirname, 'specs', expected);
+    const specPath = join(__dirname, '../..', 'specs', expected);
     if (!existsSync(specPath)) {
       throw new Error(`The spec file "${expected}" does not exist.`);
     }
@@ -642,7 +642,7 @@ export class FileSystem {
    * @memberof FileSystem
    */
   copyFixture(src: string, dest: string): this {
-    const fixturePath = join(__dirname, 'fixtures', src);
+    const fixturePath = join(__dirname, '../..', 'fixtures', src);
     if (!existsSync(fixturePath)) {
       throw new Error(`The fixture file "${src}" does not exist.`);
     }

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "lib/",
+    "module": "commonjs",
+    "target": "es2023",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "sourceMap": true,
+    "declaration": true,
+    "typeRoots": [
+      "./typings",
+      "../../typings",
+      "../../node_modules/@types",
+    ],
+    "lib": [
+      "es2023",
+      "dom"
+    ]
+  },
+  "include": [
+    "./src/**/*.ts"
+  ]
+}

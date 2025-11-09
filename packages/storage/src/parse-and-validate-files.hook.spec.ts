@@ -424,7 +424,7 @@ describe('ParseAndValidateFiles', () => {
     });
 
     it('should not kill the process if Disk.write throws an error.', async () => {
-      Config.set('settings.disk.driver', '@foal/internal-test');
+      Config.set('settings.disk.driver', 'mock-module');
 
       const actual: Actual = {};
       const app = await createAppWithHook({
