@@ -1,7 +1,7 @@
 {
   "name": "e2e-tests",
   "private": true,
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "End-to-end tests of the framework",
   "scripts": {
     "test": "rimraf lib && tsc -p tsconfig.json && mocha \"./lib/**/*.{spec,feature}.{js,jsx}\"",
@@ -14,13 +14,13 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@foal/core": "^5.1.0",
-    "@foal/jwks-rsa": "^5.1.0",
-    "@foal/jwt": "^5.1.0",
-    "@foal/mongodb": "^5.1.0",
-    "@foal/redis": "^5.1.0",
-    "@foal/typeorm": "^5.1.0",
-    "@foal/typestack": "^5.1.0",
+    "@foal/core": "^5.1.1",
+    "@foal/jwks-rsa": "^5.1.1",
+    "@foal/jwt": "^5.1.1",
+    "@foal/mongodb": "^5.1.1",
+    "@foal/redis": "^5.1.1",
+    "@foal/typeorm": "^5.1.1",
+    "@foal/typestack": "^5.1.1",
     "@socket.io/redis-adapter": "~8.3.0",
     "ajv": "~8.17.1",
     "class-validator": "~0.14.0",
