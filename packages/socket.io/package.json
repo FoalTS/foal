@@ -1,6 +1,6 @@
 {
   "name": "@foal/socket.io",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Websocket integration for FoalTS",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -55,7 +55,7 @@
     "typescript": "~5.5.4"
   },
   "dependencies": {
-    "@foal/core": "^5.1.0",
+    "@foal/core": "^5.1.1",
     "reflect-metadata": "~0.2.2",
     "socket.io": "~4.8.1"
   }
