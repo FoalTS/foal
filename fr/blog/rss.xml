@@ -4,10 +4,61 @@
         <title>FoalTS Blog</title>
         <link>https://foalts.org/fr/blog</link>
         <description>FoalTS Blog</description>
-        <lastBuildDate>Tue, 27 May 2025 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 09 Nov 2025 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>fr</language>
+        <item>
+            <title><![CDATA[Version 5.1 release notes]]></title>
+            <link>https://foalts.org/fr/blog/2025/11/09/version-5.1-release-notes</link>
+            <guid>https://foalts.org/fr/blog/2025/11/09/version-5.1-release-notes</guid>
+            <pubDate>Sun, 09 Nov 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Banner]]></description>
+            <content:encoded><![CDATA[<p><img decoding="async" loading="lazy" alt="Banner" src="https://foalts.org/fr/assets/images/banner-fade021a16be45e47ba1f9c35a9acf1e.png" width="1828" height="630" class="img_ev3q"></p>
+<p>Version 5.1 of <a href="https://foalts.org/" target="_blank" rel="noopener noreferrer" class="">Foal</a> is out!</p>
+<h2 class="anchor anchorTargetHideOnScrollNavbar_vjPI" id="features">Features<a href="https://foalts.org/fr/blog/2025/11/09/version-5.1-release-notes#features" class="hash-link" aria-label="Lien direct vers Features" title="Lien direct vers Features" translate="no">​</a></h2>
+<ul>
+<li class="">The framework is now tested against Node.js 24 and so this version is officially supported.</li>
+<li class="">The <code>Disk</code> and <code>LocalDisk</code> services have a new method <code>mkdirIfNotExists</code> to creates directories. This is useful when using the local file system to ensure that a directory exists before saving files. Otherwise, an error can be thrown when it does not. On cloud storage services such as S3, directories are created automatically when saving files so this method does nothing.</li>
+<li class="">The <code>Logger</code> service has a new method <code>addErrorContext</code> which works like <code>addLogContext</code> but only for error-level logs. This is useful to add context information that is only relevant for errors (e.g. request body, etc.) without polluting the other log levels.</li>
+<li class="">The iteration count of the <code>hashPassword</code> function has been increased to 600,000 to match the <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#pbkdf2" target="_blank" rel="noopener noreferrer" class="">latest OWASP recommendations</a>.</li>
+</ul>
+<h2 class="anchor anchorTargetHideOnScrollNavbar_vjPI" id="enhancements">Enhancements<a href="https://foalts.org/fr/blog/2025/11/09/version-5.1-release-notes#enhancements" class="hash-link" aria-label="Lien direct vers Enhancements" title="Lien direct vers Enhancements" translate="no">​</a></h2>
+<ul>
+<li class="">On new projects, the generated <code>src/index.ts</code> file has been improved to better log any errors thrown in the <code>main</code> function.</li>
+<li class="">The <code>run</code> function of the <code>AsyncService</code> has been improved to execute functions fully asynchronously, which was not the case before in very specific scenarios.</li>
+<li class="">The missing OpenAPI documentation on the <code>@PermissionRequired</code> hook has been added.</li>
+</ul>
+<h2 class="anchor anchorTargetHideOnScrollNavbar_vjPI" id="chores">Chores<a href="https://foalts.org/fr/blog/2025/11/09/version-5.1-release-notes#chores" class="hash-link" aria-label="Lien direct vers Chores" title="Lien direct vers Chores" translate="no">​</a></h2>
+<ul>
+<li class="">Sub-dependencies have been updated to their latest versions.</li>
+</ul>
+<h2 class="anchor anchorTargetHideOnScrollNavbar_vjPI" id="dependencies">Dependencies<a href="https://foalts.org/fr/blog/2025/11/09/version-5.1-release-notes#dependencies" class="hash-link" aria-label="Lien direct vers Dependencies" title="Lien direct vers Dependencies" translate="no">​</a></h2>
+<ul>
+<li class=""><code>@foal/aws-s3</code>
+<ul>
+<li class=""><code>@aws-sdk/client-s3@3.926</code></li>
+<li class=""><code>@aws-sdk/lib-storage@3.926</code></li>
+</ul>
+</li>
+<li class=""><code>@foal/cli</code>
+<ul>
+<li class=""><code>commander@14.0</code></li>
+</ul>
+</li>
+<li class=""><code>@foal/graphql</code>
+<ul>
+<li class=""><code>glob</code> (removed and replaced by Node native API)</li>
+</ul>
+</li>
+<li class=""><code>@foal/swagger-ui-dist</code>
+<ul>
+<li class=""><code>swagger-ui-dist@5.30</code></li>
+</ul>
+</li>
+</ul>]]></content:encoded>
+            <category>release</category>
+        </item>
         <item>
             <title><![CDATA[Version 5.0 release notes]]></title>
             <link>https://foalts.org/fr/blog/2025/05/27/version-5.0-release-notes</link>
@@ -644,21 +695,6 @@
 <p>Inline scripts in the Swagger page have been removed to support more strict <em>Content Security Policy</em> directive.</p>
 <h2 class="anchor anchorTargetHideOnScrollNavbar_vjPI" id="bug-fixes">Bug fixes<a href="https://foalts.org/fr/blog/2021/09/19/version-2.6-release-notes#bug-fixes" class="hash-link" aria-label="Lien direct vers Bug fixes" title="Lien direct vers Bug fixes" translate="no">​</a></h2>
 <p>The <code>foal connect angular</code> command now supports empty <code>angular.json</code> files.</p>]]></content:encoded>
-            <category>release</category>
-        </item>
-        <item>
-            <title><![CDATA[Version 2.5 release notes]]></title>
-            <link>https://foalts.org/fr/blog/2021/06/11/version-2.5-release-notes</link>
-            <guid>https://foalts.org/fr/blog/2021/06/11/version-2.5-release-notes</guid>
-            <pubDate>Fri, 11 Jun 2021 00:00:00 GMT</pubDate>
-            <description><![CDATA[Banner]]></description>
-            <content:encoded><![CDATA[<p><img decoding="async" loading="lazy" alt="Banner" src="https://foalts.org/fr/assets/images/banner-863c69d216aa9bd2a3e15897df73e2ce.png" width="914" height="315" class="img_ev3q"></p>
-<p>Version 2.5 of Foal has been released! Here are the improvements that it brings.</p>
-<h2 class="anchor anchorTargetHideOnScrollNavbar_vjPI" id="npm-run-develop-watches-config-files"><code>npm run develop</code> watches config files<a href="https://foalts.org/fr/blog/2021/06/11/version-2.5-release-notes#npm-run-develop-watches-config-files" class="hash-link" aria-label="Lien direct vers npm-run-develop-watches-config-files" title="Lien direct vers npm-run-develop-watches-config-files" translate="no">​</a></h2>
-<p>In previous versions of Foal, the <code>develop</code> command did not restart the server when a configuration file was changed. This was annoying and is the reason why, starting with v2.5, new projects generated by the CLI will watch configuration files.</p>
-<h2 class="anchor anchorTargetHideOnScrollNavbar_vjPI" id="createopenapidocument-accepts-an-optional-servicemanager"><code>createOpenApiDocument</code> accepts an optional serviceManager<a href="https://foalts.org/fr/blog/2021/06/11/version-2.5-release-notes#createopenapidocument-accepts-an-optional-servicemanager" class="hash-link" aria-label="Lien direct vers createopenapidocument-accepts-an-optional-servicemanager" title="Lien direct vers createopenapidocument-accepts-an-optional-servicemanager" translate="no">​</a></h2>
-<p>If you use <code>createOpenApiDocument</code>, in a shell script for example, the function accepts an optional <code>serviceManager</code> parameter from this version.</p>
-<p>This can be useful if your OpenAPI decorators access controller properties whose values are manually injected.</p>]]></content:encoded>
             <category>release</category>
         </item>
     </channel>
