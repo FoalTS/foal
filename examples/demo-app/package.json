@@ -1,7 +1,7 @@
 {
   "name": "demo-app",
   "private": true,
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "FoalTs examples",
   "scripts": {
     "build": "tsc && copy-cli \"src/**/*.html\" build",
@@ -44,14 +44,14 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@foal/aws-s3": "^5.0.1",
-    "@foal/core": "^5.0.1",
-    "@foal/graphiql": "^5.0.1",
-    "@foal/graphql": "^5.0.1",
-    "@foal/social": "^5.0.1",
-    "@foal/storage": "^5.0.1",
-    "@foal/swagger": "^5.0.1",
-    "@foal/typeorm": "^5.0.1",
+    "@foal/aws-s3": "^5.1.0",
+    "@foal/core": "^5.1.0",
+    "@foal/graphiql": "^5.1.0",
+    "@foal/graphql": "^5.1.0",
+    "@foal/social": "^5.1.0",
+    "@foal/storage": "^5.1.0",
+    "@foal/swagger": "^5.1.0",
+    "@foal/typeorm": "^5.1.0",
     "graphql": "~16.9.0",
     "source-map-support": "~0.5.21",
     "sqlite3": "~5.1.7",
@@ -59,7 +59,7 @@
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
-    "@foal/cli": "^5.0.1",
+    "@foal/cli": "^5.1.0",
     "@types/mocha": "10.0.10",
     "@types/node": "24.10.0",
     "concurrently": "~9.1.2",

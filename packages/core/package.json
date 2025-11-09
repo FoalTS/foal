@@ -1,6 +1,6 @@
 {
   "name": "@foal/core",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "description": "Full-featured Node.js framework, with no complexity",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -67,13 +67,13 @@
     "reflect-metadata": "~0.2.2"
   },
   "devDependencies": {
-    "mock-module": "^5.0.1",
     "@types/mocha": "10.0.10",
     "@types/node": "24.10.0",
     "@types/supertest": "6.0.3",
     "ajv-errors": "~3.0.0",
     "ejs": "~3.1.10",
     "mocha": "~11.7.5",
+    "mock-module": "^5.1.0",
     "rimraf": "~6.1.0",
     "source-map-support": "~0.5.21",
     "supertest": "~7.1.4",
