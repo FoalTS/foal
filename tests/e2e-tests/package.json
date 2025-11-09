@@ -29,7 +29,7 @@
     "redis": "~4.7.0",
     "superagent": "~9.0.1",
     "supertest": "~7.1.4",
-    "typeorm": "0.3.24",
+    "typeorm": "0.3.27",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
