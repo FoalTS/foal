@@ -6,7 +6,9 @@ import { Config } from '../config';
 import { Level, formatMessage, shouldLog } from './logger.utils';
 
 export class Logger {
-  private asyncLocalStorage = new AsyncLocalStorage<Record<string, any>>();
+  private contextStorage = new AsyncLocalStorage<Record<string, any>>();
+  private errorContextStorage = new AsyncLocalStorage<Record<string, any>>();
+
   private transports: ((level: Level, log: string) => void)[] = [
     (level, log) => console.log(log),
   ];
@@ -16,13 +18,24 @@ export class Logger {
   }
 
   initLogContext(callback: () => void): void {
-    this.asyncLocalStorage.run({}, callback);
+    this.contextStorage.run({}, () => {
+      this.errorContextStorage.run({}, callback);
+    });
   }
 
   addLogContext(context: Record<string, any>): void {
-    const store = this.asyncLocalStorage.getStore();
+    const store = this.contextStorage.getStore();
     if (!store) {
       this.log('warn', 'Impossible to add log context information. The logger context has not been initialized.');
+      return;
+    }
+    Object.assign(store, context);
+  }
+
+  addErrorContext(context: Record<string, any>): void {
+    const store = this.errorContextStorage.getStore();
+    if (!store) {
+      this.log('warn', 'Impossible to add error context information. The logger context has not been initialized.');
       return;
     }
     Object.assign(store, context);
@@ -44,12 +57,14 @@ export class Logger {
     };
 
     const now = new Date();
-    const contextParams = this.asyncLocalStorage.getStore();
+    const contextParams = this.contextStorage.getStore();
+    const errorContextParams = level === 'error' ? this.errorContextStorage.getStore() : {};
     const formattedMessage = formatMessage(
       level,
       message,
       {
         ...contextParams,
+        ...errorContextParams,
         ...params,
       },
       format,
