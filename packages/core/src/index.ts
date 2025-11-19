@@ -34,6 +34,7 @@ export {
   getAjvInstance,
   hashPassword,
   PasswordService,
+  VerifyPasswordOptions,
   passwordHashNeedsToBeRefreshed,
   isInFile,
   signToken,
