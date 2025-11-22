@@ -56,7 +56,7 @@ if (!user.password) {
   return new HttpResponseUnauthorized();
 }
 
-if (!(await verifyPassword(password, user.password))) {
+if (!(await this.passwordService.verifyPassword(password, user.password))) {
   return new HttpResponseUnauthorized();
 }
 ```

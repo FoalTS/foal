@@ -9,16 +9,16 @@ import {
   createSession,
   dependency,
   Get,
-  hashPassword,
   Hook,
   HttpResponseForbidden,
   HttpResponseNoContent,
   HttpResponseOK,
   HttpResponseUnauthorized,
+  PasswordService,
   Post,
+  ServiceManager,
   UseSessions,
-  ValidateBody,
-  verifyPassword
+  ValidateBody
 } from '@foal/core';
 import { MongoDBStore } from '@foal/mongodb';
 import { MongoClient, ObjectId as ObjectId2 } from 'mongodb';
@@ -89,6 +89,9 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
     @dependency
     store: MongoDBStore;
 
+    @dependency
+    passwordService: PasswordService;
+
     @Post('/logout')
     @UseSessions({ store: MongoDBStore, required: false, })
     async logout(ctx: Context) {
@@ -116,7 +119,7 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
         return new HttpResponseUnauthorized();
       }
 
-      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseUnauthorized();
       }
 
@@ -151,13 +154,15 @@ describe('[Sample] TypeORM & MongoDB Store', async () => {
 
     await mongoClient.db().collection('foalSessions').deleteMany({});
 
+    const serviceManager = new ServiceManager();
+    const passwordService = serviceManager.get(PasswordService);
     const user = new User();
     user.email = 'john@foalts.org';
-    user.password = await hashPassword('password');
+    user.password = await passwordService.hashPassword('password');
     user.isAdmin = false;
     await user.save();
 
-    app = await createApp(AppController);
+    app = await createApp(AppController, { serviceManager });
   });
 
   after(async () => {
