@@ -3,11 +3,6 @@ title: Introduction
 slug: /
 ---
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
-![Known Vulnerabilities](https://snyk.io/test/github/foalts/foal/badge.svg)
-![Commit activity](https://img.shields.io/github/commit-activity/y/FoalTS/foal.svg)
-![Last commit](https://img.shields.io/github/last-commit/FoalTS/foal.svg)
-
 ## What is Foal?
 
 *Foal* (or *FoalTS*) is a Node.JS framework for creating web applications.
