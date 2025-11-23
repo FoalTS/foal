@@ -25,7 +25,8 @@ main {
 }
 
 main>div {
-  max-width: calc(var(--ifm-container-width) - var(--doc-sidebar-width)) !important;
+  padding-left: 5rem !important;
+  padding-right: 5rem !important;
 }
 
 .badge {
