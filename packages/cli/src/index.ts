@@ -24,8 +24,7 @@ import {
   upgrade,
 } from './generate';
 import { ClientError } from './generate/file-system';
-import { rmdir } from './rmdir';
-import { CreateSecretCommandService, RunScriptCommandService } from './commands';
+import { CreateSecretCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
 import { CryptoService, LoggerService, UtilService } from './services';
 
 function displayError(...lines: string[]): void {
@@ -181,7 +180,8 @@ program
   .description('Remove a directory and all its contents, including any subdirectories and files.')
   .action(async (name: string) => {
     try {
-      await rmdir(name);
+      const rmdirCommandService = new RmdirCommandService();
+      await rmdirCommandService.run(name);
     } catch (error: any) {
       if (error.code === 'ENOTDIR') {
         displayError(error.message);
