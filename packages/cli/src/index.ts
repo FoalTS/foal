@@ -10,7 +10,6 @@ import { red, yellow } from 'colors/safe';
 import { program } from 'commander';
 
 // FoalTS
-import { createSecret } from './create-secret';
 import {
   connectAngular,
   connectReact,
@@ -27,6 +26,8 @@ import {
 import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
 import { runScript } from './run';
+import { CreateSecretCommandService } from './commands';
+import { CryptoService, LoggerService } from './services';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -62,7 +63,12 @@ program
 program
   .command('createsecret')
   .description('Create a 256-bit random secret encoded in base64.')
-  .action(() => createSecret().then(secret => console.log(secret)));
+  .action(async () => {
+    const cryptoService = new CryptoService();
+    const loggerService = new LoggerService();
+    const createSecretCommandService = new CreateSecretCommandService(cryptoService, loggerService);
+    await createSecretCommandService.run();
+  });
 
 program
   .command('run')
