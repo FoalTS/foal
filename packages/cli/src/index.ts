@@ -14,12 +14,11 @@ import {
   createApp,
   createController,
   createEntity,
-  createHook,
   createRestApi,
   upgrade,
 } from './generate';
 import { ClientError, CryptoService, FileSystem, LoggerService, UtilService } from './services';
-import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateSecretCommandService, CreateScriptCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
+import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateSecretCommandService, CreateHookCommandService, CreateScriptCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -149,7 +148,9 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
           createRestApi({ name, register: options.register, auth: options.auth });
           break;
         case 'hook':
-          createHook({ name });
+          const hookFileSystem = new FileSystem();
+          const createHookCommandService = new CreateHookCommandService(hookFileSystem);
+          createHookCommandService.run({ name });
           break;
         case 'script':
           const scriptFileSystem = new FileSystem();

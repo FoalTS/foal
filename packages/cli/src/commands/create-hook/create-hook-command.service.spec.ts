@@ -1,12 +1,17 @@
 // FoalTS
-import { FileSystem } from '../../../services';
-import { createHook } from './create-hook';
+import { FileSystem } from '../../services';
+import { CreateHookCommandService } from './create-hook-command.service';
 
-describe('createHook', () => {
+describe('CreateHookCommandService', () => {
 
   const fs = new FileSystem();
+  let service: CreateHookCommandService;
 
-  beforeEach(() => fs.setUp());
+  beforeEach(() => {
+    fs.setUp();
+    const fileSystem = new FileSystem();
+    service = new CreateHookCommandService(fileSystem);
+  });
 
   afterEach(() => fs.tearDown());
 
@@ -22,7 +27,7 @@ describe('createHook', () => {
       });
 
       it('should render the templates in the proper directory.', () => {
-        createHook({ name: 'test-fooBar' });
+        service.run({ name: 'test-fooBar' });
 
         fs
           .assertEqual('test-foo-bar.hook.ts', 'hook/test-foo-bar.hook.ts')
@@ -30,7 +35,7 @@ describe('createHook', () => {
       });
 
       it('should create the directory if it does not exist.', () => {
-        createHook({ name: 'barfoo/hello/test-fooBar' });
+        service.run({ name: 'barfoo/hello/test-fooBar' });
 
         fs
           .assertExists('barfoo/hello/test-foo-bar.hook.ts');
@@ -39,7 +44,7 @@ describe('createHook', () => {
       it('should create index.ts if it does not exist.', () => {
         fs.rmfile('index.ts');
 
-        createHook({ name: 'test-fooBar' });
+        service.run({ name: 'test-fooBar' });
 
         fs.assertExists('index.ts');
       });
@@ -53,3 +58,4 @@ describe('createHook', () => {
   test('');
 
 });
+
