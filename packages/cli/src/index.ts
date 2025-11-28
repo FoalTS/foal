@@ -17,11 +17,10 @@ import {
   createHook,
   createRestApi,
   createScript,
-  createService,
   upgrade,
 } from './generate';
 import { ClientError, CryptoService, FileSystem, LoggerService, UtilService } from './services';
-import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateSecretCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
+import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateSecretCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -157,7 +156,9 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
           createScript({ name });
           break;
         case 'service':
-          createService({ name });
+          const serviceFileSystem = new FileSystem();
+          const createServiceCommandService = new CreateServiceCommandService(serviceFileSystem);
+          createServiceCommandService.run({ name });
           break;
         default:
           displayError(

@@ -1,12 +1,17 @@
 // FoalTS
-import { FileSystem } from '../../../services';
-import { createService } from './create-service';
+import { FileSystem } from '../../services';
+import { CreateServiceCommandService } from './create-service-command.service';
 
-describe('createService', () => {
+describe('CreateServiceCommandService', () => {
 
   const fs = new FileSystem();
+  let service: CreateServiceCommandService;
 
-  beforeEach(() => fs.setUp());
+  beforeEach(() => {
+    fs.setUp();
+    const fileSystem = new FileSystem();
+    service = new CreateServiceCommandService(fileSystem);
+  });
 
   afterEach(() => fs.tearDown());
 
@@ -22,7 +27,7 @@ describe('createService', () => {
       });
 
       it('should render the empty templates in the proper directory.', () => {
-        createService({ name: 'test-fooBar' });
+        service.run({ name: 'test-fooBar' });
 
         fs
           .assertEqual('test-foo-bar.service.ts', 'service/test-foo-bar.service.empty.ts')
@@ -30,7 +35,7 @@ describe('createService', () => {
       });
 
       it('should create the directory if it does not exist.', () => {
-        createService({ name: 'barfoo/hello/test-fooBar' });
+        service.run({ name: 'barfoo/hello/test-fooBar' });
 
         fs
           .assertExists('barfoo/hello/test-foo-bar.service.ts');
@@ -39,7 +44,7 @@ describe('createService', () => {
       it('should create index.ts if it does not exist.', () => {
         fs.rmfile('index.ts');
 
-        createService({ name: 'test-fooBar' });
+        service.run({ name: 'test-fooBar' });
 
         fs.assertExists('index.ts');
       });
@@ -53,3 +58,4 @@ describe('createService', () => {
   test('');
 
 });
+
