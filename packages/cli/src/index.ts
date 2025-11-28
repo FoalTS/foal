@@ -12,11 +12,10 @@ import { program } from 'commander';
 // FoalTS
 import {
   createApp,
-  createRestApi,
   upgrade,
 } from './generate';
 import { ClientError, CryptoService, FileSystem, LoggerService, UtilService } from './services';
-import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateSecretCommandService, CreateControllerCommandService, CreateEntityCommandService, CreateHookCommandService, CreateScriptCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
+import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateSecretCommandService, CreateControllerCommandService, CreateEntityCommandService, CreateHookCommandService, CreateRestApiCommandService, CreateScriptCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -147,7 +146,9 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
           createEntityCommandService.run({ name });
           break;
         case 'rest-api':
-          createRestApi({ name, register: options.register, auth: options.auth });
+          const restApiFileSystem = new FileSystem();
+          const createRestApiCommandService = new CreateRestApiCommandService(restApiFileSystem);
+          createRestApiCommandService.run({ name, register: options.register, auth: options.auth });
           break;
         case 'hook':
           const hookFileSystem = new FileSystem();

@@ -2,14 +2,19 @@
 import { throws } from 'assert';
 
 // FoalTS
-import { ClientError, FileSystem } from '../../../services';
-import { createRestApi } from './create-rest-api';
+import { ClientError, FileSystem } from '../../services';
+import { CreateRestApiCommandService } from './create-rest-api-command.service';
 
-describe('createRestApi', () => {
+describe('CreateRestApiCommandService', () => {
 
   const fs = new FileSystem();
+  let service: CreateRestApiCommandService;
 
-  beforeEach(() => fs.setUp());
+  beforeEach(() => {
+    fs.setUp();
+    const fileSystem = new FileSystem();
+    service = new CreateRestApiCommandService(fileSystem);
+  });
 
   afterEach(() => fs.tearDown());
 
@@ -18,7 +23,7 @@ describe('createRestApi', () => {
       .copyFixture('rest-api/package.mongodb.json', 'package.json');
 
     throws(
-      () => createRestApi({ name: 'test-fooBar', register: false }),
+      () => service.run({ name: 'test-fooBar', register: false }),
       new ClientError('"npx foal generate|g rest-api <name>" cannot be used in a MongoDB project.')
     );
   });
@@ -28,7 +33,7 @@ describe('createRestApi', () => {
       .copyFixture('rest-api/package.json', 'package.json');
 
     throws(
-      () => createRestApi({ name: 'test-fooBar', register: false }),
+      () => service.run({ name: 'test-fooBar', register: false }),
       new ClientError(
         'Impossible to generate a REST API endpoint. '
         + 'The directories controllers/ and entities/ (or src/app/controllers and src/app/entities) were not found.')
@@ -49,7 +54,7 @@ describe('createRestApi', () => {
     context('given the provided name is a not a path', () => {
 
       it('should create in the controllers/ directory the controller and its test.', () => {
-        createRestApi({ name: 'test-fooBar', register: false });
+        service.run({ name: 'test-fooBar', register: false });
 
         fs
           .assertEqual('controllers/test-foo-bar.controller.ts', 'rest-api/controllers/test-foo-bar.controller.ts')
@@ -57,7 +62,7 @@ describe('createRestApi', () => {
       });
 
       it('should create in the controllers/ directory the controller and its test (auth flag).', () => {
-        createRestApi({ name: 'test-fooBar', register: false, auth: true });
+        service.run({ name: 'test-fooBar', register: false, auth: true });
 
         fs
           .assertEqual('controllers/test-foo-bar.controller.ts', 'rest-api/controllers/test-foo-bar.controller.auth.ts')
@@ -65,14 +70,14 @@ describe('createRestApi', () => {
       });
 
       it('should create in the entitites/ directory the entity.', () => {
-        createRestApi({ name: 'test-fooBar', register: false });
+        service.run({ name: 'test-fooBar', register: false });
 
         fs
           .assertEqual('entities/test-foo-bar.entity.ts', 'rest-api/entities/test-foo-bar.entity.ts');
       });
 
       it('should create in the entitites/ directory the entity (auth flag).', () => {
-        createRestApi({ name: 'test-fooBar', register: false, auth: true });
+        service.run({ name: 'test-fooBar', register: false, auth: true });
 
         fs
           .assertEqual('entities/test-foo-bar.entity.ts', 'rest-api/entities/test-foo-bar.entity.auth.ts');
@@ -82,7 +87,7 @@ describe('createRestApi', () => {
         'should create in the controllers/ directory an index.ts file if it does not exist '
         + 'and export the controller.',
         () => {
-          createRestApi({ name: 'test-fooBar', register: false });
+          service.run({ name: 'test-fooBar', register: false });
 
           fs
             .assertEqual('controllers/index.ts', 'rest-api/controllers/index.empty.ts');
@@ -93,7 +98,7 @@ describe('createRestApi', () => {
         'should create in the entities/ directory an index.ts file if it does not exist '
         + 'and export the entity.',
         () => {
-          createRestApi({ name: 'test-fooBar', register: false });
+          service.run({ name: 'test-fooBar', register: false });
 
           fs
             .assertEqual('entities/index.ts', 'rest-api/entities/index.empty.ts');
@@ -107,7 +112,7 @@ describe('createRestApi', () => {
           fs
             .copyFixture('rest-api/index.controllers.ts', 'controllers/index.ts');
 
-          createRestApi({ name: 'test-fooBar', register: false });
+          service.run({ name: 'test-fooBar', register: false });
 
           fs
             .assertEqual('controllers/index.ts', 'rest-api/controllers/index.ts');
@@ -118,7 +123,7 @@ describe('createRestApi', () => {
         fs
           .copyFixture('rest-api/index.entities.ts', 'entities/index.ts');
 
-        createRestApi({ name: 'test-fooBar', register: false });
+        service.run({ name: 'test-fooBar', register: false });
 
         fs
           .assertEqual('entities/index.ts', 'rest-api/entities/index.ts');
@@ -130,7 +135,7 @@ describe('createRestApi', () => {
           fs
             .copyFixture('rest-api/app.controller.ts', 'app.controller.ts');
 
-          createRestApi({ name: 'test-fooBar', register: false });
+          service.run({ name: 'test-fooBar', register: false });
 
           fs
             .assertEqual('app.controller.ts', 'rest-api/app.controller.not-modified.ts');
@@ -142,7 +147,7 @@ describe('createRestApi', () => {
 
         it('should throw a ClientError if the file app.controller.ts does not exist in the current directory.', () => {
           throws(
-            () => createRestApi({ name: 'test-fooBar', register: true }),
+            () => service.run({ name: 'test-fooBar', register: true }),
             new ClientError('Impossible to modify "app.controller.ts": the file does not exist.')
           );
         });
@@ -154,7 +159,7 @@ describe('createRestApi', () => {
             fs
               .copyFixture('rest-api/app.controller.ts', 'app.controller.ts');
 
-            createRestApi({ name: 'test-fooBar', register: true });
+            service.run({ name: 'test-fooBar', register: true });
 
             fs
               .assertEqual('app.controller.ts', 'rest-api/app.controller.ts');
@@ -168,14 +173,14 @@ describe('createRestApi', () => {
     context('given the provided name is a path', () => {
 
       it('should create the sub-directories if they do not exist in the controllers/ directory.', () => {
-        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+        service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
         fs
           .assertExists('controllers/barfoo/api');
       });
 
       it('should create in the sub-directories the controller and its test.', () => {
-        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+        service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
         fs
           .cd('controllers/barfoo/api')
@@ -187,7 +192,7 @@ describe('createRestApi', () => {
       });
 
       it('should create in the sub-directories the controller and its test (auth flag).', () => {
-        createRestApi({ name: 'barfoo/api/test-fooBar', register: false, auth: true });
+        service.run({ name: 'barfoo/api/test-fooBar', register: false, auth: true });
 
         fs
           .cd('controllers/barfoo/api')
@@ -196,14 +201,14 @@ describe('createRestApi', () => {
       });
 
       it('should create in the entitites/ directory the entity.', () => {
-        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+        service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
         fs
           .assertEqual('entities/test-foo-bar.entity.ts', 'rest-api/entities/test-foo-bar.entity.ts');
       });
 
       it('should create in the entitites/ directory the entity (auth flag).', () => {
-        createRestApi({ name: 'barfoo/api/test-fooBar', register: false, auth: true });
+        service.run({ name: 'barfoo/api/test-fooBar', register: false, auth: true });
 
         fs
           .assertEqual('entities/test-foo-bar.entity.ts', 'rest-api/entities/test-foo-bar.entity.auth.ts');
@@ -213,7 +218,7 @@ describe('createRestApi', () => {
         'should create in the controllers/ sub-directories an index.ts file if it does not exist '
         + 'and export the controller.',
         () => {
-          createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+          service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
           fs
             .cd('controllers/barfoo/api')
@@ -225,7 +230,7 @@ describe('createRestApi', () => {
         'should create in the entities/ directory an index.ts file if it does not exist '
         + 'and export the entity.',
         () => {
-          createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+          service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
           fs
             .assertEqual('entities/index.ts', 'rest-api/entities/index.empty.ts');
@@ -241,7 +246,7 @@ describe('createRestApi', () => {
             .cd('controllers/barfoo/api')
             .copyFixture('rest-api/index.controllers.ts', 'index.ts');
 
-          createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+          service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
           fs
             .assertEqual('index.ts', 'rest-api/controllers/index.ts');
@@ -252,7 +257,7 @@ describe('createRestApi', () => {
         fs
           .copyFixture('rest-api/index.entities.ts', 'entities/index.ts');
 
-        createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+        service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
         fs
           .assertEqual('entities/index.ts', 'rest-api/entities/index.ts');
@@ -266,7 +271,7 @@ describe('createRestApi', () => {
             .cd('controllers/barfoo')
             .copyFixture('rest-api/api.controller.ts', 'api.controller.ts');
 
-          createRestApi({ name: 'barfoo/api/test-fooBar', register: false });
+          service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
           fs
             .assertEqual('api.controller.ts', 'rest-api/controllers/api.controller.not-modified.ts');
@@ -281,7 +286,7 @@ describe('createRestApi', () => {
           + 'in the last sub-directory xxx.',
           () => {
             throws(
-              () => createRestApi({ name: 'barfoo/api/test-fooBar', register: true }),
+              () => service.run({ name: 'barfoo/api/test-fooBar', register: true }),
               new ClientError('Impossible to modify "api.controller.ts": the file does not exist.')
             );
           }
@@ -296,7 +301,7 @@ describe('createRestApi', () => {
               .cd('controllers/barfoo')
               .copyFixture('rest-api/api.controller.ts', 'api.controller.ts');
 
-            createRestApi({ name: 'barfoo/api/test-fooBar', register: true });
+            service.run({ name: 'barfoo/api/test-fooBar', register: true });
 
             fs
               .assertEqual('api.controller.ts', 'rest-api/controllers/api.controller.ts');
@@ -318,3 +323,4 @@ describe('createRestApi', () => {
   });
 
 });
+
