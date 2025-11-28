@@ -1,7 +1,7 @@
 import { join, relative } from 'path';
 
 import { red } from 'colors/safe';
-import { FileSystem } from '../../services';
+import { FileSystem } from '../../../services';
 
 /**
  * Service for connecting a Vue frontend to a FoalTS application.

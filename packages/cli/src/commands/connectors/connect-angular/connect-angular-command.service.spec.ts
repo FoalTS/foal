@@ -1,4 +1,4 @@
-import { FileSystem } from '../../services';
+import { FileSystem } from '../../../services';
 import { ConnectAngularCommandService } from './connect-angular-command.service';
 
 // TODO: To improve: make the tests (more) independent from each other.

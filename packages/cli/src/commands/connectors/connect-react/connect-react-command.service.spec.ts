@@ -1,4 +1,4 @@
-import { FileSystem } from '../../services';
+import { FileSystem } from '../../../services';
 import { ConnectReactCommandService } from './connect-react-command.service';
 
 describe('ConnectReactCommandService', () => {

@@ -1,4 +1,4 @@
-import { FileSystem } from '../../services';
+import { FileSystem } from '../../../services';
 import { ConnectVueCommandService } from './connect-vue-command.service';
 
 describe('ConnectVueCommandService', () => {
