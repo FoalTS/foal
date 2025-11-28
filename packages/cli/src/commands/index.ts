@@ -11,3 +11,4 @@ export { CreateScriptCommandService } from './create-script';
 export { CreateServiceCommandService } from './create-service';
 export { RmdirCommandService } from './rmdir';
 export { RunScriptCommandService } from './run-script';
+export { UpgradeCommandService } from './upgrade';

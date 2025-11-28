@@ -10,11 +10,8 @@ import { red, yellow } from 'colors/safe';
 import { program } from 'commander';
 
 // FoalTS
-import {
-  upgrade,
-} from './generate';
 import { ClientError, CryptoService, FileSystem, LoggerService, UtilService } from './services';
-import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateAppCommandService, CreateSecretCommandService, CreateControllerCommandService, CreateEntityCommandService, CreateHookCommandService, CreateRestApiCommandService, CreateScriptCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
+import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateAppCommandService, CreateSecretCommandService, CreateControllerCommandService, CreateEntityCommandService, CreateHookCommandService, CreateRestApiCommandService, CreateScriptCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService, UpgradeCommandService } from './commands';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -206,7 +203,9 @@ program
   .description('Upgrade the project to the latest version of FoalTS. If a version is provided, upgrade to that version.')
   .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
   .action(async (version: string|undefined, options: { install: boolean }) => {
-    await upgrade({ version, autoInstall: options.install });
+    const upgradeFileSystem = new FileSystem();
+    const upgradeCommandService = new UpgradeCommandService(upgradeFileSystem);
+    await upgradeCommandService.run({ version, autoInstall: options.install });
   });
 
 program

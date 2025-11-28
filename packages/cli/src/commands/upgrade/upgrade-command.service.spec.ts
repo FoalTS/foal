@@ -1,12 +1,17 @@
 import { deepStrictEqual } from 'assert';
-import { FileSystem } from '../../../services';
-import { upgrade } from './upgrade';
+import { FileSystem } from '../../services';
+import { UpgradeCommandService } from './upgrade-command.service';
 
-describe('upgrade', () => {
+describe('UpgradeCommandService', () => {
 
   const fs = new FileSystem();
+  let service: UpgradeCommandService;
 
-  beforeEach(() => fs.setUp());
+  beforeEach(() => {
+    fs.setUp();
+    const fileSystem = new FileSystem();
+    service = new UpgradeCommandService(fileSystem);
+  });
 
   afterEach(() => fs.tearDown());
 
@@ -15,7 +20,7 @@ describe('upgrade', () => {
       fs
         .copyFixture('upgrade/package.json', 'package.json')
 
-      await upgrade({ version: '3.0.0' });
+      await service.run({ version: '3.0.0' });
 
       const actualDependencies = fs.getProjectDependencies();
       const expectedDependencies = [
@@ -30,7 +35,7 @@ describe('upgrade', () => {
       fs
         .copyFixture('upgrade/package.json', 'package.json')
 
-        await upgrade({ version: '3.0.0' });
+        await service.run({ version: '3.0.0' });
 
         const actualDevDependencies = fs.getProjectDevDependencies();
         const expectedDevDependencies = [
@@ -46,7 +51,7 @@ describe('upgrade', () => {
       fs
         .copyFixture('upgrade/package.json', 'package.json')
 
-      await upgrade({}, { getLatestVersion: async () => '3.0.0' });
+      await service.run({}, { getLatestVersion: async () => '3.0.0' });
 
       const actualDependencies = fs.getProjectDependencies();
       const expectedDependencies = [
@@ -61,7 +66,7 @@ describe('upgrade', () => {
       fs
         .copyFixture('upgrade/package.json', 'package.json')
 
-        await upgrade({}, { getLatestVersion: async () => '3.0.0' });
+        await service.run({}, { getLatestVersion: async () => '3.0.0' });
 
         const actualDevDependencies = fs.getProjectDevDependencies();
         const expectedDevDependencies = [
@@ -73,3 +78,4 @@ describe('upgrade', () => {
   });
 
 });
+
