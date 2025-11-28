@@ -1,11 +1,16 @@
-import { FileSystem } from '../../../services';
-import { connectReact } from './connect-react';
+import { FileSystem } from '../../services';
+import { ConnectReactCommandService } from './connect-react-command.service';
 
-describe('connectReact', () => {
+describe('ConnectReactCommandService', () => {
 
   const fs = new FileSystem();
+  let service: ConnectReactCommandService;
 
-  beforeEach(() => fs.setUp());
+  beforeEach(() => {
+    fs.setUp();
+    const fileSystem = new FileSystem();
+    service = new ConnectReactCommandService(fileSystem);
+  });
 
   afterEach(() => fs.tearDown());
 
@@ -14,7 +19,7 @@ describe('connectReact', () => {
       .ensureDir('connector-test/react')
       .copyFixture('react/package.json', 'connector-test/react/package.json');
 
-    connectReact('./connector-test/react');
+    service.run('./connector-test/react');
 
     fs
       .assertEqual('connector-test/react/package.json', 'react/package.json')
@@ -26,21 +31,22 @@ describe('connectReact', () => {
       .ensureDir('connector-test/react')
       .copyFixture('react/package.json', 'connector-test/react/package.json');
 
-    connectReact('./connector-test/react');
+    service.run('./connector-test/react');
 
     fs
       .assertEqual('connector-test/react/.env', 'react/env');
   })
 
   it('should not throw if the path does not exist.', () => {
-    connectReact('somewhere-that-does-not-exist');
+    service.run('somewhere-that-does-not-exist');
   });
 
   it('should not throw if package.json does not exist.', () => {
     fs
       .ensureDir('connector-test/react');
 
-    connectReact('./connector-test/react');
+    service.run('./connector-test/react');
   });
 
 });
+
