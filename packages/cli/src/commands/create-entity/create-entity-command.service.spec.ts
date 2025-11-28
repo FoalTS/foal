@@ -1,12 +1,17 @@
 // FoalTS
-import { FileSystem } from '../../../services';
-import { createEntity } from './create-entity';
+import { FileSystem } from '../../services';
+import { CreateEntityCommandService } from './create-entity-command.service';
 
-describe('createEntity', () => {
+describe('CreateEntityCommandService', () => {
 
   const fs = new FileSystem();
+  let service: CreateEntityCommandService;
 
-  beforeEach(() => fs.setUp());
+  beforeEach(() => {
+    fs.setUp();
+    const fileSystem = new FileSystem();
+    service = new CreateEntityCommandService(fileSystem);
+  });
 
   afterEach(() => fs.tearDown());
 
@@ -21,7 +26,7 @@ describe('createEntity', () => {
           .cd(root)
           .copyFixture('entity/index.ts', 'index.ts');
 
-        createEntity({ name: 'test-fooBar' });
+        service.run({ name: 'test-fooBar' });
 
         fs
           .assertEqual('test-foo-bar.entity.ts', 'entity/test-foo-bar.entity.ts')
@@ -35,7 +40,7 @@ describe('createEntity', () => {
           .cd(root)
           .copyFixture('entity/index.ts', 'index.ts');
 
-        createEntity({ name: 'test-fooBar' });
+        service.run({ name: 'test-fooBar' });
 
         fs
           .assertEqual('test-foo-bar.entity.ts', 'entity/test-foo-bar.entity.mongodb.ts')
@@ -49,7 +54,7 @@ describe('createEntity', () => {
           .cd(root)
           .copyFixture('entity/index.ts', 'index.ts');
 
-        createEntity({ name: 'barfoo/hello/test-fooBar' });
+        service.run({ name: 'barfoo/hello/test-fooBar' });
 
         fs
           .assertExists('barfoo/hello/test-foo-bar.entity.ts');
@@ -61,7 +66,7 @@ describe('createEntity', () => {
           .ensureDir(root)
           .cd(root);
 
-        createEntity({ name: 'test-fooBar' });
+        service.run({ name: 'test-fooBar' });
 
         fs.assertExists('index.ts');
       });
@@ -75,3 +80,4 @@ describe('createEntity', () => {
   test('');
 
 });
+
