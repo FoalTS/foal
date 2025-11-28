@@ -138,11 +138,11 @@ import {
   dependency,
   HttpResponseNoContent,
   HttpResponseUnauthorized,
+  PasswordService,
   Post,
   Store,
   UseSessions,
-  ValidateBody,
-  verifyPassword
+  ValidateBody
 } from '@foal/core';
 
 import { User } from '../entities';
@@ -152,6 +152,9 @@ const credentialsSchema = { /* ... */ };
 export class AuthController {
   @dependency
   store: Store;
+
+  @dependency
+  passwordService: PasswordService;
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
@@ -166,7 +169,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+    if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
       return new HttpResponseUnauthorized();
     }
 
@@ -246,11 +249,12 @@ async function postData(url = '', data = {}) {
 ```typescript
 import {
   Context,
+  dependency,
   HttpResponseNoContent,
   HttpResponseUnauthorized,
+  PasswordService,
   Post,
-  ValidateBody,
-  verifyPassword
+  ValidateBody
 } from '@foal/core';
 import { getSecretOrPrivateKey, setAuthCookie } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
@@ -260,6 +264,9 @@ import { User } from '../entities';
 const credentialsSchema = { /* ... */ };
 
 export class AuthController {
+  @dependency
+  passwordService: PasswordService;
+
   @Post('/login')
   @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
@@ -269,7 +276,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+    if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
       return new HttpResponseUnauthorized();
     }
 
@@ -328,11 +335,11 @@ import {
   createSession,
   dependency,
   HttpResponseRedirect,
+  PasswordService,
   Post,
   Store,
   UseSessions,
-  ValidateBody,
-  verifyPassword
+  ValidateBody
 } from '@foal/core';
 
 import { User } from '../entities';
@@ -342,6 +349,9 @@ const credentialsSchema = { /* ... */ };
 export class AuthController {
   @dependency
   store: Store;
+
+  @dependency
+  passwordService: PasswordService;
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
@@ -356,7 +366,7 @@ export class AuthController {
       return new HttpResponseRedirect('/login');
     }
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+    if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
       return new HttpResponseRedirect('/login');
     }
 

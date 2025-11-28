@@ -16,11 +16,11 @@ import {
   Get,
   HttpResponseOK,
   HttpResponseRedirect,
+  PasswordService,
   Post,
   render,
   UseSessions,
-  ValidateBody,
-  verifyPassword
+  ValidateBody
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createFixtureUser, createAndInitializeDataSource, credentialsSchema, readCookie, User } from '../../../common';
@@ -34,6 +34,9 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
     @dependency
     // "Store" documentation
     store: TypeORMStore;
+
+    @dependency
+    passwordService: PasswordService;
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
@@ -50,7 +53,7 @@ describe('Feature: Stateful CSRF protection in a Regular Web App', () => {
         return new HttpResponseRedirect('/login');
       }
 
-      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseRedirect('/login');
       }
 
