@@ -1,6 +1,6 @@
 // std
 import { strictEqual } from 'assert';
-import { mock, Mock } from 'node:test';
+import { mock } from 'node:test';
 
 // FoalTS
 import { CryptoService, LoggerService } from '../../services';
