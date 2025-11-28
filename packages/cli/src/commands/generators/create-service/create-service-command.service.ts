@@ -1,7 +1,7 @@
 // FoalTS
 import { basename, dirname } from 'path';
 import { FileSystem } from '../../../services';
-import { getNames } from '../../../generate/utils';
+import { getNames } from '../utils';
 
 /**
  * Service for creating a new service file.

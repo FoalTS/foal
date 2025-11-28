@@ -1,6 +1,6 @@
 // FoalTS
 import { FileSystem } from '../../services';
-import { installDependencies, logger } from '../../generate/utils';
+import { installDependencies, logger } from '../generators/utils';
 
 async function getLatestVersion(): Promise<string> {
   const response = await fetch('https://registry.npmjs.org/@foal/core/latest');

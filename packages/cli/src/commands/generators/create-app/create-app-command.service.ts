@@ -8,7 +8,7 @@ import {
   initGitRepo,
   logger,
   installDependencies,
-} from '../../../generate/utils';
+} from '../utils';
 
 /**
  * Service for creating a new FoalTS application.

@@ -5,7 +5,7 @@ import { mock, Mock } from 'node:test';
 
 // FoalTS
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
-import { mkdirIfDoesNotExist, rmDirAndFilesIfExist } from '../../generate/utils';
+import { mkdirIfDoesNotExist, rmDirAndFilesIfExist } from '../generators/utils';
 import { RunScriptCommandService } from './run-script-command.service';
 import { UtilService } from '../../services';
 import { Logger, ServiceManager } from '@foal/core';
