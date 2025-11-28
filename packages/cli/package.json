@@ -10,7 +10,7 @@
     "dev:test:fs": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/file-system.spec.ts\"",
     "dev:test:generators": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/generate/generators/**/*.spec.ts\"",
     "dev:test:rmdir": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/rmdir/**/*.spec.ts\"",
-    "dev:test:run": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/run/**/*.spec.ts\"",
+    "dev:test:services": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/services/**/*.spec.ts\"",
     "build": "rimraf lib && tsc -p tsconfig-build.json",
     "prepublish": "npm run build"
   },

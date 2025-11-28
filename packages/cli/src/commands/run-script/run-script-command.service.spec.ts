@@ -5,8 +5,9 @@ import { mock, Mock } from 'node:test';
 
 // FoalTS
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
-import { mkdirIfDoesNotExist, rmDirAndFilesIfExist } from '../generate/utils';
-import { execScript } from './run-script';
+import { mkdirIfDoesNotExist, rmDirAndFilesIfExist } from '../../generate/utils';
+import { RunScriptCommandService } from './run-script-command.service';
+import { UtilService } from '../../services';
 import { Logger, ServiceManager } from '@foal/core';
 
 function rmfileIfExists(path: string) {
@@ -22,6 +23,8 @@ describe('execScript', () => {
   let loggerInfoMock: Mock<Logger['info']>['mock'];
   let loggerErrorMock: Mock<Logger['error']>['mock'];
   let loggerAddLogContextMock: Mock<Logger['addLogContext']>['mock'];
+  let utilService: UtilService;
+  let runScriptCommandService: RunScriptCommandService;
 
   beforeEach(() => {
     services = new ServiceManager();
@@ -29,6 +32,8 @@ describe('execScript', () => {
     loggerInfoMock = mock.method(logger, 'info', () => {}).mock;
     loggerErrorMock = mock.method(logger, 'error', () => {}).mock;
     loggerAddLogContextMock = mock.method(logger, 'addLogContext', () => {}).mock;
+    utilService = new UtilService();
+    runScriptCommandService = new RunScriptCommandService(utilService);
   });
 
   afterEach(() => {
@@ -45,7 +50,7 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await execScript({ name: 'my-script' }, [], services, logger);
+    await runScriptCommandService.execScript({ name: 'my-script' }, [], services, logger);
 
     strictEqual(loggerAddLogContextMock.callCount(), 1);
 
@@ -57,7 +62,7 @@ describe('execScript', () => {
   });
 
   it('should log a suitable message if build/scripts/my-script.js and src/scripts/my-script.ts do not exist.', async () => {
-    await execScript({ name: 'my-script' }, [], services, logger);
+    await runScriptCommandService.execScript({ name: 'my-script' }, [], services, logger);
     strictEqual(loggerErrorMock.callCount(), 1);
 
     const actual = loggerErrorMock.calls[0].arguments[0];
@@ -71,7 +76,7 @@ describe('execScript', () => {
     mkdirIfDoesNotExist('src/scripts');
     writeFileSync('src/scripts/my-script.ts', '', 'utf8');
 
-    await execScript({ name: 'my-script' }, [], services, logger);
+    await runScriptCommandService.execScript({ name: 'my-script' }, [], services, logger);
 
     strictEqual(loggerErrorMock.callCount(), 1);
 
@@ -87,7 +92,7 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await execScript({ name: 'my-script' }, [], services, logger);
+    await runScriptCommandService.execScript({ name: 'my-script' }, [], services, logger);
 
     strictEqual(loggerErrorMock.callCount(), 1);
 
@@ -108,7 +113,7 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await execScript({ name: 'my-script' }, [
+    await runScriptCommandService.execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
@@ -137,7 +142,7 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await execScript({ name: 'my-script' }, [
+    await runScriptCommandService.execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
@@ -172,7 +177,7 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await execScript({ name: 'my-script' }, [
+    await runScriptCommandService.execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
@@ -205,7 +210,7 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await execScript({ name: 'my-script' }, [
+    await runScriptCommandService.execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
@@ -237,7 +242,7 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await execScript({ name: 'my-script' }, [
+    await runScriptCommandService.execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
@@ -265,7 +270,7 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await execScript({ name: 'my-script' }, [
+    await runScriptCommandService.execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
@@ -295,7 +300,7 @@ describe('execScript', () => {
 
     delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-    await execScript({ name: 'my-script' }, [
+    await runScriptCommandService.execScript({ name: 'my-script' }, [
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
       '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
       'run',
@@ -324,7 +329,7 @@ describe('execScript', () => {
 
       delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-      await execScript({ name: 'my-script' }, [
+      await runScriptCommandService.execScript({ name: 'my-script' }, [
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
         'run',
@@ -347,7 +352,7 @@ describe('execScript', () => {
 
       delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-      await execScript({ name: 'my-script' }, [
+      await runScriptCommandService.execScript({ name: 'my-script' }, [
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
         'run',
@@ -369,7 +374,7 @@ describe('execScript', () => {
 
       delete require.cache[join(process.cwd(), `./build/scripts/my-script.js`)];
 
-      await execScript({ name: 'my-script' }, [
+      await runScriptCommandService.execScript({ name: 'my-script' }, [
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/node',
         '/Users/loicpoullain/.nvm/versions/node/v8.11.3/bin/foal',
         'run',
@@ -380,3 +385,4 @@ describe('execScript', () => {
     });
   });
 });
+

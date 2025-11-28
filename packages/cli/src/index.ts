@@ -25,9 +25,8 @@ import {
 } from './generate';
 import { ClientError } from './generate/file-system';
 import { rmdir } from './rmdir';
-import { runScript } from './run';
-import { CreateSecretCommandService } from './commands';
-import { CryptoService, LoggerService } from './services';
+import { CreateSecretCommandService, RunScriptCommandService } from './commands';
+import { CryptoService, LoggerService, UtilService } from './services';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -74,8 +73,10 @@ program
   .command('run')
   .argument('<name>', 'Name of the script to run')
   .description('Run a shell script.')
-  .action((name: string) => {
-    runScript({ name }, process.argv);
+  .action(async (name: string) => {
+    const utilService = new UtilService();
+    const runScriptCommandService = new RunScriptCommandService(utilService);
+    await runScriptCommandService.run(name, process.argv);
   });
 
 program
