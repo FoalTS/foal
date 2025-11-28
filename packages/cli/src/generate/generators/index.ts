@@ -1,4 +1,3 @@
-export * from './angular';
 export * from './app';
 export * from './controller';
 export * from './entity';

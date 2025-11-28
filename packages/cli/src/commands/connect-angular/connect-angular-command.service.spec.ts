@@ -1,12 +1,17 @@
-import { FileSystem } from '../../../services';
-import { connectAngular } from './connect-angular';
+import { FileSystem } from '../../services';
+import { ConnectAngularCommandService } from './connect-angular-command.service';
 
 // TODO: To improve: make the tests (more) independent from each other.
-describe('connectAngular', () => {
+describe('ConnectAngularCommandService', () => {
 
   const fs = new FileSystem();
+  let service: ConnectAngularCommandService;
 
-  beforeEach(() => fs.setUp());
+  beforeEach(() => {
+    fs.setUp();
+    const fileSystem = new FileSystem();
+    service = new ConnectAngularCommandService(fileSystem);
+  });
 
   afterEach(() => fs.tearDown());
 
@@ -16,14 +21,14 @@ describe('connectAngular', () => {
       .copyFixture('angular/angular.json', 'connector-test/angular/angular.json')
       .copyFixture('angular/package.json', 'connector-test/angular/package.json');
 
-    connectAngular('./connector-test/angular');
+    service.run('./connector-test/angular');
 
     fs
       .assertEqual('connector-test/angular/src/proxy.conf.json', 'angular/proxy.conf.json');
   });
 
   it('should not throw if the path does not exist.', () => {
-    connectAngular('somewhere-that-does-not-exist');
+    service.run('somewhere-that-does-not-exist');
   });
 
   it('should update angular.json with the proxy file and the output dir.', () => {
@@ -32,7 +37,7 @@ describe('connectAngular', () => {
       .copyFixture('angular/angular.json', 'connector-test/angular/angular.json')
       .copyFixture('angular/package.json', 'connector-test/angular/package.json');
 
-    connectAngular('./connector-test/angular');
+    service.run('./connector-test/angular');
 
     fs
       .assertEqual('connector-test/angular/angular.json', 'angular/angular.json');
@@ -44,7 +49,7 @@ describe('connectAngular', () => {
       .copyFixture('angular/angular.empty.json', 'connector-test/angular/angular.json')
       .copyFixture('angular/package.json', 'connector-test/angular/package.json');
 
-    connectAngular('./connector-test/angular');
+    service.run('./connector-test/angular');
 
     fs
       .assertEqual('connector-test/angular/angular.json', 'angular/angular.empty.json');
@@ -54,7 +59,7 @@ describe('connectAngular', () => {
     fs
       .ensureDir('connector-test/angular/src');
 
-    connectAngular('./connector-test/angular');
+    service.run('./connector-test/angular');
   });
 
   it('should update package.json with the "--prod" flag.', () => {
@@ -63,7 +68,7 @@ describe('connectAngular', () => {
       .copyFixture('angular/angular.json', 'connector-test/angular/angular.json')
       .copyFixture('angular/package.json', 'connector-test/angular/package.json');
 
-    connectAngular('./connector-test/angular');
+    service.run('./connector-test/angular');
 
     fs
       .assertEqual('connector-test/angular/package.json', 'angular/package.json');
@@ -73,7 +78,8 @@ describe('connectAngular', () => {
     fs
       .ensureDir('connector-test/angular/src');
 
-    connectAngular('./connector-test/angular');
+    service.run('./connector-test/angular');
   });
 
 });
+

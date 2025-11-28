@@ -11,7 +11,6 @@ import { program } from 'commander';
 
 // FoalTS
 import {
-  connectAngular,
   connectReact,
   connectVue,
   createApp,
@@ -23,8 +22,8 @@ import {
   createService,
   upgrade,
 } from './generate';
-import { ClientError, CryptoService, LoggerService, UtilService } from './services';
-import { CreateSecretCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
+import { ClientError, CryptoService, FileSystem, LoggerService, UtilService } from './services';
+import { ConnectAngularCommandService, CreateSecretCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -91,7 +90,9 @@ Available frameworks:
   .action(async (framework: string, path: string) => {
     switch (framework) {
       case 'angular':
-        connectAngular(path);
+        const fileSystem = new FileSystem();
+        const connectAngularCommandService = new ConnectAngularCommandService(fileSystem);
+        connectAngularCommandService.run(path);
         break;
       case 'react':
         connectReact(path);
