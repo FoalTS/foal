@@ -1,16 +1,16 @@
 // FoalTS
-import { FileSystem } from '../../services';
-import { CreateServiceCommandService } from './create-service-command.service';
+import { FileSystem } from '../../../services';
+import { CreateHookCommandService } from './create-hook-command.service';
 
-describe('CreateServiceCommandService', () => {
+describe('CreateHookCommandService', () => {
 
   const fs = new FileSystem();
-  let service: CreateServiceCommandService;
+  let service: CreateHookCommandService;
 
   beforeEach(() => {
     fs.setUp();
     const fileSystem = new FileSystem();
-    service = new CreateServiceCommandService(fileSystem);
+    service = new CreateHookCommandService(fileSystem);
   });
 
   afterEach(() => fs.tearDown());
@@ -23,22 +23,22 @@ describe('CreateServiceCommandService', () => {
         fs
           .ensureDir(root)
           .cd(root)
-          .copyFixture('service/index.ts', 'index.ts');
+          .copyFixture('hook/index.ts', 'index.ts');
       });
 
-      it('should render the empty templates in the proper directory.', () => {
+      it('should render the templates in the proper directory.', () => {
         service.run({ name: 'test-fooBar' });
 
         fs
-          .assertEqual('test-foo-bar.service.ts', 'service/test-foo-bar.service.empty.ts')
-          .assertEqual('index.ts', 'service/index.ts');
+          .assertEqual('test-foo-bar.hook.ts', 'hook/test-foo-bar.hook.ts')
+          .assertEqual('index.ts', 'hook/index.ts');
       });
 
       it('should create the directory if it does not exist.', () => {
         service.run({ name: 'barfoo/hello/test-fooBar' });
 
         fs
-          .assertExists('barfoo/hello/test-foo-bar.service.ts');
+          .assertExists('barfoo/hello/test-foo-bar.hook.ts');
       });
 
       it('should create index.ts if it does not exist.', () => {
@@ -53,8 +53,8 @@ describe('CreateServiceCommandService', () => {
 
   }
 
-  test('src/app/services');
-  test('services');
+  test('src/app/hooks');
+  test('hooks');
   test('');
 
 });

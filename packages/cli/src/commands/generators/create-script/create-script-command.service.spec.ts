@@ -1,5 +1,5 @@
 // FoalTS
-import { FileSystem } from '../../services';
+import { FileSystem } from '../../../services';
 import { CreateScriptCommandService } from './create-script-command.service';
 
 describe('CreateScriptCommandService', () => {

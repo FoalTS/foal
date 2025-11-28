@@ -2,7 +2,7 @@
 import { throws } from 'assert';
 
 // FoalTS
-import { ClientError, FileSystem } from '../../services';
+import { ClientError, FileSystem } from '../../../services';
 import { CreateControllerCommandService } from './create-controller-command.service';
 
 describe('CreateControllerCommandService', () => {

@@ -1,5 +1,5 @@
 // FoalTS
-import { FileSystem } from '../../services';
+import { FileSystem } from '../../../services';
 import { CreateEntityCommandService } from './create-entity-command.service';
 
 describe('CreateEntityCommandService', () => {

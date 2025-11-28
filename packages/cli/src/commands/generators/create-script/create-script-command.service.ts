@@ -1,6 +1,6 @@
 // FoalTS
-import { FileSystem } from '../../services';
-import { getNames } from '../../generate/utils';
+import { FileSystem } from '../../../services';
+import { getNames } from '../../../generate/utils';
 
 /**
  * Service for creating a new script file.

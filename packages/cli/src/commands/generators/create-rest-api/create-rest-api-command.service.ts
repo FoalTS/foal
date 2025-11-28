@@ -5,8 +5,8 @@ import { basename, dirname } from 'path';
 import { underline } from 'colors/safe';
 
 // FoalTS
-import { ClientError, FileSystem } from '../../services';
-import { getNames } from '../../generate/utils';
+import { ClientError, FileSystem } from '../../../services';
+import { getNames } from '../../../generate/utils';
 
 /**
  * Service for creating a new REST API endpoint (entity and controller).

@@ -2,13 +2,13 @@
 import { red } from 'colors/safe';
 
 // FoalTS
-import { FileSystem } from '../../services';
+import { FileSystem } from '../../../services';
 import {
   getNames,
   initGitRepo,
   logger,
   installDependencies,
-} from '../../generate/utils';
+} from '../../../generate/utils';
 
 /**
  * Service for creating a new FoalTS application.

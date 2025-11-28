@@ -1,5 +1,5 @@
 // FoalTS
-import { FileSystem } from '../../services';
+import { FileSystem } from '../../../services';
 import { CreateAppCommandService } from './create-app-command.service';
 
 describe('CreateAppCommandService', () => {
