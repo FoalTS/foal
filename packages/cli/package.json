@@ -2,8 +2,8 @@
   "name": "@foal/cli",
   "version": "5.1.1",
   "description": "CLI tool for FoalTS",
-  "main": "./lib/cli.js",
-  "types": "./lib/cli.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "test": "rimraf lib && tsc -p tsconfig.json && mocha --file \"./lib/test.js\" \"./lib/**/*.spec.js\"",
     "dev:test:commands": "mocha --file \"./src/test.ts\" --require ts-node/register --watch --extension ts \"./src/commands/**/*.spec.ts\"",

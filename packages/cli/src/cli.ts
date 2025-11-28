@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * FoalTS
  * Copyright(c) 2017-2025 Loïc Poullain
