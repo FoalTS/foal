@@ -1,7 +1,7 @@
 import { join, relative } from 'path';
 
 import { red } from 'colors/safe';
-import { FileSystem } from '../../file-system';
+import { FileSystem } from '../../../services';
 
 export function connectReact(path: string) {
   const fs = new FileSystem();

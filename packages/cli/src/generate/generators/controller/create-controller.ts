@@ -2,7 +2,7 @@
 import { basename, dirname } from 'path';
 
 // FoalTS
-import { FileSystem } from '../../file-system';
+import { FileSystem } from '../../../services';
 import { getNames } from '../../utils';
 
 export function createController({ name, register }: { name: string, register: boolean }) {

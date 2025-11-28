@@ -1,5 +1,5 @@
 // FoalTS
-import { FileSystem } from '../../file-system';
+import { FileSystem } from '../../../services';
 import { installDependencies, logger } from '../../utils';
 
 async function getLatestVersion(): Promise<string> {

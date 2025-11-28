@@ -23,9 +23,8 @@ import {
   createService,
   upgrade,
 } from './generate';
-import { ClientError } from './generate/file-system';
+import { ClientError, CryptoService, LoggerService, UtilService } from './services';
 import { CreateSecretCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
-import { CryptoService, LoggerService, UtilService } from './services';
 
 function displayError(...lines: string[]): void {
   console.error();

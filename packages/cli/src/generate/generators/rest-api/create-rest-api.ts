@@ -5,7 +5,7 @@ import { basename, dirname } from 'path';
 import { underline } from 'colors/safe';
 
 // FoalTS
-import { ClientError, FileSystem } from '../../file-system';
+import { ClientError, FileSystem } from '../../../services';
 import { getNames } from '../../utils';
 
 export function createRestApi({ name, register, auth }: { name: string, register: boolean, auth?: boolean }) {

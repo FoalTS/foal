@@ -1,4 +1,4 @@
-import { FileSystem } from '../../file-system';
+import { FileSystem } from '../../../services';
 import { connectAngular } from './connect-angular';
 
 // TODO: To improve: make the tests (more) independent from each other.

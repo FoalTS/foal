@@ -1,4 +1,4 @@
-import { FileSystem } from '../../file-system';
+import { FileSystem } from '../../../services';
 import { connectVue } from './connect-vue';
 
 describe('connectVue', () => {

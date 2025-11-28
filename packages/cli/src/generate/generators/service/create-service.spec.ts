@@ -1,5 +1,5 @@
 // FoalTS
-import { FileSystem } from '../../file-system';
+import { FileSystem } from '../../../services';
 import { createService } from './create-service';
 
 describe('createService', () => {

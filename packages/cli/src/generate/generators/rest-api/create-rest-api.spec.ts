@@ -2,7 +2,7 @@
 import { throws } from 'assert';
 
 // FoalTS
-import { ClientError, FileSystem } from '../../file-system';
+import { ClientError, FileSystem } from '../../../services';
 import { createRestApi } from './create-rest-api';
 
 describe('createRestApi', () => {

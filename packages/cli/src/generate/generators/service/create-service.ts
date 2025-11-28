@@ -1,6 +1,6 @@
 // FoalTS
 import { basename, dirname } from 'path';
-import { FileSystem } from '../../file-system';
+import { FileSystem } from '../../../services';
 import { getNames } from '../../utils';
 
 export function createService({ name }: { name: string }) {

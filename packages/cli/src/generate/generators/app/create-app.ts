@@ -2,7 +2,7 @@
 import { red } from 'colors/safe';
 
 // FoalTS
-import { FileSystem } from '../../file-system';
+import { FileSystem } from '../../../services';
 import {
   getNames,
   initGitRepo,
