@@ -12,7 +12,6 @@ import { program } from 'commander';
 // FoalTS
 import {
   connectReact,
-  connectVue,
   createApp,
   createController,
   createEntity,
@@ -23,7 +22,7 @@ import {
   upgrade,
 } from './generate';
 import { ClientError, CryptoService, FileSystem, LoggerService, UtilService } from './services';
-import { ConnectAngularCommandService, CreateSecretCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
+import { ConnectAngularCommandService, ConnectVueCommandService, CreateSecretCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -98,7 +97,9 @@ Available frameworks:
         connectReact(path);
         break;
       case 'vue':
-        connectVue(path);
+        const vueFileSystem = new FileSystem();
+        const connectVueCommandService = new ConnectVueCommandService(vueFileSystem);
+        connectVueCommandService.run(path);
         break;
       default:
         displayError(

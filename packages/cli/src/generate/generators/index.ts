@@ -7,4 +7,3 @@ export * from './rest-api';
 export * from './script';
 export * from './service';
 export * from './upgrade';
-export * from './vue';
