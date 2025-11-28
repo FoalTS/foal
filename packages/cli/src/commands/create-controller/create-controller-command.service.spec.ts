@@ -2,14 +2,19 @@
 import { throws } from 'assert';
 
 // FoalTS
-import { ClientError, FileSystem } from '../../../services';
-import { createController } from './create-controller';
+import { ClientError, FileSystem } from '../../services';
+import { CreateControllerCommandService } from './create-controller-command.service';
 
-describe('createController', () => {
+describe('CreateControllerCommandService', () => {
 
   const fs = new FileSystem();
+  let service: CreateControllerCommandService;
 
-  beforeEach(() => fs.setUp());
+  beforeEach(() => {
+    fs.setUp();
+    const fileSystem = new FileSystem();
+    service = new CreateControllerCommandService(fileSystem);
+  });
 
   afterEach(() => fs.tearDown());
 
@@ -24,7 +29,7 @@ describe('createController', () => {
     context('given the provided name is a not a path', () => {
 
       it('should create in the current directory the controller and its test.', () => {
-        createController({ name: 'test-fooBar', register: false });
+        service.run({ name: 'test-fooBar', register: false });
 
         fs
           .assertEqual('test-foo-bar.controller.ts', 'controller/test-foo-bar.controller.empty.ts')
@@ -35,7 +40,7 @@ describe('createController', () => {
         'should create in the current directory an index.ts file if it does not exist '
         + 'and export the controller.',
         () => {
-          createController({ name: 'test-fooBar', register: false });
+          service.run({ name: 'test-fooBar', register: false });
 
           fs
             .assertEqual('index.ts', 'controller/index.empty.ts');
@@ -46,7 +51,7 @@ describe('createController', () => {
         fs
           .copyFixture('controller/index.ts', 'index.ts');
 
-        createController({ name: 'test-fooBar', register: false });
+        service.run({ name: 'test-fooBar', register: false });
 
         fs
           .assertEqual('index.ts', 'controller/index.ts');
@@ -59,7 +64,7 @@ describe('createController', () => {
             .cd('..')
             .copyFixture('controller/app.controller.ts', 'app.controller.ts');
 
-          createController({ name: 'test-fooBar', register: false });
+          service.run({ name: 'test-fooBar', register: false });
 
           fs
             .assertEqual('app.controller.ts', 'controller/app.controller.not-modified.ts');
@@ -71,7 +76,7 @@ describe('createController', () => {
 
         it('should throw a ClientError if the file app.controller.ts does not exist in the parent directory.', () => {
           throws(
-            () => createController({ name: 'test-fooBar', register: true }),
+            () => service.run({ name: 'test-fooBar', register: true }),
             new ClientError('Impossible to modify "app.controller.ts": the file does not exist.')
           );
         });
@@ -81,7 +86,7 @@ describe('createController', () => {
             .cd('..')
             .copyFixture('controller/app.controller.ts', 'app.controller.ts');
 
-          createController({ name: 'test-fooBar', register: true });
+          service.run({ name: 'test-fooBar', register: true });
 
           fs
             .assertEqual('app.controller.ts', 'controller/app.controller.ts');
@@ -94,14 +99,14 @@ describe('createController', () => {
     context('given the provided name is a path', () => {
 
       it('should create the sub-directories if they do not exist.', () => {
-        createController({ name: 'barfoo/api/test-fooBar', register: false });
+        service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
         fs
           .assertExists('barfoo/api');
       });
 
       it('should create in the sub-directories the controller and its test.', () => {
-        createController({ name: 'barfoo/api/test-fooBar', register: false });
+        service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
         fs
           .cd('barfoo/api')
@@ -113,7 +118,7 @@ describe('createController', () => {
         'should create in the sub-directories an index.ts file if it does not exist '
         + 'and export the controller.',
         () => {
-          createController({ name: 'barfoo/api/test-fooBar', register: false });
+          service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
           fs
             .cd('barfoo/api')
@@ -127,7 +132,7 @@ describe('createController', () => {
           .cd('barfoo/api')
           .copyFixture('controller/index.ts', 'index.ts');
 
-        createController({ name: 'barfoo/api/test-fooBar', register: false });
+        service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
         fs
           .assertEqual('index.ts', 'controller/index.ts');
@@ -141,7 +146,7 @@ describe('createController', () => {
             .cd('barfoo')
             .copyFixture('controller/api.controller.ts', 'api.controller.ts');
 
-          createController({ name: 'barfoo/api/test-fooBar', register: false });
+          service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
           fs
             .assertEqual('api.controller.ts', 'controller/api.controller.not-modified.ts');
@@ -156,7 +161,7 @@ describe('createController', () => {
           + 'in the last sub-directory xxx.',
           () => {
             throws(
-              () => createController({ name: 'barfoo/api/test-fooBar', register: true }),
+              () => service.run({ name: 'barfoo/api/test-fooBar', register: true }),
               new ClientError('Impossible to modify "api.controller.ts": the file does not exist.')
             );
           }
@@ -171,7 +176,7 @@ describe('createController', () => {
               .cd('barfoo')
               .copyFixture('controller/api.controller.ts', 'api.controller.ts');
 
-            createController({ name: 'barfoo/api/test-fooBar', register: true });
+            service.run({ name: 'barfoo/api/test-fooBar', register: true });
 
             fs
               .assertEqual('api.controller.ts', 'controller/api.controller.ts');
@@ -197,3 +202,4 @@ describe('createController', () => {
   });
 
 });
+
