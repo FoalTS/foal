@@ -1,25 +1,30 @@
 // FoalTS
-import { FileSystem } from '../../../services';
-import { createApp } from './create-app';
+import { FileSystem } from '../../services';
+import { CreateAppCommandService } from './create-app-command.service';
 
-describe('createApp', () => {
+describe('CreateAppCommandService', () => {
 
   const fs = new FileSystem();
+  let service: CreateAppCommandService;
 
-  beforeEach(() => fs.setUp());
+  beforeEach(() => {
+    fs.setUp();
+    const fileSystem = new FileSystem();
+    service = new CreateAppCommandService(fileSystem);
+  });
 
   afterEach(() => fs.tearDown());
 
   it('should abort the project creation if a directory already exists.', async () => {
     fs.ensureDir('test-foo-bar');
 
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs.assertEmptyDir('test-foo-bar');
   });
 
   it('should render the config templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/config')
@@ -36,7 +41,7 @@ describe('createApp', () => {
   });
 
   it('should render the config templates (YAML option).', async () => {
-    await createApp({ name: 'test-fooBar', yaml: true });
+    await service.run({ name: 'test-fooBar', yaml: true });
 
     fs
       .cd('test-foo-bar/config')
@@ -53,7 +58,7 @@ describe('createApp', () => {
   });
 
   it('should render the config templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true });
+    await service.run({ name: 'test-fooBar', mongodb: true });
 
     fs
       .cd('test-foo-bar/config')
@@ -70,7 +75,7 @@ describe('createApp', () => {
   });
 
   it('should render the config templates (MongoDB & YAML options).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true, yaml: true });
+    await service.run({ name: 'test-fooBar', mongodb: true, yaml: true });
 
     fs
       .cd('test-foo-bar/config')
@@ -87,7 +92,7 @@ describe('createApp', () => {
   });
 
   it('should copy the public directory.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/public')
@@ -96,7 +101,7 @@ describe('createApp', () => {
   });
 
   it('shoud copy the src/e2e templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/src/e2e')
@@ -104,7 +109,7 @@ describe('createApp', () => {
   });
 
   it('shoud copy the src/scripts templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/src/scripts')
@@ -112,7 +117,7 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/controllers templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/src/app/controllers')
@@ -122,7 +127,7 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/hooks templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/src/app/hooks')
@@ -130,7 +135,7 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/entities templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/src/app/entities')
@@ -140,7 +145,7 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/entities templates (MongoDB).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true });
+    await service.run({ name: 'test-fooBar', mongodb: true });
 
     fs
       .cd('test-foo-bar/src/app/entities')
@@ -150,7 +155,7 @@ describe('createApp', () => {
   });
 
   it('should render the src/app/services templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/src/app/services')
@@ -158,7 +163,7 @@ describe('createApp', () => {
  });
 
   it('should render the src/app templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/src/app')
@@ -166,7 +171,7 @@ describe('createApp', () => {
   });
 
   it('should render the src templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar/src')
@@ -177,7 +182,7 @@ describe('createApp', () => {
   });
 
   it('should render the root templates.', async () => {
-    await createApp({ name: 'test-fooBar' });
+    await service.run({ name: 'test-fooBar' });
 
     fs
       .cd('test-foo-bar')
@@ -191,7 +196,7 @@ describe('createApp', () => {
       .assertEqual('.eslintrc.js', 'app/.eslintrc.js');
   });
   it('should render the root templates (YAML option).', async () => {
-    await createApp({ name: 'test-fooBar', yaml: true });
+    await service.run({ name: 'test-fooBar', yaml: true });
 
     fs
       .cd('test-foo-bar')
@@ -206,7 +211,7 @@ describe('createApp', () => {
   });
 
   it('should render the root templates (MongoDB option).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true });
+    await service.run({ name: 'test-fooBar', mongodb: true });
 
     fs
       .cd('test-foo-bar')
@@ -221,7 +226,7 @@ describe('createApp', () => {
   });
 
   it('should render the root templates (MongoDB & YAML options).', async () => {
-    await createApp({ name: 'test-fooBar', mongodb: true, yaml: true });
+    await service.run({ name: 'test-fooBar', mongodb: true, yaml: true });
 
     fs
       .cd('test-foo-bar')
@@ -236,3 +241,4 @@ describe('createApp', () => {
   });
 
 });
+

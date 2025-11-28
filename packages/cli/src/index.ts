@@ -11,11 +11,10 @@ import { program } from 'commander';
 
 // FoalTS
 import {
-  createApp,
   upgrade,
 } from './generate';
 import { ClientError, CryptoService, FileSystem, LoggerService, UtilService } from './services';
-import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateSecretCommandService, CreateControllerCommandService, CreateEntityCommandService, CreateHookCommandService, CreateRestApiCommandService, CreateScriptCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
+import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateAppCommandService, CreateSecretCommandService, CreateControllerCommandService, CreateEntityCommandService, CreateHookCommandService, CreateRestApiCommandService, CreateScriptCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService } from './commands';
 
 function displayError(...lines: string[]): void {
   console.error();
@@ -38,8 +37,10 @@ program
   .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
   .option('-m, --mongodb', 'Generate a new project using MongoDB instead of SQLite', false)
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON', false)
-  .action((name: string, options: { git: boolean, install: boolean, mongodb: boolean, yaml: boolean }) => {
-    createApp({
+  .action(async (name: string, options: { git: boolean, install: boolean, mongodb: boolean, yaml: boolean }) => {
+    const fileSystem = new FileSystem();
+    const createAppCommandService = new CreateAppCommandService(fileSystem);
+    await createAppCommandService.run({
       autoInstall: options.install,
       initRepo: options.git,
       mongodb: options.mongodb,
