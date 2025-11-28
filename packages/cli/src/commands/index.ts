@@ -2,6 +2,7 @@ export { ConnectAngularCommandService } from './connect-angular';
 export { ConnectReactCommandService } from './connect-react';
 export { ConnectVueCommandService } from './connect-vue';
 export { CreateSecretCommandService } from './create-secret';
+export { CreateScriptCommandService } from './create-script';
 export { CreateServiceCommandService } from './create-service';
 export { RmdirCommandService } from './rmdir';
 export { RunScriptCommandService } from './run-script';
