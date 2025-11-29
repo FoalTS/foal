@@ -1,6 +1,6 @@
 // FoalTS
 import { basename, dirname } from 'path';
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 import { getNames } from '../utils';
 
 /**
@@ -8,7 +8,7 @@ import { getNames } from '../utils';
  */
 export class CreateServiceCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -19,16 +19,16 @@ export class CreateServiceCommandService {
    */
   run({ name }: { name: string }): void {
     let root = '';
-    if (this.fileSystem.exists('src/app/services')) {
+    if (this.generator.exists('src/app/services')) {
       root = 'src/app/services';
-    } else if (this.fileSystem.exists('services')) {
+    } else if (this.generator.exists('services')) {
       root = 'services';
     }
 
     const names = getNames(basename(name));
     const subdir = dirname(name);
 
-    this.fileSystem
+    this.generator
       .cd(root)
       .ensureDir(subdir)
       .cd(subdir)

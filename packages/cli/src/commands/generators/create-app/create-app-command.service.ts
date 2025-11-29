@@ -2,7 +2,7 @@
 import { red } from 'colors/safe';
 
 // FoalTS
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 import {
   getNames,
   initGitRepo,
@@ -15,7 +15,7 @@ import {
  */
 export class CreateAppCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -43,21 +43,21 @@ export class CreateAppCommandService {
 
     const locals = names;
 
-    if (this.fileSystem.exists(names.kebabName)) {
+    if (this.generator.exists(names.kebabName)) {
       logger.log(red('  Error: ') + `The target directory "${names.kebabName}" already exists.`);
       logger.log('Please remove it before proceeding.');
       logger.log();
       return;
     }
 
-    this.fileSystem
+    this.generator
       .ensureDir(names.kebabName)
       .cd(names.kebabName);
 
     logger.log('  📂 Creating files...');
     logger.log();
 
-    this.fileSystem
+    this.generator
       .hideLogs()
       .copy('app/gitignore', '.gitignore')
       .renderOnlyIf(!mongodb, 'app/package.json', 'package.json', locals)

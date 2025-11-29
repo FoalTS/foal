@@ -1,14 +1,14 @@
 import { join, relative } from 'path';
 
 import { red } from 'colors/safe';
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 
 /**
  * Service for connecting an Angular frontend to a FoalTS application.
  */
 export class ConnectAngularCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -18,28 +18,28 @@ export class ConnectAngularCommandService {
    * @returns {void}
    */
   run(path: string): void {
-    if (!this.fileSystem.exists(path)) {
+    if (!this.generator.exists(path)) {
       if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
         console.log(red(`  The directory ${path} does not exist.`));
       }
       return;
     }
 
-    if (!this.fileSystem.exists(join(path, 'angular.json'))) {
+    if (!this.generator.exists(join(path, 'angular.json'))) {
       if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
         console.log(red(`  The directory ${path} is not an Angular project (missing angular.json).`));
       }
       return;
     }
 
-    if (!this.fileSystem.exists(join(path, 'package.json'))) {
+    if (!this.generator.exists(join(path, 'package.json'))) {
       if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
         console.log(red(`  The directory ${path} is not an Angular project (missing package.json).`));
       }
       return;
     }
 
-    this.fileSystem
+    this.generator
       .cd(path)
       .copy('angular/proxy.conf.json', 'src/proxy.conf.json')
       .modify('package.json', content => {

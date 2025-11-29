@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readFileSync, rmdirSync, unlinkSync, writeFileSy
 import { join } from 'path';
 
 // FoalTS
-import { ClientError, FileSystem } from './file-system';
+import { ClientError, Generator } from './generator';
 
 function rmdir(path: string) {
   if (existsSync(path)) {
@@ -36,20 +36,20 @@ describe('ClientError', () => {
 
 });
 
-describe('FileSystem', () => {
+describe('Generator', () => {
 
-  let fs: FileSystem;
+  let generator: Generator;
 
-  beforeEach(() => fs = new FileSystem());
+  beforeEach(() => generator = new Generator());
 
   describe('has a "cd" method that', () => {
 
     it('should change the current directory.', () => {
-      strictEqual(fs.currentDir, '');
-      fs.cd('foobar/foo');
-      strictEqual(fs.currentDir.replace(/\\/g, '/'), 'foobar/foo');
-      fs.cd('../bar');
-      strictEqual(fs.currentDir.replace(/\\/g, '/'), 'foobar/bar');
+      strictEqual(generator.currentDir, '');
+      generator.cd('foobar/foo');
+      strictEqual(generator.currentDir.replace(/\\/g, '/'), 'foobar/foo');
+      generator.cd('../bar');
+      strictEqual(generator.currentDir.replace(/\\/g, '/'), 'foobar/bar');
     });
 
   });
@@ -97,9 +97,9 @@ describe('FileSystem', () => {
         }),
         'utf8'
       );
-      fs.cd('foo/bar');
-      fs.cdProjectRootDir();
-      strictEqual(fs.currentDir, '.');
+      generator.cd('foo/bar');
+      generator.cdProjectRootDir();
+      strictEqual(generator.currentDir, '.');
     });
 
     it('should throw a ClienError if the package.json is not a valid JSON.', () => {
@@ -109,9 +109,9 @@ describe('FileSystem', () => {
         'utf8'
       );
 
-      fs.cd('foo/bar');
+      generator.cd('foo/bar');
       try {
-        fs.cdProjectRootDir();
+        generator.cdProjectRootDir();
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         if (!(error instanceof ClientError)) {
@@ -132,9 +132,9 @@ describe('FileSystem', () => {
         'utf8'
       );
 
-      fs.cd('foo/bar');
+      generator.cd('foo/bar');
       try {
-        fs.cdProjectRootDir();
+        generator.cdProjectRootDir();
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         if (!(error instanceof ClientError)) {
@@ -156,9 +156,9 @@ describe('FileSystem', () => {
         'utf8'
       );
 
-      fs.cd('foo/bar');
+      generator.cd('foo/bar');
       try {
-        fs.cdProjectRootDir();
+        generator.cdProjectRootDir();
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         if (!(error instanceof ClientError)) {
@@ -172,9 +172,9 @@ describe('FileSystem', () => {
     });
 
     it('should throw a ClientError if no package.json is found.', () => {
-      fs.cd('foo/bar');
+      generator.cd('foo/bar');
       try {
-        fs.cdProjectRootDir();
+        generator.cdProjectRootDir();
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         if (!(error instanceof ClientError)) {
@@ -204,11 +204,11 @@ describe('FileSystem', () => {
     });
 
     it('should return true if the file or directory exists.', () => {
-      strictEqual(fs.exists('foo.txt'), true);
+      strictEqual(generator.exists('foo.txt'), true);
     });
 
     it('should return true if the file or directory does not exist.', () => {
-      strictEqual(fs.exists('bar.txt'), false);
+      strictEqual(generator.exists('bar.txt'), false);
     });
 
   });
@@ -231,18 +231,18 @@ describe('FileSystem', () => {
     });
 
     it('should create the directory if it does not exist.', () => {
-      fs.ensureDir('bar');
+      generator.ensureDir('bar');
       if (!existsSync('test-generators/subdir/bar')) {
         throw new Error('The directory "bar" does not exist.');
       }
     });
 
     it('should not throw if the directory already exists.', () => {
-      fs.ensureDir('foo');
+      generator.ensureDir('foo');
     });
 
     it('should create all intermediate directories.', () => {
-      fs.ensureDir('bar/foo/foobar');
+      generator.ensureDir('bar/foo/foobar');
       if (!existsSync('test-generators/subdir/bar/foo/foobar')) {
         throw new Error('The directory "bar/foo/foobar" does not exist.');
       }
@@ -264,14 +264,14 @@ describe('FileSystem', () => {
     });
 
     it('should create the directory if the condition is true.', () => {
-      fs.ensureDirOnlyIf(true, 'foo');
+      generator.ensureDirOnlyIf(true, 'foo');
       if (!existsSync('test-generators/subdir/foo')) {
         throw new Error('The directory "foo" does not exist.');
       }
     });
 
     it('should not create the directory if the condition is false.', () => {
-      fs.ensureDirOnlyIf(false, 'foo');
+      generator.ensureDirOnlyIf(false, 'foo');
       if (existsSync('test-generators/subdir/foo')) {
         throw new Error('The directory "foo" should not exist.');
       }
@@ -295,14 +295,14 @@ describe('FileSystem', () => {
     });
 
     it('should create the file if it does not exist.', () => {
-      fs.ensureFile('bar.txt');
+      generator.ensureFile('bar.txt');
       if (!existsSync('test-generators/subdir/bar.txt')) {
         throw new Error('The file "bar.txt" does not exist.');
       }
     });
 
     it('should not erase the file if it exists.', () => {
-      fs.ensureFile('foo.txt');
+      generator.ensureFile('foo.txt');
       strictEqual(
         readFileSync('test-generators/subdir/foo.txt', 'utf8'),
         'hello'
@@ -333,7 +333,7 @@ describe('FileSystem', () => {
     });
 
     it('should copy the file from the `templates` directory.', () => {
-      fs.copy('test-file-system/tpl.txt', 'hello.txt');
+      generator.copy('test-file-system/tpl.txt', 'hello.txt');
       if (!existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/subdir/hello.txt" does not exist.');
       }
@@ -345,7 +345,7 @@ describe('FileSystem', () => {
 
     it('should throw an error if the file does not exist.', () => {
       try {
-        fs.copy('test-file-system/foobar.txt', 'hello.txt');
+        generator.copy('test-file-system/foobar.txt', 'hello.txt');
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         strictEqual(error.message, 'The template "test-file-system/foobar.txt" does not exist.');
@@ -376,14 +376,14 @@ describe('FileSystem', () => {
     });
 
     it('should copy the file if the condition is true.', () => {
-      fs.copyOnlyIf(true, 'test-file-system/tpl.txt', 'hello.txt');
+      generator.copyOnlyIf(true, 'test-file-system/tpl.txt', 'hello.txt');
       if (!existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/hello.txt" does not exist.');
       }
     });
 
     it('should not copy the file if the condition is false.', () => {
-      fs.copyOnlyIf(false, 'test-file-system/tpl.txt', 'hello.txt');
+      generator.copyOnlyIf(false, 'test-file-system/tpl.txt', 'hello.txt');
       if (existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/subdir/hello.txt" should not exist.');
       }
@@ -413,7 +413,7 @@ describe('FileSystem', () => {
     });
 
     it('should copy and render the template from the `templates` directory.', () => {
-      fs.render('test-file-system/tpl.txt', 'hello.txt', {
+      generator.render('test-file-system/tpl.txt', 'hello.txt', {
         barfoo: 'world',
         foobar: 'hello',
       });
@@ -428,7 +428,7 @@ describe('FileSystem', () => {
 
     it('should throw an error if the template does not exist.', () => {
       try {
-        fs.render('test-file-system/foobar.txt', 'hello.txt', {});
+        generator.render('test-file-system/foobar.txt', 'hello.txt', {});
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         strictEqual(error.message, 'The template "test-file-system/foobar.txt" does not exist.');
@@ -459,14 +459,14 @@ describe('FileSystem', () => {
     });
 
     it('should copy the file if the condition is true.', () => {
-      fs.renderOnlyIf(true, 'test-file-system/tpl.txt', 'hello.txt', {});
+      generator.renderOnlyIf(true, 'test-file-system/tpl.txt', 'hello.txt', {});
       if (!existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/subdir/hello.txt" does not exist.');
       }
     });
 
     it('should not copy the file if the condition is false.', () => {
-      fs.renderOnlyIf(false, 'test-file-system/tpl.txt', 'hello.txt', {});
+      generator.renderOnlyIf(false, 'test-file-system/tpl.txt', 'hello.txt', {});
       if (existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/subdir/hello.txt" should not exist.');
       }
@@ -488,7 +488,7 @@ describe('FileSystem', () => {
     });
 
     it('should modify the file with the given callback.', () => {
-      fs.modify('hello.txt', content => content + ' world!');
+      generator.modify('hello.txt', content => content + ' world!');
       strictEqual(
         readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'hello world!'
@@ -497,7 +497,7 @@ describe('FileSystem', () => {
 
     it('should throw a ClientError if the file does not exist.', () => {
       try {
-        fs.modify('test-file-system/foobar.txt', content => content);
+        generator.modify('test-file-system/foobar.txt', content => content);
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         if (!(error instanceof ClientError)) {
@@ -524,7 +524,7 @@ describe('FileSystem', () => {
     });
 
     it('should modify the file with the given callback if the condition is true.', () => {
-      fs.modifyOnlyfIf(true, 'hello.txt', content => content + ' world!');
+      generator.modifyOnlyfIf(true, 'hello.txt', content => content + ' world!');
       strictEqual(
         readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'hello world!'
@@ -532,7 +532,7 @@ describe('FileSystem', () => {
     });
 
     it('should not modify the file with the given callback if the condition is false.', () => {
-      fs.modifyOnlyfIf(false, 'hello.txt', content => content + ' world!');
+      generator.modifyOnlyfIf(false, 'hello.txt', content => content + ' world!');
       strictEqual(
         readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'hello'
@@ -556,7 +556,7 @@ describe('FileSystem', () => {
     });
 
     it('should add a named import at the bottom of the file.', () => {
-      fs.addNamedExportIn('hello.txt', 'bar', 'bar.txt');
+      generator.addNamedExportIn('hello.txt', 'bar', 'bar.txt');
       strictEqual(
         readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         'export { foo } from \'foo.txt\';\nexport { bar } from \'bar.txt\';\n'
@@ -594,7 +594,7 @@ describe('FileSystem', () => {
     });
 
     it('should add a named import at the beginning of the file if none exists.', () => {
-      fs.addOrExtendNamedImportIn('empty.txt', 'FooController', './controllers/foo.controller.txt');
+      generator.addOrExtendNamedImportIn('empty.txt', 'FooController', './controllers/foo.controller.txt');
       strictEqual(
         readFileSync('test-generators/subdir/empty.txt', 'utf8'),
         'import { FooController } from \'./controllers/foo.controller.txt\';\n'
@@ -604,7 +604,7 @@ describe('FileSystem', () => {
     });
 
     it('should add a named import after all the imports if it does not already exist.', () => {
-      fs.addOrExtendNamedImportIn('hello.txt', 'FooController', './controllers/foo.controller.txt');
+      generator.addOrExtendNamedImportIn('hello.txt', 'FooController', './controllers/foo.controller.txt');
       strictEqual(
         readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         '// 3p\n'
@@ -617,7 +617,7 @@ describe('FileSystem', () => {
     });
 
     it('should extend the named import if it already exists and it does not have the specifier.', () => {
-      fs.addOrExtendNamedImportIn('hello.txt', 'MyController', './bar.txt');
+      generator.addOrExtendNamedImportIn('hello.txt', 'MyController', './bar.txt');
       strictEqual(
         readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         '// 3p\n'
@@ -629,7 +629,7 @@ describe('FileSystem', () => {
     });
 
     it('should not extend the named import if it already exists but it has already the specifier.', () => {
-      fs.addOrExtendNamedImportIn('hello.txt', 'World', './bar.txt');
+      generator.addOrExtendNamedImportIn('hello.txt', 'World', './bar.txt');
       strictEqual(
         readFileSync('test-generators/subdir/hello.txt', 'utf8'),
         '// 3p\n'
@@ -661,7 +661,7 @@ describe('FileSystem', () => {
         'class FooBar {}',
         'utf8'
       );
-      fs.addOrExtendClassArrayPropertyIn(
+      generator.addOrExtendClassArrayPropertyIn(
         'foo.txt',
         'subControllers',
         'controller(\'/api\', ApiController)'
@@ -682,7 +682,7 @@ describe('FileSystem', () => {
         'class FooBar implements IFooBarInterface {}',
         'utf8'
       );
-      fs.addOrExtendClassArrayPropertyIn(
+      generator.addOrExtendClassArrayPropertyIn(
         'foo.txt',
         'subControllers',
         'controller(\'/api\', ApiController)'
@@ -703,7 +703,7 @@ describe('FileSystem', () => {
         'class FooBar {\n\n}',
         'utf8'
       );
-      fs.addOrExtendClassArrayPropertyIn(
+      generator.addOrExtendClassArrayPropertyIn(
         'foo.txt',
         'subControllers',
         'controller(\'/api\', ApiController)'
@@ -727,7 +727,7 @@ describe('FileSystem', () => {
         + '}',
         'utf8'
       );
-      fs.addOrExtendClassArrayPropertyIn(
+      generator.addOrExtendClassArrayPropertyIn(
         'foo.txt',
         'subControllers',
         'controller(\'/api\', ApiController)'
@@ -753,7 +753,7 @@ describe('FileSystem', () => {
         + '}',
         'utf8'
       );
-      fs.addOrExtendClassArrayPropertyIn(
+      generator.addOrExtendClassArrayPropertyIn(
         'foo.txt',
         'subControllers',
         'controller(\'/api\', ApiController)'
@@ -778,7 +778,7 @@ describe('FileSystem', () => {
         + '}',
         'utf8'
       );
-      fs.addOrExtendClassArrayPropertyIn(
+      generator.addOrExtendClassArrayPropertyIn(
         'foo.txt',
         'subControllers',
         'controller(\'/api\', ApiController)'
@@ -804,7 +804,7 @@ describe('FileSystem', () => {
         + '}',
         'utf8'
       );
-      fs.addOrExtendClassArrayPropertyIn(
+      generator.addOrExtendClassArrayPropertyIn(
         'foo.txt',
         'subControllers',
         'controller(\'/api\', ApiController)'
@@ -831,16 +831,16 @@ describe('FileSystem', () => {
     });
 
     it('should create the test client directory.', () => {
-      fs.setUp();
+      generator.setUp();
       if (!existsSync('test-generators/subdir')) {
         throw new Error('The directory "test-generators/subdir" does not exist.');
       }
     });
 
     it('should set the current directory to none.', () => {
-      fs.cd('foobar');
-      fs.setUp();
-      strictEqual(fs.currentDir, '');
+      generator.cd('foobar');
+      generator.setUp();
+      strictEqual(generator.currentDir, '');
     });
 
   });
@@ -868,16 +868,16 @@ describe('FileSystem', () => {
     });
 
     it('should return true if the project has the dependency in its package.json.', () => {
-      strictEqual(fs.projectHasDependency('bar'), true);
+      strictEqual(generator.projectHasDependency('bar'), true);
     });
 
     it('should return false if the project does not have the dependency in its package.json.', () => {
-      strictEqual(fs.projectHasDependency('foo'), false);
+      strictEqual(generator.projectHasDependency('foo'), false);
     });
 
     it('should not change the current working directory.', () => {
-      fs.projectHasDependency('commander');
-      strictEqual(fs.currentDir, '');
+      generator.projectHasDependency('commander');
+      strictEqual(generator.currentDir, '');
     });
 
   });
@@ -906,7 +906,7 @@ describe('FileSystem', () => {
 
     it('should return the project dependencies.', () => {
       deepStrictEqual(
-        fs.getProjectDependencies(),
+        generator.getProjectDependencies(),
         [
           { name: '@foal/core', version: '~1.0.1' },
           { name: 'bar', version: '~2.2.0' }
@@ -915,8 +915,8 @@ describe('FileSystem', () => {
     });
 
     it('should not change the current working directory.', () => {
-      fs.getProjectDependencies();
-      strictEqual(fs.currentDir, '');
+      generator.getProjectDependencies();
+      strictEqual(generator.currentDir, '');
     });
 
   });
@@ -944,11 +944,11 @@ describe('FileSystem', () => {
     });
 
     it('should return itself.', () => {
-      strictEqual(fs.setOrUpdateProjectDependency('foo', '1.0.0'), fs);
+      strictEqual(generator.setOrUpdateProjectDependency('foo', '1.0.0'), generator);
     });
 
     it('should add the dependency if it does not exist.', () => {
-      fs.setOrUpdateProjectDependency('foo', '1.0.0');
+      generator.setOrUpdateProjectDependency('foo', '1.0.0');
 
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
@@ -961,7 +961,7 @@ describe('FileSystem', () => {
     });
 
     it('should update the dependency if it already exists.', () => {
-      fs.setOrUpdateProjectDependency('@foal/core', '2.0.0');
+      generator.setOrUpdateProjectDependency('@foal/core', '2.0.0');
 
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
@@ -998,12 +998,12 @@ describe('FileSystem', () => {
     });
 
     it('should return itself.', () => {
-      strictEqual(fs.setOrUpdateProjectDependency('foo', '1.0.0'), fs);
+      strictEqual(generator.setOrUpdateProjectDependency('foo', '1.0.0'), generator);
     });
 
     context('given the condition is true', () => {
       it('should add the dependency if it does not exist.', () => {
-        fs.setOrUpdateProjectDependencyOnlyIf(true, 'foo', '1.0.0');
+        generator.setOrUpdateProjectDependencyOnlyIf(true, 'foo', '1.0.0');
 
         const fileContent = readFileSync('package.json', 'utf8');
         const pkg = JSON.parse(fileContent);
@@ -1018,7 +1018,7 @@ describe('FileSystem', () => {
 
     context('given the condition is false', () => {
       it('should not add the dependency if it does not exist.', () => {
-        fs.setOrUpdateProjectDependencyOnlyIf(false, 'foo', '1.0.0');
+        generator.setOrUpdateProjectDependencyOnlyIf(false, 'foo', '1.0.0');
 
         const fileContent = readFileSync('package.json', 'utf8');
         const pkg = JSON.parse(fileContent);
@@ -1059,7 +1059,7 @@ describe('FileSystem', () => {
 
     it('should return the project dev dependencies.', () => {
       deepStrictEqual(
-        fs.getProjectDevDependencies(),
+        generator.getProjectDevDependencies(),
         [
           { name: '@foal/cli', version: '~1.0.1' },
           { name: 'bar', version: '~2.2.0' }
@@ -1068,8 +1068,8 @@ describe('FileSystem', () => {
     });
 
     it('should not change the current working directory.', () => {
-      fs.getProjectDevDependencies();
-      strictEqual(fs.currentDir, '');
+      generator.getProjectDevDependencies();
+      strictEqual(generator.currentDir, '');
     });
 
   });
@@ -1100,11 +1100,11 @@ describe('FileSystem', () => {
     });
 
     it('should return itself.', () => {
-      strictEqual(fs.setOrUpdateProjectDevDependency('foo', '1.0.0'), fs);
+      strictEqual(generator.setOrUpdateProjectDevDependency('foo', '1.0.0'), generator);
     });
 
     it('should add the dependency if it does not exist.', () => {
-      fs.setOrUpdateProjectDevDependency('foo', '1.0.0');
+      generator.setOrUpdateProjectDevDependency('foo', '1.0.0');
 
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
@@ -1117,7 +1117,7 @@ describe('FileSystem', () => {
     });
 
     it('should update the dependency if it already exists.', () => {
-      fs.setOrUpdateProjectDevDependency('@foal/cli', '2.0.0');
+      generator.setOrUpdateProjectDevDependency('@foal/cli', '2.0.0');
 
       const fileContent = readFileSync('package.json', 'utf8');
       const pkg = JSON.parse(fileContent);
@@ -1148,16 +1148,16 @@ describe('FileSystem', () => {
     });
 
     it('should remove the test client directory and all its contents.', () => {
-      fs.tearDown();
+      generator.tearDown();
       if (existsSync('test-generators/subdir')) {
         throw new Error('The directory "test-generators/subdir" should not exist.');
       }
     });
 
     it('should set the current directory to none.', () => {
-      fs.cd('foobar');
-      fs.tearDown();
-      strictEqual(fs.currentDir, '');
+      generator.cd('foobar');
+      generator.tearDown();
+      strictEqual(generator.currentDir, '');
     });
 
   });
@@ -1178,7 +1178,7 @@ describe('FileSystem', () => {
 
     it('should throw an error if the file does not exist.', () => {
       try {
-        fs.assertExists('bar');
+        generator.assertExists('bar');
         throw new Error('An error should have been thrown.');
       } catch (error: any) {
         strictEqual(error.message, 'The file "bar" does not exist.');
@@ -1186,7 +1186,7 @@ describe('FileSystem', () => {
     });
 
     it('should not throw an error if the file exits.', () => {
-      fs.assertExists('foo');
+      generator.assertExists('foo');
     });
 
   });
@@ -1207,7 +1207,7 @@ describe('FileSystem', () => {
 
     it('should throw an error if the file exits.', () => {
       try {
-        fs.assertNotExists('foo');
+        generator.assertNotExists('foo');
         throw new Error('An error should have been thrown.');
       } catch (error: any) {
         strictEqual(error.message, 'The file "foo" should not exist.');
@@ -1215,7 +1215,7 @@ describe('FileSystem', () => {
     });
 
     it('should not throw an error if the file does not exist.', () => {
-      fs.assertNotExists('bar');
+      generator.assertNotExists('bar');
     });
 
   });
@@ -1240,7 +1240,7 @@ describe('FileSystem', () => {
 
     it('should throw an error if the directory is not empty.', () => {
       try {
-        fs.assertEmptyDir('foo');
+        generator.assertEmptyDir('foo');
         throw new Error('An error should have been thrown.');
       } catch (error: any) {
         strictEqual(error.message, 'The directory "foo" should be empty.');
@@ -1248,7 +1248,7 @@ describe('FileSystem', () => {
     });
 
     it('should not throw an error if the directory is empty.', () => {
-      fs.assertEmptyDir('bar');
+      generator.assertEmptyDir('bar');
     });
 
   });
@@ -1287,7 +1287,7 @@ describe('FileSystem', () => {
 
     it('should throw an error if the two files are different (binary).', () => {
       try {
-        fs.assertEqual('bar', 'test-file-system/foo.spec');
+        generator.assertEqual('bar', 'test-file-system/foo.spec');
         throw new Error('An error should have been thrown.');
       } catch (error: any) {
         notStrictEqual(error.message, 'An error should have been thrown.');
@@ -1295,12 +1295,12 @@ describe('FileSystem', () => {
     });
 
     it('should not throw an error if the two files are equal (binary).', () => {
-      fs.assertEqual('foo', 'test-file-system/foo.spec');
+      generator.assertEqual('foo', 'test-file-system/foo.spec');
     });
 
     it('should throw an error if the two files are different (string).', () => {
       try {
-        fs.assertEqual('bar.txt', 'test-file-system/foo.spec.txt');
+        generator.assertEqual('bar.txt', 'test-file-system/foo.spec.txt');
         throw new Error('An error should have been thrown.');
       } catch (error: any) {
         strictEqual(error.code, 'ERR_ASSERTION');
@@ -1308,12 +1308,12 @@ describe('FileSystem', () => {
     });
 
     it('should not throw an error if the two files are equal (string).', () => {
-      fs.assertEqual('foo.txt', 'test-file-system/foo.spec.txt');
+      generator.assertEqual('foo.txt', 'test-file-system/foo.spec.txt');
     });
 
     it('should throw an error if the spec file does not exist.', () => {
       try {
-        fs.assertEqual('foobar', 'test-file-system/hello.txt');
+        generator.assertEqual('foobar', 'test-file-system/hello.txt');
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         strictEqual(error.message, 'The spec file "test-file-system/hello.txt" does not exist.');
@@ -1344,7 +1344,7 @@ describe('FileSystem', () => {
     });
 
     it('should copy the file from the `fixtures` directory.', () => {
-      fs.copyFixture('test-file-system/tpl.txt', 'hello.txt');
+      generator.copyFixture('test-file-system/tpl.txt', 'hello.txt');
       if (!existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/subdir/hello.txt" does not exist.');
       }
@@ -1356,7 +1356,7 @@ describe('FileSystem', () => {
 
     it('should throw an error if the file does not exist.', () => {
       try {
-        fs.copyFixture('test-file-system/foobar.txt', 'hello.txt');
+        generator.copyFixture('test-file-system/foobar.txt', 'hello.txt');
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         strictEqual(error.message, 'The fixture file "test-file-system/foobar.txt" does not exist.');
@@ -1380,7 +1380,7 @@ describe('FileSystem', () => {
     });
 
     it('should remove the file.', () => {
-      fs.rmfile('hello.txt');
+      generator.rmfile('hello.txt');
       if (existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "hello.txt" should have been removed.');
       }

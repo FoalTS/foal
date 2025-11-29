@@ -2,26 +2,26 @@
 import { throws } from 'assert';
 
 // FoalTS
-import { ClientError, FileSystem } from '../../../services';
+import { ClientError, Generator } from '../../../services';
 import { CreateControllerCommandService } from './create-controller-command.service';
 
 describe('CreateControllerCommandService', () => {
 
-  const fs = new FileSystem();
+  const generator = new Generator();
   let service: CreateControllerCommandService;
 
   beforeEach(() => {
-    fs.setUp();
-    const fileSystem = new FileSystem();
-    service = new CreateControllerCommandService(fileSystem);
+    generator.setUp();
+    const generator2 = new Generator();
+    service = new CreateControllerCommandService(generator2);
   });
 
-  afterEach(() => fs.tearDown());
+  afterEach(() => generator.tearDown());
 
   function test(root: string) {
 
     beforeEach(() => {
-      fs
+      generator
         .ensureDir(root)
         .cd(root);
     });
@@ -31,7 +31,7 @@ describe('CreateControllerCommandService', () => {
       it('should create in the current directory the controller and its test.', () => {
         service.run({ name: 'test-fooBar', register: false });
 
-        fs
+        generator
           .assertEqual('test-foo-bar.controller.ts', 'controller/test-foo-bar.controller.empty.ts')
           .assertEqual('test-foo-bar.controller.spec.ts', 'controller/test-foo-bar.controller.spec.empty.ts');
       });
@@ -42,31 +42,31 @@ describe('CreateControllerCommandService', () => {
         () => {
           service.run({ name: 'test-fooBar', register: false });
 
-          fs
+          generator
             .assertEqual('index.ts', 'controller/index.empty.ts');
         }
       );
 
       it('should update in the current directory the index.ts file if it exists and export the controller.', () => {
-        fs
+        generator
           .copyFixture('controller/index.ts', 'index.ts');
 
         service.run({ name: 'test-fooBar', register: false });
 
-        fs
+        generator
           .assertEqual('index.ts', 'controller/index.ts');
       });
 
       context('given the register option is false', () => {
 
         it('should not try to update in the file app.controller.ts if it exists the parent directory.', () => {
-          fs
+          generator
             .cd('..')
             .copyFixture('controller/app.controller.ts', 'app.controller.ts');
 
           service.run({ name: 'test-fooBar', register: false });
 
-          fs
+          generator
             .assertEqual('app.controller.ts', 'controller/app.controller.not-modified.ts');
         });
 
@@ -82,13 +82,13 @@ describe('CreateControllerCommandService', () => {
         });
 
         it('should register the controller in the file app.controller.ts if it exists in the parent directory.', () => {
-          fs
+          generator
             .cd('..')
             .copyFixture('controller/app.controller.ts', 'app.controller.ts');
 
           service.run({ name: 'test-fooBar', register: true });
 
-          fs
+          generator
             .assertEqual('app.controller.ts', 'controller/app.controller.ts');
         });
 
@@ -101,14 +101,14 @@ describe('CreateControllerCommandService', () => {
       it('should create the sub-directories if they do not exist.', () => {
         service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
-        fs
+        generator
           .assertExists('barfoo/api');
       });
 
       it('should create in the sub-directories the controller and its test.', () => {
         service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
-        fs
+        generator
           .cd('barfoo/api')
           .assertEqual('test-foo-bar.controller.ts', 'controller/test-foo-bar.controller.empty.ts')
           .assertEqual('test-foo-bar.controller.spec.ts', 'controller/test-foo-bar.controller.spec.empty.ts');
@@ -120,35 +120,35 @@ describe('CreateControllerCommandService', () => {
         () => {
           service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
-          fs
+          generator
             .cd('barfoo/api')
             .assertEqual('index.ts', 'controller/index.empty.ts');
         }
       );
 
       it('should update in the sub-directories the index.ts file if it exists and export the controller.', () => {
-        fs
+        generator
           .ensureDir('barfoo/api')
           .cd('barfoo/api')
           .copyFixture('controller/index.ts', 'index.ts');
 
         service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
-        fs
+        generator
           .assertEqual('index.ts', 'controller/index.ts');
       });
 
       context('given the register option is false', () => {
 
         it('should not try to update the file xxx.controller.ts if it exists in the last sub-directory xxx.', () => {
-          fs
+          generator
             .ensureDir('barfoo')
             .cd('barfoo')
             .copyFixture('controller/api.controller.ts', 'api.controller.ts');
 
           service.run({ name: 'barfoo/api/test-fooBar', register: false });
 
-          fs
+          generator
             .assertEqual('api.controller.ts', 'controller/api.controller.not-modified.ts');
         });
 
@@ -171,14 +171,14 @@ describe('CreateControllerCommandService', () => {
           'should register the controller in the file xxx.controller.ts if it exists '
           + 'in the last sub-directory xxx.',
           () => {
-            fs
+            generator
               .ensureDir('barfoo')
               .cd('barfoo')
               .copyFixture('controller/api.controller.ts', 'api.controller.ts');
 
             service.run({ name: 'barfoo/api/test-fooBar', register: true });
 
-            fs
+            generator
               .assertEqual('api.controller.ts', 'controller/api.controller.ts');
           }
         );

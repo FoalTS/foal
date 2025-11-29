@@ -1,5 +1,5 @@
 // FoalTS
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 import { getNames } from '../utils';
 
 /**
@@ -7,7 +7,7 @@ import { getNames } from '../utils';
  */
 export class CreateScriptCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -19,7 +19,7 @@ export class CreateScriptCommandService {
   run({ name }: { name: string }): void {
     const names = getNames(name);
 
-    this.fileSystem
+    this.generator
       // TODO: test this line
       .cdProjectRootDir()
       .cd('src/scripts')

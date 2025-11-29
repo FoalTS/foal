@@ -1,14 +1,14 @@
 import { join, relative } from 'path';
 
 import { red } from 'colors/safe';
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 
 /**
  * Service for connecting a React frontend to a FoalTS application.
  */
 export class ConnectReactCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -18,14 +18,14 @@ export class ConnectReactCommandService {
    * @returns {void}
    */
   run(path: string): void {
-    if (!this.fileSystem.exists(path)) {
+    if (!this.generator.exists(path)) {
       if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
         console.log(red(`  The directory ${path} does not exist.`));
       }
       return;
     }
 
-    if (!this.fileSystem.exists(join(path, 'package.json'))) {
+    if (!this.generator.exists(join(path, 'package.json'))) {
       if (process.env.P1Z7kEbSUUPMxF8GqPwD8Gx_FOAL_CLI_TEST !== 'true') {
         console.log(red(`  The directory ${path} is not a React project (missing package.json).`));
       }
@@ -36,7 +36,7 @@ export class ConnectReactCommandService {
       // Make projects generated on Windows build on Unix.
       .replace(/\\/g, '/');
 
-    this.fileSystem
+    this.generator
       .cd(path)
       .modify('package.json', content => {
         const pkg = JSON.parse(content);

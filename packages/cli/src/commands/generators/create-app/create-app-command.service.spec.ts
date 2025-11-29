@@ -1,32 +1,32 @@
 // FoalTS
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 import { CreateAppCommandService } from './create-app-command.service';
 
 describe('CreateAppCommandService', () => {
 
-  const fs = new FileSystem();
+  const generator = new Generator();
   let service: CreateAppCommandService;
 
   beforeEach(() => {
-    fs.setUp();
-    const fileSystem = new FileSystem();
-    service = new CreateAppCommandService(fileSystem);
+    generator.setUp();
+    const generator2 = new Generator();
+    service = new CreateAppCommandService(generator2);
   });
 
-  afterEach(() => fs.tearDown());
+  afterEach(() => generator.tearDown());
 
   it('should abort the project creation if a directory already exists.', async () => {
-    fs.ensureDir('test-foo-bar');
+    generator.ensureDir('test-foo-bar');
 
     await service.run({ name: 'test-fooBar' });
 
-    fs.assertEmptyDir('test-foo-bar');
+    generator.assertEmptyDir('test-foo-bar');
   });
 
   it('should render the config templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/config')
       .assertEqual('default.json', 'app/config/default.json')
       .assertNotExists('default.yml')
@@ -43,7 +43,7 @@ describe('CreateAppCommandService', () => {
   it('should render the config templates (YAML option).', async () => {
     await service.run({ name: 'test-fooBar', yaml: true });
 
-    fs
+    generator
       .cd('test-foo-bar/config')
       .assertNotExists('default.json')
       .assertEqual('default.yml', 'app/config/default.yml')
@@ -60,7 +60,7 @@ describe('CreateAppCommandService', () => {
   it('should render the config templates (MongoDB option).', async () => {
     await service.run({ name: 'test-fooBar', mongodb: true });
 
-    fs
+    generator
       .cd('test-foo-bar/config')
       .assertEqual('default.json', 'app/config/default.mongodb.json')
       .assertNotExists('default.yml')
@@ -77,7 +77,7 @@ describe('CreateAppCommandService', () => {
   it('should render the config templates (MongoDB & YAML options).', async () => {
     await service.run({ name: 'test-fooBar', mongodb: true, yaml: true });
 
-    fs
+    generator
       .cd('test-foo-bar/config')
       .assertNotExists('default.json')
       .assertEqual('default.yml', 'app/config/default.mongodb.yml')
@@ -94,7 +94,7 @@ describe('CreateAppCommandService', () => {
   it('should copy the public directory.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/public')
       .assertEqual('index.html', 'app/public/index.html')
       .assertEqual('logo.png', 'app/public/logo.png');
@@ -103,7 +103,7 @@ describe('CreateAppCommandService', () => {
   it('shoud copy the src/e2e templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/src/e2e')
       .assertEqual('index.ts', 'app/src/e2e/index.ts');
   });
@@ -111,7 +111,7 @@ describe('CreateAppCommandService', () => {
   it('shoud copy the src/scripts templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/src/scripts')
       .assertEqual('create-user.ts', 'app/src/scripts/create-user.ts');
   });
@@ -119,7 +119,7 @@ describe('CreateAppCommandService', () => {
   it('should render the src/app/controllers templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/src/app/controllers')
       .assertEqual('index.ts', 'app/src/app/controllers/index.ts')
       .assertEqual('api.controller.spec.ts', 'app/src/app/controllers/api.controller.spec.ts')
@@ -129,7 +129,7 @@ describe('CreateAppCommandService', () => {
   it('should render the src/app/hooks templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/src/app/hooks')
       .assertEqual('index.ts', 'app/src/app/hooks/index.ts');
   });
@@ -137,7 +137,7 @@ describe('CreateAppCommandService', () => {
   it('should render the src/app/entities templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/src/app/entities')
       .assertEqual('index.ts', 'app/src/app/entities/index.ts')
       .assertEqual('user.entity.ts', 'app/src/app/entities/user.entity.ts')
@@ -147,7 +147,7 @@ describe('CreateAppCommandService', () => {
   it('should render the src/app/entities templates (MongoDB).', async () => {
     await service.run({ name: 'test-fooBar', mongodb: true });
 
-    fs
+    generator
       .cd('test-foo-bar/src/app/entities')
       .assertEqual('index.ts', 'app/src/app/entities/index.ts')
       .assertEqual('user.entity.ts', 'app/src/app/entities/user.entity.mongodb.ts')
@@ -157,7 +157,7 @@ describe('CreateAppCommandService', () => {
   it('should render the src/app/services templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/src/app/services')
       .assertEqual('index.ts', 'app/src/app/services/index.ts');
  });
@@ -165,7 +165,7 @@ describe('CreateAppCommandService', () => {
   it('should render the src/app templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/src/app')
       .assertEqual('app.controller.ts', 'app/src/app/app.controller.ts');
   });
@@ -173,7 +173,7 @@ describe('CreateAppCommandService', () => {
   it('should render the src templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar/src')
       .assertEqual('db.ts', 'app/src/db.ts')
       .assertEqual('e2e.ts', 'app/src/e2e.ts')
@@ -184,7 +184,7 @@ describe('CreateAppCommandService', () => {
   it('should render the root templates.', async () => {
     await service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
       .assertEqual('package.json', 'app/package.json')
@@ -198,7 +198,7 @@ describe('CreateAppCommandService', () => {
   it('should render the root templates (YAML option).', async () => {
     await service.run({ name: 'test-fooBar', yaml: true });
 
-    fs
+    generator
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
       .assertEqual('package.json', 'app/package.yaml.json')
@@ -213,7 +213,7 @@ describe('CreateAppCommandService', () => {
   it('should render the root templates (MongoDB option).', async () => {
     await service.run({ name: 'test-fooBar', mongodb: true });
 
-    fs
+    generator
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
       .assertEqual('package.json', 'app/package.mongodb.json')
@@ -228,7 +228,7 @@ describe('CreateAppCommandService', () => {
   it('should render the root templates (MongoDB & YAML options).', async () => {
     await service.run({ name: 'test-fooBar', mongodb: true, yaml: true });
 
-    fs
+    generator
       .cd('test-foo-bar')
       .assertEqual('.gitignore', 'app/gitignore')
       .assertEqual('package.json', 'app/package.mongodb.yaml.json')

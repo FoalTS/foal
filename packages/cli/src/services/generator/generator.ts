@@ -32,7 +32,7 @@ function rmDirAndFiles(path: string) {
 }
 
 /**
- * Error thrown by the FileSystem which aims to be pretty
+ * Error thrown by the Generator which aims to be pretty
  * printed without the stacktrace.
  *
  * @export
@@ -44,13 +44,13 @@ export class ClientError extends Error {
 }
 
 /**
- * This class provides more methods that Node std "fs".
+ * This class provides more methods that Node std "generator".
  * It also allows to create an isolated directory during directory.
  *
  * @export
- * @class FileSystem
+ * @class Generator
  */
-export class FileSystem {
+export class Generator {
 
   currentDir = '';
 
@@ -61,7 +61,7 @@ export class FileSystem {
    * Do not show create and update logs.
    *
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   hideLogs(): this {
     this.logs = false;
@@ -73,7 +73,7 @@ export class FileSystem {
    *
    * @param {string} path - Relative path of the directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   cd(path: string): this {
     this.currentDir = join(this.currentDir, path);
@@ -88,7 +88,7 @@ export class FileSystem {
    * as dependency.
    *
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   cdProjectRootDir(): this {
     // "/" on Unix, C:\ on Windows
@@ -127,7 +127,7 @@ export class FileSystem {
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {boolean}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   exists(path: string): boolean {
     return existsSync(this.parse(path));
@@ -139,7 +139,7 @@ export class FileSystem {
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   ensureDir(path: string): this {
     const dir = dirname(path);
@@ -159,7 +159,7 @@ export class FileSystem {
    * @param {boolean} condition - The condition.
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   ensureDirOnlyIf(condition: boolean, path: string): this {
     if (condition) {
@@ -173,7 +173,7 @@ export class FileSystem {
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   ensureFile(path: string): this {
     if (!existsSync(this.parse(path))) {
@@ -189,7 +189,7 @@ export class FileSystem {
    * @param {string} src - The source path relative to the `templates/` directory.
    * @param {string} dest - The destination path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   copy(src: string, dest: string): this {
     const templatePath = join(__dirname, '../../..', 'templates', src);
@@ -211,7 +211,7 @@ export class FileSystem {
    * @param {string} src - The source path relative to the `templates/` directory.
    * @param {string} dest - The destination path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   copyOnlyIf(condition: boolean, src: string, dest: string): this {
     if (condition) {
@@ -227,7 +227,7 @@ export class FileSystem {
    * @param {string} dest - The destination path relative to the client directory.
    * @param {*} locals - The template variables.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   render(src: string, dest: string, locals: any): this {
     const templatePath = join(__dirname, '../../..', 'templates', src);
@@ -251,7 +251,7 @@ export class FileSystem {
    * @param {string} dest - The destination path relative to the client directory.
    * @param {*} locals - The template variables.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   renderOnlyIf(condition: boolean, src: string, dest: string, locals: any): this {
     if (condition) {
@@ -266,7 +266,7 @@ export class FileSystem {
    * @param {string} path - The path relative to the client directory.
    * @param {(content: string) => string} callback - The callback that modifies the content.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   modify(path: string, callback: (content: string) => string): this {
     if (!existsSync(this.parse(path))) {
@@ -285,7 +285,7 @@ export class FileSystem {
    * @param {string} path - The path relative to the client directory.
    * @param {(content: string) => string} callback - The callback that modifies the content.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   modifyOnlyfIf(condition: boolean, path: string, callback: (content: string) => string): this {
     if (condition) {
@@ -301,7 +301,7 @@ export class FileSystem {
    * @param {string} specifier - The import specifier.
    * @param {string} source - The import source.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   addNamedExportIn(path: string, specifier: string, source: string): this {
     this.modify(path, content => `${content}export { ${specifier} } from '${source}';\n`);
@@ -318,7 +318,7 @@ export class FileSystem {
    * @param {string} specifier - The import specifier.
    * @param {string} source - The import source.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   addOrExtendNamedImportIn(path: string, specifier: string, source: string, options?: { logs: boolean }): this {
     const initialLogs = this.logs;
@@ -387,7 +387,7 @@ export class FileSystem {
    * @param {string} propertyName - The property name.
    * @param {string} element - The item to add to the array.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   addOrExtendClassArrayPropertyIn(
     path: string, propertyName: string, element: string, options?: { logs: boolean }
@@ -443,7 +443,7 @@ export class FileSystem {
    *
    * @param {string} name - The name of the dependency.
    * @returns {boolean}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   projectHasDependency(name: string): boolean {
     const initialCurrentDir = this.currentDir;
@@ -544,7 +544,7 @@ export class FileSystem {
   /**
    * Creates the test client directory. Sets current directory to none.
    *
-   * @memberof FileSystem
+   * @memberof Generator
    */
   setUp(): void {
     const [ firstDir ] = this.testDir.split('/');
@@ -556,7 +556,7 @@ export class FileSystem {
   /**
    * Empties and removes the test client directory. Sets current directory to none.
    *
-   * @memberof FileSystem
+   * @memberof Generator
    */
   tearDown(): void {
     const [ firstDir ] = this.testDir.split('/');
@@ -570,7 +570,7 @@ export class FileSystem {
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   assertExists(path: string): this {
     if (!existsSync(this.parse(path))) {
@@ -584,7 +584,7 @@ export class FileSystem {
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   assertNotExists(path: string): this {
     if (existsSync(this.parse(path))) {
@@ -597,7 +597,7 @@ export class FileSystem {
    * Throws an error if the directory is not empty.
    *
    * @param {string} path - The path relative to the client directory.
-   * @memberof FileSystem
+   * @memberof Generator
    */
   assertEmptyDir(path: string): void {
     if (readdirSync(this.parse(path)).length > 0) {
@@ -612,7 +612,7 @@ export class FileSystem {
    * @param {string} expected - The path relative to the `specs/` directory.
    * @param {{ binary: boolean }} [{ binary }={ binary: true }] - Specify if the file is binary.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   assertEqual(actual: string, expected: string, { binary }: { binary: boolean } = { binary: false }): this {
     const specPath = join(__dirname, '../../..', 'specs', expected);
@@ -639,7 +639,7 @@ export class FileSystem {
    * @param {string} src - The source path relative to the `fixtures/` directory.
    * @param {string} dest - The destination path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   copyFixture(src: string, dest: string): this {
     const fixturePath = join(__dirname, '../../..', 'fixtures', src);
@@ -657,7 +657,7 @@ export class FileSystem {
    * Removes a file.
    *
    * @param {string} path - The path relative to the client directory.
-   * @memberof FileSystem
+   * @memberof Generator
    */
   rmfile(path: string): void {
     unlinkSync(this.parse(path));
@@ -691,3 +691,4 @@ export class FileSystem {
   }
 
 }
+

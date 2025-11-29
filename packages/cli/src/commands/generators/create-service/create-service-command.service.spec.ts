@@ -1,26 +1,26 @@
 // FoalTS
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 import { CreateServiceCommandService } from './create-service-command.service';
 
 describe('CreateServiceCommandService', () => {
 
-  const fs = new FileSystem();
+  const generator = new Generator();
   let service: CreateServiceCommandService;
 
   beforeEach(() => {
-    fs.setUp();
-    const fileSystem = new FileSystem();
-    service = new CreateServiceCommandService(fileSystem);
+    generator.setUp();
+    const generator2 = new Generator();
+    service = new CreateServiceCommandService(generator2);
   });
 
-  afterEach(() => fs.tearDown());
+  afterEach(() => generator.tearDown());
 
   function test(root: string) {
 
     describe(`when the directory ${root}/ exists`, () => {
 
       beforeEach(() => {
-        fs
+        generator
           .ensureDir(root)
           .cd(root)
           .copyFixture('service/index.ts', 'index.ts');
@@ -29,7 +29,7 @@ describe('CreateServiceCommandService', () => {
       it('should render the empty templates in the proper directory.', () => {
         service.run({ name: 'test-fooBar' });
 
-        fs
+        generator
           .assertEqual('test-foo-bar.service.ts', 'service/test-foo-bar.service.empty.ts')
           .assertEqual('index.ts', 'service/index.ts');
       });
@@ -37,16 +37,16 @@ describe('CreateServiceCommandService', () => {
       it('should create the directory if it does not exist.', () => {
         service.run({ name: 'barfoo/hello/test-fooBar' });
 
-        fs
+        generator
           .assertExists('barfoo/hello/test-foo-bar.service.ts');
       });
 
       it('should create index.ts if it does not exist.', () => {
-        fs.rmfile('index.ts');
+        generator.rmfile('index.ts');
 
         service.run({ name: 'test-fooBar' });
 
-        fs.assertExists('index.ts');
+        generator.assertExists('index.ts');
       });
 
     });

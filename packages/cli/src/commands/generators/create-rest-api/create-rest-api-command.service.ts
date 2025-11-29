@@ -5,7 +5,7 @@ import { basename, dirname } from 'path';
 import { underline } from 'colors/safe';
 
 // FoalTS
-import { ClientError, FileSystem } from '../../../services';
+import { ClientError, Generator } from '../../../services';
 import { getNames } from '../utils';
 
 /**
@@ -13,7 +13,7 @@ import { getNames } from '../utils';
  */
 export class CreateRestApiCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -27,13 +27,13 @@ export class CreateRestApiCommandService {
   run({ name, register, auth }: { name: string, register: boolean, auth?: boolean }): void {
     auth = auth || false;
 
-    if (this.fileSystem.projectHasDependency('mongodb')) {
+    if (this.generator.projectHasDependency('mongodb')) {
       throw new ClientError('"npx foal generate|g rest-api <name>" cannot be used in a MongoDB project.');
     }
 
-    if (this.fileSystem.exists('src/app/entities') && this.fileSystem.exists('src/app/controllers')) {
-      this.fileSystem.cd('src/app');
-    } else if (!this.fileSystem.exists('entities') || !this.fileSystem.exists('controllers')) {
+    if (this.generator.exists('src/app/entities') && this.generator.exists('src/app/controllers')) {
+      this.generator.cd('src/app');
+    } else if (!this.generator.exists('entities') || !this.generator.exists('controllers')) {
       throw new ClientError(
         'Impossible to generate a REST API endpoint. '
         + 'The directories controllers/ and entities/ (or src/app/controllers and src/app/entities) were not found.'
@@ -50,7 +50,7 @@ export class CreateRestApiCommandService {
 
     const entityFileName = `${locals.kebabName}.entity.ts`;
 
-    this.fileSystem
+    this.generator
       .cd('entities')
       .renderOnlyIf(!auth, 'rest-api/entities/entity.ts', entityFileName, locals)
       .renderOnlyIf(auth, 'rest-api/entities/entity.auth.ts', entityFileName, locals)
@@ -63,7 +63,7 @@ export class CreateRestApiCommandService {
     const controllerFileName = `${locals.kebabName}.controller.ts`;
     const controllerSpecFileName = `${locals.kebabName}.controller.spec.ts`;
 
-    this.fileSystem
+    this.generator
       .cd('controllers')
       .ensureDir(subdir)
       .cd(subdir)
@@ -76,7 +76,7 @@ export class CreateRestApiCommandService {
       .cd('..');
 
     if (register) {
-      this.fileSystem
+      this.generator
         .addOrExtendNamedImportIn(
           parentControllerPath,
           'controller',

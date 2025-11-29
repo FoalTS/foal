@@ -1,27 +1,27 @@
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 import { ConnectVueCommandService } from './connect-vue-command.service';
 
 describe('ConnectVueCommandService', () => {
 
-  const fs = new FileSystem();
+  const generator = new Generator();
   let service: ConnectVueCommandService;
 
   beforeEach(() => {
-    fs.setUp();
-    const fileSystem = new FileSystem();
-    service = new ConnectVueCommandService(fileSystem);
+    generator.setUp();
+    const generator2 = new Generator();
+    service = new ConnectVueCommandService(generator2);
   });
 
-  afterEach(() => fs.tearDown());
+  afterEach(() => generator.tearDown());
 
   it('should update package.json to set up the proxy and change the output dir.', () => {
-   fs
+   generator
     .ensureDir('connector-test/vue')
     .copyFixture('vue/package.json', 'connector-test/vue/package.json');
 
    service.run('./connector-test/vue');
 
-   fs
+   generator
     .assertEqual('connector-test/vue/package.json', 'vue/package.json');
   });
 
@@ -30,7 +30,7 @@ describe('ConnectVueCommandService', () => {
   });
 
   it('should not throw if package.json does not exist.', () => {
-    fs
+    generator
       .ensureDir('connector-test/vue');
 
     service.run('./connector-test/vue');
