@@ -55,10 +55,6 @@ export class FileSystemService {
     return readFileSync(this.computePath(path), 'utf8');
   }
 
-  exists(path: string): boolean {
-    return existsSync(this.computePath(path));
-  }
-
   readFileFromTemplates(path: string): string {
     return readFileSync(join(__dirname, '../../..', 'templates', path), 'utf8');
   }
@@ -77,5 +73,17 @@ export class FileSystemService {
 
   copyFileFromFixtures(src: string, dest: string): void {
     copyFileSync(join(__dirname, '../../..', 'fixtures', src), this.computePath(dest));
+  }
+
+  exists(path: string): boolean {
+    return existsSync(this.computePath(path));
+  }
+
+  existsTemplate(path: string): boolean {
+    return existsSync(join(__dirname, '../../..', 'templates', path));
+  }
+
+  existsFixture(path: string): boolean {
+    return existsSync(join(__dirname, '../../..', 'fixtures', path));
   }
 }
