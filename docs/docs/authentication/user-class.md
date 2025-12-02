@@ -95,7 +95,7 @@ Go to `src/scripts/create-user.ts` and replace its content with the following li
 
 ```typescript
 // 3p
-import { hashPassword, Logger, ServiceManager } from '@foal/core';
+import { Logger, PasswordService, ServiceManager } from '@foal/core';
 
 // App
 import { User } from '../app/entities';
@@ -115,9 +115,10 @@ export async function main(args: any, services: ServiceManager, logger: Logger) 
   await dataSource.initialize();
 
   try {
+    const passwordService = services.get(PasswordService)
     const user = new User();
     user.email = args.email;
-    user.password = await hashPassword(args.password);
+    user.password = await passwordService.hashPassword(args.password);
 
     await user.save();
 

@@ -12,12 +12,13 @@ import {
   Context,
   controller,
   createApp,
+  dependency,
   HttpResponseCreated,
   HttpResponseNoContent,
   HttpResponseUnauthorized,
+  PasswordService,
   Post,
-  ValidateBody,
-  verifyPassword
+  ValidateBody
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, setAuthCookie } from '@foal/jwt';
 import { createFixtureUser, createAndInitializeDataSource, credentialsSchema, readCookie, User } from '../../../common';
@@ -28,6 +29,9 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
 
   // auth.controller.ts
   class AuthController {
+    @dependency
+    passwordService: PasswordService;
+
     @Post('/login')
     @ValidateBody(credentialsSchema)
     async login(ctx: Context) {
@@ -37,7 +41,7 @@ describe('Feature: Stateless CSRF protection in a Single-Page Application', () =
         return new HttpResponseUnauthorized();
       }
 
-      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseUnauthorized();
       }
 
