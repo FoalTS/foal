@@ -1,6 +1,4 @@
-import { PasswordService, PASSWORD_ITERATIONS } from './password.service';
-
-export { PASSWORD_ITERATIONS };
+import { PasswordService } from './password.service';
 
 /**
  * Hash a password using the PBKDF2 algorithm.
