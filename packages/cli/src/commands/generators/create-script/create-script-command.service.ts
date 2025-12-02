@@ -23,7 +23,7 @@ export class CreateScriptCommandService {
       // TODO: test this line
       .cdProjectRootDir()
       .cd('src/scripts')
-      .copy('script/script.ts', `${names.kebabName}.ts`);
+      .copyTemplate('script/script.ts', `${names.kebabName}.ts`);
   }
 }
 

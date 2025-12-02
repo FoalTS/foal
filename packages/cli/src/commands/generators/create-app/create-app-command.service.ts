@@ -59,15 +59,15 @@ export class CreateAppCommandService {
 
     this.generator
       .hideLogs()
-      .copy('app/gitignore', '.gitignore')
+      .copyTemplate('app/gitignore', '.gitignore')
       .renderOnlyIf(!mongodb, 'app/package.json', 'package.json', locals)
       .renderOnlyIf(mongodb, 'app/package.mongodb.json', 'package.json', locals)
       .setOrUpdateProjectDependencyOnlyIf(yaml, 'yamljs', '~0.3.0')
-      .copy('app/tsconfig.app.json', 'tsconfig.app.json')
-      .copy('app/tsconfig.e2e.json', 'tsconfig.e2e.json')
-      .copy('app/tsconfig.json', 'tsconfig.json')
-      .copy('app/tsconfig.test.json', 'tsconfig.test.json')
-      .copy('app/.eslintrc.js', '.eslintrc.js')
+      .copyTemplate('app/tsconfig.app.json', 'tsconfig.app.json')
+      .copyTemplate('app/tsconfig.e2e.json', 'tsconfig.e2e.json')
+      .copyTemplate('app/tsconfig.json', 'tsconfig.json')
+      .copyTemplate('app/tsconfig.test.json', 'tsconfig.test.json')
+      .copyTemplate('app/.eslintrc.js', '.eslintrc.js')
         // Config
         .ensureDir('config')
         .cd('config')
@@ -91,54 +91,54 @@ export class CreateAppCommandService {
         // Public
         .ensureDir('public')
         .cd('public')
-        .copy('app/public/index.html', 'index.html')
-        .copy('app/public/logo.png', 'logo.png')
+        .copyTemplate('app/public/index.html', 'index.html')
+        .copyTemplate('app/public/logo.png', 'logo.png')
         .cd('..')
         // Src
         .ensureDir('src')
         .cd('src')
-        .copy('app/src/db.ts', 'db.ts')
-        .copy('app/src/e2e.ts', 'e2e.ts')
-        .copy('app/src/index.ts', 'index.ts')
-        .copy('app/src/test.ts', 'test.ts')
+        .copyTemplate('app/src/db.ts', 'db.ts')
+        .copyTemplate('app/src/e2e.ts', 'e2e.ts')
+        .copyTemplate('app/src/index.ts', 'index.ts')
+        .copyTemplate('app/src/test.ts', 'test.ts')
           // App
           .ensureDir('app')
           .cd('app')
-          .copy('app/src/app/app.controller.ts', 'app.controller.ts')
+          .copyTemplate('app/src/app/app.controller.ts', 'app.controller.ts')
             // Controllers
             .ensureDir('controllers')
             .cd('controllers')
-            .copy('app/src/app/controllers/index.ts', 'index.ts')
-            .copy('app/src/app/controllers/api.controller.ts', 'api.controller.ts')
-            .copy('app/src/app/controllers/api.controller.spec.ts', 'api.controller.spec.ts')
+            .copyTemplate('app/src/app/controllers/index.ts', 'index.ts')
+            .copyTemplate('app/src/app/controllers/api.controller.ts', 'api.controller.ts')
+            .copyTemplate('app/src/app/controllers/api.controller.spec.ts', 'api.controller.spec.ts')
             .cd('..')
             // Entities
             .ensureDir('entities')
             .cd('entities')
-            .copy('app/src/app/entities/index.ts', 'index.ts')
-            .copyOnlyIf(!mongodb, 'app/src/app/entities/user.entity.ts', 'user.entity.ts')
-            .copyOnlyIf(mongodb, 'app/src/app/entities/user.entity.mongodb.ts', 'user.entity.ts')
+            .copyTemplate('app/src/app/entities/index.ts', 'index.ts')
+            .copyTemplateOnlyIf(!mongodb, 'app/src/app/entities/user.entity.ts', 'user.entity.ts')
+            .copyTemplateOnlyIf(mongodb, 'app/src/app/entities/user.entity.mongodb.ts', 'user.entity.ts')
             .cd('..')
             // Hooks
             .ensureDir('hooks')
             .cd('hooks')
-            .copy('app/src/app/hooks/index.ts', 'index.ts')
+            .copyTemplate('app/src/app/hooks/index.ts', 'index.ts')
             .cd('..')
             // Services
             .ensureDir('services')
             .cd('services')
-            .copy('app/src/app/services/index.ts', 'index.ts')
+            .copyTemplate('app/src/app/services/index.ts', 'index.ts')
             .cd('..')
           .cd('..')
           // E2E
           .ensureDir('e2e')
           .cd('e2e')
-          .copy('app/src/e2e/index.ts', 'index.ts')
+          .copyTemplate('app/src/e2e/index.ts', 'index.ts')
           .cd('..')
           // Scripts
           .ensureDir('scripts')
           .cd('scripts')
-          .copy('app/src/scripts/create-user.ts', 'create-user.ts');
+          .copyTemplate('app/src/scripts/create-user.ts', 'create-user.ts');
 
     if (autoInstall) {
       const { failed } = await installDependencies(names.kebabName);

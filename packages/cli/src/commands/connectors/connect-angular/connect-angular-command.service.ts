@@ -41,7 +41,7 @@ export class ConnectAngularCommandService {
 
     this.generator
       .cd(path)
-      .copy('angular/proxy.conf.json', 'src/proxy.conf.json')
+      .copyTemplate('angular/proxy.conf.json', 'src/proxy.conf.json')
       .modify('package.json', content => {
         const pkg = JSON.parse(content);
 

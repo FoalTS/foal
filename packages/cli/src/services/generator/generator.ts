@@ -179,7 +179,7 @@ export class Generator {
    * @returns {this}
    * @memberof Generator
    */
-  copy(src: string, dest: string): this {
+  copyTemplate(src: string, dest: string): this {
     const templatePath = join(__dirname, '../../..', 'templates', src);
     if (!existsSync(templatePath)) {
       throw new Error(`The template "${src}" does not exist.`);
@@ -201,9 +201,9 @@ export class Generator {
    * @returns {this}
    * @memberof Generator
    */
-  copyOnlyIf(condition: boolean, src: string, dest: string): this {
+  copyTemplateOnlyIf(condition: boolean, src: string, dest: string): this {
     if (condition) {
-      this.copy(src, dest);
+      this.copyTemplate(src, dest);
     }
     return this;
   }

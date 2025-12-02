@@ -43,7 +43,7 @@ export class ConnectReactCommandService {
         pkg.proxy = 'http://localhost:3001';
         return JSON.stringify(pkg, null, 2);
       })
-      .copy('react/env.development', '.env.development')
+      .copyTemplate('react/env.development', '.env.development')
       .render('react/env', '.env', { path: outputPath });
   }
 }

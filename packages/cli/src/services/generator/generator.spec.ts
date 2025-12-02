@@ -316,7 +316,7 @@ describe('Generator', () => {
 
   });
 
-  describe('has a "copy" method that', () => {
+  describe('has a "copyTemplate" method that', () => {
 
     const templateDir = join(process.cwd(), 'templates/test-file-system');
     const templatePath = join(process.cwd(), 'templates/test-file-system/tpl.txt');
@@ -338,7 +338,7 @@ describe('Generator', () => {
     });
 
     it('should copy the file from the `templates` directory.', () => {
-      generator.copy('test-file-system/tpl.txt', 'hello.txt');
+      generator.copyTemplate('test-file-system/tpl.txt', 'hello.txt');
       if (!existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/subdir/hello.txt" does not exist.');
       }
@@ -350,7 +350,7 @@ describe('Generator', () => {
 
     it('should throw an error if the file does not exist.', () => {
       try {
-        generator.copy('test-file-system/foobar.txt', 'hello.txt');
+        generator.copyTemplate('test-file-system/foobar.txt', 'hello.txt');
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         strictEqual(error.message, 'The template "test-file-system/foobar.txt" does not exist.');
@@ -359,7 +359,7 @@ describe('Generator', () => {
 
   });
 
-  describe('has a "copyOnlyIf" method that', () => {
+  describe('has a "copyTemplateOnlyIf" method that', () => {
 
     const templateDir = join(process.cwd(), 'templates/test-file-system');
     const templatePath = join(process.cwd(), 'templates/test-file-system/tpl.txt');
@@ -381,14 +381,14 @@ describe('Generator', () => {
     });
 
     it('should copy the file if the condition is true.', () => {
-      generator.copyOnlyIf(true, 'test-file-system/tpl.txt', 'hello.txt');
+      generator.copyTemplateOnlyIf(true, 'test-file-system/tpl.txt', 'hello.txt');
       if (!existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/hello.txt" does not exist.');
       }
     });
 
     it('should not copy the file if the condition is false.', () => {
-      generator.copyOnlyIf(false, 'test-file-system/tpl.txt', 'hello.txt');
+      generator.copyTemplateOnlyIf(false, 'test-file-system/tpl.txt', 'hello.txt');
       if (existsSync('test-generators/subdir/hello.txt')) {
         throw new Error('The file "test-generators/subdir/hello.txt" should not exist.');
       }
