@@ -55,6 +55,10 @@ export class FileSystemService {
     return readFileSync(this.computePath(path), 'utf8');
   }
 
+  exists(path: string): boolean {
+    return existsSync(this.computePath(path));
+  }
+
   readFileFromTemplates(path: string): string {
     return readFileSync(join(__dirname, '../../..', 'templates', path), 'utf8');
   }

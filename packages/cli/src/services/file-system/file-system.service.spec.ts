@@ -177,6 +177,36 @@ describe('FileSystemService', () => {
     });
   });
 
+  describe('has an "exists" method that', () => {
+    beforeEach(() => {
+      setUpTestDirectory();
+    });
+
+    afterEach(() => {
+      tearDownTestDirectory();
+    });
+
+    it('should return true if the file exists', () => {
+      writeFileSync('test-generators/subdir/foo.txt', 'hello');
+
+      strictEqual(fileSystem.exists('foo.txt'), true);
+    });
+
+    it('should return true if the directory exists', () => {
+      mkdirSync('test-generators/subdir/foo');
+
+      strictEqual(fileSystem.exists('foo'), true);
+    });
+
+    it('should return false if the file does not exist', () => {
+      strictEqual(fileSystem.exists('foo.txt'), false);
+    });
+
+    it('should return false if the directory does not exist', () => {
+      strictEqual(fileSystem.exists('foo'), false);
+    });
+  });
+
   describe('has a "readFileFromTemplates" method that', () => {
     it('should read the file from the templates directory', () => {
       const content = fileSystem.readFileFromTemplates('file-system/test-template.txt');
