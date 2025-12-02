@@ -1,15 +1,11 @@
 // std
 import { deepStrictEqual, strictEqual } from 'assert';
 import {
-  copyFileSync,
   existsSync,
-  mkdirSync,
   readdirSync,
   readFileSync,
-  unlinkSync,
-  writeFileSync
 } from 'fs';
-import { dirname, join, parse } from 'path';
+import { join, parse } from 'path';
 
 // 3p
 import { cyan, green } from 'colors/safe';
@@ -90,7 +86,8 @@ export class Generator {
       }
       this.cd('..');
     }
-    const content = readFileSync(this.parse('package.json'), 'utf8');
+    const packagePath = join(this.currentDir, 'package.json');
+    const content = this.fileSystem.readFile(packagePath);
 
     let pkg: any;
     try {
@@ -118,7 +115,8 @@ export class Generator {
    * @memberof Generator
    */
   exists(path: string): boolean {
-    return existsSync(this.parse(path));
+    const relativePath = join(this.currentDir, path);
+    return this.fileSystem.exists(relativePath);
   }
 
   /**
@@ -130,13 +128,8 @@ export class Generator {
    * @memberof Generator
    */
   ensureDir(path: string): this {
-    const dir = dirname(path);
-    if (dir !== '.') {
-      this.ensureDir(dir);
-    }
-    if (!existsSync(this.parse(path))) {
-      mkdirSync(this.parse(path));
-    }
+    const relativePath = join(this.currentDir, path);
+    this.fileSystem.mkdir(relativePath);
     return this;
   }
 
@@ -164,9 +157,10 @@ export class Generator {
    * @memberof Generator
    */
   ensureFile(path: string): this {
-    if (!existsSync(this.parse(path))) {
+    const relativePath = join(this.currentDir, path);
+    if (!this.fileSystem.exists(relativePath)) {
       this.logCreate(path);
-      writeFileSync(this.parse(path), '', 'utf8');
+      this.fileSystem.writeFile(relativePath, '');
     }
     return this;
   }
@@ -180,14 +174,13 @@ export class Generator {
    * @memberof Generator
    */
   copyTemplate(src: string, dest: string): this {
-    const templatePath = join(__dirname, '../../..', 'templates', src);
-    if (!existsSync(templatePath)) {
+    if (!this.fileSystem.existsTemplate(src)) {
       throw new Error(`The template "${src}" does not exist.`);
     }
     this.logCreate(dest);
-    copyFileSync(
-      templatePath,
-      this.parse(dest)
+    this.fileSystem.copyFileFromTemplates(
+      src,
+      join(this.currentDir, dest)
     );
     return this;
   }
@@ -218,16 +211,15 @@ export class Generator {
    * @memberof Generator
    */
   render(src: string, dest: string, locals: any): this {
-    const templatePath = join(__dirname, '../../..', 'templates', src);
-    if (!existsSync(templatePath)) {
+    if (!this.fileSystem.existsTemplate(src)) {
       throw new Error(`The template "${src}" does not exist.`);
     }
-    let content = readFileSync(templatePath, 'utf8');
+    let content = this.fileSystem.readFileFromTemplates(src);
     for (const key in locals) {
       content = content.split(`/* ${key} */`).join(locals[key]);
     }
     this.logCreate(dest);
-    writeFileSync(this.parse(dest), content, 'utf8');
+    this.fileSystem.writeFile(join(this.currentDir, dest), content);
     return this;
   }
 
@@ -257,12 +249,13 @@ export class Generator {
    * @memberof Generator
    */
   modify(path: string, callback: (content: string) => string): this {
-    if (!existsSync(this.parse(path))) {
+    const relativePath = join(this.currentDir, path);
+    if (!this.fileSystem.exists(relativePath)) {
       throw new ClientError(`Impossible to modify "${path}": the file does not exist.`);
     }
-    const content = readFileSync(this.parse(path), 'utf8');
+    const content = this.fileSystem.readFile(relativePath);
     this.logUpdate(path);
-    writeFileSync(this.parse(path), callback(content), 'utf8');
+    this.fileSystem.writeFile(relativePath, callback(content));
     return this;
   }
 
@@ -437,7 +430,8 @@ export class Generator {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     this.currentDir = initialCurrentDir;
     return pkg.dependencies.hasOwnProperty(name);
@@ -452,7 +446,8 @@ export class Generator {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     this.currentDir = initialCurrentDir;
     return Object.keys(pkg.dependencies)
@@ -468,11 +463,12 @@ export class Generator {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     pkg.dependencies[name] = version;
 
-    writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
+    this.fileSystem.writeFile(packagePath, JSON.stringify(pkg, null, 2));
 
     this.currentDir = initialCurrentDir;
     return this;
@@ -499,7 +495,8 @@ export class Generator {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     this.currentDir = initialCurrentDir;
     return Object.keys(pkg.devDependencies)
@@ -515,11 +512,12 @@ export class Generator {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     pkg.devDependencies[name] = version;
 
-    writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
+    this.fileSystem.writeFile(packagePath, JSON.stringify(pkg, null, 2));
 
     this.currentDir = initialCurrentDir;
     return this;
@@ -537,7 +535,8 @@ export class Generator {
    * @memberof Generator
    */
   assertExists(path: string): this {
-    if (!existsSync(this.parse(path))) {
+    const relativePath = join(this.currentDir, path);
+    if (!this.fileSystem.exists(relativePath)) {
       throw new Error(`The file "${path}" does not exist.`);
     }
     return this;
@@ -551,7 +550,8 @@ export class Generator {
    * @memberof Generator
    */
   assertNotExists(path: string): this {
-    if (existsSync(this.parse(path))) {
+    const relativePath = join(this.currentDir, path);
+    if (this.fileSystem.exists(relativePath)) {
       throw new Error(`The file "${path}" should not exist.`);
     }
     return this;
@@ -606,13 +606,12 @@ export class Generator {
    * @memberof Generator
    */
   copyFixture(src: string, dest: string): this {
-    const fixturePath = join(__dirname, '../../..', 'fixtures', src);
-    if (!existsSync(fixturePath)) {
+    if (!this.fileSystem.existsFixture(src)) {
       throw new Error(`The fixture file "${src}" does not exist.`);
     }
-    copyFileSync(
-      fixturePath,
-      this.parse(dest)
+    this.fileSystem.copyFileFromFixtures(
+      src,
+      join(this.currentDir, dest)
     );
     return this;
   }
@@ -624,7 +623,8 @@ export class Generator {
    * @memberof Generator
    */
   rmfile(path: string): void {
-    unlinkSync(this.parse(path));
+    const relativePath = join(this.currentDir, path);
+    this.fileSystem.deleteFile(relativePath);
   }
 
   private isTestingEnvironment(): boolean {
