@@ -13,17 +13,16 @@ import {
   createApp,
   dependency,
   Get,
-  hashPassword,
   HttpResponseOK,
   HttpResponseRedirect,
   IAppController,
+  PasswordService,
   Post,
   render,
   Store,
   UserRequired,
   UseSessions,
-  ValidateBody,
-  verifyPassword
+  ValidateBody
 } from '@foal/core';
 import { DatabaseSession } from '@foal/typeorm';
 import { createAndInitializeDataSource, getTypeORMStorePath, readCookie, writeCookie } from '../../../common';
@@ -61,13 +60,15 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
   };
 
   class AuthController {
+    @dependency
+    passwordService: PasswordService;
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
     async signup(ctx: Context) {
       const user = new User();
       user.email = ctx.request.body.email;
-      user.password = await hashPassword(ctx.request.body.password);
+      user.password = await this.passwordService.hashPassword(ctx.request.body.password);
       await user.save();
 
       ctx.session!.setUser(user);
@@ -86,7 +87,7 @@ describe('Feature: Authenticating users in a statefull SSR application using coo
         return new HttpResponseRedirect('/login');
       }
 
-      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
         ctx.session!.set('errorMessage', 'Invalid password.', { flash: true });
         return new HttpResponseRedirect('/login');
       }

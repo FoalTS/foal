@@ -16,10 +16,10 @@ import {
   HttpResponseCreated,
   HttpResponseNoContent,
   HttpResponseUnauthorized,
+  PasswordService,
   Post,
   UseSessions,
   ValidateBody,
-  verifyPassword,
 } from '@foal/core';
 import { DatabaseSession, TypeORMStore } from '@foal/typeorm';
 import { createFixtureUser, createAndInitializeDataSource, credentialsSchema, readCookie, User } from '../../../common';
@@ -33,6 +33,9 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
     @dependency
     // "Store" documentation
     store: TypeORMStore;
+
+    @dependency
+    passwordService: PasswordService;
 
     @Post('/login')
     @ValidateBody(credentialsSchema)
@@ -49,7 +52,7 @@ describe('Feature: Stateful CSRF protection in a Single-Page Application', () =>
         return new HttpResponseUnauthorized();
       }
 
-      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseUnauthorized();
       }
 

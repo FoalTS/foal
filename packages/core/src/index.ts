@@ -33,6 +33,8 @@ export {
   generateToken,
   getAjvInstance,
   hashPassword,
+  PasswordService,
+  VerifyPasswordOptions,
   passwordHashNeedsToBeRefreshed,
   isInFile,
   signToken,

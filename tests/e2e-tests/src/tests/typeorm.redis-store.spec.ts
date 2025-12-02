@@ -9,16 +9,16 @@ import {
   createSession,
   dependency,
   Get,
-  hashPassword,
   Hook,
   HttpResponseForbidden,
   HttpResponseNoContent,
   HttpResponseOK,
   HttpResponseUnauthorized,
+  PasswordService,
   Post,
+  ServiceManager,
   UseSessions,
-  ValidateBody,
-  verifyPassword
+  ValidateBody
 } from '@foal/core';
 import { RedisStore } from '@foal/redis';
 import { createClient } from 'redis';
@@ -88,6 +88,9 @@ describe('[Sample] MongoDB & Redis Store', async () => {
     @dependency
     store: RedisStore;
 
+    @dependency
+    passwordService: PasswordService;
+
     @Post('/logout')
     @UseSessions({ store: RedisStore, required: false, })
     async logout(ctx: Context) {
@@ -115,7 +118,7 @@ describe('[Sample] MongoDB & Redis Store', async () => {
         return new HttpResponseUnauthorized();
       }
 
-      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseUnauthorized();
       }
 
@@ -155,13 +158,15 @@ describe('[Sample] MongoDB & Redis Store', async () => {
 
     await redisClient.flushDb();
 
+    const serviceManager = new ServiceManager();
+    const passwordService = serviceManager.get(PasswordService)
     const user = new User();
     user.email = 'john@foalts.org';
-    user.password = await hashPassword('password');
+    user.password = await passwordService.hashPassword('password');
     user.isAdmin = false;
     await user.save();
 
-    app = await createApp(AppController);
+    app = await createApp(AppController, { serviceManager });
   });
 
   after(() => {

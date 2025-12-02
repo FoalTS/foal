@@ -224,7 +224,7 @@ Replace the content of the new created file `src/scripts/create-user.ts` with th
 
 ```typescript
 // 3p
-import { hashPassword, Logger, ServiceManager } from '@foal/core';
+import { Logger, PasswordService, ServiceManager } from '@foal/core';
 import { Group, Permission } from '@foal/typeorm';
 
 // App
@@ -244,11 +244,12 @@ export const schema = {
 };
 
 export async function main(args: any, services: ServiceManager, logger: Logger) {
+  const passwordService = services.get(PasswordService);
   const user = new User();
   user.userPermissions = [];
   user.groups = [];
   user.email = args.email;
-  user.password = await hashPassword(args.password);
+  user.password = await passwordService.hashPassword(args.password);
 
   await dataSource.initialize();
 
