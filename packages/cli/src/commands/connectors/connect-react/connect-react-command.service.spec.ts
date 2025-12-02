@@ -1,18 +1,22 @@
-import { Generator } from '../../../services';
+import { FileSystemService, Generator } from '../../../services';
 import { ConnectReactCommandService } from './connect-react-command.service';
 
 describe('ConnectReactCommandService', () => {
 
-  const generator = new Generator();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: ConnectReactCommandService;
 
   beforeEach(() => {
-    generator.setUp();
-    const generator2 = new Generator();
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    generator = new Generator(fileSystem);
+
+    const generator2 = new Generator(fileSystem);
     service = new ConnectReactCommandService(generator2);
   });
 
-  afterEach(() => generator.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   it('should update package.json and create a .env.development file to set up the proxy.', () => {
     generator

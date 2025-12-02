@@ -1,19 +1,23 @@
-import { Generator } from '../../../services';
+import { FileSystemService, Generator } from '../../../services';
 import { ConnectAngularCommandService } from './connect-angular-command.service';
 
 // TODO: To improve: make the tests (more) independent from each other.
 describe('ConnectAngularCommandService', () => {
 
-  const generator = new Generator();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: ConnectAngularCommandService;
 
   beforeEach(() => {
-    generator.setUp();
-    const generator2 = new Generator();
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    generator = new Generator(fileSystem);
+
+    const generator2 = new Generator(fileSystem);
     service = new ConnectAngularCommandService(generator2);
   });
 
-  afterEach(() => generator.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   it('should create a proxy.conf.json file in ${path}/src.', () => {
     generator

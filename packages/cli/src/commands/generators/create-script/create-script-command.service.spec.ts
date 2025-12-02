@@ -1,19 +1,23 @@
 // FoalTS
-import { Generator } from '../../../services';
+import { FileSystemService, Generator } from '../../../services';
 import { CreateScriptCommandService } from './create-script-command.service';
 
 describe('CreateScriptCommandService', () => {
 
-  const generator = new Generator();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: CreateScriptCommandService;
 
   beforeEach(() => {
-    generator.setUp();
-    const generator2 = new Generator();
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    generator = new Generator(fileSystem);
+
+    const generator2 = new Generator(fileSystem);
     service = new CreateScriptCommandService(generator2);
   });
 
-  afterEach(() => generator.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   it('should copy the empty script file in the proper directory.', () => {
     generator

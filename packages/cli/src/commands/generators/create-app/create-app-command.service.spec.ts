@@ -1,19 +1,23 @@
 // FoalTS
-import { Generator } from '../../../services';
+import { FileSystemService, Generator } from '../../../services';
 import { CreateAppCommandService } from './create-app-command.service';
 
 describe('CreateAppCommandService', () => {
 
-  const generator = new Generator();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: CreateAppCommandService;
 
   beforeEach(() => {
-    generator.setUp();
-    const generator2 = new Generator();
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    generator = new Generator(fileSystem);
+
+    const generator2 = new Generator(fileSystem);
     service = new CreateAppCommandService(generator2);
   });
 
-  afterEach(() => generator.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   it('should abort the project creation if a directory already exists.', async () => {
     generator.ensureDir('test-foo-bar');

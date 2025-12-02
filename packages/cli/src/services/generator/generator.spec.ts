@@ -5,6 +5,7 @@ import { join } from 'path';
 
 // FoalTS
 import { ClientError, Generator } from './generator';
+import { FileSystemService } from '../file-system';
 
 function rmdir(path: string) {
   if (existsSync(path)) {
@@ -39,8 +40,12 @@ describe('ClientError', () => {
 describe('Generator', () => {
 
   let generator: Generator;
+  let fileSystem: FileSystemService;
 
-  beforeEach(() => generator = new Generator());
+  beforeEach(() => {
+    fileSystem = new FileSystemService();
+    generator = new Generator(fileSystem);
+  });
 
   describe('has a "cd" method that', () => {
 
@@ -823,28 +828,6 @@ describe('Generator', () => {
 
   });
 
-  describe('has a "setUp" method that', () => {
-
-    afterEach(() => {
-      rmdir('test-generators/subdir');
-      rmdir('test-generators');
-    });
-
-    it('should create the test client directory.', () => {
-      generator.setUp();
-      if (!existsSync('test-generators/subdir')) {
-        throw new Error('The directory "test-generators/subdir" does not exist.');
-      }
-    });
-
-    it('should set the current directory to none.', () => {
-      generator.cd('foobar');
-      generator.setUp();
-      strictEqual(generator.currentDir, '');
-    });
-
-  });
-
   describe('has a "projectHasDependency" method that', () => {
 
     let initialPkg: Buffer;
@@ -1127,37 +1110,6 @@ describe('Generator', () => {
         'bar': '~2.2.0'
       });
 
-    });
-
-  });
-
-  describe('has a "tearDown" method that', () => {
-
-    beforeEach(() => {
-      mkdir('test-generators');
-      mkdir('test-generators/subdir');
-      mkdir('test-generators/subdir/foo');
-      writeFileSync('test-generators/subdir/foo/bar', Buffer.alloc(2));
-    });
-
-    afterEach(() => {
-      rmfile('test-generators/subdir/foo/bar');
-      rmdir('test-generators/subdir/foo');
-      rmdir('test-generators/subdir');
-      rmdir('test-generators');
-    });
-
-    it('should remove the test client directory and all its contents.', () => {
-      generator.tearDown();
-      if (existsSync('test-generators/subdir')) {
-        throw new Error('The directory "test-generators/subdir" should not exist.');
-      }
-    });
-
-    it('should set the current directory to none.', () => {
-      generator.cd('foobar');
-      generator.tearDown();
-      strictEqual(generator.currentDir, '');
     });
 
   });

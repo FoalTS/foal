@@ -1,19 +1,23 @@
 // FoalTS
-import { Generator } from '../../../services';
+import { FileSystemService, Generator } from '../../../services';
 import { CreateEntityCommandService } from './create-entity-command.service';
 
 describe('CreateEntityCommandService', () => {
 
-  const generator = new Generator();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: CreateEntityCommandService;
 
   beforeEach(() => {
-    generator.setUp();
-    const generator2 = new Generator();
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    generator = new Generator(fileSystem);
+
+    const generator2 = new Generator(fileSystem);
     service = new CreateEntityCommandService(generator2);
   });
 
-  afterEach(() => generator.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   function test(root: string) {
 

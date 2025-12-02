@@ -9,7 +9,7 @@ import { red, yellow } from 'colors/safe';
 import { program } from 'commander';
 
 // FoalTS
-import { ClientError, CryptoService, Generator, LoggerService, UtilService } from './services';
+import { ClientError, CryptoService, FileSystemService, Generator, LoggerService, UtilService } from './services';
 import { ConnectAngularCommandService, ConnectReactCommandService, ConnectVueCommandService, CreateAppCommandService, CreateSecretCommandService, CreateControllerCommandService, CreateEntityCommandService, CreateHookCommandService, CreateRestApiCommandService, CreateScriptCommandService, CreateServiceCommandService, RmdirCommandService, RunScriptCommandService, UpgradeCommandService } from './commands';
 
 function displayError(...lines: string[]): void {
@@ -34,7 +34,8 @@ program
   .option('-m, --mongodb', 'Generate a new project using MongoDB instead of SQLite', false)
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON', false)
   .action(async (name: string, options: { git: boolean, install: boolean, mongodb: boolean, yaml: boolean }) => {
-    const generator = new Generator();
+    const fileSystem = new FileSystemService();
+    const generator = new Generator(fileSystem);
     const createAppCommandService = new CreateAppCommandService(generator);
     await createAppCommandService.run({
       autoInstall: options.install,
@@ -79,17 +80,20 @@ Available frameworks:
   .action(async (framework: string, path: string) => {
     switch (framework) {
       case 'angular':
-        const generator = new Generator();
+        const fileSystem = new FileSystemService();
+        const generator = new Generator(fileSystem);
         const connectAngularCommandService = new ConnectAngularCommandService(generator);
         connectAngularCommandService.run(path);
         break;
       case 'react':
-        const reactGenerator = new Generator();
+        const reactFileSystem = new FileSystemService();
+        const reactGenerator = new Generator(reactFileSystem);
         const connectReactCommandService = new ConnectReactCommandService(reactGenerator);
         connectReactCommandService.run(path);
         break;
       case 'vue':
-        const vueGenerator = new Generator();
+        const vueFileSystem = new FileSystemService();
+        const vueGenerator = new Generator(vueFileSystem);
         const connectVueCommandService = new ConnectVueCommandService(vueGenerator);
         connectVueCommandService.run(path);
         break;
@@ -133,32 +137,38 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
     try {
       switch (type) {
         case 'controller':
-          const controllerGenerator = new Generator();
+          const controllerFileSystem = new FileSystemService();
+          const controllerGenerator = new Generator(controllerFileSystem);
           const createControllerCommandService = new CreateControllerCommandService(controllerGenerator);
           createControllerCommandService.run({ name, register: options.register });
           break;
         case 'entity':
-          const entityGenerator = new Generator();
+          const entityFileSystem = new FileSystemService();
+          const entityGenerator = new Generator(entityFileSystem);
           const createEntityCommandService = new CreateEntityCommandService(entityGenerator);
           createEntityCommandService.run({ name });
           break;
         case 'rest-api':
-          const restApiGenerator = new Generator();
+          const restApiFileSystem = new FileSystemService();
+          const restApiGenerator = new Generator(restApiFileSystem);
           const createRestApiCommandService = new CreateRestApiCommandService(restApiGenerator);
           createRestApiCommandService.run({ name, register: options.register, auth: options.auth });
           break;
         case 'hook':
-          const hookGenerator = new Generator();
+          const hookFileSystem = new FileSystemService();
+          const hookGenerator = new Generator(hookFileSystem);
           const createHookCommandService = new CreateHookCommandService(hookGenerator);
           createHookCommandService.run({ name });
           break;
         case 'script':
-          const scriptGenerator = new Generator();
+          const scriptFileSystem = new FileSystemService();
+          const scriptGenerator = new Generator(scriptFileSystem);
           const createScriptCommandService = new CreateScriptCommandService(scriptGenerator);
           createScriptCommandService.run({ name });
           break;
         case 'service':
-          const serviceGenerator = new Generator();
+          const serviceFileSystem = new FileSystemService();
+          const serviceGenerator = new Generator(serviceFileSystem);
           const createServiceCommandService = new CreateServiceCommandService(serviceGenerator);
           createServiceCommandService.run({ name });
           break;
@@ -202,7 +212,8 @@ program
   .description('Upgrade the project to the latest version of FoalTS. If a version is provided, upgrade to that version.')
   .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
   .action(async (version: string|undefined, options: { install: boolean }) => {
-    const upgradeGenerator = new Generator();
+    const upgradeFileSystem = new FileSystemService();
+    const upgradeGenerator = new Generator(upgradeFileSystem);
     const upgradeCommandService = new UpgradeCommandService(upgradeGenerator);
     await upgradeCommandService.run({ version, autoInstall: options.install });
   });

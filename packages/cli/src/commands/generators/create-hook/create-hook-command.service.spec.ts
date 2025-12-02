@@ -1,19 +1,23 @@
 // FoalTS
-import { Generator } from '../../../services';
+import { FileSystemService, Generator } from '../../../services';
 import { CreateHookCommandService } from './create-hook-command.service';
 
 describe('CreateHookCommandService', () => {
 
-  const generator = new Generator();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: CreateHookCommandService;
 
   beforeEach(() => {
-    generator.setUp();
-    const generator2 = new Generator();
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    generator = new Generator(fileSystem);
+
+    const generator2 = new Generator(fileSystem);
     service = new CreateHookCommandService(generator2);
   });
 
-  afterEach(() => generator.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   function test(root: string) {
 

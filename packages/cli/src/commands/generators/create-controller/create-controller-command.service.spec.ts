@@ -2,21 +2,25 @@
 import { throws } from 'assert';
 
 // FoalTS
-import { ClientError, Generator } from '../../../services';
+import { ClientError, FileSystemService, Generator } from '../../../services';
 import { CreateControllerCommandService } from './create-controller-command.service';
 
 describe('CreateControllerCommandService', () => {
 
-  const generator = new Generator();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: CreateControllerCommandService;
 
   beforeEach(() => {
-    generator.setUp();
-    const generator2 = new Generator();
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    generator = new Generator(fileSystem);
+
+    const generator2 = new Generator(fileSystem);
     service = new CreateControllerCommandService(generator2);
   });
 
-  afterEach(() => generator.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   function test(root: string) {
 

@@ -1,19 +1,23 @@
 import { deepStrictEqual } from 'assert';
-import { Generator } from '../../services';
+import { FileSystemService, Generator } from '../../services';
 import { UpgradeCommandService } from './upgrade-command.service';
 
 describe('UpgradeCommandService', () => {
 
-  const generator = new Generator();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: UpgradeCommandService;
 
   beforeEach(() => {
-    generator.setUp();
-    const generator2 = new Generator();
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    generator = new Generator(fileSystem);
+
+    const generator2 = new Generator(fileSystem);
     service = new UpgradeCommandService(generator2);
   });
 
-  afterEach(() => generator.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   context('given a version is provided', () => {
     it('should upgrade all @foal/* dependencies (and NOT the other dependencies) to the given version.', async () => {

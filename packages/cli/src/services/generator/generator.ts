@@ -6,8 +6,6 @@ import {
   mkdirSync,
   readdirSync,
   readFileSync,
-  rmdirSync,
-  statSync,
   unlinkSync,
   writeFileSync
 } from 'fs';
@@ -16,20 +14,8 @@ import { dirname, join, parse } from 'path';
 // 3p
 import { cyan, green } from 'colors/safe';
 
-function rmDirAndFiles(path: string) {
-  const files = readdirSync(path);
-  for (const file of files) {
-    const stats = statSync(join(path, file));
-
-    if (stats.isDirectory()) {
-      rmDirAndFiles(join(path, file));
-    } else {
-      unlinkSync(join(path, file));
-    }
-  }
-
-  rmdirSync(path);
-}
+// FoalTS
+import { FileSystemService } from '../file-system';
 
 /**
  * Error thrown by the Generator which aims to be pretty
@@ -56,6 +42,8 @@ export class Generator {
 
   private readonly testDir = 'test-generators/subdir';
   private logs = true;
+
+  constructor(private readonly fileSystem: FileSystemService) {}
 
   /**
    * Do not show create and update logs.
@@ -540,30 +528,6 @@ export class Generator {
   /************************
       Testing Methods
   ************************/
-
-  /**
-   * Creates the test client directory. Sets current directory to none.
-   *
-   * @memberof Generator
-   */
-  setUp(): void {
-    const [ firstDir ] = this.testDir.split('/');
-    mkdirSync(firstDir);
-    mkdirSync(this.testDir);
-    this.currentDir = '';
-  }
-
-  /**
-   * Empties and removes the test client directory. Sets current directory to none.
-   *
-   * @memberof Generator
-   */
-  tearDown(): void {
-    const [ firstDir ] = this.testDir.split('/');
-    rmDirAndFiles(firstDir);
-
-    this.currentDir = '';
-  }
 
   /**
    * Throws an error if the file or directory does not exist.
