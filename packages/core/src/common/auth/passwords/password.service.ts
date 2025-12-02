@@ -71,7 +71,6 @@ export class PasswordService {
     );
     const isValid = timingSafeEqual(password, derivedKey);
 
-    // If the password is valid and the hash needs to be refreshed, generate a new hash and call the callback
     if (isValid && this.passwordHashNeedsToBeRefreshed(passwordHash) && options?.onPasswordUpgrade) {
       const newHash = await this.hashPassword(plainTextPassword);
       await options.onPasswordUpgrade(newHash);
