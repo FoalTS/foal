@@ -1,10 +1,5 @@
 // std
 import { deepStrictEqual, strictEqual } from 'assert';
-import {
-  existsSync,
-  readdirSync,
-  readFileSync,
-} from 'fs';
 import { join, parse } from 'path';
 
 // 3p
@@ -564,7 +559,7 @@ export class Generator {
    * @memberof Generator
    */
   assertEmptyDir(path: string): void {
-    if (readdirSync(this.parse(path)).length > 0) {
+    if (!this.fileSystem.isDirectoryEmpty(join(this.currentDir, path))) {
       throw new Error(`The directory "${path}" should be empty.`);
     }
   }
@@ -579,19 +574,18 @@ export class Generator {
    * @memberof Generator
    */
   assertEqual(actual: string, expected: string, { binary }: { binary: boolean } = { binary: false }): this {
-    const specPath = join(__dirname, '../../..', 'specs', expected);
-    if (!existsSync(specPath)) {
+    if (!this.fileSystem.existsSpec(expected)) {
       throw new Error(`The spec file "${expected}" does not exist.`);
     }
     if (binary) {
       deepStrictEqual(
-        readFileSync(this.parse(actual)),
-        readFileSync(specPath)
+        this.fileSystem.readBinaryFile(join(this.currentDir, actual)),
+        this.fileSystem.readBinaryFileFromSpecs(expected)
       );
     } else {
       strictEqual(
-        readFileSync(this.parse(actual), 'utf8'),
-        readFileSync(specPath, 'utf8')
+        this.fileSystem.readFile(join(this.currentDir, actual)),
+        this.fileSystem.readFileFromSpecs(expected)
       );
     }
     return this;

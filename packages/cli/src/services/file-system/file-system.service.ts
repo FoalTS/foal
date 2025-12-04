@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
 export class FileSystemService {
@@ -55,8 +55,20 @@ export class FileSystemService {
     return readFileSync(this.computePath(path), 'utf8');
   }
 
+  readBinaryFile(path: string): Buffer {
+    return readFileSync(this.computePath(path));
+  }
+
   readFileFromTemplates(path: string): string {
     return readFileSync(join(__dirname, '../../..', 'templates', path), 'utf8');
+  }
+
+  readFileFromSpecs(path: string): string {
+    return readFileSync(join(__dirname, '../../..', 'specs', path), 'utf8');
+  }
+
+  readBinaryFileFromSpecs(path: string): Buffer {
+    return readFileSync(join(__dirname, '../../..', 'specs', path));
   }
 
   deleteFile(path: string): void {
@@ -85,5 +97,19 @@ export class FileSystemService {
 
   existsFixture(path: string): boolean {
     return existsSync(join(__dirname, '../../..', 'fixtures', path));
+  }
+
+  existsSpec(path: string): boolean {
+    return existsSync(join(__dirname, '../../..', 'specs', path));
+  }
+
+  isDirectoryEmpty(path: string): boolean {
+    const dirPath = this.computePath(path);
+
+    if (!existsSync(dirPath)) {
+      throw new Error(`Directory does not exist: ${path}`);
+    }
+
+    return readdirSync(dirPath).length === 0;
   }
 }

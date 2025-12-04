@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { FileSystemService } from './file-system.service';
-import { doesNotThrow, strictEqual, throws } from 'assert';
+import { deepStrictEqual, doesNotThrow, strictEqual, throws } from 'assert';
 
 function setUpTestDirectory(): void {
   mkdirSync('test-generators/subdir', { recursive: true });
@@ -177,11 +177,50 @@ describe('FileSystemService', () => {
     });
   });
 
+  describe('has a "readBinaryFile" method that', () => {
+    beforeEach(() => {
+      setUpTestDirectory();
+    });
+
+    afterEach(() => {
+      tearDownTestDirectory();
+    });
+
+    it('should read the file as a buffer', () => {
+      const expected = Buffer.from([0x48, 0x65, 0x6c, 0x6c, 0x6f]);
+
+      writeFileSync('test-generators/subdir/foo.bin', expected);
+
+      const actual = fileSystem.readBinaryFile('foo.bin');
+
+      strictEqual(Buffer.isBuffer(actual), true);
+      deepStrictEqual(actual, expected);
+    });
+  });
+
   describe('has a "readFileFromTemplates" method that', () => {
     it('should read the file from the templates directory', () => {
       const content = fileSystem.readFileFromTemplates('file-system/test-template.txt');
 
       strictEqual(content, 'This is a template to test the FileSystem service.');
+    });
+  });
+
+  describe('has a "readFileFromSpecs" method that', () => {
+    it('should read the file from the specs directory', () => {
+      const content = fileSystem.readFileFromSpecs('file-system/test-spec.txt');
+
+      strictEqual(content, 'This is a spec to test the FileSystem service.');
+    });
+  });
+
+  describe('has a "readBinaryFileFromSpecs" method that', () => {
+    it('should read the file from the specs directory as a buffer', () => {
+      const actual = Buffer.from('This is a spec to test the FileSystem service.', 'utf8');
+      const expected = fileSystem.readBinaryFileFromSpecs('file-system/test-spec.txt');
+
+      strictEqual(Buffer.isBuffer(expected), true);
+      deepStrictEqual(actual, expected);
     });
   });
 
@@ -317,6 +356,45 @@ describe('FileSystemService', () => {
 
     it('should return false if the fixture file does not exist', () => {
       strictEqual(fileSystem.existsFixture('file-system/non-existent-fixture.txt'), false);
+    });
+  });
+
+  describe('has an "existsSpec" method that', () => {
+    it('should return true if the spec file exists', () => {
+      strictEqual(fileSystem.existsSpec('file-system/test-spec.txt'), true);
+    });
+
+    it('should return false if the spec file does not exist', () => {
+      strictEqual(fileSystem.existsSpec('file-system/non-existent-spec.txt'), false);
+    });
+  });
+
+  describe('has an "isDirectoryEmpty" method that', () => {
+    beforeEach(() => {
+      setUpTestDirectory();
+    });
+
+    afterEach(() => {
+      tearDownTestDirectory();
+    });
+
+    it('should return true if the directory is empty', () => {
+      mkdirSync('test-generators/subdir/foo');
+
+      strictEqual(fileSystem.isDirectoryEmpty('foo'), true);
+    });
+
+    it('should return false if the directory is not empty', () => {
+      mkdirSync('test-generators/subdir/foo');
+      writeFileSync('test-generators/subdir/foo/bar.txt', 'hello');
+
+      strictEqual(fileSystem.isDirectoryEmpty('foo'), false);
+    });
+
+    it('should throw if the directory does not exist', () => {
+      throws(() => {
+        fileSystem.isDirectoryEmpty('non-existent-dir');
+      }, /Directory does not exist: non-existent-dir/);
     });
   });
 });
