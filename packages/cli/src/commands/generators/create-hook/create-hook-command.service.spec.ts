@@ -1,26 +1,31 @@
 // FoalTS
-import { FileSystem } from '../../../services';
+import { FileSystemService, Generator, LoggerService } from '../../../services';
 import { CreateHookCommandService } from './create-hook-command.service';
 
 describe('CreateHookCommandService', () => {
 
-  const fs = new FileSystem();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: CreateHookCommandService;
 
   beforeEach(() => {
-    fs.setUp();
-    const fileSystem = new FileSystem();
-    service = new CreateHookCommandService(fileSystem);
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    const logger = new LoggerService();
+    generator = new Generator(fileSystem, logger);
+
+    const generator2 = new Generator(fileSystem, logger);
+    service = new CreateHookCommandService(generator2);
   });
 
-  afterEach(() => fs.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   function test(root: string) {
 
     describe(`when the directory ${root}/ exists`, () => {
 
       beforeEach(() => {
-        fs
+        generator
           .ensureDir(root)
           .cd(root)
           .copyFixture('hook/index.ts', 'index.ts');
@@ -29,7 +34,7 @@ describe('CreateHookCommandService', () => {
       it('should render the templates in the proper directory.', () => {
         service.run({ name: 'test-fooBar' });
 
-        fs
+        generator
           .assertEqual('test-foo-bar.hook.ts', 'hook/test-foo-bar.hook.ts')
           .assertEqual('index.ts', 'hook/index.ts');
       });
@@ -37,16 +42,16 @@ describe('CreateHookCommandService', () => {
       it('should create the directory if it does not exist.', () => {
         service.run({ name: 'barfoo/hello/test-fooBar' });
 
-        fs
+        generator
           .assertExists('barfoo/hello/test-foo-bar.hook.ts');
       });
 
       it('should create index.ts if it does not exist.', () => {
-        fs.rmfile('index.ts');
+        generator.rmfile('index.ts');
 
         service.run({ name: 'test-fooBar' });
 
-        fs.assertExists('index.ts');
+        generator.assertExists('index.ts');
       });
 
     });

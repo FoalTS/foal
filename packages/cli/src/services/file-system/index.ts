@@ -1,1 +1,1 @@
-export { ClientError, FileSystem } from './file-system';
+export { FileSystemService } from './file-system.service';

@@ -78,6 +78,22 @@ describe('LoggerService', () => {
         strictEqual(loggedMessages.length, 1);
         strictEqual(loggedMessages[0], `${bgGreen(white(' SERVER '))} ${message}`);
       });
+
+      it('should add a prefix to the message when type is "create".', () => {
+        const message = 'File created.';
+        loggerService.log('info', message, 'create');
+
+        strictEqual(loggedMessages.length, 1);
+        strictEqual(loggedMessages[0], `${bgGreen(white(' CREATE '))} ${message}`);
+      });
+
+      it('should add a prefix to the message when type is "update".', () => {
+        const message = 'File updated.';
+        loggerService.log('info', message, 'update');
+
+        strictEqual(loggedMessages.length, 1);
+        strictEqual(loggedMessages[0], `${bgCyan(white(' UPDATE '))} ${message}`);
+      });
     });
 
     context('given log level is "error"', () => {
@@ -121,6 +137,22 @@ describe('LoggerService', () => {
 
         strictEqual(loggedErrors.length, 1);
         strictEqual(loggedErrors[0], `${bgRed(white(' SERVER '))} ${message}`);
+      });
+
+      it('should add a prefix to the message when type is "create".', () => {
+        const message = 'Create error.';
+        loggerService.log('error', message, 'create');
+
+        strictEqual(loggedErrors.length, 1);
+        strictEqual(loggedErrors[0], `${bgRed(white(' CREATE '))} ${message}`);
+      });
+
+      it('should add a prefix to the message when type is "update".', () => {
+        const message = 'Update error.';
+        loggerService.log('error', message, 'update');
+
+        strictEqual(loggedErrors.length, 1);
+        strictEqual(loggedErrors[0], `${bgRed(white(' UPDATE '))} ${message}`);
       });
     });
 

@@ -1,5 +1,5 @@
 // FoalTS
-import { FileSystem } from '../../services';
+import { Generator } from '../../services';
 import { installDependencies, logger } from '../generators/utils';
 
 async function getLatestVersion(): Promise<string> {
@@ -13,7 +13,7 @@ async function getLatestVersion(): Promise<string> {
  */
 export class UpgradeCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -34,17 +34,17 @@ export class UpgradeCommandService {
     logger.log(`  Upgrading @foal/* dependencies to version ${version}...`);
     logger.log();
 
-    const dependencies = this.fileSystem.getProjectDependencies();
+    const dependencies = this.generator.getProjectDependencies();
     for (const dependency of dependencies) {
       if (dependency.name.startsWith('@foal/')) {
-        this.fileSystem.setOrUpdateProjectDependency(dependency.name, version);
+        this.generator.setOrUpdateProjectDependency(dependency.name, version);
       }
     }
 
-    const devDependencies = this.fileSystem.getProjectDevDependencies();
+    const devDependencies = this.generator.getProjectDevDependencies();
     for (const devDependency of devDependencies) {
       if (devDependency.name.startsWith('@foal/')) {
-        this.fileSystem.setOrUpdateProjectDevDependency(devDependency.name, version);
+        this.generator.setOrUpdateProjectDevDependency(devDependency.name, version);
       }
     }
 

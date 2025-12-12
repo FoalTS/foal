@@ -1,4 +1,5 @@
 export { CryptoService } from './crypto';
-export { ClientError, FileSystem } from './file-system';
+export { FileSystemService } from './file-system';
+export { ClientError, Generator } from './generator';
 export { LoggerService } from './logger';
 export { UtilService } from './util';

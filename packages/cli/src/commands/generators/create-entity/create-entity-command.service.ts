@@ -1,6 +1,6 @@
 // FoalTS
 import { basename, dirname } from 'path';
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 import { getNames } from '../utils';
 
 /**
@@ -8,7 +8,7 @@ import { getNames } from '../utils';
  */
 export class CreateEntityCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -19,18 +19,18 @@ export class CreateEntityCommandService {
    */
   run({ name }: { name: string }): void {
     let root = '';
-    if (this.fileSystem.exists('src/app/entities')) {
+    if (this.generator.exists('src/app/entities')) {
       root = 'src/app/entities';
-    } else if (this.fileSystem.exists('entities')) {
+    } else if (this.generator.exists('entities')) {
       root = 'entities';
     }
 
     const names = getNames(basename(name));
     const subdir = dirname(name);
 
-    const isMongoDBProject = this.fileSystem.projectHasDependency('mongodb');
+    const isMongoDBProject = this.generator.projectHasDependency('mongodb');
 
-    this.fileSystem
+    this.generator
       .cd(root)
       .ensureDir(subdir)
       .cd(subdir)

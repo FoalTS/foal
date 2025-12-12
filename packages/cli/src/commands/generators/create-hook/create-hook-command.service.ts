@@ -1,6 +1,6 @@
 // FoalTS
 import { basename, dirname } from 'path';
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 import { getNames } from '../utils';
 
 /**
@@ -8,7 +8,7 @@ import { getNames } from '../utils';
  */
 export class CreateHookCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -19,16 +19,16 @@ export class CreateHookCommandService {
    */
   run({ name }: { name: string }): void {
     let root = '';
-    if (this.fileSystem.exists('src/app/hooks')) {
+    if (this.generator.exists('src/app/hooks')) {
       root = 'src/app/hooks';
-    } else if (this.fileSystem.exists('hooks')) {
+    } else if (this.generator.exists('hooks')) {
       root = 'hooks';
     }
 
     const names = getNames(basename(name));
     const subdir = dirname(name);
 
-    this.fileSystem
+    this.generator
       .cd(root)
       .ensureDir(subdir)
       .cd(subdir)

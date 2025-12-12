@@ -1,28 +1,33 @@
 // FoalTS
-import { FileSystem } from '../../../services';
+import { FileSystemService, Generator, LoggerService } from '../../../services';
 import { CreateScriptCommandService } from './create-script-command.service';
 
 describe('CreateScriptCommandService', () => {
 
-  const fs = new FileSystem();
+  let fileSystem: FileSystemService;
+  let generator: Generator;
   let service: CreateScriptCommandService;
 
   beforeEach(() => {
-    fs.setUp();
-    const fileSystem = new FileSystem();
-    service = new CreateScriptCommandService(fileSystem);
+    fileSystem = new FileSystemService();
+    fileSystem.setUp();
+    const logger = new LoggerService();
+    generator = new Generator(fileSystem, logger);
+
+    const generator2 = new Generator(fileSystem, logger);
+    service = new CreateScriptCommandService(generator2);
   });
 
-  afterEach(() => fs.tearDown());
+  afterEach(() => fileSystem.tearDown());
 
   it('should copy the empty script file in the proper directory.', () => {
-    fs
+    generator
       .copyFixture('script/package.json', 'package.json')
       .ensureDir('src/scripts');
 
     service.run({ name: 'test-fooBar' });
 
-    fs
+    generator
       .cd('src/scripts')
       .assertEqual('test-foo-bar.ts', 'script/test-foo-bar.ts');
   });

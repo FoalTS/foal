@@ -2,7 +2,7 @@
 import { basename, dirname } from 'path';
 
 // FoalTS
-import { FileSystem } from '../../../services';
+import { Generator } from '../../../services';
 import { getNames } from '../utils';
 
 /**
@@ -10,7 +10,7 @@ import { getNames } from '../utils';
  */
 export class CreateControllerCommandService {
   constructor(
-    private fileSystem: FileSystem,
+    private generator: Generator,
   ) {}
 
   /**
@@ -22,9 +22,9 @@ export class CreateControllerCommandService {
    */
   run({ name, register }: { name: string, register: boolean }): void {
     let root = '';
-    if (this.fileSystem.exists('src/app/controllers')) {
+    if (this.generator.exists('src/app/controllers')) {
       root = 'src/app/controllers';
-    } else if (this.fileSystem.exists('controllers')) {
+    } else if (this.generator.exists('controllers')) {
       root = 'controllers';
     }
 
@@ -37,7 +37,7 @@ export class CreateControllerCommandService {
 
     const className = `${names.upperFirstCamelName}Controller`;
 
-    this.fileSystem
+    this.generator
       .cd(root)
       .ensureDir(subdir)
       .cd(subdir)
@@ -47,7 +47,7 @@ export class CreateControllerCommandService {
       .addNamedExportIn('index.ts', className, `./${names.kebabName}.controller`);
 
     if (register) {
-      this.fileSystem
+      this.generator
         .cd('..')
         .addOrExtendNamedImportIn(
           parentControllerPath,

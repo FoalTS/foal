@@ -1,38 +1,13 @@
 // std
 import { deepStrictEqual, strictEqual } from 'assert';
-import {
-  copyFileSync,
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  rmdirSync,
-  statSync,
-  unlinkSync,
-  writeFileSync
-} from 'fs';
-import { dirname, join, parse } from 'path';
+import { join, parse } from 'path';
 
-// 3p
-import { cyan, green } from 'colors/safe';
-
-function rmDirAndFiles(path: string) {
-  const files = readdirSync(path);
-  for (const file of files) {
-    const stats = statSync(join(path, file));
-
-    if (stats.isDirectory()) {
-      rmDirAndFiles(join(path, file));
-    } else {
-      unlinkSync(join(path, file));
-    }
-  }
-
-  rmdirSync(path);
-}
+// FoalTS
+import { FileSystemService } from '../file-system';
+import { LoggerService } from '../logger';
 
 /**
- * Error thrown by the FileSystem which aims to be pretty
+ * Error thrown by the Generator which aims to be pretty
  * printed without the stacktrace.
  *
  * @export
@@ -44,24 +19,29 @@ export class ClientError extends Error {
 }
 
 /**
- * This class provides more methods that Node std "fs".
+ * This class provides more methods that Node std "generator".
  * It also allows to create an isolated directory during directory.
  *
  * @export
- * @class FileSystem
+ * @class Generator
  */
-export class FileSystem {
+export class Generator {
 
   currentDir = '';
 
   private readonly testDir = 'test-generators/subdir';
   private logs = true;
 
+  constructor(
+    private readonly fileSystem: FileSystemService,
+    private readonly logger: LoggerService,
+  ) {}
+
   /**
    * Do not show create and update logs.
    *
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   hideLogs(): this {
     this.logs = false;
@@ -73,7 +53,7 @@ export class FileSystem {
    *
    * @param {string} path - Relative path of the directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   cd(path: string): this {
     this.currentDir = join(this.currentDir, path);
@@ -88,7 +68,7 @@ export class FileSystem {
    * as dependency.
    *
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   cdProjectRootDir(): this {
     // "/" on Unix, C:\ on Windows
@@ -102,7 +82,8 @@ export class FileSystem {
       }
       this.cd('..');
     }
-    const content = readFileSync(this.parse('package.json'), 'utf8');
+    const packagePath = join(this.currentDir, 'package.json');
+    const content = this.fileSystem.readFile(packagePath);
 
     let pkg: any;
     try {
@@ -127,10 +108,11 @@ export class FileSystem {
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {boolean}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   exists(path: string): boolean {
-    return existsSync(this.parse(path));
+    const relativePath = join(this.currentDir, path);
+    return this.fileSystem.exists(relativePath);
   }
 
   /**
@@ -139,16 +121,11 @@ export class FileSystem {
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   ensureDir(path: string): this {
-    const dir = dirname(path);
-    if (dir !== '.') {
-      this.ensureDir(dir);
-    }
-    if (!existsSync(this.parse(path))) {
-      mkdirSync(this.parse(path));
-    }
+    const relativePath = join(this.currentDir, path);
+    this.fileSystem.mkdir(relativePath);
     return this;
   }
 
@@ -159,7 +136,7 @@ export class FileSystem {
    * @param {boolean} condition - The condition.
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   ensureDirOnlyIf(condition: boolean, path: string): this {
     if (condition) {
@@ -173,12 +150,13 @@ export class FileSystem {
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   ensureFile(path: string): this {
-    if (!existsSync(this.parse(path))) {
+    const relativePath = join(this.currentDir, path);
+    if (!this.fileSystem.exists(relativePath)) {
       this.logCreate(path);
-      writeFileSync(this.parse(path), '', 'utf8');
+      this.fileSystem.writeFile(relativePath, '');
     }
     return this;
   }
@@ -189,17 +167,16 @@ export class FileSystem {
    * @param {string} src - The source path relative to the `templates/` directory.
    * @param {string} dest - The destination path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
-  copy(src: string, dest: string): this {
-    const templatePath = join(__dirname, '../../..', 'templates', src);
-    if (!existsSync(templatePath)) {
+  copyTemplate(src: string, dest: string): this {
+    if (!this.fileSystem.existsTemplate(src)) {
       throw new Error(`The template "${src}" does not exist.`);
     }
     this.logCreate(dest);
-    copyFileSync(
-      templatePath,
-      this.parse(dest)
+    this.fileSystem.copyFileFromTemplates(
+      src,
+      join(this.currentDir, dest)
     );
     return this;
   }
@@ -211,11 +188,11 @@ export class FileSystem {
    * @param {string} src - The source path relative to the `templates/` directory.
    * @param {string} dest - The destination path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
-  copyOnlyIf(condition: boolean, src: string, dest: string): this {
+  copyTemplateOnlyIf(condition: boolean, src: string, dest: string): this {
     if (condition) {
-      this.copy(src, dest);
+      this.copyTemplate(src, dest);
     }
     return this;
   }
@@ -227,19 +204,18 @@ export class FileSystem {
    * @param {string} dest - The destination path relative to the client directory.
    * @param {*} locals - The template variables.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   render(src: string, dest: string, locals: any): this {
-    const templatePath = join(__dirname, '../../..', 'templates', src);
-    if (!existsSync(templatePath)) {
+    if (!this.fileSystem.existsTemplate(src)) {
       throw new Error(`The template "${src}" does not exist.`);
     }
-    let content = readFileSync(templatePath, 'utf8');
+    let content = this.fileSystem.readFileFromTemplates(src);
     for (const key in locals) {
       content = content.split(`/* ${key} */`).join(locals[key]);
     }
     this.logCreate(dest);
-    writeFileSync(this.parse(dest), content, 'utf8');
+    this.fileSystem.writeFile(join(this.currentDir, dest), content);
     return this;
   }
 
@@ -251,7 +227,7 @@ export class FileSystem {
    * @param {string} dest - The destination path relative to the client directory.
    * @param {*} locals - The template variables.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   renderOnlyIf(condition: boolean, src: string, dest: string, locals: any): this {
     if (condition) {
@@ -266,15 +242,16 @@ export class FileSystem {
    * @param {string} path - The path relative to the client directory.
    * @param {(content: string) => string} callback - The callback that modifies the content.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   modify(path: string, callback: (content: string) => string): this {
-    if (!existsSync(this.parse(path))) {
+    const relativePath = join(this.currentDir, path);
+    if (!this.fileSystem.exists(relativePath)) {
       throw new ClientError(`Impossible to modify "${path}": the file does not exist.`);
     }
-    const content = readFileSync(this.parse(path), 'utf8');
+    const content = this.fileSystem.readFile(relativePath);
     this.logUpdate(path);
-    writeFileSync(this.parse(path), callback(content), 'utf8');
+    this.fileSystem.writeFile(relativePath, callback(content));
     return this;
   }
 
@@ -285,7 +262,7 @@ export class FileSystem {
    * @param {string} path - The path relative to the client directory.
    * @param {(content: string) => string} callback - The callback that modifies the content.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   modifyOnlyfIf(condition: boolean, path: string, callback: (content: string) => string): this {
     if (condition) {
@@ -301,7 +278,7 @@ export class FileSystem {
    * @param {string} specifier - The import specifier.
    * @param {string} source - The import source.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   addNamedExportIn(path: string, specifier: string, source: string): this {
     this.modify(path, content => `${content}export { ${specifier} } from '${source}';\n`);
@@ -318,7 +295,7 @@ export class FileSystem {
    * @param {string} specifier - The import specifier.
    * @param {string} source - The import source.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   addOrExtendNamedImportIn(path: string, specifier: string, source: string, options?: { logs: boolean }): this {
     const initialLogs = this.logs;
@@ -387,7 +364,7 @@ export class FileSystem {
    * @param {string} propertyName - The property name.
    * @param {string} element - The item to add to the array.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   addOrExtendClassArrayPropertyIn(
     path: string, propertyName: string, element: string, options?: { logs: boolean }
@@ -443,13 +420,14 @@ export class FileSystem {
    *
    * @param {string} name - The name of the dependency.
    * @returns {boolean}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   projectHasDependency(name: string): boolean {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     this.currentDir = initialCurrentDir;
     return pkg.dependencies.hasOwnProperty(name);
@@ -464,7 +442,8 @@ export class FileSystem {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     this.currentDir = initialCurrentDir;
     return Object.keys(pkg.dependencies)
@@ -480,11 +459,12 @@ export class FileSystem {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     pkg.dependencies[name] = version;
 
-    writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
+    this.fileSystem.writeFile(packagePath, JSON.stringify(pkg, null, 2));
 
     this.currentDir = initialCurrentDir;
     return this;
@@ -511,7 +491,8 @@ export class FileSystem {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     this.currentDir = initialCurrentDir;
     return Object.keys(pkg.devDependencies)
@@ -527,11 +508,12 @@ export class FileSystem {
     const initialCurrentDir = this.currentDir;
 
     this.cdProjectRootDir();
-    const pkg = JSON.parse(readFileSync(this.parse('package.json'), 'utf8'));
+    const packagePath = join(this.currentDir, 'package.json');
+    const pkg = JSON.parse(this.fileSystem.readFile(packagePath));
 
     pkg.devDependencies[name] = version;
 
-    writeFileSync(this.parse('package.json'), JSON.stringify(pkg, null, 2));
+    this.fileSystem.writeFile(packagePath, JSON.stringify(pkg, null, 2));
 
     this.currentDir = initialCurrentDir;
     return this;
@@ -542,38 +524,15 @@ export class FileSystem {
   ************************/
 
   /**
-   * Creates the test client directory. Sets current directory to none.
-   *
-   * @memberof FileSystem
-   */
-  setUp(): void {
-    const [ firstDir ] = this.testDir.split('/');
-    mkdirSync(firstDir);
-    mkdirSync(this.testDir);
-    this.currentDir = '';
-  }
-
-  /**
-   * Empties and removes the test client directory. Sets current directory to none.
-   *
-   * @memberof FileSystem
-   */
-  tearDown(): void {
-    const [ firstDir ] = this.testDir.split('/');
-    rmDirAndFiles(firstDir);
-
-    this.currentDir = '';
-  }
-
-  /**
    * Throws an error if the file or directory does not exist.
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   assertExists(path: string): this {
-    if (!existsSync(this.parse(path))) {
+    const relativePath = join(this.currentDir, path);
+    if (!this.fileSystem.exists(relativePath)) {
       throw new Error(`The file "${path}" does not exist.`);
     }
     return this;
@@ -584,10 +543,11 @@ export class FileSystem {
    *
    * @param {string} path - The path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   assertNotExists(path: string): this {
-    if (existsSync(this.parse(path))) {
+    const relativePath = join(this.currentDir, path);
+    if (this.fileSystem.exists(relativePath)) {
       throw new Error(`The file "${path}" should not exist.`);
     }
     return this;
@@ -597,10 +557,10 @@ export class FileSystem {
    * Throws an error if the directory is not empty.
    *
    * @param {string} path - The path relative to the client directory.
-   * @memberof FileSystem
+   * @memberof Generator
    */
   assertEmptyDir(path: string): void {
-    if (readdirSync(this.parse(path)).length > 0) {
+    if (!this.fileSystem.isDirectoryEmpty(join(this.currentDir, path))) {
       throw new Error(`The directory "${path}" should be empty.`);
     }
   }
@@ -612,22 +572,21 @@ export class FileSystem {
    * @param {string} expected - The path relative to the `specs/` directory.
    * @param {{ binary: boolean }} [{ binary }={ binary: true }] - Specify if the file is binary.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   assertEqual(actual: string, expected: string, { binary }: { binary: boolean } = { binary: false }): this {
-    const specPath = join(__dirname, '../../..', 'specs', expected);
-    if (!existsSync(specPath)) {
+    if (!this.fileSystem.existsSpec(expected)) {
       throw new Error(`The spec file "${expected}" does not exist.`);
     }
     if (binary) {
       deepStrictEqual(
-        readFileSync(this.parse(actual)),
-        readFileSync(specPath)
+        this.fileSystem.readBinaryFile(join(this.currentDir, actual)),
+        this.fileSystem.readBinaryFileFromSpecs(expected)
       );
     } else {
       strictEqual(
-        readFileSync(this.parse(actual), 'utf8'),
-        readFileSync(specPath, 'utf8')
+        this.fileSystem.readFile(join(this.currentDir, actual)),
+        this.fileSystem.readFileFromSpecs(expected)
       );
     }
     return this;
@@ -639,16 +598,15 @@ export class FileSystem {
    * @param {string} src - The source path relative to the `fixtures/` directory.
    * @param {string} dest - The destination path relative to the client directory.
    * @returns {this}
-   * @memberof FileSystem
+   * @memberof Generator
    */
   copyFixture(src: string, dest: string): this {
-    const fixturePath = join(__dirname, '../../..', 'fixtures', src);
-    if (!existsSync(fixturePath)) {
+    if (!this.fileSystem.existsFixture(src)) {
       throw new Error(`The fixture file "${src}" does not exist.`);
     }
-    copyFileSync(
-      fixturePath,
-      this.parse(dest)
+    this.fileSystem.copyFileFromFixtures(
+      src,
+      join(this.currentDir, dest)
     );
     return this;
   }
@@ -657,10 +615,11 @@ export class FileSystem {
    * Removes a file.
    *
    * @param {string} path - The path relative to the client directory.
-   * @memberof FileSystem
+   * @memberof Generator
    */
   rmfile(path: string): void {
-    unlinkSync(this.parse(path));
+    const relativePath = join(this.currentDir, path);
+    this.fileSystem.deleteFile(relativePath);
   }
 
   private isTestingEnvironment(): boolean {
@@ -676,18 +635,17 @@ export class FileSystem {
 
   private logCreate(path: string) {
     path = join(this.currentDir, path);
-    //  && !this.options.noLogs
     if (!this.isTestingEnvironment() && this.logs) {
-      console.log(`${green('CREATE')} ${path}`);
+      this.logger.info(path, 'create');
     }
   }
 
   private logUpdate(path: string) {
-    //  && !this.options.noLogs
     path = join(this.currentDir, path);
     if (!this.isTestingEnvironment() && this.logs) {
-      console.log(`${cyan('UPDATE')} ${path}`);
+      this.logger.info(path, 'update');
     }
   }
 
 }
+
