@@ -2,11 +2,9 @@
 import { deepStrictEqual, strictEqual } from 'assert';
 import { join, parse } from 'path';
 
-// 3p
-import { cyan, green } from 'colors/safe';
-
 // FoalTS
 import { FileSystemService } from '../file-system';
+import { LoggerService } from '../logger';
 
 /**
  * Error thrown by the Generator which aims to be pretty
@@ -34,7 +32,10 @@ export class Generator {
   private readonly testDir = 'test-generators/subdir';
   private logs = true;
 
-  constructor(private readonly fileSystem: FileSystemService) {}
+  constructor(
+    private readonly fileSystem: FileSystemService,
+    private readonly logger: LoggerService,
+  ) {}
 
   /**
    * Do not show create and update logs.
@@ -634,17 +635,15 @@ export class Generator {
 
   private logCreate(path: string) {
     path = join(this.currentDir, path);
-    //  && !this.options.noLogs
     if (!this.isTestingEnvironment() && this.logs) {
-      console.log(`${green('CREATE')} ${path}`);
+      this.logger.info(path, 'create');
     }
   }
 
   private logUpdate(path: string) {
-    //  && !this.options.noLogs
     path = join(this.currentDir, path);
     if (!this.isTestingEnvironment() && this.logs) {
-      console.log(`${cyan('UPDATE')} ${path}`);
+      this.logger.info(path, 'update');
     }
   }
 

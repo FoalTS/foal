@@ -6,6 +6,7 @@ import { join } from 'path';
 // FoalTS
 import { ClientError, Generator } from './generator';
 import { FileSystemService } from '../file-system';
+import { LoggerService } from '../logger';
 
 function rmdir(path: string) {
   if (existsSync(path)) {
@@ -44,7 +45,8 @@ describe('Generator', () => {
 
   beforeEach(() => {
     fileSystem = new FileSystemService();
-    generator = new Generator(fileSystem);
+    const logger = new LoggerService();
+    generator = new Generator(fileSystem, logger);
   });
 
   describe('has a "cd" method that', () => {

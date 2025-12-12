@@ -1,4 +1,4 @@
-import { FileSystemService, Generator } from '../../../services';
+import { FileSystemService, Generator, LoggerService } from '../../../services';
 import { ConnectVueCommandService } from './connect-vue-command.service';
 
 describe('ConnectVueCommandService', () => {
@@ -10,9 +10,10 @@ describe('ConnectVueCommandService', () => {
   beforeEach(() => {
     fileSystem = new FileSystemService();
     fileSystem.setUp();
-    generator = new Generator(fileSystem);
+    const logger = new LoggerService();
+    generator = new Generator(fileSystem, logger);
 
-    const generator2 = new Generator(fileSystem);
+    const generator2 = new Generator(fileSystem, logger);
     service = new ConnectVueCommandService(generator2);
   });
 

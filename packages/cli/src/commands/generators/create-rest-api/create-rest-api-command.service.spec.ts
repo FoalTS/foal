@@ -2,7 +2,7 @@
 import { throws } from 'assert';
 
 // FoalTS
-import { ClientError, FileSystemService, Generator } from '../../../services';
+import { ClientError, FileSystemService, Generator, LoggerService } from '../../../services';
 import { CreateRestApiCommandService } from './create-rest-api-command.service';
 
 describe('CreateRestApiCommandService', () => {
@@ -14,9 +14,10 @@ describe('CreateRestApiCommandService', () => {
   beforeEach(() => {
     fileSystem = new FileSystemService();
     fileSystem.setUp();
-    generator = new Generator(fileSystem);
+    const logger = new LoggerService();
+    generator = new Generator(fileSystem, logger);
 
-    const generator2 = new Generator(fileSystem);
+    const generator2 = new Generator(fileSystem, logger);
     service = new CreateRestApiCommandService(generator2);
   });
 

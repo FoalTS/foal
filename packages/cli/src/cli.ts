@@ -35,7 +35,8 @@ program
   .option('-y, --yaml', 'Generate a new project using YAML configuration instead of JSON', false)
   .action(async (name: string, options: { git: boolean, install: boolean, mongodb: boolean, yaml: boolean }) => {
     const fileSystem = new FileSystemService();
-    const generator = new Generator(fileSystem);
+    const logger = new LoggerService();
+    const generator = new Generator(fileSystem, logger);
     const createAppCommandService = new CreateAppCommandService(generator);
     await createAppCommandService.run({
       autoInstall: options.install,
@@ -81,19 +82,22 @@ Available frameworks:
     switch (framework) {
       case 'angular':
         const fileSystem = new FileSystemService();
-        const generator = new Generator(fileSystem);
+        const logger = new LoggerService();
+        const generator = new Generator(fileSystem, logger);
         const connectAngularCommandService = new ConnectAngularCommandService(generator);
         connectAngularCommandService.run(path);
         break;
       case 'react':
         const reactFileSystem = new FileSystemService();
-        const reactGenerator = new Generator(reactFileSystem);
+        const reactLogger = new LoggerService();
+        const reactGenerator = new Generator(reactFileSystem, reactLogger);
         const connectReactCommandService = new ConnectReactCommandService(reactGenerator);
         connectReactCommandService.run(path);
         break;
       case 'vue':
         const vueFileSystem = new FileSystemService();
-        const vueGenerator = new Generator(vueFileSystem);
+        const vueLogger = new LoggerService();
+        const vueGenerator = new Generator(vueFileSystem, vueLogger);
         const connectVueCommandService = new ConnectVueCommandService(vueGenerator);
         connectVueCommandService.run(path);
         break;
@@ -138,37 +142,43 @@ ${generateTypes.map(t => `  - ${t}`).join('\n')}
       switch (type) {
         case 'controller':
           const controllerFileSystem = new FileSystemService();
-          const controllerGenerator = new Generator(controllerFileSystem);
+          const controllerLogger = new LoggerService();
+          const controllerGenerator = new Generator(controllerFileSystem, controllerLogger);
           const createControllerCommandService = new CreateControllerCommandService(controllerGenerator);
           createControllerCommandService.run({ name, register: options.register });
           break;
         case 'entity':
           const entityFileSystem = new FileSystemService();
-          const entityGenerator = new Generator(entityFileSystem);
+          const entityLogger = new LoggerService();
+          const entityGenerator = new Generator(entityFileSystem, entityLogger);
           const createEntityCommandService = new CreateEntityCommandService(entityGenerator);
           createEntityCommandService.run({ name });
           break;
         case 'rest-api':
           const restApiFileSystem = new FileSystemService();
-          const restApiGenerator = new Generator(restApiFileSystem);
+          const restApiLogger = new LoggerService();
+          const restApiGenerator = new Generator(restApiFileSystem, restApiLogger);
           const createRestApiCommandService = new CreateRestApiCommandService(restApiGenerator);
           createRestApiCommandService.run({ name, register: options.register, auth: options.auth });
           break;
         case 'hook':
           const hookFileSystem = new FileSystemService();
-          const hookGenerator = new Generator(hookFileSystem);
+          const hookLogger = new LoggerService();
+          const hookGenerator = new Generator(hookFileSystem, hookLogger);
           const createHookCommandService = new CreateHookCommandService(hookGenerator);
           createHookCommandService.run({ name });
           break;
         case 'script':
           const scriptFileSystem = new FileSystemService();
-          const scriptGenerator = new Generator(scriptFileSystem);
+          const scriptLogger = new LoggerService();
+          const scriptGenerator = new Generator(scriptFileSystem, scriptLogger);
           const createScriptCommandService = new CreateScriptCommandService(scriptGenerator);
           createScriptCommandService.run({ name });
           break;
         case 'service':
           const serviceFileSystem = new FileSystemService();
-          const serviceGenerator = new Generator(serviceFileSystem);
+          const serviceLogger = new LoggerService();
+          const serviceGenerator = new Generator(serviceFileSystem, serviceLogger);
           const createServiceCommandService = new CreateServiceCommandService(serviceGenerator);
           createServiceCommandService.run({ name });
           break;
@@ -213,7 +223,8 @@ program
   .option('-I, --no-install', 'Don\'t autoinstall packages using yarn or npm (uses first available)')
   .action(async (version: string|undefined, options: { install: boolean }) => {
     const upgradeFileSystem = new FileSystemService();
-    const upgradeGenerator = new Generator(upgradeFileSystem);
+    const upgradeLogger = new LoggerService();
+    const upgradeGenerator = new Generator(upgradeFileSystem, upgradeLogger);
     const upgradeCommandService = new UpgradeCommandService(upgradeGenerator);
     await upgradeCommandService.run({ version, autoInstall: options.install });
   });
