@@ -8,7 +8,7 @@ import { ConcreteSessionStore } from 'mock-module';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { Config, ConfigNotFoundError } from './config';
-import { createService, dependency, Dependency, IDependency, ServiceManager, ServiceFactory, LazyService } from './service-manager';
+import { createService, dependency, Dependency, IDependency, ServiceManager, ServiceFactory, LazyService, lazy } from './service-manager';
 
 describe('dependency', () => {
 
@@ -1078,6 +1078,140 @@ describe('ServiceManager', () => {
 
       strictEqual(container.lazy1.value.value, 1);
       strictEqual(container.lazy2.value.value, 2);
+    });
+
+  });
+
+  describe('@lazy decorator', () => {
+
+    it('should automatically inject ServiceManager into LazyService instances.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class MyController {
+        @lazy
+        testService = new LazyService(TestService);
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.testService.value.value, 42);
+    });
+
+    it('should work with multiple LazyService properties.', () => {
+      class Service1 {
+        value = 1;
+      }
+      class Service2 {
+        value = 2;
+      }
+
+      class MyController {
+        @lazy
+        service1 = new LazyService(Service1);
+        
+        @lazy
+        service2 = new LazyService(Service2);
+      }
+
+      serviceManager.set(Service1, new Service1());
+      serviceManager.set(Service2, new Service2());
+      
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.service1.value.value, 1);
+      strictEqual(controller.service2.value.value, 2);
+    });
+
+    it('should work with transformation functions.', () => {
+      class BaseService {
+        baseValue = 'base';
+      }
+
+      class ExtendedService extends BaseService {
+        extendedValue = 42;
+      }
+
+      class MyController {
+        @lazy
+        service = new LazyService(
+          BaseService,
+          (s) => s as ExtendedService
+        );
+      }
+
+      const extendedInstance = new ExtendedService();
+      serviceManager.set(BaseService, extendedInstance);
+      
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.service.value.extendedValue, 42);
+    });
+
+    it('should not require manual LazyService.boot() call.', () => {
+      class TestService {
+        getValue() {
+          return 'test-value';
+        }
+      }
+
+      class MyService {
+        @lazy
+        testService = new LazyService(TestService);
+
+        getTestValue() {
+          return this.testService.value.getValue();
+        }
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const myService = serviceManager.get(MyService);
+
+      // This should work without calling LazyService.boot()
+      strictEqual(myService.getTestValue(), 'test-value');
+    });
+
+    it('should work with inheritance.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class BaseController {
+        @lazy
+        testService = new LazyService(TestService);
+      }
+
+      class ChildController extends BaseController {
+        getValue() {
+          return this.testService.value.value;
+        }
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(ChildController);
+
+      strictEqual(controller.getValue(), 42);
+    });
+
+    it('should cache the resolved service instance.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class MyController {
+        @lazy
+        testService = new LazyService(TestService);
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(MyController);
+
+      const firstAccess = controller.testService.value;
+      const secondAccess = controller.testService.value;
+
+      strictEqual(firstAccess, secondAccess);
     });
 
   });

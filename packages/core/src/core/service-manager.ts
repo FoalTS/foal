@@ -13,6 +13,10 @@ export interface IDependency {
   serviceClassOrID: string|Class;
 }
 
+export interface ILazyDependency {
+  propertyKey: string;
+}
+
 /**
  * Factory class for creating service instances with custom initialization logic.
  *
@@ -62,6 +66,17 @@ export function dependency(target: any, propertyKey: string) {
   const dependencies: IDependency[] = [ ...(Reflect.getMetadata('dependencies', target) || []) ];
   dependencies.push({ propertyKey, serviceClassOrID: serviceClass });
   Reflect.defineMetadata('dependencies', dependencies, target);
+}
+
+/**
+ * Decorator for lazy-loaded services. Automatically injects ServiceManager into LazyService instances.
+ *
+ * @export
+ */
+export function lazy(target: any, propertyKey: string) {
+  const lazyDependencies: ILazyDependency[] = [ ...(Reflect.getMetadata('lazyDependencies', target) || []) ];
+  lazyDependencies.push({ propertyKey });
+  Reflect.defineMetadata('lazyDependencies', lazyDependencies, target);
 }
 
 /**
@@ -342,6 +357,15 @@ export class ServiceManager {
 
     for (const dependency of dependencies) {
       (service as any)[dependency.propertyKey] = this.get(dependency.serviceClassOrID as any);
+    }
+
+    // Inject ServiceManager into @lazy decorated LazyService properties
+    const lazyDependencies: ILazyDependency[] = Reflect.getMetadata('lazyDependencies', serviceClass.prototype) || [];
+    for (const lazyDep of lazyDependencies) {
+      const lazyServiceInstance = (service as any)[lazyDep.propertyKey];
+      if (lazyServiceInstance instanceof LazyService) {
+        injectLazyService(this, lazyServiceInstance);
+      }
     }
   }
 
