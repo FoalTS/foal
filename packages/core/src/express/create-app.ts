@@ -73,26 +73,34 @@ export function getHttpLogParamsDefault(tokens: any, req: any, res: any): Record
  * Higher scores indicate more specific routes that should be registered first.
  * Static segments score higher than dynamic parameters.
  *
+ * @export
  * @param {string} path - The route path
  * @returns {number} The specificity score
  */
-function calculateRouteSpecificity(path: string): number {
+export function calculateRouteSpecificity(path: string): number {
   const segments = path.split('/').filter(s => s.length > 0);
-  let score = 0;
+  let staticCount = 0;
+  let positionScore = 0;
 
+  // Count static segments and calculate position-weighted score
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
     
-    if (segment.startsWith(':')) {
-      // Dynamic parameter: lower priority
-      // Weight decreases with depth to prioritize specific prefixes
-      score += 1 * Math.pow(10, segments.length - i);
-    } else {
-      // Static segment: higher priority
-      // Weight increases significantly with depth
-      score += 100 * Math.pow(10, segments.length - i);
+    if (!segment.startsWith(':')) {
+      staticCount++;
+      // Earlier static segments are weighted more heavily
+      positionScore += Math.pow(100, segments.length - i);
     }
   }
+
+  // Primary sort: number of static segments (more is better)
+  // Use a very large multiplier to ensure static count dominates
+  // Secondary sort: total length (longer is better)
+  // Tertiary sort: position of static segments (earlier is better)
+  const score = 
+    staticCount * 100000000000 +  // Static count is primary factor (100 billion per static segment)
+    segments.length * 100000 +     // Length is secondary factor
+    positionScore;                 // Position is tertiary factor
 
   return score;
 }
@@ -101,10 +109,11 @@ function calculateRouteSpecificity(path: string): number {
  * Sort routes to ensure static routes are registered before dynamic routes.
  * This prevents dynamic routes from shadowing static routes in Express.
  *
+ * @export
  * @param {any[]} routes - Array of route objects
  * @returns {any[]} Sorted array of route objects
  */
-function sortRoutes(routes: any[]): any[] {
+export function sortRoutes(routes: any[]): any[] {
   return routes.sort((a, b) => {
     const scoreA = calculateRouteSpecificity(a.route.path);
     const scoreB = calculateRouteSpecificity(b.route.path);

@@ -26,8 +26,103 @@ import {
   ServiceManager,
   Logger,
 } from '../core';
-import { createApp, getHttpLogParamsDefault, OPENAPI_SERVICE_ID } from './create-app';
+import { createApp, getHttpLogParamsDefault, OPENAPI_SERVICE_ID, calculateRouteSpecificity, sortRoutes } from './create-app';
 import { mock } from 'node:test';
+
+describe('calculateRouteSpecificity', () => {
+  it('should assign higher scores to static routes than dynamic routes.', () => {
+    const staticScore = calculateRouteSpecificity('/api/users');
+    const dynamicScore = calculateRouteSpecificity('/api/:id');
+    
+    strictEqual(staticScore > dynamicScore, true);
+  });
+
+  it('should assign higher scores to routes with more static segments.', () => {
+    const threeStaticScore = calculateRouteSpecificity('/api/users/current');
+    const twoStaticScore = calculateRouteSpecificity('/api/users');
+    const oneStaticScore = calculateRouteSpecificity('/api');
+    
+    strictEqual(threeStaticScore > twoStaticScore, true);
+    strictEqual(twoStaticScore > oneStaticScore, true);
+  });
+
+  it('should assign higher scores to static-heavy routes over dynamic-heavy routes.', () => {
+    const staticPlusDynamicScore = calculateRouteSpecificity('/api/users/:userId');
+    const twoParamsScore = calculateRouteSpecificity('/api/:resource/:id');
+    
+    strictEqual(staticPlusDynamicScore > twoParamsScore, true);
+  });
+
+  it('should handle routes with only dynamic segments.', () => {
+    const oneDynamicScore = calculateRouteSpecificity('/:param');
+    const twoDynamicScore = calculateRouteSpecificity('/:resource/:id');
+    
+    strictEqual(twoDynamicScore > oneDynamicScore, true);
+  });
+
+  it('should handle empty path segments correctly.', () => {
+    const score1 = calculateRouteSpecificity('/api/users/');
+    const score2 = calculateRouteSpecificity('/api/users');
+    
+    strictEqual(score1, score2);
+  });
+});
+
+describe('sortRoutes', () => {
+  it('should sort routes by specificity with most specific first.', () => {
+    const routes = [
+      { route: { path: '/api/:id' } },
+      { route: { path: '/api/users/current' } },
+      { route: { path: '/api/users/:userId' } },
+      { route: { path: '/api/users' } },
+    ];
+
+    const sorted = sortRoutes([...routes]);
+    
+    strictEqual(sorted[0].route.path, '/api/users/current');
+    strictEqual(sorted[1].route.path, '/api/users/:userId');
+    strictEqual(sorted[2].route.path, '/api/users');
+    strictEqual(sorted[3].route.path, '/api/:id');
+  });
+
+  it('should prioritize static routes over dynamic routes at the same depth.', () => {
+    const routes = [
+      { route: { path: '/mypath/:param' } },
+      { route: { path: '/mypath/static' } },
+    ];
+
+    const sorted = sortRoutes([...routes]);
+    
+    strictEqual(sorted[0].route.path, '/mypath/static');
+    strictEqual(sorted[1].route.path, '/mypath/:param');
+  });
+
+  it('should handle complex mixed routes.', () => {
+    const routes = [
+      { route: { path: '/:param' } },
+      { route: { path: '/api/:resource/:id' } },
+      { route: { path: '/api/users' } },
+      { route: { path: '/api/users/:userId/posts/:postId' } },
+      { route: { path: '/api/users/:userId' } },
+      { route: { path: '/api/users/current/profile' } },
+    ];
+
+    const sorted = sortRoutes([...routes]);
+    
+    // Most specific (4 static) should be first
+    strictEqual(sorted[0].route.path, '/api/users/current/profile');
+    // Then 3 static + 2 dynamic (5 total segments)
+    strictEqual(sorted[1].route.path, '/api/users/:userId/posts/:postId');
+    // Then 2 static + 1 dynamic (3 total segments)
+    strictEqual(sorted[2].route.path, '/api/users/:userId');
+    // Then 2 static (2 total segments)
+    strictEqual(sorted[3].route.path, '/api/users');
+    // Then 1 static + 2 dynamic (3 total segments)
+    strictEqual(sorted[4].route.path, '/api/:resource/:id');
+    // Least specific (1 dynamic) should be last
+    strictEqual(sorted[5].route.path, '/:param');
+  });
+});
 
 describe('getHttpLogParamsDefault', () => {
   context('the request has NOT been aborted', () => {
