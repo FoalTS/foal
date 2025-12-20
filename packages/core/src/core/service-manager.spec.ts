@@ -1030,7 +1030,7 @@ describe('ServiceManager', () => {
 
       const lazy = new LazyService(
         BaseService,
-        (service) => service as ExtendedService
+        service => service as ExtendedService
       );
       LazyService.boot(serviceManager, { lazy });
 
@@ -1046,12 +1046,13 @@ describe('ServiceManager', () => {
 
       const lazy = new LazyService(
         TestService,
-        (service) => undefined as any
+        service => undefined as any
       );
       LazyService.boot(serviceManager, { lazy });
 
       try {
-        const val = lazy.value;
+        // tslint:disable-next-line:no-unused-expression
+        lazy.value;
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         ok(error.message.includes('Invalid transform'));
@@ -1111,14 +1112,14 @@ describe('ServiceManager', () => {
       class MyController {
         @lazy
         service1 = new LazyService(Service1);
-        
+
         @lazy
         service2 = new LazyService(Service2);
       }
 
       serviceManager.set(Service1, new Service1());
       serviceManager.set(Service2, new Service2());
-      
+
       const controller = serviceManager.get(MyController);
 
       strictEqual(controller.service1.value.value, 1);
@@ -1138,13 +1139,13 @@ describe('ServiceManager', () => {
         @lazy
         service = new LazyService(
           BaseService,
-          (s) => s as ExtendedService
+          s => s as ExtendedService
         );
       }
 
       const extendedInstance = new ExtendedService();
       serviceManager.set(BaseService, extendedInstance);
-      
+
       const controller = serviceManager.get(MyController);
 
       strictEqual(controller.service.value.extendedValue, 42);
