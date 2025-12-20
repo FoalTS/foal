@@ -68,6 +68,11 @@ export function getHttpLogParamsDefault(tokens: any, req: any, res: any): Record
   };
 }
 
+// Route specificity scoring constants
+const STATIC_SEGMENT_WEIGHT = 100000000000; // 100 billion per static segment (primary factor)
+const PATH_LENGTH_WEIGHT = 100000;           // Weight for total path length (secondary factor)
+const POSITION_BASE = 100;                   // Base for position-weighted scoring (tertiary factor)
+
 /**
  * Calculate the specificity score of a route path.
  * Higher scores indicate more specific routes that should be registered first.
@@ -82,6 +87,12 @@ export function calculateRouteSpecificity(path: string): number {
   let staticCount = 0;
   let positionScore = 0;
 
+  // Pre-calculate powers for efficiency
+  const powers = new Array(segments.length + 1);
+  for (let i = 0; i <= segments.length; i++) {
+    powers[i] = Math.pow(POSITION_BASE, i);
+  }
+
   // Count static segments and calculate position-weighted score
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
@@ -89,7 +100,7 @@ export function calculateRouteSpecificity(path: string): number {
     if (!segment.startsWith(':')) {
       staticCount++;
       // Earlier static segments are weighted more heavily
-      positionScore += Math.pow(100, segments.length - i);
+      positionScore += powers[segments.length - i];
     }
   }
 
@@ -98,11 +109,18 @@ export function calculateRouteSpecificity(path: string): number {
   // Secondary sort: total length (longer is better)
   // Tertiary sort: position of static segments (earlier is better)
   const score =
-    staticCount * 100000000000 +  // Static count is primary factor (100 billion per static segment)
-    segments.length * 100000 +     // Length is secondary factor
-    positionScore;                 // Position is tertiary factor
+    staticCount * STATIC_SEGMENT_WEIGHT +
+    segments.length * PATH_LENGTH_WEIGHT +
+    positionScore;
 
   return score;
+}
+
+// Internal type for route objects with necessary structure for sorting
+interface RouteWithPath {
+  route: {
+    path: string;
+  };
 }
 
 /**
@@ -110,10 +128,10 @@ export function calculateRouteSpecificity(path: string): number {
  * This prevents dynamic routes from shadowing static routes in Express.
  *
  * @export
- * @param {any[]} routes - Array of route objects
- * @returns {any[]} Sorted array of route objects
+ * @param {RouteWithPath[]} routes - Array of route objects
+ * @returns {RouteWithPath[]} Sorted array of route objects
  */
-export function sortRoutes(routes: any[]): any[] {
+export function sortRoutes<T extends RouteWithPath>(routes: T[]): T[] {
   return routes.sort((a, b) => {
     const scoreA = calculateRouteSpecificity(a.route.path);
     const scoreB = calculateRouteSpecificity(b.route.path);
