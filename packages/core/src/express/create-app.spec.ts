@@ -1217,4 +1217,64 @@ describe('createApp', () => {
       .expect(200)
       .expect({ type: 'dynamic-two', resource: 'posts', id: '456' });
   });
+
+  it('should prioritize static routes over dynamic routes across different controllers.', async () => {
+    class SubController1 {
+      @Get('/api/:id')
+      dynamicRoute(ctx: Context) {
+        return new HttpResponseOK({ type: 'dynamic-sub1', id: ctx.request.params.id });
+      }
+    }
+
+    class SubController2 {
+      @Get('/api/users')
+      staticRoute() {
+        return new HttpResponseOK({ type: 'static-sub2' });
+      }
+    }
+
+    class AppController {
+      subControllers = [SubController1, SubController2];
+
+      @Get('/api/users/current')
+      mainStaticRoute() {
+        return new HttpResponseOK({ type: 'static-main' });
+      }
+
+      @Get('/api/:resource/:action')
+      mainDynamicRoute(ctx: Context) {
+        return new HttpResponseOK({
+          type: 'dynamic-main',
+          resource: ctx.request.params.resource,
+          action: ctx.request.params.action
+        });
+      }
+    }
+
+    const app = await createApp(AppController);
+
+    // Most specific static route from main controller should match
+    await request(app)
+      .get('/api/users/current')
+      .expect(200)
+      .expect({ type: 'static-main' });
+
+    // Static route from SubController2 should match
+    await request(app)
+      .get('/api/users')
+      .expect(200)
+      .expect({ type: 'static-sub2' });
+
+    // Dynamic route from SubController1 should match other single-segment paths
+    await request(app)
+      .get('/api/products')
+      .expect(200)
+      .expect({ type: 'dynamic-sub1', id: 'products' });
+
+    // Dynamic route from main controller should match two-segment paths
+    await request(app)
+      .get('/api/posts/create')
+      .expect(200)
+      .expect({ type: 'dynamic-main', resource: 'posts', action: 'create' });
+  });
 });

@@ -8,10 +8,21 @@
 - **Latest Applied Branch**: `copilot/fix-route-shadowing-issue`
 
 ## Problem Statement
-Dynamic routes (e.g., `GET /mypath/:param`) were shadowing static routes (e.g., `GET /mypath/some-static-path`) when both were defined in the same controller. This happened because Express matches routes in the order they are registered, and the dynamic route would match first.
+Dynamic routes (e.g., `GET /mypath/:param`) were shadowing static routes (e.g., `GET /mypath/some-static-path`) when routes were registered. This happened because Express matches routes in the order they are registered, and dynamic routes would match before static ones if registered first.
+
+**Important**: This issue affects routes across ALL controllers, not just within a single controller. Routes from different controllers (main controller and subcontrollers) were all affected.
 
 ## Solution Summary
-Implemented a route sorting algorithm that ensures static routes are registered with Express before dynamic routes by calculating a specificity score for each route.
+Implemented a **global** route sorting algorithm that ensures static routes are registered with Express before dynamic routes by calculating a specificity score for each route. All routes from all controllers are collected into a single array, sorted together globally, and then registered with Express in specificity order.
+
+### Global Application
+The fix applies globally across all controllers because:
+1. `makeControllerRoutes()` recursively collects routes from the main controller and ALL subcontrollers
+2. All routes are yielded into a single stream and collected with `Array.from()`
+3. `sortRoutes()` sorts the entire collection as one unit, regardless of which controller each route came from
+4. Routes are registered with Express in the globally sorted order
+
+This means a static route in one controller will correctly take priority over a dynamic route in a different controller.
 
 ## Changes Made
 
@@ -28,6 +39,7 @@ Implemented a route sorting algorithm that ensures static routes are registered 
    - Added unit tests for `sortRoutes()`
    - Added integration test: "should prioritize static routes over dynamic routes to prevent shadowing"
    - Added integration test: "should prioritize more specific routes with multiple segments"
+   - Added integration test: "should prioritize static routes over dynamic routes across different controllers"
 
 ## Commit History
 ```
