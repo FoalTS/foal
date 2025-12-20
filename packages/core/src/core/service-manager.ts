@@ -40,64 +40,6 @@ export class ServiceFactory<T = any> {
 }
 
 /**
- * Helper function to inject dependencies into a LazyService instance.
- */
-const injectLazyService = (sm: ServiceManager, l: LazyService<any>) =>
-  (Reflect.getMetadata('dependencies', Object.getPrototypeOf(l)) as IDependency[] | undefined)
-    ?.forEach(d => ((l as any)[d.propertyKey] = sm.get(d.serviceClassOrID as any)));
-
-/**
- * Lazy-loading wrapper for services with optional transformation.
- * Provides deferred service resolution with caching.
- *
- * @export
- */
-export class LazyService<T, V extends T = T> {
-  @dependency private sm!: ServiceManager;
-  private c?: V;
-
-  constructor(
-    public readonly type: ClassOrAbstractClass<T>,
-    private readonly tx?: (v: T) => V
-  ) {}
-
-  /**
-   * Get the lazy-loaded service instance.
-   * The service is resolved and cached on first access.
-   */
-  get value(): V {
-    return (
-      this.c ??
-      (this.c = (() => {
-        const v = this.sm.get(this.type);
-        if (!v) {
-          throw new Error(`Unable to resolve service: ${this.type.name}`);
-        }
-        const r = this.tx ? this.tx(v) : (v as any);
-        if (!r) {
-          throw new Error(`Invalid transform: ${this.type.name}`);
-        }
-        return r;
-      })())
-    );
-  }
-
-  /**
-   * Boot all LazyService instances within a service.
-   * Injects the ServiceManager into any LazyService properties.
-   *
-   * @template T
-   * @param {ServiceManager} sm - The service manager.
-   * @param {T} s - The service instance.
-   * @returns {T} The service instance.
-   */
-  static boot<T>(sm: ServiceManager, s: T): T {
-    Object.values(s as any).forEach(v => v instanceof LazyService && injectLazyService(sm, v));
-    return s;
-  }
-}
-
-/**
  * Decorator injecting a service inside a controller or another service.
  *
  * @param id {string} - The service ID.
@@ -484,3 +426,62 @@ export class ServiceManager {
   }
 
 }
+
+/**
+ * Helper function to inject dependencies into a LazyService instance.
+ */
+const injectLazyService = (sm: ServiceManager, l: LazyService<any>) =>
+  (Reflect.getMetadata('dependencies', Object.getPrototypeOf(l)) as IDependency[] | undefined)
+    ?.forEach(d => ((l as any)[d.propertyKey] = sm.get(d.serviceClassOrID as any)));
+
+/**
+ * Lazy-loading wrapper for services with optional transformation.
+ * Provides deferred service resolution with caching.
+ *
+ * @export
+ */
+export class LazyService<T, V extends T = T> {
+  @dependency private sm!: ServiceManager;
+  private c?: V;
+
+  constructor(
+    readonly type: ClassOrAbstractClass<T>,
+    private readonly tx?: (v: T) => V
+  ) {}
+
+  /**
+   * Get the lazy-loaded service instance.
+   * The service is resolved and cached on first access.
+   */
+  get value(): V {
+    return (
+      this.c ??
+      (this.c = (() => {
+        const v = this.sm.get(this.type);
+        if (!v) {
+          throw new Error(`Unable to resolve service: ${this.type.name}`);
+        }
+        const r = this.tx ? this.tx(v) : (v as any);
+        if (!r) {
+          throw new Error(`Invalid transform: ${this.type.name}`);
+        }
+        return r;
+      })())
+    );
+  }
+
+  /**
+   * Boot all LazyService instances within a service.
+   * Injects the ServiceManager into any LazyService properties.
+   *
+   * @template T
+   * @param {ServiceManager} sm - The service manager.
+   * @param {T} s - The service instance.
+   * @returns {T} The service instance.
+   */
+  static boot<T>(sm: ServiceManager, s: T): T {
+    Object.values(s as any).forEach(v => v instanceof LazyService && injectLazyService(sm, v));
+    return s;
+  }
+}
+

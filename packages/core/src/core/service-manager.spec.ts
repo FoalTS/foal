@@ -8,7 +8,7 @@ import { ConcreteSessionStore } from 'mock-module';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { Config, ConfigNotFoundError } from './config';
-import { createService, dependency, Dependency, IDependency, ServiceManager, ServiceFactory } from './service-manager';
+import { createService, dependency, Dependency, IDependency, ServiceManager, ServiceFactory, LazyService } from './service-manager';
 
 describe('dependency', () => {
 
@@ -981,6 +981,103 @@ describe('ServiceManager', () => {
       serviceManager.get(TestService);
 
       strictEqual(booted, false);
+    });
+
+  });
+
+  describe('LazyService', () => {
+
+    it('should lazily resolve a service on first access.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      serviceManager.set(TestService, new TestService());
+
+      const lazy = new LazyService(TestService);
+      LazyService.boot(serviceManager, { lazy });
+
+      strictEqual(lazy.value.value, 42);
+    });
+
+    it('should cache the resolved service.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      serviceManager.set(TestService, new TestService());
+
+      const lazy = new LazyService(TestService);
+      LazyService.boot(serviceManager, { lazy });
+
+      const firstAccess = lazy.value;
+      const secondAccess = lazy.value;
+
+      strictEqual(firstAccess, secondAccess);
+    });
+
+    it('should support transformation function.', () => {
+      class BaseService {
+        baseValue = 'base';
+      }
+
+      class ExtendedService extends BaseService {
+        extendedValue = 42;
+      }
+
+      const extendedInstance = new ExtendedService();
+      serviceManager.set(BaseService, extendedInstance);
+
+      const lazy = new LazyService(
+        BaseService,
+        (service) => service as ExtendedService
+      );
+      LazyService.boot(serviceManager, { lazy });
+
+      strictEqual(lazy.value.extendedValue, 42);
+    });
+
+    it('should throw error if transformation returns invalid value.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      serviceManager.set(TestService, new TestService());
+
+      const lazy = new LazyService(
+        TestService,
+        (service) => undefined as any
+      );
+      LazyService.boot(serviceManager, { lazy });
+
+      try {
+        const val = lazy.value;
+        throw new Error('An error should have been thrown');
+      } catch (error: any) {
+        ok(error.message.includes('Invalid transform'));
+      }
+    });
+
+    it('should inject ServiceManager into multiple LazyService instances.', () => {
+      class Service1 {
+        value = 1;
+      }
+      class Service2 {
+        value = 2;
+      }
+
+      serviceManager.set(Service1, new Service1());
+      serviceManager.set(Service2, new Service2());
+
+      const container = {
+        lazy1: new LazyService(Service1),
+        lazy2: new LazyService(Service2),
+      };
+
+      LazyService.boot(serviceManager, container);
+
+      strictEqual(container.lazy1.value.value, 1);
+      strictEqual(container.lazy2.value.value, 2);
     });
 
   });
