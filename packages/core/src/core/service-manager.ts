@@ -15,6 +15,7 @@ export interface IDependency {
 
 export interface ILazyDependency {
   propertyKey: string;
+  serviceType?: any;
 }
 
 /**
@@ -69,14 +70,40 @@ export function dependency(target: any, propertyKey: string) {
 }
 
 /**
- * Decorator for lazy-loaded services. Automatically injects ServiceManager into LazyService instances.
+ * Decorator for lazy-loaded services. Supports two usage patterns:
+ * 1. With LazyService: @lazy myService = new LazyService(ServiceClass)
+ * 2. Direct service reference: @lazy myService: ServiceClass (automatically wraps in LazyService)
  *
  * @export
  */
-export function lazy(target: any, propertyKey: string) {
-  const lazyDependencies: ILazyDependency[] = [ ...(Reflect.getMetadata('lazyDependencies', target) || []) ];
-  lazyDependencies.push({ propertyKey });
-  Reflect.defineMetadata('lazyDependencies', lazyDependencies, target);
+export function lazy(target: any, propertyKey: string): void;
+/**
+ * Decorator for lazy-loaded services with explicit service type.
+ * Usage: @lazy(ServiceClass) myService: ServiceClass
+ *
+ * @export
+ */
+export function lazy<T>(serviceClass: ClassOrAbstractClass<T>): (target: any, propertyKey: string) => void;
+export function lazy<T>(targetOrServiceClass: any, propertyKey?: string): any {
+  // Case 1: Used as @lazy (without parameters)
+  if (propertyKey !== undefined) {
+    const target = targetOrServiceClass;
+    // Get the service type from TypeScript metadata
+    const serviceType = Reflect.getMetadata('design:type', target, propertyKey);
+
+    const lazyDependencies: ILazyDependency[] = [ ...(Reflect.getMetadata('lazyDependencies', target) || []) ];
+    lazyDependencies.push({ propertyKey, serviceType });
+    Reflect.defineMetadata('lazyDependencies', lazyDependencies, target);
+    return;
+  }
+
+  // Case 2: Used as @lazy(ServiceClass)
+  const serviceClass = targetOrServiceClass;
+  return (target: any, propertyKey: string) => {
+    const lazyDependencies: ILazyDependency[] = [ ...(Reflect.getMetadata('lazyDependencies', target) || []) ];
+    lazyDependencies.push({ propertyKey, serviceType: serviceClass });
+    Reflect.defineMetadata('lazyDependencies', lazyDependencies, target);
+  };
 }
 
 /**
@@ -359,12 +386,21 @@ export class ServiceManager {
       (service as any)[dependency.propertyKey] = this.get(dependency.serviceClassOrID as any);
     }
 
-    // Inject ServiceManager into @lazy decorated LazyService properties
+    // Inject ServiceManager into @lazy decorated properties
     const lazyDependencies: ILazyDependency[] = Reflect.getMetadata('lazyDependencies', serviceClass.prototype) || [];
     for (const lazyDep of lazyDependencies) {
-      const lazyServiceInstance = (service as any)[lazyDep.propertyKey];
-      if (lazyServiceInstance instanceof LazyService) {
-        injectLazyService(this, lazyServiceInstance);
+      // Check if property already has a value (manually set LazyService)
+      const propertyValue = (service as any)[lazyDep.propertyKey];
+
+      // If it's already a LazyService, inject ServiceManager
+      if (propertyValue instanceof LazyService) {
+        injectLazyService(this, propertyValue);
+      } else if (lazyDep.serviceType && !propertyValue) {
+        // Auto-inject the service directly (no LazyService wrapper)
+        if (lazyDep.serviceType !== LazyService && lazyDep.serviceType !== Object) {
+          // Get the service instance from ServiceManager
+          (service as any)[lazyDep.propertyKey] = this.get(lazyDep.serviceType);
+        }
       }
     }
   }

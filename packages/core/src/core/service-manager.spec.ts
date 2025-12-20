@@ -1215,6 +1215,87 @@ describe('ServiceManager', () => {
       strictEqual(firstAccess, secondAccess);
     });
 
+    // Tests for direct service reference syntax (without LazyService wrapper)
+    it('should work with direct service reference using @lazy(ServiceClass).', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class MyController {
+        @lazy(TestService)
+        testService!: TestService;
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.testService.value, 42);
+    });
+
+    it('should work with multiple direct service references.', () => {
+      class Service1 {
+        value = 1;
+      }
+      class Service2 {
+        value = 2;
+      }
+
+      class MyController {
+        @lazy(Service1)
+        service1!: Service1;
+
+        @lazy(Service2)
+        service2!: Service2;
+      }
+
+      serviceManager.set(Service1, new Service1());
+      serviceManager.set(Service2, new Service2());
+
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.service1.value, 1);
+      strictEqual(controller.service2.value, 2);
+    });
+
+    it('should auto-create and inject service for direct references.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class MyController {
+        @lazy(TestService)
+        testService!: TestService;
+      }
+
+      const controller = serviceManager.get(MyController);
+
+      // Service should be auto-resolved
+      ok(controller.testService instanceof TestService);
+      strictEqual(controller.testService.value, 42);
+    });
+
+    it('should work with inheritance for direct service references.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class BaseController {
+        @lazy(TestService)
+        testService!: TestService;
+      }
+
+      class ChildController extends BaseController {
+        getValue() {
+          return this.testService.value;
+        }
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(ChildController);
+
+      strictEqual(controller.getValue(), 42);
+    });
+
   });
 
 });
