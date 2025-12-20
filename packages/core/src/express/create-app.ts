@@ -69,6 +69,52 @@ export function getHttpLogParamsDefault(tokens: any, req: any, res: any): Record
 }
 
 /**
+ * Calculate the specificity score of a route path.
+ * Higher scores indicate more specific routes that should be registered first.
+ * Static segments score higher than dynamic parameters.
+ *
+ * @param {string} path - The route path
+ * @returns {number} The specificity score
+ */
+function calculateRouteSpecificity(path: string): number {
+  const segments = path.split('/').filter(s => s.length > 0);
+  let score = 0;
+
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i];
+    
+    if (segment.startsWith(':')) {
+      // Dynamic parameter: lower priority
+      // Weight decreases with depth to prioritize specific prefixes
+      score += 1 * Math.pow(10, segments.length - i);
+    } else {
+      // Static segment: higher priority
+      // Weight increases significantly with depth
+      score += 100 * Math.pow(10, segments.length - i);
+    }
+  }
+
+  return score;
+}
+
+/**
+ * Sort routes to ensure static routes are registered before dynamic routes.
+ * This prevents dynamic routes from shadowing static routes in Express.
+ *
+ * @param {any[]} routes - Array of route objects
+ * @returns {any[]} Sorted array of route objects
+ */
+function sortRoutes(routes: any[]): any[] {
+  return routes.sort((a, b) => {
+    const scoreA = calculateRouteSpecificity(a.route.path);
+    const scoreB = calculateRouteSpecificity(b.route.path);
+    
+    // Higher scores (more specific) should come first
+    return scoreB - scoreA;
+  });
+}
+
+/**
  * Create an Express application from the root controller.
  *
  * @export
@@ -170,8 +216,10 @@ export async function createApp(
   const appController = services.get<IAppController>(AppController);
 
   // Resolve the controllers and hooks and add them to the express instance.
-  const routes = makeControllerRoutes(AppController, services);
-  for (const { route } of routes) {
+  const routes = Array.from(makeControllerRoutes(AppController, services));
+  const sortedRoutes = sortRoutes(routes);
+  
+  for (const { route } of sortedRoutes) {
     app[route.httpMethod.toLowerCase()](route.path, async (req: any, res: any, next: (err?: any) => any) => {
       try {
         const ctx = new Context(req, route.controller.constructor.name, route.propertyKey);

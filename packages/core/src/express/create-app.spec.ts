@@ -1018,4 +1018,108 @@ describe('createApp', () => {
 
     deepStrictEqual(args, [{ requestId }]);
   });
+
+  it('should prioritize static routes over dynamic routes to prevent shadowing.', async () => {
+    class AppController {
+      @Get('/mypath/:param')
+      dynamicRoute(ctx: Context) {
+        return new HttpResponseOK({ type: 'dynamic', param: ctx.request.params.param });
+      }
+
+      @Get('/mypath/some-static-path')
+      staticRoute() {
+        return new HttpResponseOK({ type: 'static' });
+      }
+
+      @Get('/mypath/another-static')
+      anotherStaticRoute() {
+        return new HttpResponseOK({ type: 'another-static' });
+      }
+    }
+
+    const app = await createApp(AppController);
+
+    // Static route should match exactly
+    await request(app)
+      .get('/mypath/some-static-path')
+      .expect(200)
+      .expect({ type: 'static' });
+
+    // Another static route should match exactly
+    await request(app)
+      .get('/mypath/another-static')
+      .expect(200)
+      .expect({ type: 'another-static' });
+
+    // Dynamic route should match other paths
+    await request(app)
+      .get('/mypath/test')
+      .expect(200)
+      .expect({ type: 'dynamic', param: 'test' });
+  });
+
+  it('should prioritize more specific routes with multiple segments.', async () => {
+    class AppController {
+      @Get('/api/:id')
+      dynamicOne(ctx: Context) {
+        return new HttpResponseOK({ type: 'dynamic-one', id: ctx.request.params.id });
+      }
+
+      @Get('/api/users')
+      staticUsers() {
+        return new HttpResponseOK({ type: 'static-users' });
+      }
+
+      @Get('/api/users/:userId')
+      dynamicUserId(ctx: Context) {
+        return new HttpResponseOK({ type: 'dynamic-user', userId: ctx.request.params.userId });
+      }
+
+      @Get('/api/users/current')
+      staticCurrent() {
+        return new HttpResponseOK({ type: 'static-current' });
+      }
+
+      @Get('/api/:resource/:id')
+      dynamicTwo(ctx: Context) {
+        return new HttpResponseOK({ 
+          type: 'dynamic-two', 
+          resource: ctx.request.params.resource,
+          id: ctx.request.params.id 
+        });
+      }
+    }
+
+    const app = await createApp(AppController);
+
+    // Most specific static route should match
+    await request(app)
+      .get('/api/users/current')
+      .expect(200)
+      .expect({ type: 'static-current' });
+
+    // Static route should match
+    await request(app)
+      .get('/api/users')
+      .expect(200)
+      .expect({ type: 'static-users' });
+
+    // Dynamic route with one parameter should match
+    await request(app)
+      .get('/api/users/123')
+      .expect(200)
+      .expect({ type: 'dynamic-user', userId: '123' });
+
+    // Dynamic route should match other paths
+    await request(app)
+      .get('/api/products')
+      .expect(200)
+      .expect({ type: 'dynamic-one', id: 'products' });
+
+    // Dynamic route with two parameters should match
+    await request(app)
+      .get('/api/posts/456')
+      .expect(200)
+      .expect({ type: 'dynamic-two', resource: 'posts', id: '456' });
+  });
 });
