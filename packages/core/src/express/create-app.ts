@@ -85,7 +85,7 @@ export function calculateRouteSpecificity(path: string): number {
   // Count static segments and calculate position-weighted score
   for (let i = 0; i < segments.length; i++) {
     const segment = segments[i];
-    
+
     if (!segment.startsWith(':')) {
       staticCount++;
       // Earlier static segments are weighted more heavily
@@ -97,7 +97,7 @@ export function calculateRouteSpecificity(path: string): number {
   // Use a very large multiplier to ensure static count dominates
   // Secondary sort: total length (longer is better)
   // Tertiary sort: position of static segments (earlier is better)
-  const score = 
+  const score =
     staticCount * 100000000000 +  // Static count is primary factor (100 billion per static segment)
     segments.length * 100000 +     // Length is secondary factor
     positionScore;                 // Position is tertiary factor
@@ -117,7 +117,7 @@ export function sortRoutes(routes: any[]): any[] {
   return routes.sort((a, b) => {
     const scoreA = calculateRouteSpecificity(a.route.path);
     const scoreB = calculateRouteSpecificity(b.route.path);
-    
+
     // Higher scores (more specific) should come first
     return scoreB - scoreA;
   });
@@ -227,7 +227,7 @@ export async function createApp(
   // Resolve the controllers and hooks and add them to the express instance.
   const routes = Array.from(makeControllerRoutes(AppController, services));
   const sortedRoutes = sortRoutes(routes);
-  
+
   for (const { route } of sortedRoutes) {
     app[route.httpMethod.toLowerCase()](route.path, async (req: any, res: any, next: (err?: any) => any) => {
       try {

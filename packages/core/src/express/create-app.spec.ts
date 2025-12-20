@@ -33,7 +33,7 @@ describe('calculateRouteSpecificity', () => {
   it('should assign higher scores to static routes than dynamic routes.', () => {
     const staticScore = calculateRouteSpecificity('/api/users');
     const dynamicScore = calculateRouteSpecificity('/api/:id');
-    
+
     strictEqual(staticScore > dynamicScore, true);
   });
 
@@ -41,7 +41,7 @@ describe('calculateRouteSpecificity', () => {
     const threeStaticScore = calculateRouteSpecificity('/api/users/current');
     const twoStaticScore = calculateRouteSpecificity('/api/users');
     const oneStaticScore = calculateRouteSpecificity('/api');
-    
+
     strictEqual(threeStaticScore > twoStaticScore, true);
     strictEqual(twoStaticScore > oneStaticScore, true);
   });
@@ -49,21 +49,21 @@ describe('calculateRouteSpecificity', () => {
   it('should assign higher scores to static-heavy routes over dynamic-heavy routes.', () => {
     const staticPlusDynamicScore = calculateRouteSpecificity('/api/users/:userId');
     const twoParamsScore = calculateRouteSpecificity('/api/:resource/:id');
-    
+
     strictEqual(staticPlusDynamicScore > twoParamsScore, true);
   });
 
   it('should handle routes with only dynamic segments.', () => {
     const oneDynamicScore = calculateRouteSpecificity('/:param');
     const twoDynamicScore = calculateRouteSpecificity('/:resource/:id');
-    
+
     strictEqual(twoDynamicScore > oneDynamicScore, true);
   });
 
   it('should handle empty path segments correctly.', () => {
     const score1 = calculateRouteSpecificity('/api/users/');
     const score2 = calculateRouteSpecificity('/api/users');
-    
+
     strictEqual(score1, score2);
   });
 });
@@ -78,7 +78,7 @@ describe('sortRoutes', () => {
     ];
 
     const sorted = sortRoutes([...routes]);
-    
+
     strictEqual(sorted[0].route.path, '/api/users/current');
     strictEqual(sorted[1].route.path, '/api/users/:userId');
     strictEqual(sorted[2].route.path, '/api/users');
@@ -92,7 +92,7 @@ describe('sortRoutes', () => {
     ];
 
     const sorted = sortRoutes([...routes]);
-    
+
     strictEqual(sorted[0].route.path, '/mypath/static');
     strictEqual(sorted[1].route.path, '/mypath/:param');
   });
@@ -108,7 +108,7 @@ describe('sortRoutes', () => {
     ];
 
     const sorted = sortRoutes([...routes]);
-    
+
     // Most specific (4 static) should be first
     strictEqual(sorted[0].route.path, '/api/users/current/profile');
     // Then 3 static + 2 dynamic (5 total segments)
@@ -1177,10 +1177,10 @@ describe('createApp', () => {
 
       @Get('/api/:resource/:id')
       dynamicTwo(ctx: Context) {
-        return new HttpResponseOK({ 
-          type: 'dynamic-two', 
+        return new HttpResponseOK({
+          type: 'dynamic-two',
           resource: ctx.request.params.resource,
-          id: ctx.request.params.id 
+          id: ctx.request.params.id
         });
       }
     }
