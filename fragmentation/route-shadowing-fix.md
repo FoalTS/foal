@@ -4,8 +4,20 @@
 - **Patch ID**: `route-shadowing-fix`
 - **Created Date**: 2025-12-20
 - **Original Branch**: `copilot/fix-route-shadowing-issue`
+- **Base Version**: FoalTS 5.1.1
+- **Derived From**: Commit 40f4870 (master branch)
 - **Status**: Active
 - **Latest Applied Branch**: `copilot/fix-route-shadowing-issue`
+- **Target Merge**: master (v5.1.1)
+
+## Version Information
+This patch was developed against **FoalTS 5.1.1** (the current master branch). While the original issue mentioned version 4.5.1, the fix was implemented on the latest version (5.1.1) as the repository is currently at this version.
+
+To apply this patch to older versions (e.g., 4.5.1), you may need to:
+1. Create a branch from the 4.5.1 tag
+2. Manually port the changes (cherry-pick may not work cleanly due to version differences)
+3. Adjust for any API differences between versions
+4. Test thoroughly as the codebase structure may differ
 
 ## Problem Statement
 Dynamic routes (e.g., `GET /mypath/:param`) were shadowing static routes (e.g., `GET /mypath/some-static-path`) when routes were registered. This happened because Express matches routes in the order they are registered, and dynamic routes would match before static ones if registered first.
@@ -80,15 +92,15 @@ Routes are scored using three factors:
 ### Applied to Branches
 | Branch | Date | Commit Hash | Status | Notes |
 |--------|------|-------------|--------|-------|
-| `copilot/fix-route-shadowing-issue` | 2025-12-20 | 0c92eb2 | ✅ Original | Initial implementation |
+| `copilot/fix-route-shadowing-issue` | 2025-12-20 | fbe881c | ✅ Original | Initial implementation (v5.1.1) |
 
 ### Pending Application
-- [ ] `master` - Waiting for PR approval
-- [ ] Other release branches as needed
+- [ ] `master` - Waiting for PR approval (target: v5.1.1)
+- [ ] Older versions (e.g., v4.5.1) - May require manual porting due to version differences
 
 ## How to Apply This Patch to Another Branch
 
-### Manual Application
+### To Same Version (v5.1.1+)
 1. Checkout the target branch:
    ```bash
    git checkout <target-branch>
@@ -100,6 +112,8 @@ Routes are scored using three factors:
    git cherry-pick 374b020  # Tests and refinements
    git cherry-pick f5b1488  # Linting fixes
    git cherry-pick 0c92eb2  # Code review improvements
+   git cherry-pick 031839f  # Fragmentation tracking
+   git cherry-pick fbe881c  # Global test and docs
    ```
 
 3. Test the changes:
@@ -115,11 +129,40 @@ Routes are scored using three factors:
    - Update "Latest Applied Branch" in metadata
    - Update status if needed
 
+### To Older Versions (e.g., v4.5.1)
+**Note**: This patch was developed for v5.1.1. Applying to older versions requires manual porting.
+
+1. Create a branch from the target version tag:
+   ```bash
+   git checkout -b fix-route-shadowing-v4.5.1 v4.5.1
+   ```
+
+2. Manually review and apply the changes:
+   - Review the diff: `git diff 40f4870..fbe881c -- packages/core/src/express/create-app.ts`
+   - Check for API differences in the older version
+   - Adapt the code if necessary
+   - Apply similar changes to test files
+
+3. Key files to update:
+   - `packages/core/src/express/create-app.ts` - Add sorting logic
+   - `packages/core/src/express/create-app.spec.ts` - Add tests
+
+4. Thoroughly test on the target version:
+   ```bash
+   cd packages/core
+   npm install  # Ensure dependencies for that version
+   npm run build
+   npm test
+   npm run lint
+   ```
+
+5. Document the port in this file with the version-specific commit hash
+
 ### Using Git Patch File
-Alternatively, create and apply patch files:
+Alternatively, create and apply patch files (works best for same version):
 ```bash
 # Create patch
-git format-patch ce5b50c~1..0c92eb2 -o fragmentation/patches/
+git format-patch ce5b50c~1..fbe881c -o fragmentation/patches/
 
 # Apply to target branch
 git checkout <target-branch>
