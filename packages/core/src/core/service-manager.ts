@@ -88,6 +88,15 @@ export function createControllerOrService<T extends object>(
 }
 
 /**
+ * Service entry in the service map.
+ */
+interface ServiceEntry {
+  boot: boolean;
+  service?: any;
+  target?: Class|ServiceFactory<any>;
+}
+
+/**
  * Identity Mapper that instantiates and returns service singletons.
  *
  * @export
@@ -95,7 +104,7 @@ export function createControllerOrService<T extends object>(
  */
 export class ServiceManager {
 
-  private readonly map: Map<string|ClassOrAbstractClass|ServiceFactory<any>, { boot: boolean, service?: any, target?: Class|ServiceFactory<any> }>  = new Map();
+  private readonly map: Map<string|ClassOrAbstractClass|ServiceFactory<any>, ServiceEntry>  = new Map();
   private initialized: boolean = false;
 
   /**
@@ -174,17 +183,22 @@ export class ServiceManager {
     let opts: { boot?: boolean, init?: boolean } = {};
 
     // Parse arguments based on their types and count
-    if (arguments.length === 3 || (arguments.length === 2 && typeof targetOrOptions !== 'object')) {
+    if (arguments.length === 3) {
       // Case: register(identifier, target, options)
       identifier = identifierOrTarget;
       target = targetOrOptions as Class|ServiceFactory<any>;
       opts = options || {};
+    } else if (arguments.length === 2 && typeof targetOrOptions === 'function') {
+      // Case: register(identifier, Class)
+      identifier = identifierOrTarget;
+      target = targetOrOptions as Class;
+      opts = {};
     } else if (arguments.length === 2 && targetOrOptions instanceof ServiceFactory) {
       // Case: register(identifier, factory)
       identifier = identifierOrTarget;
       target = targetOrOptions;
       opts = {};
-    } else if (arguments.length === 2 && typeof targetOrOptions === 'object' && !(targetOrOptions instanceof ServiceFactory)) {
+    } else if (arguments.length === 2 && typeof targetOrOptions === 'object') {
       // Case: register(target, options)
       identifier = identifierOrTarget;
       target = identifierOrTarget as Class;
@@ -265,16 +279,17 @@ export class ServiceManager {
         if (this.initialized && value.boot && service.boot) {
           const result = service.boot();
           if (result && typeof result.then === 'function') {
+            const identifierName = typeof identifier === 'string'
+              ? identifier
+              : (identifier as any).name || 'unknown';
             throw new Error(
-              `Lazy initialized services must not have async 'boot' hooks: ${
-                (identifier as Class).name || identifier
-              }`
+              `Lazy initialized services must not have async 'boot' hooks: ${identifierName}`
             );
           }
           value.boot = false;
         }
 
-        delete value.target;
+        value.target = undefined;
       }
       return value.service;
     }
@@ -319,7 +334,7 @@ export class ServiceManager {
     }
   }
 
-  private async bootService(value: { boot: boolean, service?: any, target?: Class|ServiceFactory<any> }): Promise<void> {
+  private async bootService(value: ServiceEntry): Promise<void> {
     if (value.boot && value.service && value.service.boot) {
       value.boot = false;
       await value.service.boot();

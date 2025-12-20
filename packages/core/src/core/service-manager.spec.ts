@@ -889,7 +889,7 @@ describe('ServiceManager', () => {
       }
 
       class TestServiceFactory extends ServiceFactory<TestService> {
-        create(): [typeof TestService, TestService] {
+        create(serviceManager: ServiceManager): [typeof TestService, TestService] {
           return [TestService, new TestService(42)];
         }
       }
@@ -915,7 +915,7 @@ describe('ServiceManager', () => {
       }
 
       class TestServiceFactory extends ServiceFactory<TestService> {
-        create(): [typeof TestService, TestService] {
+        create(serviceManager: ServiceManager): [typeof TestService, TestService] {
           return [TestService, new TestService('factory-created')];
         }
       }
@@ -931,7 +931,7 @@ describe('ServiceManager', () => {
       class TestService {}
 
       class TestServiceFactory extends ServiceFactory<TestService> {
-        create(): [typeof TestService, TestService] {
+        create(serviceManager: ServiceManager): [typeof TestService, TestService] {
           return [TestService, new TestService()];
         }
       }
