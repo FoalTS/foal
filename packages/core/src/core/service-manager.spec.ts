@@ -8,7 +8,7 @@ import { ConcreteSessionStore } from 'mock-module';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { Config, ConfigNotFoundError } from './config';
-import { createService, dependency, Dependency, IDependency, ServiceManager, ServiceFactory, LazyService } from './service-manager';
+import { createService, dependency, Dependency, IDependency, ServiceManager, ServiceFactory, LazyService, lazy } from './service-manager';
 
 describe('dependency', () => {
 
@@ -1030,7 +1030,7 @@ describe('ServiceManager', () => {
 
       const lazy = new LazyService(
         BaseService,
-        (service) => service as ExtendedService
+        service => service as ExtendedService
       );
       LazyService.boot(serviceManager, { lazy });
 
@@ -1046,12 +1046,13 @@ describe('ServiceManager', () => {
 
       const lazy = new LazyService(
         TestService,
-        (service) => undefined as any
+        service => undefined as any
       );
       LazyService.boot(serviceManager, { lazy });
 
       try {
-        const val = lazy.value;
+        // tslint:disable-next-line:no-unused-expression
+        lazy.value;
         throw new Error('An error should have been thrown');
       } catch (error: any) {
         ok(error.message.includes('Invalid transform'));
@@ -1078,6 +1079,274 @@ describe('ServiceManager', () => {
 
       strictEqual(container.lazy1.value.value, 1);
       strictEqual(container.lazy2.value.value, 2);
+    });
+
+  });
+
+  describe('@lazy decorator', () => {
+
+    it('should automatically inject ServiceManager into LazyService instances.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class MyController {
+        @lazy
+        testService = new LazyService(TestService);
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.testService.value.value, 42);
+    });
+
+    it('should work with multiple LazyService properties.', () => {
+      class Service1 {
+        value = 1;
+      }
+      class Service2 {
+        value = 2;
+      }
+
+      class MyController {
+        @lazy
+        service1 = new LazyService(Service1);
+
+        @lazy
+        service2 = new LazyService(Service2);
+      }
+
+      serviceManager.set(Service1, new Service1());
+      serviceManager.set(Service2, new Service2());
+
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.service1.value.value, 1);
+      strictEqual(controller.service2.value.value, 2);
+    });
+
+    it('should work with transformation functions.', () => {
+      class BaseService {
+        baseValue = 'base';
+      }
+
+      class ExtendedService extends BaseService {
+        extendedValue = 42;
+      }
+
+      class MyController {
+        @lazy
+        service = new LazyService(
+          BaseService,
+          s => s as ExtendedService
+        );
+      }
+
+      const extendedInstance = new ExtendedService();
+      serviceManager.set(BaseService, extendedInstance);
+
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.service.value.extendedValue, 42);
+    });
+
+    it('should not require manual LazyService.boot() call.', () => {
+      class TestService {
+        getValue() {
+          return 'test-value';
+        }
+      }
+
+      class MyService {
+        @lazy
+        testService = new LazyService(TestService);
+
+        getTestValue() {
+          return this.testService.value.getValue();
+        }
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const myService = serviceManager.get(MyService);
+
+      // This should work without calling LazyService.boot()
+      strictEqual(myService.getTestValue(), 'test-value');
+    });
+
+    it('should work with inheritance.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class BaseController {
+        @lazy
+        testService = new LazyService(TestService);
+      }
+
+      class ChildController extends BaseController {
+        getValue() {
+          return this.testService.value.value;
+        }
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(ChildController);
+
+      strictEqual(controller.getValue(), 42);
+    });
+
+    it('should cache the resolved service instance.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class MyController {
+        @lazy
+        testService = new LazyService(TestService);
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(MyController);
+
+      const firstAccess = controller.testService.value;
+      const secondAccess = controller.testService.value;
+
+      strictEqual(firstAccess, secondAccess);
+    });
+
+    // Tests for direct service reference syntax (without LazyService wrapper)
+    it('should work with direct service reference using @lazy(ServiceClass).', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class MyController {
+        @lazy(TestService)
+        testService!: TestService;
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.testService.value, 42);
+    });
+
+    it('should work with multiple direct service references.', () => {
+      class Service1 {
+        value = 1;
+      }
+      class Service2 {
+        value = 2;
+      }
+
+      class MyController {
+        @lazy(Service1)
+        service1!: Service1;
+
+        @lazy(Service2)
+        service2!: Service2;
+      }
+
+      serviceManager.set(Service1, new Service1());
+      serviceManager.set(Service2, new Service2());
+
+      const controller = serviceManager.get(MyController);
+
+      strictEqual(controller.service1.value, 1);
+      strictEqual(controller.service2.value, 2);
+    });
+
+    it('should auto-create and inject service for direct references.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class MyController {
+        @lazy(TestService)
+        testService!: TestService;
+      }
+
+      const controller = serviceManager.get(MyController);
+
+      // Service should be auto-resolved
+      ok(controller.testService instanceof TestService);
+      strictEqual(controller.testService.value, 42);
+    });
+
+    it('should work with inheritance for direct service references.', () => {
+      class TestService {
+        value = 42;
+      }
+
+      class BaseController {
+        @lazy(TestService)
+        testService!: TestService;
+      }
+
+      class ChildController extends BaseController {
+        getValue() {
+          return this.testService.value;
+        }
+      }
+
+      serviceManager.set(TestService, new TestService());
+      const controller = serviceManager.get(ChildController);
+
+      strictEqual(controller.getValue(), 42);
+    });
+
+    it('should verify lazy loading - service created only on first access.', () => {
+      let serviceCreated = false;
+
+      class TestService {
+        constructor() {
+          serviceCreated = true;
+        }
+        value = 42;
+      }
+
+      class MyController {
+        @lazy(TestService)
+        testService!: TestService;
+      }
+
+      // Create controller - service should NOT be created yet
+      const controller = serviceManager.get(MyController);
+      strictEqual(serviceCreated, false, 'Service should not be created during controller instantiation');
+
+      // Access property - service should be created NOW
+      const result = controller.testService;
+      strictEqual(serviceCreated, true, 'Service should be created on first access');
+      strictEqual(result.value, 42);
+    });
+
+    it('should verify lazy loading - service not created if property never accessed.', () => {
+      let serviceCreated = false;
+
+      class TestService {
+        constructor() {
+          serviceCreated = true;
+        }
+        value = 42;
+      }
+
+      class MyController {
+        @lazy(TestService)
+        testService!: TestService;
+
+        // Method that doesn't use the lazy service
+        doSomethingElse() {
+          return 'done';
+        }
+      }
+
+      // Create controller and use it WITHOUT accessing testService
+      const controller = serviceManager.get(MyController);
+      controller.doSomethingElse();
+
+      // Service should NEVER be created
+      strictEqual(serviceCreated, false, 'Service should not be created if property is never accessed');
     });
 
   });
