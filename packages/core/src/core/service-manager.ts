@@ -14,18 +14,29 @@ export interface IDependency {
 }
 
 /**
- * Interface for service factories that can create service instances.
+ * Factory class for creating service instances with custom initialization logic.
  *
  * @export
  */
-export abstract class ServiceFactory<T = any> {
+export class ServiceFactory<T = any> {
   /**
-   * Create a service instance.
+   * Creates a ServiceFactory instance.
    *
-   * @param {ServiceManager} serviceManager - The service manager.
+   * @param {(sm: ServiceManager) => [Class<T>, T]} factory - Factory function that creates the service.
+   */
+  constructor(
+    private readonly factory: (sm: ServiceManager) => [Class<T>, T]
+  ) {}
+
+  /**
+   * Create a service instance using the factory function.
+   *
+   * @param {ServiceManager} sm - The service manager.
    * @returns {[Class<T>, T]} A tuple of [ServiceClass, ServiceInstance].
    */
-  abstract create(serviceManager: ServiceManager): [Class<T>, T];
+  create(sm: ServiceManager): [Class<T>, T] {
+    return this.factory(sm);
+  }
 }
 
 /**

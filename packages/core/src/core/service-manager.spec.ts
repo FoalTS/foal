@@ -888,13 +888,9 @@ describe('ServiceManager', () => {
         }
       }
 
-      class TestServiceFactory extends ServiceFactory<TestService> {
-        create(serviceManager: ServiceManager): [typeof TestService, TestService] {
-          return [TestService, new TestService(42)];
-        }
-      }
-
-      const factory = new TestServiceFactory();
+      const factory = new ServiceFactory<TestService>((sm: ServiceManager) => {
+        return [TestService, new TestService(42)];
+      });
       serviceManager.register('test-factory', factory);
 
       const service = serviceManager.get('test-factory');
@@ -914,13 +910,9 @@ describe('ServiceManager', () => {
         }
       }
 
-      class TestServiceFactory extends ServiceFactory<TestService> {
-        create(serviceManager: ServiceManager): [typeof TestService, TestService] {
-          return [TestService, new TestService('factory-created')];
-        }
-      }
-
-      const factory = new TestServiceFactory();
+      const factory = new ServiceFactory<TestService>((sm: ServiceManager) => {
+        return [TestService, new TestService('factory-created')];
+      });
       const service = serviceManager.get(factory);
 
       ok(service instanceof TestService);
@@ -930,13 +922,9 @@ describe('ServiceManager', () => {
     it('should cache services created by factory.', () => {
       class TestService {}
 
-      class TestServiceFactory extends ServiceFactory<TestService> {
-        create(serviceManager: ServiceManager): [typeof TestService, TestService] {
-          return [TestService, new TestService()];
-        }
-      }
-
-      const factory = new TestServiceFactory();
+      const factory = new ServiceFactory<TestService>((sm: ServiceManager) => {
+        return [TestService, new TestService()];
+      });
       const service1 = serviceManager.get(factory);
       const service2 = serviceManager.get(factory);
 
