@@ -97,12 +97,14 @@ export function lazy<T>(targetOrServiceClass: any, propertyKey?: string): any {
     return;
   }
 
-  // Case 2: Used as @lazy(ServiceClass)
+  // Case 2: Used as @lazy(ServiceClass) - truly lazy with getter
   const serviceClass = targetOrServiceClass;
   return (target: any, propertyKey: string) => {
     const lazyDependencies: ILazyDependency[] = [ ...(Reflect.getMetadata('lazyDependencies', target) || []) ];
     lazyDependencies.push({ propertyKey, serviceType: serviceClass });
     Reflect.defineMetadata('lazyDependencies', lazyDependencies, target);
+
+    // Property descriptor will be defined on each instance in injectDependencies
   };
 }
 
@@ -396,10 +398,26 @@ export class ServiceManager {
       if (propertyValue instanceof LazyService) {
         injectLazyService(this, propertyValue);
       } else if (lazyDep.serviceType && !propertyValue) {
-        // Auto-inject the service directly (no LazyService wrapper)
+        // For @lazy(ServiceClass) with getter, define property on instance
         if (lazyDep.serviceType !== LazyService && lazyDep.serviceType !== Object) {
-          // Get the service instance from ServiceManager
-          (service as any)[lazyDep.propertyKey] = this.get(lazyDep.serviceType);
+          const cacheKey = Symbol(`__lazy_cache_${lazyDep.propertyKey}`);
+          const sm = this;
+
+          // Define property with getter on the instance
+          Object.defineProperty(service, lazyDep.propertyKey, {
+            get() {
+              // Return cached value if available
+              if ((this as any)[cacheKey] !== undefined) {
+                return (this as any)[cacheKey];
+              }
+
+              // Resolve the service on first access and cache it
+              (this as any)[cacheKey] = sm.get(lazyDep.serviceType);
+              return (this as any)[cacheKey];
+            },
+            enumerable: true,
+            configurable: true
+          });
         }
       }
     }
