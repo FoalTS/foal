@@ -8,7 +8,7 @@ import { ConcreteSessionStore } from 'mock-module';
 import { existsSync, mkdirSync, rmdirSync, unlinkSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { Config, ConfigNotFoundError } from './config';
-import { createService, dependency, Dependency, IDependency, ServiceManager } from './service-manager';
+import { createService, dependency, Dependency, IDependency, ServiceManager, ServiceFactory } from './service-manager';
 
 describe('dependency', () => {
 
@@ -827,6 +827,172 @@ describe('ServiceManager', () => {
 
       });
 
+    });
+
+  });
+
+  describe('when "register" is called', () => {
+
+    it('should return itself.', () => {
+      class TestService {}
+      strictEqual(serviceManager.register(TestService), serviceManager);
+    });
+
+    it('should register a service for lazy initialization.', () => {
+      class TestService {}
+      serviceManager.register(TestService);
+      
+      const service = serviceManager.get(TestService);
+      ok(service instanceof TestService);
+    });
+
+    it('should register a service with a string identifier.', () => {
+      class TestService {}
+      serviceManager.register('test-service', TestService);
+      
+      const service = serviceManager.get('test-service');
+      ok(service instanceof TestService);
+    });
+
+    it('should register a service with boot option set to false.', () => {
+      let booted = false;
+      class TestService {
+        boot() {
+          booted = true;
+        }
+      }
+      
+      serviceManager.register(TestService, { boot: false });
+      serviceManager.get(TestService);
+      
+      strictEqual(booted, false);
+    });
+
+    it('should register a service with init option for immediate instantiation.', async () => {
+      let instantiated = false;
+      class TestService {
+        constructor() {
+          instantiated = true;
+        }
+      }
+      
+      serviceManager.register(TestService, { init: true });
+      strictEqual(instantiated, true);
+    });
+
+    it('should support ServiceFactory for service creation.', () => {
+      class TestService {
+        value: number;
+        constructor(value: number) {
+          this.value = value;
+        }
+      }
+      
+      class TestServiceFactory extends ServiceFactory<TestService> {
+        create(): [typeof TestService, TestService] {
+          return [TestService, new TestService(42)];
+        }
+      }
+      
+      const factory = new TestServiceFactory();
+      serviceManager.register('test-factory', factory);
+      
+      const service = serviceManager.get('test-factory');
+      ok(service instanceof TestService);
+      strictEqual(service.value, 42);
+    });
+
+  });
+
+  describe('ServiceFactory integration', () => {
+
+    it('should handle ServiceFactory in get method.', () => {
+      class TestService {
+        name: string;
+        constructor(name: string) {
+          this.name = name;
+        }
+      }
+      
+      class TestServiceFactory extends ServiceFactory<TestService> {
+        create(): [typeof TestService, TestService] {
+          return [TestService, new TestService('factory-created')];
+        }
+      }
+      
+      const factory = new TestServiceFactory();
+      const service = serviceManager.get(factory);
+      
+      ok(service instanceof TestService);
+      strictEqual(service.name, 'factory-created');
+    });
+
+    it('should cache services created by factory.', () => {
+      class TestService {}
+      
+      class TestServiceFactory extends ServiceFactory<TestService> {
+        create(): [typeof TestService, TestService] {
+          return [TestService, new TestService()];
+        }
+      }
+      
+      const factory = new TestServiceFactory();
+      const service1 = serviceManager.get(factory);
+      const service2 = serviceManager.get(factory);
+      
+      strictEqual(service1, service2);
+    });
+
+  });
+
+  describe('lazy initialization', () => {
+
+    it('should throw error if lazy service has async boot hook after initialized.', async () => {
+      class TestService {
+        async boot() {
+          return Promise.resolve();
+        }
+      }
+      
+      await serviceManager.boot();
+      serviceManager.register(TestService, { boot: true });
+      
+      try {
+        serviceManager.get(TestService);
+        throw new Error('An error should have been thrown');
+      } catch (error: any) {
+        ok(error.message.includes('Lazy initialized services must not have async'));
+      }
+    });
+
+    it('should call sync boot hook immediately for lazy services after initialized.', async () => {
+      let booted = false;
+      class TestService {
+        boot() {
+          booted = true;
+        }
+      }
+      
+      await serviceManager.boot();
+      serviceManager.register(TestService, { boot: true });
+      serviceManager.get(TestService);
+      
+      strictEqual(booted, true);
+    });
+
+    it('should not call boot hook immediately for lazy services if boot is false.', async () => {
+      let booted = false;
+      class TestService {
+        boot() {
+          booted = true;
+        }
+      }
+      
+      await serviceManager.boot();
+      serviceManager.register(TestService, { boot: false });
+      serviceManager.get(TestService);
+      
+      strictEqual(booted, false);
     });
 
   });
