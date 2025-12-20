@@ -243,8 +243,7 @@ export class ServiceManager {
    * @returns {*} - The service instance.
    * @memberof ServiceManager
    */
-  get<T>(identifier: ClassOrAbstractClass<T>): T;
-  get<T>(identifier: ServiceFactory<T>): T;
+  get<T>(identifier: ClassOrAbstractClass<T> | ServiceFactory<T>): T;
   get(identifier: string): any;
   get(identifier: string|ClassOrAbstractClass|ServiceFactory<any>): any {
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
@@ -261,7 +260,7 @@ export class ServiceManager {
         const [serviceClass, service] = this.instantiateService(value.target);
         value.service = service;
         this.injectDependencies(serviceClass, service);
-        
+
         // Boot immediately if initialized and boot is true
         if (this.initialized && value.boot && service.boot) {
           const result = service.boot();
@@ -274,7 +273,7 @@ export class ServiceManager {
           }
           value.boot = false;
         }
-        
+
         delete value.target;
       }
       return value.service;
@@ -292,7 +291,7 @@ export class ServiceManager {
 
     // If the service has not been instantiated yet then do it.
     const [serviceClass, service] = this.instantiateService(identifier as Class|ServiceFactory<any>);
-    
+
     this.injectDependencies(serviceClass, service);
 
     // Save the service using the identifier (could be a factory or a class).
@@ -314,7 +313,7 @@ export class ServiceManager {
 
   private injectDependencies(serviceClass: Class, service: any): void {
     const dependencies: IDependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
-    
+
     for (const dependency of dependencies) {
       (service as any)[dependency.propertyKey] = this.get(dependency.serviceClassOrID as any);
     }

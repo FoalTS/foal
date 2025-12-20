@@ -841,7 +841,7 @@ describe('ServiceManager', () => {
     it('should register a service for lazy initialization.', () => {
       class TestService {}
       serviceManager.register(TestService);
-      
+
       const service = serviceManager.get(TestService);
       ok(service instanceof TestService);
     });
@@ -849,7 +849,7 @@ describe('ServiceManager', () => {
     it('should register a service with a string identifier.', () => {
       class TestService {}
       serviceManager.register('test-service', TestService);
-      
+
       const service = serviceManager.get('test-service');
       ok(service instanceof TestService);
     });
@@ -861,10 +861,10 @@ describe('ServiceManager', () => {
           booted = true;
         }
       }
-      
+
       serviceManager.register(TestService, { boot: false });
       serviceManager.get(TestService);
-      
+
       strictEqual(booted, false);
     });
 
@@ -875,7 +875,7 @@ describe('ServiceManager', () => {
           instantiated = true;
         }
       }
-      
+
       serviceManager.register(TestService, { init: true });
       strictEqual(instantiated, true);
     });
@@ -887,16 +887,16 @@ describe('ServiceManager', () => {
           this.value = value;
         }
       }
-      
+
       class TestServiceFactory extends ServiceFactory<TestService> {
         create(): [typeof TestService, TestService] {
           return [TestService, new TestService(42)];
         }
       }
-      
+
       const factory = new TestServiceFactory();
       serviceManager.register('test-factory', factory);
-      
+
       const service = serviceManager.get('test-factory');
       ok(service instanceof TestService);
       strictEqual(service.value, 42);
@@ -913,33 +913,33 @@ describe('ServiceManager', () => {
           this.name = name;
         }
       }
-      
+
       class TestServiceFactory extends ServiceFactory<TestService> {
         create(): [typeof TestService, TestService] {
           return [TestService, new TestService('factory-created')];
         }
       }
-      
+
       const factory = new TestServiceFactory();
       const service = serviceManager.get(factory);
-      
+
       ok(service instanceof TestService);
       strictEqual(service.name, 'factory-created');
     });
 
     it('should cache services created by factory.', () => {
       class TestService {}
-      
+
       class TestServiceFactory extends ServiceFactory<TestService> {
         create(): [typeof TestService, TestService] {
           return [TestService, new TestService()];
         }
       }
-      
+
       const factory = new TestServiceFactory();
       const service1 = serviceManager.get(factory);
       const service2 = serviceManager.get(factory);
-      
+
       strictEqual(service1, service2);
     });
 
@@ -953,10 +953,10 @@ describe('ServiceManager', () => {
           return Promise.resolve();
         }
       }
-      
+
       await serviceManager.boot();
       serviceManager.register(TestService, { boot: true });
-      
+
       try {
         serviceManager.get(TestService);
         throw new Error('An error should have been thrown');
@@ -972,11 +972,11 @@ describe('ServiceManager', () => {
           booted = true;
         }
       }
-      
+
       await serviceManager.boot();
       serviceManager.register(TestService, { boot: true });
       serviceManager.get(TestService);
-      
+
       strictEqual(booted, true);
     });
 
@@ -987,11 +987,11 @@ describe('ServiceManager', () => {
           booted = true;
         }
       }
-      
+
       await serviceManager.boot();
       serviceManager.register(TestService, { boot: false });
       serviceManager.get(TestService);
-      
+
       strictEqual(booted, false);
     });
 
