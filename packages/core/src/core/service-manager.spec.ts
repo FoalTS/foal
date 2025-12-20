@@ -1296,6 +1296,59 @@ describe('ServiceManager', () => {
       strictEqual(controller.getValue(), 42);
     });
 
+    it('should verify lazy loading - service created only on first access.', () => {
+      let serviceCreated = false;
+
+      class TestService {
+        constructor() {
+          serviceCreated = true;
+        }
+        value = 42;
+      }
+
+      class MyController {
+        @lazy(TestService)
+        testService!: TestService;
+      }
+
+      // Create controller - service should NOT be created yet
+      const controller = serviceManager.get(MyController);
+      strictEqual(serviceCreated, false, 'Service should not be created during controller instantiation');
+
+      // Access property - service should be created NOW
+      const result = controller.testService;
+      strictEqual(serviceCreated, true, 'Service should be created on first access');
+      strictEqual(result.value, 42);
+    });
+
+    it('should verify lazy loading - service not created if property never accessed.', () => {
+      let serviceCreated = false;
+
+      class TestService {
+        constructor() {
+          serviceCreated = true;
+        }
+        value = 42;
+      }
+
+      class MyController {
+        @lazy(TestService)
+        testService!: TestService;
+
+        // Method that doesn't use the lazy service
+        doSomethingElse() {
+          return 'done';
+        }
+      }
+
+      // Create controller and use it WITHOUT accessing testService
+      const controller = serviceManager.get(MyController);
+      controller.doSomethingElse();
+
+      // Service should NEVER be created
+      strictEqual(serviceCreated, false, 'Service should not be created if property is never accessed');
+    });
+
   });
 
 });
