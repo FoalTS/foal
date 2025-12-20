@@ -26,8 +26,103 @@ import {
   ServiceManager,
   Logger,
 } from '../core';
-import { createApp, getHttpLogParamsDefault, OPENAPI_SERVICE_ID } from './create-app';
+import { createApp, getHttpLogParamsDefault, OPENAPI_SERVICE_ID, calculateRouteSpecificity, sortRoutes } from './create-app';
 import { mock } from 'node:test';
+
+describe('calculateRouteSpecificity', () => {
+  it('should assign higher scores to static routes than dynamic routes.', () => {
+    const staticScore = calculateRouteSpecificity('/api/users');
+    const dynamicScore = calculateRouteSpecificity('/api/:id');
+
+    strictEqual(staticScore > dynamicScore, true);
+  });
+
+  it('should assign higher scores to routes with more static segments.', () => {
+    const threeStaticScore = calculateRouteSpecificity('/api/users/current');
+    const twoStaticScore = calculateRouteSpecificity('/api/users');
+    const oneStaticScore = calculateRouteSpecificity('/api');
+
+    strictEqual(threeStaticScore > twoStaticScore, true);
+    strictEqual(twoStaticScore > oneStaticScore, true);
+  });
+
+  it('should assign higher scores to static-heavy routes over dynamic-heavy routes.', () => {
+    const staticPlusDynamicScore = calculateRouteSpecificity('/api/users/:userId');
+    const twoParamsScore = calculateRouteSpecificity('/api/:resource/:id');
+
+    strictEqual(staticPlusDynamicScore > twoParamsScore, true);
+  });
+
+  it('should handle routes with only dynamic segments.', () => {
+    const oneDynamicScore = calculateRouteSpecificity('/:param');
+    const twoDynamicScore = calculateRouteSpecificity('/:resource/:id');
+
+    strictEqual(twoDynamicScore > oneDynamicScore, true);
+  });
+
+  it('should handle empty path segments correctly.', () => {
+    const score1 = calculateRouteSpecificity('/api/users/');
+    const score2 = calculateRouteSpecificity('/api/users');
+
+    strictEqual(score1, score2);
+  });
+});
+
+describe('sortRoutes', () => {
+  it('should sort routes by specificity with most specific first.', () => {
+    const routes = [
+      { route: { path: '/api/:id' } },
+      { route: { path: '/api/users/current' } },
+      { route: { path: '/api/users/:userId' } },
+      { route: { path: '/api/users' } },
+    ];
+
+    const sorted = sortRoutes([...routes]);
+
+    strictEqual(sorted[0].route.path, '/api/users/current');
+    strictEqual(sorted[1].route.path, '/api/users/:userId');
+    strictEqual(sorted[2].route.path, '/api/users');
+    strictEqual(sorted[3].route.path, '/api/:id');
+  });
+
+  it('should prioritize static routes over dynamic routes at the same depth.', () => {
+    const routes = [
+      { route: { path: '/mypath/:param' } },
+      { route: { path: '/mypath/static' } },
+    ];
+
+    const sorted = sortRoutes([...routes]);
+
+    strictEqual(sorted[0].route.path, '/mypath/static');
+    strictEqual(sorted[1].route.path, '/mypath/:param');
+  });
+
+  it('should handle complex mixed routes.', () => {
+    const routes = [
+      { route: { path: '/:param' } },
+      { route: { path: '/api/:resource/:id' } },
+      { route: { path: '/api/users' } },
+      { route: { path: '/api/users/:userId/posts/:postId' } },
+      { route: { path: '/api/users/:userId' } },
+      { route: { path: '/api/users/current/profile' } },
+    ];
+
+    const sorted = sortRoutes([...routes]);
+
+    // Most specific (4 static) should be first
+    strictEqual(sorted[0].route.path, '/api/users/current/profile');
+    // Then 3 static + 2 dynamic (5 total segments)
+    strictEqual(sorted[1].route.path, '/api/users/:userId/posts/:postId');
+    // Then 2 static + 1 dynamic (3 total segments)
+    strictEqual(sorted[2].route.path, '/api/users/:userId');
+    // Then 2 static (2 total segments)
+    strictEqual(sorted[3].route.path, '/api/users');
+    // Then 1 static + 2 dynamic (3 total segments)
+    strictEqual(sorted[4].route.path, '/api/:resource/:id');
+    // Least specific (1 dynamic) should be last
+    strictEqual(sorted[5].route.path, '/:param');
+  });
+});
 
 describe('getHttpLogParamsDefault', () => {
   context('the request has NOT been aborted', () => {
@@ -1017,5 +1112,169 @@ describe('createApp', () => {
     const args = loggerMock.calls[0].arguments;
 
     deepStrictEqual(args, [{ requestId }]);
+  });
+
+  it('should prioritize static routes over dynamic routes to prevent shadowing.', async () => {
+    class AppController {
+      @Get('/mypath/:param')
+      dynamicRoute(ctx: Context) {
+        return new HttpResponseOK({ type: 'dynamic', param: ctx.request.params.param });
+      }
+
+      @Get('/mypath/some-static-path')
+      staticRoute() {
+        return new HttpResponseOK({ type: 'static' });
+      }
+
+      @Get('/mypath/another-static')
+      anotherStaticRoute() {
+        return new HttpResponseOK({ type: 'another-static' });
+      }
+    }
+
+    const app = await createApp(AppController);
+
+    // Static route should match exactly
+    await request(app)
+      .get('/mypath/some-static-path')
+      .expect(200)
+      .expect({ type: 'static' });
+
+    // Another static route should match exactly
+    await request(app)
+      .get('/mypath/another-static')
+      .expect(200)
+      .expect({ type: 'another-static' });
+
+    // Dynamic route should match other paths
+    await request(app)
+      .get('/mypath/test')
+      .expect(200)
+      .expect({ type: 'dynamic', param: 'test' });
+  });
+
+  it('should prioritize more specific routes with multiple segments.', async () => {
+    class AppController {
+      @Get('/api/:id')
+      dynamicOne(ctx: Context) {
+        return new HttpResponseOK({ type: 'dynamic-one', id: ctx.request.params.id });
+      }
+
+      @Get('/api/users')
+      staticUsers() {
+        return new HttpResponseOK({ type: 'static-users' });
+      }
+
+      @Get('/api/users/:userId')
+      dynamicUserId(ctx: Context) {
+        return new HttpResponseOK({ type: 'dynamic-user', userId: ctx.request.params.userId });
+      }
+
+      @Get('/api/users/current')
+      staticCurrent() {
+        return new HttpResponseOK({ type: 'static-current' });
+      }
+
+      @Get('/api/:resource/:id')
+      dynamicTwo(ctx: Context) {
+        return new HttpResponseOK({
+          type: 'dynamic-two',
+          resource: ctx.request.params.resource,
+          id: ctx.request.params.id
+        });
+      }
+    }
+
+    const app = await createApp(AppController);
+
+    // Most specific static route should match
+    await request(app)
+      .get('/api/users/current')
+      .expect(200)
+      .expect({ type: 'static-current' });
+
+    // Static route should match
+    await request(app)
+      .get('/api/users')
+      .expect(200)
+      .expect({ type: 'static-users' });
+
+    // Dynamic route with one parameter should match
+    await request(app)
+      .get('/api/users/123')
+      .expect(200)
+      .expect({ type: 'dynamic-user', userId: '123' });
+
+    // Dynamic route should match other paths
+    await request(app)
+      .get('/api/products')
+      .expect(200)
+      .expect({ type: 'dynamic-one', id: 'products' });
+
+    // Dynamic route with two parameters should match
+    await request(app)
+      .get('/api/posts/456')
+      .expect(200)
+      .expect({ type: 'dynamic-two', resource: 'posts', id: '456' });
+  });
+
+  it('should prioritize static routes over dynamic routes across different controllers.', async () => {
+    class SubController1 {
+      @Get('/api/:id')
+      dynamicRoute(ctx: Context) {
+        return new HttpResponseOK({ type: 'dynamic-sub1', id: ctx.request.params.id });
+      }
+    }
+
+    class SubController2 {
+      @Get('/api/users')
+      staticRoute() {
+        return new HttpResponseOK({ type: 'static-sub2' });
+      }
+    }
+
+    class AppController {
+      subControllers = [SubController1, SubController2];
+
+      @Get('/api/users/current')
+      mainStaticRoute() {
+        return new HttpResponseOK({ type: 'static-main' });
+      }
+
+      @Get('/api/:resource/:action')
+      mainDynamicRoute(ctx: Context) {
+        return new HttpResponseOK({
+          type: 'dynamic-main',
+          resource: ctx.request.params.resource,
+          action: ctx.request.params.action
+        });
+      }
+    }
+
+    const app = await createApp(AppController);
+
+    // Most specific static route from main controller should match
+    await request(app)
+      .get('/api/users/current')
+      .expect(200)
+      .expect({ type: 'static-main' });
+
+    // Static route from SubController2 should match
+    await request(app)
+      .get('/api/users')
+      .expect(200)
+      .expect({ type: 'static-sub2' });
+
+    // Dynamic route from SubController1 should match other single-segment paths
+    await request(app)
+      .get('/api/products')
+      .expect(200)
+      .expect({ type: 'dynamic-sub1', id: 'products' });
+
+    // Dynamic route from main controller should match two-segment paths
+    await request(app)
+      .get('/api/posts/create')
+      .expect(200)
+      .expect({ type: 'dynamic-main', resource: 'posts', action: 'create' });
   });
 });
