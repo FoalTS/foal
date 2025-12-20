@@ -14,6 +14,32 @@ export interface IDependency {
 }
 
 /**
+ * Factory class for creating service instances with custom initialization logic.
+ *
+ * @export
+ */
+export class ServiceFactory<T = any> {
+  /**
+   * Creates a ServiceFactory instance.
+   *
+   * @param {(sm: ServiceManager) => [Class<T>, T]} factory - Factory function that creates the service.
+   */
+  constructor(
+    private readonly factory: (sm: ServiceManager) => [Class<T>, T]
+  ) {}
+
+  /**
+   * Create a service instance using the factory function.
+   *
+   * @param {ServiceManager} sm - The service manager.
+   * @returns {[Class<T>, T]} A tuple of [ServiceClass, ServiceInstance].
+   */
+  create(sm: ServiceManager): [Class<T>, T] {
+    return this.factory(sm);
+  }
+}
+
+/**
  * Decorator injecting a service inside a controller or another service.
  *
  * @param id {string} - The service ID.
@@ -73,6 +99,15 @@ export function createControllerOrService<T extends object>(
 }
 
 /**
+ * Service entry in the service map.
+ */
+interface ServiceEntry {
+  boot: boolean;
+  service?: any;
+  target?: Class|ServiceFactory<any>;
+}
+
+/**
  * Identity Mapper that instantiates and returns service singletons.
  *
  * @export
@@ -80,7 +115,8 @@ export function createControllerOrService<T extends object>(
  */
 export class ServiceManager {
 
-  private readonly map: Map<string|ClassOrAbstractClass, { boot: boolean, service: any }>  = new Map();
+  private readonly map: Map<string|ClassOrAbstractClass|ServiceFactory<any>, ServiceEntry>  = new Map();
+  private initialized: boolean = false;
 
   /**
    * Boot all services : call the method "boot" of each service if it exists.
@@ -99,14 +135,112 @@ export class ServiceManager {
       if (!value) {
         throw new Error(`No service was found with the identifier "${identifier}".`);
       }
-      return this.bootService(value);
+      // Ensure service is instantiated before booting
+      if (value.target && !value.service) {
+        this.get(identifier as any);
+      }
+      await this.bootService(value);
+    } else {
+      const promises: Promise<void>[] = [];
+      for (const [key, value] of this.map.entries()) {
+        // Ensure service is instantiated before booting
+        if (value.target && !value.service) {
+          this.get(key as any);
+        }
+        promises.push(this.bootService(value));
+      }
+      await Promise.all(promises);
+      this.initialized = true;
+    }
+  }
+
+  /**
+   * Register a service for lazy initialization.
+   *
+   * @param {string} identifier - The service ID.
+   * @param {Class|ServiceFactory<any>} target - The service class or factory.
+   * @param {{ boot?: boolean, init?: boolean }} [options] - Options for registration.
+   * @returns {this} The service manager.
+   * @memberof ServiceManager
+   */
+  register(identifier: string, target: Class|ServiceFactory<any>, options?: { boot?: boolean, init?: boolean }): this;
+  /**
+   * Register a service for lazy initialization.
+   *
+   * @template T
+   * @param {ClassOrAbstractClass<T>} identifier - The service class.
+   * @param {Class<T>|ServiceFactory<T>} target - The service class or factory.
+   * @param {{ boot?: boolean, init?: boolean }} [options] - Options for registration.
+   * @returns {this} The service manager.
+   * @memberof ServiceManager
+   */
+  register<T>(identifier: ClassOrAbstractClass<T>, target: Class<T>|ServiceFactory<T>, options?: { boot?: boolean, init?: boolean }): this;
+  /**
+   * Register a service for lazy initialization.
+   *
+   * @param {ClassOrAbstractClass} identifierOrTarget - The service class (when used without a separate target).
+   * @param {{ boot?: boolean, init?: boolean }} [options] - Options for registration.
+   * @returns {this} The service manager.
+   * @memberof ServiceManager
+   */
+  register(identifierOrTarget: ClassOrAbstractClass, options?: { boot?: boolean, init?: boolean }): this;
+  register(
+    identifierOrTarget: string|ClassOrAbstractClass,
+    targetOrOptions?: Class|ServiceFactory<any>|{ boot?: boolean, init?: boolean },
+    options?: { boot?: boolean, init?: boolean }
+  ): this {
+    let identifier: string|ClassOrAbstractClass;
+    let target: Class|ServiceFactory<any>;
+    let opts: { boot?: boolean, init?: boolean } = {};
+
+    // Parse arguments based on their types and count
+    if (arguments.length === 3) {
+      // Case: register(identifier, target, options)
+      identifier = identifierOrTarget;
+      target = targetOrOptions as Class|ServiceFactory<any>;
+      opts = options || {};
+    } else if (arguments.length === 2 && typeof targetOrOptions === 'function') {
+      // Case: register(identifier, Class)
+      identifier = identifierOrTarget;
+      target = targetOrOptions as Class;
+      opts = {};
+    } else if (arguments.length === 2 && targetOrOptions instanceof ServiceFactory) {
+      // Case: register(identifier, factory)
+      identifier = identifierOrTarget;
+      target = targetOrOptions;
+      opts = {};
+    } else if (arguments.length === 2 && typeof targetOrOptions === 'object') {
+      // Case: register(target, options)
+      identifier = identifierOrTarget;
+      target = identifierOrTarget as Class;
+      opts = targetOrOptions as { boot?: boolean, init?: boolean };
+    } else {
+      // Case: register(target) with no options
+      identifier = identifierOrTarget;
+      target = identifierOrTarget as Class;
     }
 
-    const promises: Promise<void>[] = [];
-    for (const value of this.map.values()) {
-      promises.push(this.bootService(value));
+    // Set defaults
+    if (opts.boot === undefined) {
+      opts.boot = true;
     }
-    await Promise.all(promises);
+
+    if (opts.init) {
+      // Immediate initialization
+      const service = this.get(target as any);
+      this.map.set(identifier, {
+        boot: false, // Already handled during get
+        service
+      });
+    } else {
+      // Lazy initialization
+      this.map.set(identifier, {
+        boot: opts.boot,
+        target
+      });
+    }
+
+    return this;
   }
 
   /**
@@ -134,9 +268,9 @@ export class ServiceManager {
    * @returns {*} - The service instance.
    * @memberof ServiceManager
    */
-  get<T>(identifier: ClassOrAbstractClass<T>): T;
+  get<T>(identifier: ClassOrAbstractClass<T> | ServiceFactory<T>): T;
   get(identifier: string): any;
-  get(identifier: string|ClassOrAbstractClass): any {
+  get(identifier: string|ClassOrAbstractClass|ServiceFactory<any>): any {
     // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
     if (identifier === ServiceManager || identifier.isServiceManager === true) {
       // @ts-ignore : Type 'ServiceManager' is not assignable to type 'Service'.
@@ -146,6 +280,28 @@ export class ServiceManager {
     // Get the service if it exists.
     const value = this.map.get(identifier);
     if (value) {
+      // Handle lazy initialization
+      if (value.target && !value.service) {
+        const [serviceClass, service] = this.instantiateService(value.target);
+        value.service = service;
+        this.injectDependencies(serviceClass, service);
+
+        // Boot immediately if initialized and boot is true
+        if (this.initialized && value.boot && service.boot) {
+          const result = service.boot();
+          if (result && typeof result.then === 'function') {
+            const identifierName = typeof identifier === 'string'
+              ? identifier
+              : (identifier as any).name || 'unknown';
+            throw new Error(
+              `Lazy initialized services must not have async 'boot' hooks: ${identifierName}`
+            );
+          }
+          value.boot = false;
+        }
+
+        value.target = undefined;
+      }
       return value.service;
     }
 
@@ -154,22 +310,17 @@ export class ServiceManager {
       throw new Error(`No service was found with the identifier "${identifier}".`);
     }
 
-    if (identifier.hasOwnProperty('concreteClassConfigPath')) {
+    if (!(identifier instanceof ServiceFactory) && identifier.hasOwnProperty('concreteClassConfigPath')) {
       const concreteClass = this.getConcreteClassFromConfig(identifier);
       return this.get(concreteClass);
     }
 
     // If the service has not been instantiated yet then do it.
-    const dependencies: IDependency[] = Reflect.getMetadata('dependencies', identifier.prototype) || [];
+    const [serviceClass, service] = this.instantiateService(identifier as Class|ServiceFactory<any>);
 
-    // identifier is a class here.
-    const service = new (identifier as Class)();
+    this.injectDependencies(serviceClass, service);
 
-    for (const dependency of dependencies) {
-      (service as any)[dependency.propertyKey] = this.get(dependency.serviceClassOrID as any);
-    }
-
-    // Save the service.
+    // Save the service using the identifier (could be a factory or a class).
     this.map.set(identifier, {
       boot: true,
       service,
@@ -178,8 +329,24 @@ export class ServiceManager {
     return service;
   }
 
-  private async bootService(value: { boot: boolean, service: any }): Promise<void> {
-    if (value.boot && value.service.boot) {
+  private instantiateService(target: Class|ServiceFactory<any>): [Class, any] {
+    if (target instanceof ServiceFactory) {
+      return target.create(this);
+    } else {
+      return [target, new target()];
+    }
+  }
+
+  private injectDependencies(serviceClass: Class, service: any): void {
+    const dependencies: IDependency[] = Reflect.getMetadata('dependencies', serviceClass.prototype) || [];
+
+    for (const dependency of dependencies) {
+      (service as any)[dependency.propertyKey] = this.get(dependency.serviceClassOrID as any);
+    }
+  }
+
+  private async bootService(value: ServiceEntry): Promise<void> {
+    if (value.boot && value.service && value.service.boot) {
       value.boot = false;
       await value.service.boot();
     }
@@ -259,3 +426,62 @@ export class ServiceManager {
   }
 
 }
+
+/**
+ * Helper function to inject dependencies into a LazyService instance.
+ */
+const injectLazyService = (sm: ServiceManager, l: LazyService<any>) =>
+  (Reflect.getMetadata('dependencies', Object.getPrototypeOf(l)) as IDependency[] | undefined)
+    ?.forEach(d => ((l as any)[d.propertyKey] = sm.get(d.serviceClassOrID as any)));
+
+/**
+ * Lazy-loading wrapper for services with optional transformation.
+ * Provides deferred service resolution with caching.
+ *
+ * @export
+ */
+export class LazyService<T, V extends T = T> {
+  @dependency private sm!: ServiceManager;
+  private c?: V;
+
+  constructor(
+    readonly type: ClassOrAbstractClass<T>,
+    private readonly tx?: (v: T) => V
+  ) {}
+
+  /**
+   * Get the lazy-loaded service instance.
+   * The service is resolved and cached on first access.
+   */
+  get value(): V {
+    return (
+      this.c ??
+      (this.c = (() => {
+        const v = this.sm.get(this.type);
+        if (!v) {
+          throw new Error(`Unable to resolve service: ${this.type.name}`);
+        }
+        const r = this.tx ? this.tx(v) : (v as any);
+        if (!r) {
+          throw new Error(`Invalid transform: ${this.type.name}`);
+        }
+        return r;
+      })())
+    );
+  }
+
+  /**
+   * Boot all LazyService instances within a service.
+   * Injects the ServiceManager into any LazyService properties.
+   *
+   * @template T
+   * @param {ServiceManager} sm - The service manager.
+   * @param {T} s - The service instance.
+   * @returns {T} The service instance.
+   */
+  static boot<T>(sm: ServiceManager, s: T): T {
+    Object.values(s as any).forEach(v => v instanceof LazyService && injectLazyService(sm, v));
+    return s;
+  }
+}
+
