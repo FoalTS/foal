@@ -68,6 +68,79 @@ export function getHttpLogParamsDefault(tokens: any, req: any, res: any): Record
   };
 }
 
+// Route specificity scoring constants
+const STATIC_SEGMENT_WEIGHT = 100000000000; // 100 billion per static segment (primary factor)
+const PATH_LENGTH_WEIGHT = 100000;           // Weight for total path length (secondary factor)
+const POSITION_BASE = 100;                   // Base for position-weighted scoring (tertiary factor)
+
+/**
+ * Calculate the specificity score of a route path.
+ * Higher scores indicate more specific routes that should be registered first.
+ * Static segments score higher than dynamic parameters.
+ *
+ * @export
+ * @param {string} path - The route path
+ * @returns {number} The specificity score
+ */
+export function calculateRouteSpecificity(path: string): number {
+  const segments = path.split('/').filter(s => s.length > 0);
+  let staticCount = 0;
+  let positionScore = 0;
+
+  // Pre-calculate powers for efficiency
+  const powers = new Array(segments.length + 1);
+  for (let i = 0; i <= segments.length; i++) {
+    powers[i] = Math.pow(POSITION_BASE, i);
+  }
+
+  // Count static segments and calculate position-weighted score
+  for (let i = 0; i < segments.length; i++) {
+    const segment = segments[i];
+
+    if (!segment.startsWith(':')) {
+      staticCount++;
+      // Earlier static segments are weighted more heavily
+      positionScore += powers[segments.length - i];
+    }
+  }
+
+  // Primary sort: number of static segments (more is better)
+  // Use a very large multiplier to ensure static count dominates
+  // Secondary sort: total length (longer is better)
+  // Tertiary sort: position of static segments (earlier is better)
+  const score =
+    staticCount * STATIC_SEGMENT_WEIGHT +
+    segments.length * PATH_LENGTH_WEIGHT +
+    positionScore;
+
+  return score;
+}
+
+// Internal type for route objects with necessary structure for sorting
+interface RouteWithPath {
+  route: {
+    path: string;
+  };
+}
+
+/**
+ * Sort routes to ensure static routes are registered before dynamic routes.
+ * This prevents dynamic routes from shadowing static routes in Express.
+ *
+ * @export
+ * @param {RouteWithPath[]} routes - Array of route objects
+ * @returns {RouteWithPath[]} Sorted array of route objects
+ */
+export function sortRoutes<T extends RouteWithPath>(routes: T[]): T[] {
+  return routes.sort((a, b) => {
+    const scoreA = calculateRouteSpecificity(a.route.path);
+    const scoreB = calculateRouteSpecificity(b.route.path);
+
+    // Higher scores (more specific) should come first
+    return scoreB - scoreA;
+  });
+}
+
 /**
  * Create an Express application from the root controller.
  *
@@ -170,8 +243,10 @@ export async function createApp(
   const appController = services.get<IAppController>(AppController);
 
   // Resolve the controllers and hooks and add them to the express instance.
-  const routes = makeControllerRoutes(AppController, services);
-  for (const { route } of routes) {
+  const routes = Array.from(makeControllerRoutes(AppController, services));
+  const sortedRoutes = sortRoutes(routes);
+
+  for (const { route } of sortedRoutes) {
     app[route.httpMethod.toLowerCase()](route.path, async (req: any, res: any, next: (err?: any) => any) => {
       try {
         const ctx = new Context(req, route.controller.constructor.name, route.propertyKey);
