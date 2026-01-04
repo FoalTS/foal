@@ -112,8 +112,8 @@ The below example shows how to implement a login controller with an email and a 
 *login.controller.ts*
 ```typescript
 import {
-  Config, Context, HttpResponseOK, HttpResponseUnauthorized,
-  Post, ValidateBody, verifyPassword
+  Config, Context, dependency, HttpResponseOK, HttpResponseUnauthorized,
+  PasswordService, Post, ValidateBody
 } from '@foal/core';
 import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
@@ -121,6 +121,8 @@ import { sign } from 'jsonwebtoken';
 import { User } from '../entities';
 
 export class LoginController {
+  @dependency
+  passwordService: PasswordService;
 
   @Post('/login')
   @ValidateBody({
@@ -139,7 +141,7 @@ export class LoginController {
       return new HttpResponseUnauthorized();
     }
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+    if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
       return new HttpResponseUnauthorized();
     }
 

@@ -4,7 +4,7 @@ import { pbkdf2, randomBytes } from 'crypto';
 import { promisify } from 'util';
 
 // FoalTS
-import { hashPassword, HttpResponseOK, HttpResponseUnauthorized, isHttpResponseOK, passwordHashNeedsToBeRefreshed, verifyPassword } from '@foal/core';
+import { HttpResponseOK, HttpResponseUnauthorized, isHttpResponseOK, PasswordService } from '@foal/core';
 import { BaseEntity, Column, DataSource, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { createAndInitializeDataSource } from '../../../common';
 
@@ -48,23 +48,31 @@ describe('Feature: Upgrading passwords', () => {
 
       /* ======================= DOCUMENTATION BEGIN ======================= */
 
+      const passwordService = new PasswordService();
+
       const user = await User.findOneBy({ email });
 
       if (!user) {
         return new HttpResponseUnauthorized();
       }
 
-      if (!await verifyPassword(password, user.password)) {
+      // highlight-start
+      const isValid = await passwordService.verifyPassword(
+        password,
+        user.password,
+        {
+          onPasswordUpgrade: async newHash => {
+            // Automatically save the upgraded hash
+            user.password = newHash;
+            await user.save();
+          }
+        }
+      );
+      // highlight-end
+
+      if (!isValid) {
         return new HttpResponseUnauthorized();
       }
-
-      // highlight-start
-      // This line must be after the password verification.
-      if (passwordHashNeedsToBeRefreshed(user.password)) {
-        user.password = await hashPassword(password);
-        await user.save();
-      }
-      // highlight-end
 
       // Log the user in.
 
