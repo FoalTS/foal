@@ -1,13 +1,17 @@
 import { IApiOperation } from '../interfaces';
 
 export function mergeOperations(
-  operation1: IApiOperation, operation2: IApiOperation): IApiOperation {
+  operation1: IApiOperation, operation2: IApiOperation, disinheritTags?: boolean): IApiOperation {
   const operation: IApiOperation = {
     responses: Object.assign({}, operation1.responses, operation2.responses)
   };
 
   if (operation1.tags || operation2.tags) {
-    operation.tags = (operation1.tags || []).concat(operation2.tags || []);
+    if (disinheritTags) {
+      operation.tags = operation2.tags || [];
+    } else {
+      operation.tags = (operation1.tags || []).concat(operation2.tags || []);
+    }
   }
 
   if (operation2.summary !== undefined) {

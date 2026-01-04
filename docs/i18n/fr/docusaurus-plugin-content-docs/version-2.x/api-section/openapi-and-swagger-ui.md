@@ -147,6 +147,7 @@ Beside the `@ApiOperation` decorator, you can also use other decorators more spe
 | `@ApiDefineTag` |
 | `@ApiExternalDoc` |
 | `@ApiUseTag` |
+| `@ApiDisinheritTags` |
 | `@ApiParameter` |
 | `@ApiResponse` |
 | `@ApiCallback` |

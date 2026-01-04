@@ -148,6 +148,7 @@ Beside the `@ApiOperation` decorator, you can also use other decorators more spe
 | `@ApiDefineTag` |
 | `@ApiExternalDoc` |
 | `@ApiUseTag` |
+| `@ApiDisinheritTags` |
 | `@ApiParameter` |
 | `@ApiResponse` |
 | `@ApiCallback` |
@@ -834,3 +835,44 @@ export class OpenApiController extends SwaggerController {
 }
 
 ```
+
+### Prevent automatic tag inheritance
+
+In some use cases, it's useful to set tags on controllers but not have those tags be inherited by subcontrollers.
+
+This allows organising routes in the Swagger UI and documentation under tags.
+
+*Example*
+```typescript
+@ApiUseTag("Parent")
+export class ApiController {
+  subControllers = [
+    controller('/sub1', SubController1),
+    controller('/sub2', SubController2)
+  ]
+}
+
+@ApiUseTag("Sub1")
+export class SubController1 {
+  /*
+    All routes (and sub rountes) in SubController1 will have two tags: "Parent", "Sub1"
+  */
+  @Get("")
+  index() {
+    // ...
+  }
+}
+
+@ApiDisinheritTags()
+@ApiUseTag("Sub2")
+export class SubController2 {
+  /*
+    All rountes (and sub rountes) in SubController2 will have one tag: "Sub2"
+  */
+  @Get("")
+  index() {
+    // ...
+  }
+}
+```
+
