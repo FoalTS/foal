@@ -67,6 +67,7 @@ program
 program
   .command('run')
   .argument('<name>', 'Name of the script to run')
+  .argument('[args...]', 'Script arguments (key=value format)')
   .description('Run a shell script.')
   .action((name: string) => {
     runScript({ name }, process.argv);
