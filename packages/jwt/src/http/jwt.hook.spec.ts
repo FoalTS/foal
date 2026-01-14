@@ -373,6 +373,27 @@ export function testSuite(JWT: typeof JWTOptional|typeof JWTRequired, required: 
       );
     });
 
+    it('should return an HttpResponseUnauthorized object if the algorithm is "none".', async () => {
+      const header = { alg: 'none', typ: 'JWT' };
+      const token = toBase64Url(JSON.stringify(header))
+        + '.' + toBase64Url(JSON.stringify(payload1))
+        + '.' + 'some-signature';
+      ctx = createContext({ Authorization: `Bearer ${token}` });
+
+      const response = await hook(ctx, services);
+      if (!isHttpResponseUnauthorized(response)) {
+        throw new Error('response should be instance of HttpResponseUnauthorized');
+      }
+      deepStrictEqual(response.body, {
+        code: 'invalid_token',
+        description: 'invalid algorithm'
+      });
+      strictEqual(
+        response.getHeader('WWW-Authenticate'),
+        'error="invalid_token", error_description="invalid algorithm"'
+      );
+    });
+
     it('should throw an error if no secret or public key is set in the Config and options.secretOrPublicKey is'
         + ' not defined.', async () => {
       // Remove the secret.

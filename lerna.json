@@ -4,6 +4,6 @@
     "tests/*",
     "examples/*"
   ],
-  "version": "5.1.1",
+  "version": "5.1.3",
   "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }
