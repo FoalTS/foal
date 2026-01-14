@@ -58,7 +58,7 @@ Open the new created file and add two routes.
 | `/api/auth/logout` | `POST` | Logs the user out. |
 
 ```typescript
-import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, dependency, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, PasswordService, Post, ValidateBody } from '@foal/core';
 import { User } from '../../entities';
 
 const credentialsSchema = {
@@ -72,6 +72,8 @@ const credentialsSchema = {
 };
 
 export class AuthController {
+  @dependency
+  passwordService: PasswordService;
 
   @Post('/login')
   @ValidateBody(credentialsSchema)
@@ -84,7 +86,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    if (!(await verifyPassword(password, user.password))) {
+    if (!(await this.passwordService.verifyPassword(password, user.password))) {
       return new HttpResponseUnauthorized();
     }
 

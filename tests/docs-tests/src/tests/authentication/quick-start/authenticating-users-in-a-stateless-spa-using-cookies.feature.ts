@@ -12,14 +12,14 @@ import {
   Context,
   controller,
   createApp,
+  dependency,
   Get,
-  hashPassword,
   HttpResponseOK,
   HttpResponseUnauthorized,
   IAppController,
+  PasswordService,
   Post,
-  ValidateBody,
-  verifyPassword
+  ValidateBody
 } from '@foal/core';
 import { getSecretOrPrivateKey, JWTRequired, removeAuthCookie, setAuthCookie } from '@foal/jwt';
 import { createAndInitializeDataSource, readCookie, writeCookie } from '../../../common';
@@ -57,13 +57,15 @@ describe('Feature: Authenticating users in a stateless SPA using cookies', () =>
   };
 
   class AuthController {
+    @dependency
+    passwordService: PasswordService;
 
     @Post('/signup')
     @ValidateBody(credentialsSchema)
     async signup(ctx: Context) {
       const user = new User();
       user.email = ctx.request.body.email;
-      user.password = await hashPassword(ctx.request.body.password);
+      user.password = await this.passwordService.hashPassword(ctx.request.body.password);
       await user.save();
 
       const response = new HttpResponseOK();
@@ -80,7 +82,7 @@ describe('Feature: Authenticating users in a stateless SPA using cookies', () =>
         return new HttpResponseUnauthorized();
       }
 
-      if (!await verifyPassword(ctx.request.body.password, user.password)) {
+      if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
         return new HttpResponseUnauthorized();
       }
 
