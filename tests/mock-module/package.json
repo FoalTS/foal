@@ -1,7 +1,7 @@
 {
   "name": "mock-module",
   "private": true,
-  "version": "5.1.2",
+  "version": "5.1.3",
   "description": "Unpublished package used to run some tests.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
