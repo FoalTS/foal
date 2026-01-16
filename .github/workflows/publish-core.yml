@@ -1,0 +1,40 @@
+name: Publish @foal/core to GitHub Packages
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js 24.x
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@foal'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build @foal/core
+        run: npm run build
+        working-directory: packages/core
+
+      - name: Publish @foal/core to GitHub Packages
+        run: npm publish
+        working-directory: packages/core
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
