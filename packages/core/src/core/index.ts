@@ -8,4 +8,4 @@ export * from './hooks';
 export * from './routes';
 export * from './templates';
 export * from './config';
-export { createService, dependency, Dependency, ServiceManager } from './service-manager';
+export { createService, dependency, Dependency, lazy, ServiceManager, ServiceFactory, LazyService } from './service-manager';
