@@ -14,7 +14,7 @@ Open the file and replace its content with the following:
 
 ```typescript
 // 3p
-import { hashPassword, Logger, ServiceManager } from '@foal/core';
+import { Logger, PasswordService, ServiceManager } from '@foal/core';
 
 // App
 import { User } from '../app/entities';
@@ -32,9 +32,10 @@ export const schema = {
 };
 
 export async function main(args: { email: string, password: string, name?: string }, services: ServiceManager, logger: Logger) {
+  const passwordService = services.get(PasswordService);
   const user = new User();
   user.email = args.email;
-  user.password = await hashPassword(args.password);
+  user.password = await passwordService.hashPassword(args.password);
   user.name = args.name ?? 'Unknown';
   user.avatar = '';
 

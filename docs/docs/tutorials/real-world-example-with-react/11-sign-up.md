@@ -13,7 +13,7 @@ So far, only users created with the `create-user` script can log in and publish 
 Open the `auth.controller.ts` file and add a new route.
 
 ```typescript
-import { Context, hashPassword, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, dependency, HttpResponseNoContent, HttpResponseOK, HttpResponseUnauthorized, PasswordService, Post, ValidateBody } from '@foal/core';
 import { User } from '../../entities';
 
 const credentialsSchema = {
@@ -21,6 +21,8 @@ const credentialsSchema = {
 };
 
 export class AuthController {
+  @dependency
+  passwordService: PasswordService;
 
   // login...
 
@@ -36,7 +38,7 @@ export class AuthController {
     user.email = email;
     user.avatar = '';
     user.name = 'Unknown';
-    user.password = await hashPassword(password);
+    user.password = await this.passwordService.hashPassword(password);
     await user.save();
 
     ctx.session!.setUser(user);

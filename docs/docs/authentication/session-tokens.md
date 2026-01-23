@@ -96,8 +96,6 @@ npm run makemigrations
 npm run migrations
 ```
 
-> **Warning**: If you use TypeORM store, then your entity IDs must be numbers (not strings).
-
 #### RedisStore
 
 ```

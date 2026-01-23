@@ -134,7 +134,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, dependency, HttpResponseOK, HttpResponseUnauthorized, PasswordService, Post, ValidateBody } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -149,13 +149,15 @@ const credentialsSchema = {
 };
 
 export class AuthController {
+  @dependency
+  passwordService: PasswordService;
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
   async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
-    user.password = await hashPassword(ctx.request.body.password);
+    user.password = await this.passwordService.hashPassword(ctx.request.body.password);
     await user.save();
 
     ctx.session!.setUser(user);
@@ -173,7 +175,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+    if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
       return new HttpResponseUnauthorized();
     }
 
@@ -291,7 +293,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, dependency, HttpResponseOK, HttpResponseUnauthorized, PasswordService, Post, ValidateBody } from '@foal/core';
 import { getSecretOrPrivateKey, removeAuthCookie, setAuthCookie } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 import { promisify } from 'util';
@@ -309,13 +311,15 @@ const credentialsSchema = {
 };
 
 export class AuthController {
+  @dependency
+  passwordService: PasswordService;
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
   async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
-    user.password = await hashPassword(ctx.request.body.password);
+    user.password = await this.passwordService.hashPassword(ctx.request.body.password);
     await user.save();
 
     const response = new HttpResponseOK();
@@ -332,7 +336,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+    if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
       return new HttpResponseUnauthorized();
     }
 
@@ -421,7 +425,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, createSession, dependency, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, Store, UseSessions, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, createSession, dependency, HttpResponseOK, HttpResponseUnauthorized, PasswordService, Post, Store, UseSessions, ValidateBody } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -440,12 +444,15 @@ export class AuthController {
   @dependency
   store: Store;
 
+  @dependency
+  passwordService: PasswordService;
+
   @Post('/signup')
   @ValidateBody(credentialsSchema)
   async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
-    user.password = await hashPassword(ctx.request.body.password);
+    user.password = await this.passwordService.hashPassword(ctx.request.body.password);
     await user.save();
 
     ctx.session = await createSession(this.store);
@@ -465,7 +472,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+    if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
       return new HttpResponseUnauthorized();
     }
 
@@ -595,7 +602,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, hashPassword, HttpResponseOK, HttpResponseUnauthorized, Post, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, dependency, HttpResponseOK, HttpResponseUnauthorized, PasswordService, Post, ValidateBody } from '@foal/core';
 import { getSecretOrPrivateKey } from '@foal/jwt';
 import { sign } from 'jsonwebtoken';
 import { promisify } from 'util';
@@ -613,13 +620,15 @@ const credentialsSchema = {
 };
 
 export class AuthController {
+  @dependency
+  passwordService: PasswordService;
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
   async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
-    user.password = await hashPassword(ctx.request.body.password);
+    user.password = await this.passwordService.hashPassword(ctx.request.body.password);
     await user.save();
 
     return new HttpResponseOK({
@@ -636,7 +645,7 @@ export class AuthController {
       return new HttpResponseUnauthorized();
     }
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+    if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
       return new HttpResponseUnauthorized();
     }
 
@@ -734,7 +743,7 @@ export class AppController implements IAppController {
 
 *src/app/controllers/auth.controller.ts*
 ```typescript
-import { Context, hashPassword, HttpResponseRedirect, Post, ValidateBody, verifyPassword } from '@foal/core';
+import { Context, dependency, HttpResponseRedirect, PasswordService, Post, ValidateBody } from '@foal/core';
 
 import { User } from '../entities';
 
@@ -749,13 +758,15 @@ const credentialsSchema = {
 };
 
 export class AuthController {
+  @dependency
+  passwordService: PasswordService;
 
   @Post('/signup')
   @ValidateBody(credentialsSchema)
   async signup(ctx: Context) {
     const user = new User();
     user.email = ctx.request.body.email;
-    user.password = await hashPassword(ctx.request.body.password);
+    user.password = await this.passwordService.hashPassword(ctx.request.body.password);
     await user.save();
 
     ctx.session!.setUser(user);
@@ -774,7 +785,7 @@ export class AuthController {
       return new HttpResponseRedirect('/login');
     }
 
-    if (!await verifyPassword(ctx.request.body.password, user.password)) {
+    if (!await this.passwordService.verifyPassword(ctx.request.body.password, user.password)) {
       ctx.session!.set('errorMessage', 'Invalid password.', { flash: true });
       return new HttpResponseRedirect('/login');
     }
