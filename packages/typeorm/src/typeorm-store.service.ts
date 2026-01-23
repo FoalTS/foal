@@ -9,10 +9,15 @@ export class DatabaseSession extends BaseEntity {
   @PrimaryColumn({ length: 44 })
   id: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'int' })
   // Use snake case because camelCase does not work well with PostgreSQL.
   // tslint:disable-next-line: variable-name
-  user_id: number;
+  user_id: number | null;
+
+  @Column({ nullable: true, type: 'varchar', length: 64 })
+  // Use snake case because camelCase does not work well with PostgreSQL.
+  // tslint:disable-next-line: variable-name
+  user_id_str: string | null;
 
   @Column({ type: 'text' })
   content: string;
@@ -45,9 +50,12 @@ export class TypeORMStore extends SessionStore {
   }
 
   async save(state: SessionState, maxInactivity: number): Promise<void> {
-    if (typeof state.userId === 'string') {
-      throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
+    if (typeof state.userId === 'string' && state.userId.length > 64) {
+      throw new Error('[TypeORMStore] Impossible to save the session. The user ID is too long (max 64 characters).');
     }
+
+    const userIdNumber = typeof state.userId === 'number' ? state.userId : null;
+    const userIdStr = typeof state.userId === 'string' ? state.userId : null;
 
     try {
       await this.repository
@@ -59,8 +67,8 @@ export class TypeORMStore extends SessionStore {
           flash: JSON.stringify(state.flash),
           id: state.id,
           updated_at: state.updatedAt,
-          // tslint:disable-next-line
-          user_id: state.userId ?? undefined,
+          user_id: userIdNumber ?? undefined,
+          user_id_str: userIdStr ?? undefined,
         })
         .execute();
     } catch (error: any) {
@@ -88,15 +96,17 @@ export class TypeORMStore extends SessionStore {
       flash: JSON.parse(session.flash),
       id: session.id,
       updatedAt: session.updated_at,
-      // Note: session.user_id is actually a number or null (not undefined).
-      userId: session.user_id,
+      userId: session.user_id ?? session.user_id_str,
     };
   }
 
   async update(state: SessionState, maxInactivity: number): Promise<void> {
-    if (typeof state.userId === 'string') {
-      throw new Error('[TypeORMStore] Impossible to save the session. The user ID must be a number.');
+    if (typeof state.userId === 'string' && state.userId.length > 64) {
+      throw new Error('[TypeORMStore] Impossible to save the session. The user ID is too long (max 64 characters).');
     }
+
+    const userIdNumber = typeof state.userId === 'number' ? state.userId : null;
+    const userIdStr = typeof state.userId === 'string' ? state.userId : null;
 
     const dbSession = this.repository.create({
       content: JSON.stringify(state.content),
@@ -104,8 +114,8 @@ export class TypeORMStore extends SessionStore {
       flash: JSON.stringify(state.flash),
       id: state.id,
       updated_at: state.updatedAt,
-      // tslint:disable-next-line
-      user_id: state.userId ?? undefined,
+      user_id: userIdNumber ?? undefined,
+      user_id_str: userIdStr ?? undefined,
     });
 
     // The "save" method performs an UPSERT.
@@ -133,26 +143,47 @@ export class TypeORMStore extends SessionStore {
       .execute();
   }
 
-  async getAuthenticatedUserIds(): Promise<number[]> {
-    const sessions = await this.repository
-      .createQueryBuilder()
-      .select('DISTINCT user_id')
-      .where({
-        user_id: Not(IsNull())
-      })
-      .getRawMany();
-    return sessions.map(({ user_id }) => user_id);
+  async getAuthenticatedUserIds(): Promise<(number | string)[]> {
+    const [numberSessions, stringSessions] = await Promise.all([
+      this.repository
+        .createQueryBuilder()
+        .select('DISTINCT user_id')
+        .where({
+          user_id: Not(IsNull())
+        })
+        .getRawMany(),
+      this.repository
+        .createQueryBuilder()
+        .select('DISTINCT user_id_str')
+        .where({
+          user_id_str: Not(IsNull())
+        })
+        .getRawMany(),
+    ]);
+
+    return [
+      ...numberSessions.map(({ user_id }) => user_id),
+      ...stringSessions.map(({ user_id_str }) => user_id_str),
+    ];
   }
 
-  async destroyAllSessionsOf(userId: number): Promise<void> {
-    await this.repository.delete({ user_id: userId });
+  async destroyAllSessionsOf(userId: number | string): Promise<void> {
+    if (typeof userId === 'number') {
+      await this.repository.delete({ user_id: userId });
+    } else {
+      await this.repository.delete({ user_id_str: userId });
+    }
   }
 
-  async getSessionIDsOf(userId: number): Promise<string[]> {
+  async getSessionIDsOf(userId: number | string): Promise<string[]> {
+    const where = typeof userId === 'number'
+      ? { user_id: userId }
+      : { user_id_str: userId };
+
     const databaseSessions = await this.repository.find({
       // Do not select unused fields.
       select: { id: true },
-      where: { user_id: userId },
+      where,
     });
     return databaseSessions.map(dbSession => dbSession.id);
   }

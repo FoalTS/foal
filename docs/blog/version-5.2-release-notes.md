@@ -97,3 +97,26 @@ import { hashPassword, verifyPassword } from '@foal/core';
 import { PasswordService } from '@foal/core';
 ```
 
+## TypeORMStore now supports string user IDs
+
+The `TypeORMStore` session store now supports both `number` and `string` user IDs. This is particularly useful when using UUIDs or other string-based identifiers as primary keys for your users.
+
+### How it works
+
+The `sessions` table now has two columns for storing user IDs:
+- `user_id` (integer, nullable) - for numeric user IDs
+- `user_id_str` (varchar(64), nullable) - for string user IDs (UUIDs, etc.)
+
+When saving a session, the store automatically determines which column to use based on the type of the user ID. 
+
+### Migration
+
+Run the command `npm run makemigrations`. It will add the following migration to your codebase.
+
+```sql
+ALTER TABLE sessions ADD COLUMN user_id_str VARCHAR(64) NULL;
+```
+
+Then run `npm run migrations` to apply it.
+
+Existing sessions with numeric user IDs will continue to work without any changes.
