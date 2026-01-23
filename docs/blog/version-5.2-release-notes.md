@@ -111,11 +111,7 @@ When saving a session, the store automatically determines which column to use ba
 
 ### Migration
 
-Run the command `npm run makemigrations`. It will add the following migration to your codebase.
-
-```sql
-ALTER TABLE sessions ADD COLUMN user_id_str VARCHAR(64) NULL;
-```
+Run the command `npm run makemigrations`. It will generate a migration to add the new "user_id_str" column in your codebase.
 
 Then run `npm run migrations` to apply it.
 
