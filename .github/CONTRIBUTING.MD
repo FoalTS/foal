@@ -8,7 +8,7 @@ Please take a moment to read this guide before submitting an issue or pull reque
 
 ## 🔒 0. Reporting Security Vulnerabilities
 
-If you believe you have found a security vulnerability, please DO NOT submit an issue, but send an email directly to security@foalts.org. If the vulnerability is confirmed, it will be made public as soon as a fix is available.
+If you believe you have found a security vulnerability, please DO NOT submit an issue, but report it directly and privately through the [security advisory page](https://github.com/FoalTS/foal/security/advisories). If the vulnerability is confirmed, it will be made public as soon as a fix is available.
 
 ## 🐞 1. Reporting Issues, Bugs, or Feature Requests
 
