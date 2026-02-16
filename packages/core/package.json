@@ -59,7 +59,7 @@
     "lib/"
   ],
   "dependencies": {
-    "ajv": "~8.17.1",
+    "ajv": "~8.18.0",
     "ajv-formats": "~2.1.1",
     "cookie-parser": "~1.4.7",
     "express": "~4.22.1",
