@@ -15,7 +15,7 @@ function AddMetadataItem<T>(metadataKey: string, item: T) {
   return (target: any, propertyKey?: string) => {
     // Note that propertyKey can be undefined as it's an optional parameter in getMetadata.
     let items: T[] = Reflect.getMetadata(metadataKey, target, propertyKey as string) || [];
-    items = [ item, ...items ];
+    items = [item, ...items];
     Reflect.defineMetadata(metadataKey, items, target, propertyKey as string);
   };
 }
@@ -74,6 +74,10 @@ export function ApiUseTag(tag: string | ((controller: any) => string)): OpenApiD
   return AddMetadataItem('api:operation:tags', tag);
 }
 
+export function ApiDisinheritTags(disinheritTags: boolean = true): OpenApiDecorator {
+  return Reflect.metadata('api:operation:disinheritTags', disinheritTags);
+}
+
 export function ApiParameter(
   parameter: IApiParameter | IApiReference | ((controller: any) => IApiParameter | IApiReference)
 ): OpenApiDecorator {
@@ -87,7 +91,7 @@ export function ApiRequestBody(
 }
 
 export function ApiResponse(
-  key: 'default'|'1XX'|'2XX'|'3XX'|'4XX'|'5XX'|number,
+  key: 'default' | '1XX' | '2XX' | '3XX' | '4XX' | '5XX' | number,
   response: IApiResponse | IApiReference | ((controller: any) => IApiResponse | IApiReference)
 ): OpenApiDecorator {
   return AddMetadataProperty('api:operation:responses', key.toString(), response);
