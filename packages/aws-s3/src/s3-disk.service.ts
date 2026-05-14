@@ -4,7 +4,14 @@ import { Readable } from 'stream';
 // 3p
 import { Config, generateToken, streamToBuffer } from '@foal/core';
 import { Disk, FileDoesNotExist } from '@foal/storage';
-import { DeleteObjectCommand, GetObjectCommand, HeadObjectCommand, S3Client, S3ClientConfig, ServerSideEncryption } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+  S3Client,
+  S3ClientConfig,
+  ServerSideEncryption,
+} from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 
 /**
@@ -15,12 +22,11 @@ import { Upload } from '@aws-sdk/lib-storage';
  * @extends {Disk}
  */
 export class S3Disk extends Disk {
-
   async write(
     dirname: string,
     content: Buffer | Readable,
-    options: { name?: string } | { extension?: string } = {}
-  ): Promise<{ path: string; }> {
+    options: { name?: string } | { extension?: string } = {},
+  ): Promise<{ path: string }> {
     let name = this.hasName(options) ? options.name : await generateToken();
 
     if (this.hasExtension(options)) {
@@ -37,9 +43,11 @@ export class S3Disk extends Disk {
         Body: content,
         Bucket: this.bucket,
         Key: path,
-        ServerSideEncryption: Config.get('settings.disk.s3.serverSideEncryption', 'string') as ServerSideEncryption | undefined,
-      }
-    })
+        ServerSideEncryption: Config.get('settings.disk.s3.serverSideEncryption', 'string') as
+          | ServerSideEncryption
+          | undefined,
+      },
+    });
     await parallelUploads.done();
 
     return { path };
@@ -47,8 +55,11 @@ export class S3Disk extends Disk {
 
   async read<C extends 'buffer' | 'stream'>(
     path: string,
-    content: C
-  ): Promise<{ file: C extends 'buffer' ? Buffer : C extends 'stream' ? Readable : never; size: number; }> {
+    content: C,
+  ): Promise<{
+    file: C extends 'buffer' ? Buffer : C extends 'stream' ? Readable : never;
+    size: number;
+  }> {
     try {
       const command = new GetObjectCommand({
         Bucket: this.bucket,
@@ -75,7 +86,7 @@ export class S3Disk extends Disk {
 
       return {
         file: (content === 'buffer' ? await streamToBuffer(stream) : stream) as any,
-        size: ContentLength
+        size: ContentLength,
       };
     } catch (error: any) {
       if (error.name === 'NoSuchKey') {
@@ -92,7 +103,7 @@ export class S3Disk extends Disk {
         Bucket: this.bucket,
         Key: path,
       });
-      const { ContentLength }  = await this.s3.send(command);
+      const { ContentLength } = await this.s3.send(command);
 
       if (ContentLength === undefined) {
         throw new Error('Expected to have a content-length header in HTTP response.');
@@ -111,7 +122,7 @@ export class S3Disk extends Disk {
   async delete(path: string): Promise<void> {
     const command = new DeleteObjectCommand({
       Bucket: this.bucket,
-      Key: path
+      Key: path,
     });
     await this.s3.send(command);
   }
@@ -120,7 +131,7 @@ export class S3Disk extends Disk {
     return Config.getOrThrow(
       'settings.disk.s3.bucket',
       'string',
-      'You must provide a bucket name when using AWS S3 file storage (S3Disk).'
+      'You must provide a bucket name when using AWS S3 file storage (S3Disk).',
     );
   }
 
@@ -135,7 +146,7 @@ export class S3Disk extends Disk {
       const accessKeyId = Config.get('settings.aws.accessKeyId', 'string');
       const secretAccessKey = Config.get('settings.aws.secretAccessKey', 'string');
       if (accessKeyId && secretAccessKey) {
-        s3Config.credentials = { accessKeyId, secretAccessKey }
+        s3Config.credentials = { accessKeyId, secretAccessKey };
       }
 
       const region = Config.get('settings.aws.region', 'string');
@@ -143,10 +154,14 @@ export class S3Disk extends Disk {
         s3Config.region = region;
       }
 
+      const forcepathstyle = Config.get('settings.disk.s3.forcepathstyle', 'boolean|string');
+      if (forcepathstyle) {
+        s3Config.forcePathStyle = true;
+      }
+
       this._s3 = new S3Client(s3Config);
     }
 
     return this._s3;
   }
-
 }
