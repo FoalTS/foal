@@ -37,7 +37,6 @@ describe('Feature: Using Websocket controllers and hooks', () => {
 
     }
 
-    // tslint:disable-next-line
     class WebsocketController extends SocketIOController {
       subControllers = [
         wsController('users ', UserController)
