@@ -31,7 +31,6 @@ export function ValidateHeader(
   schema: object | ((controller: any) => object) = { type: 'string' },
   options: { openapi?: boolean, required?: boolean } = {}
 ): HookDecorator {
-  // tslint:disable-next-line
   const required = options.required ?? true;
   name = name.toLowerCase();
 

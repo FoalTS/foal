@@ -276,9 +276,7 @@ function storeTestSuite(type: DBType) {
         flash: JSON.stringify(state.flash),
         id: state.id,
         updated_at: state.updatedAt,
-        // tslint:disable-next-line
         user_id: userIdNumber ?? undefined,
-        // tslint:disable-next-line
         user_id_str: userIdStr ?? undefined,
       });
     }

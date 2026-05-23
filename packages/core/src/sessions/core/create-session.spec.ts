@@ -52,17 +52,14 @@ describe('createSession', () => {
     it('with an empty userId.', async () => {
       await session.commit();
 
-      // tslint:disable-next-line
       const state = store.updateCalledWith?.state ?? store.saveCalledWith?.state;
 
-      // tslint:disable-next-line
       strictEqual(state?.userId, null);
     });
 
     it('with a csrfToken generated randomly (256-bit base64url-encoded string).', async () => {
       await session.commit();
 
-      // tslint:disable-next-line
       const state = store.updateCalledWith?.state ?? store.saveCalledWith?.state;
       if (!state) {
         throw new Error('Unexpected error.');
@@ -80,7 +77,6 @@ describe('createSession', () => {
       await session.commit();
       const dateAfter = Math.trunc(Date.now() / 1000) + 1;
 
-      // tslint:disable-next-line
       const state = store.updateCalledWith?.state ?? store.saveCalledWith?.state;
 
       if (!state) {
@@ -104,9 +100,7 @@ describe('createSession', () => {
     it('that should be marked as "non-existing".', async () => {
       await session.commit();
 
-      // tslint:disable-next-line
       strictEqual(store.updateCalledWith?.state, undefined);
-      // tslint:disable-next-line
       notStrictEqual(store.saveCalledWith?.state, undefined);
     });
 
