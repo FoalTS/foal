@@ -10,8 +10,8 @@
     "examples/*"
   ],
   "scripts": {
-    "lint": "tslint -c tslint.json --project tsconfig.json",
-    "lint:fix": "tslint -c tslint.json --project tsconfig.json --fix"
+    "lint": "eslint packages --ext .ts",
+    "lint:fix": "eslint packages --ext .ts --fix"
   },
   "repository": {
     "type": "git",
@@ -23,10 +23,12 @@
   },
   "homepage": "https://github.com/FoalTS/foal#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "~6.5.0",
+    "@typescript-eslint/parser": "~6.5.0",
     "@types/mocha": "10.0.10",
+    "eslint": "~8.48.0",
     "lerna": "~9.0.0",
     "mocha": "~11.7.5",
-    "tslint": "~6.1.3",
     "typescript": "~5.5.4"
   }
 }
