@@ -154,8 +154,8 @@ export class S3Disk extends Disk {
         s3Config.region = region;
       }
 
-      const forcepathstyle = Config.get('settings.disk.s3.forcepathstyle', 'boolean|string');
-      if (forcepathstyle) {
+      const forcePathStyle = Config.get('settings.disk.s3.forcePathStyle', 'boolean');
+      if (forcePathStyle === true) {
         s3Config.forcePathStyle = true;
       }
 
