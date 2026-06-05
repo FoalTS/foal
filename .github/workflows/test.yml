@@ -31,6 +31,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: package-lock.json
+    - name: Upgrade npm
+      run: npm i -g npm@11
     - name: Install project and package dependencies
       run: npm ci
     - name: Build packages
