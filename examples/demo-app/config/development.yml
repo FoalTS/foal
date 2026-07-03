@@ -1,4 +1,4 @@
 settings:
   debug: true
   logger:
-    format: dev
+    format: dev-verbose
