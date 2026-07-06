@@ -248,6 +248,68 @@ describe('formatMessage', () => {
     });
   });
 
+  context('given format is "dev-verbose"', () => {
+    it('should return a text with the dev colors and short timestamp but with all detailed params (like "raw").', () => {
+      const message = 'Hello world';
+      const params = createTestParams();
+
+      const actual = formatMessage('debug', message, params, 'dev-verbose', now);
+      const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[35mDEBUG\u001b[39m Hello world`
+        + `\n    myBoolean: false`
+        + `\n    myNull: null`
+        + `\n    myNumber: 0`
+        + `\n    myString: "xxx"`
+        + `\n    myObject: {`
+        + `\n      "foo": "bar"`
+        + `\n    }`
+        + `\n    error: {`
+        + `\n      name: "Error"`
+        + `\n      message: "aaa"`
+        + `\n      stack: Error: aaa`
+        + `\n        at createTestParams (/somewhere/logger.spec.ts:6:11)`
+        + `\n        at Context.<anonymous> (/somewhere/logger.spec.ts:129:13)`
+        + `\n    }`;
+
+      strictEqual(actual, expected);
+    });
+
+    context('given the message is a HTTP log and is prefixed by "HTTP request -"', () => {
+      it('should return a well-formatted message and display the remaining params without duplicating the consumed ones.', () => {
+        const message = 'HTTP request - GET /foo/bar';
+        const params = {
+          method: 'GET',
+          url: '/foo/bar',
+          statusCode: 200,
+          responseTime: 123,
+          userId: 1,
+        };
+
+        const actual = formatMessage('info', message, params, 'dev-verbose', now);
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m GET /foo/bar \u001b[32m200\u001b[39m - 123 ms`
+          + `\n    userId: 1`;
+
+        strictEqual(actual, expected);
+      });
+    });
+
+    context('given the message is a socket.io log and is prefixed by "Socket.io message received -"', () => {
+      it('should return a well-formatted message and display the remaining params without duplicating the consumed ones.', () => {
+        const message = 'Socket.io message received - create user';
+        const params = {
+          eventName: 'create user',
+          status: 'ok',
+          userId: 1,
+        };
+
+        const actual = formatMessage('info', message, params, 'dev-verbose', now);
+        const expected = `\u001b[90m[${localeTimeNow}]\u001b[39m \u001b[36mINFO\u001b[39m Socket.io create user \u001b[32mok\u001b[39m`
+          + `\n    userId: 1`;
+
+        strictEqual(actual, expected);
+      });
+    });
+  });
+
   context('given format is "json"', () => {
     it('should return a JSON string.', () => {
       const message = 'Hello world';
