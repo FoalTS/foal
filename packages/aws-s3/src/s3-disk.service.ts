@@ -155,8 +155,8 @@ export class S3Disk extends Disk {
       }
 
       const forcePathStyle = Config.get('settings.disk.s3.forcePathStyle', 'boolean');
-      if (forcePathStyle === true) {
-        s3Config.forcePathStyle = true;
+      if (typeof forcePathStyle !== 'undefined') {
+        s3Config.forcePathStyle = forcePathStyle;
       }
 
       this._s3 = new S3Client(s3Config);
