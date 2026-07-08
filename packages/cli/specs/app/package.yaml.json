@@ -24,24 +24,24 @@
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@foal/core": "^5.0.0",
-    "@foal/typeorm": "^5.0.0",
+    "@foal/core": "^5.2.1",
+    "@foal/typeorm": "^5.2.1",
     "source-map-support": "~0.5.21",
     "sqlite3": "~5.1.7",
-    "typeorm": "0.3.27",
+    "typeorm": "0.3.30",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
-    "@foal/cli": "^5.0.0",
+    "@foal/cli": "^5.2.1",
     "@types/mocha": "10.0.10",
-    "@types/node": "24.10.0",
-    "concurrently": "~9.1.2",
-    "mocha": "~11.7.5",
-    "supertest": "~7.1.4",
+    "@types/node": "24.13.2",
+    "concurrently": "~9.2.3",
+    "mocha": "~11.7.6",
+    "supertest": "~7.2.2",
     "supervisor": "~0.12.0",
-    "eslint": "~8.48.0",
-    "@typescript-eslint/eslint-plugin": "~6.5.0",
-    "@typescript-eslint/parser": "~6.5.0",
-    "typescript": "~5.5.4"
+    "eslint": "~8.57.1",
+    "@typescript-eslint/eslint-plugin": "~6.21.0",
+    "@typescript-eslint/parser": "~6.21.0",
+    "typescript": "~5.9.3"
   }
 }

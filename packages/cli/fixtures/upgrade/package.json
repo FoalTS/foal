@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@foal/core": "^0.7.0",
+    "@foal/core": "^0.8.9",
     "@foal/foobar": "^0.8.0",
     "another-dependency": "^1.0.0"
   },
