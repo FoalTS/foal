@@ -52,20 +52,20 @@
     "@foal/storage": "^5.2.1",
     "@foal/swagger": "^5.2.1",
     "@foal/typeorm": "^5.2.1",
-    "graphql": "~16.9.0",
+    "graphql": "~16.14.2",
     "source-map-support": "~0.5.21",
     "sqlite3": "~5.1.7",
-    "typeorm": "0.3.27",
+    "typeorm": "0.3.30",
     "yamljs": "~0.3.0"
   },
   "devDependencies": {
     "@foal/cli": "^5.2.1",
     "@types/mocha": "10.0.10",
-    "@types/node": "24.10.0",
-    "concurrently": "~9.1.2",
+    "@types/node": "24.13.2",
+    "concurrently": "~9.2.3",
     "copy": "~0.3.2",
-    "mocha": "~11.7.5",
+    "mocha": "~11.7.6",
     "supervisor": "~0.12.0",
-    "typescript": "~5.5.4"
+    "typescript": "~5.9.3"
   }
 }
