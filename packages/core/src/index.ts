@@ -107,6 +107,7 @@ export {
   HttpResponseSuccess,
   HttpResponseTooManyRequests,
   HttpResponseUnauthorized,
+  HttpResponseUnprocessableContent,
 
   IApiAbstractParameter,
   IApiAbstractSecurityScheme,
@@ -212,6 +213,7 @@ export {
   isHttpResponseSuccess,
   isHttpResponseTooManyRequests,
   isHttpResponseUnauthorized,
+  isHttpResponseUnprocessableContent,
 
   Logger,
   render,

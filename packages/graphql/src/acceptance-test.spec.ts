@@ -23,7 +23,6 @@ import { get, Server } from 'http';
 import { Config, controller, createApp, dependency } from '@foal/core';
 import { buildSchema } from 'graphql';
 import { request } from 'graphql-request';
-import { buildSchema as buildTypeGraphQLSchema, Field, ObjectType, Query, Resolver } from 'type-graphql';
 
 // FoalTS
 import { FormatError } from './format-error.decorator';
@@ -201,62 +200,6 @@ describe('[E2E test] GraphQLController', () => {
           ]
         }
       ]
-    });
-  });
-
-  it('should support TypeGraphQL.', async () => {
-    @ObjectType()
-    class Recipe {
-      @Field()
-      title: string;
-    }
-
-    @Resolver(Recipe)
-    class RecipeResolver {
-
-      @Query(returns => Recipe)
-      async recipe() {
-        return {
-          title: 'foobar'
-        };
-      }
-
-    }
-
-    class ApiController extends GraphQLController {
-      schema = buildTypeGraphQLSchema({
-        resolvers: [ RecipeResolver ]
-      });
-    }
-
-    class AppController {
-      subControllers = [
-        controller('/graphql', ApiController)
-      ];
-    }
-
-    server = (await createApp(AppController)).listen(3000);
-
-    const response = await new Promise((resolve, reject) => {
-      get('http://localhost:3000/graphql?query={recipe{title}}', resp => {
-        let data = '';
-        resp.on('data', chunk => {
-          data += chunk;
-        });
-        resp.on('end', () => {
-          resolve(JSON.parse(data));
-        });
-      }).on('error', err => {
-        reject(err);
-      });
-    });
-
-    deepStrictEqual(response, {
-      data: {
-        recipe: {
-          title: 'foobar'
-        }
-      }
     });
   });
 

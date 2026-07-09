@@ -819,6 +819,52 @@ export function isHttpResponseConflict(obj: any): obj is HttpResponseConflict {
 }
 
 /**
+ * Represent an HTTP response with the status 422 - UNPROCESSABLE CONTENT.
+ *
+ * @export
+ * @class HttpResponseUnprocessableContent
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseUnprocessableContent<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseUnprocessableContent.
+   *
+   * @memberof HttpResponseUnprocessableContent
+   */
+  readonly isHttpResponseUnprocessableContent = true;
+  readonly statusCode = 422;
+  readonly statusMessage = 'UNPROCESSABLE CONTENT';
+
+  /**
+   * Create an instance of HttpResponseUnprocessableContent.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseUnprocessableContent
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseUnprocessableContent.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseUnprocessableContent} - True if the error is an instance of HttpResponseUnprocessableContent.
+ * False otherwise.
+ */
+export function isHttpResponseUnprocessableContent(obj: any): obj is HttpResponseUnprocessableContent {
+  return obj instanceof HttpResponseUnprocessableContent ||
+   (typeof obj === 'object' && obj !== null && obj.isHttpResponseUnprocessableContent === true);
+}
+
+/**
  * Represent an HTTP response with the status 429 - TOO MANY REQUESTS.
  *
  * @export

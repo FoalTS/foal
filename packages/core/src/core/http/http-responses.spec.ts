@@ -23,6 +23,7 @@ import {
   HttpResponseSuccess,
   HttpResponseTooManyRequests,
   HttpResponseUnauthorized,
+  HttpResponseUnprocessableContent,
   isHttpResponse,
   isHttpResponseBadRequest,
   isHttpResponseClientError,
@@ -41,7 +42,8 @@ import {
   isHttpResponseServerError,
   isHttpResponseSuccess,
   isHttpResponseTooManyRequests,
-  isHttpResponseUnauthorized
+  isHttpResponseUnauthorized,
+  isHttpResponseUnprocessableContent
 } from './http-responses';
 
 describe('HttpResponse', () => {
@@ -794,6 +796,68 @@ describe('isHttpResponseMethodNotAllowed', () => {
     strictEqual(isHttpResponseMethodNotAllowed(response), false);
     strictEqual(isHttpResponseMethodNotAllowed(undefined), false);
     strictEqual(isHttpResponseMethodNotAllowed(null), false);
+  });
+
+});
+
+describe('HttpResponseUnprocessableContent', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseUnprocessableContent();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseUnprocessableContent();
+    strictEqual(httpResponse.statusCode, 422);
+    strictEqual(httpResponse.statusMessage, 'UNPROCESSABLE CONTENT');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseUnprocessableContent();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseUnprocessableContent(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseUnprocessableContent();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseUnprocessableContent({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseUnprocessableContent<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseUnprocessableContent', () => {
+
+  it('should return true if the given object is an instance of HttpResponseUnprocessableContent.', () => {
+    const response = new HttpResponseUnprocessableContent();
+    strictEqual(isHttpResponseUnprocessableContent(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseUnprocessableContent property equal to true.', () => {
+    const response = { isHttpResponseUnprocessableContent: true };
+    strictEqual(isHttpResponseUnprocessableContent(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseUnprocessableContent and if it '
+      + 'has no property isHttpResponseUnprocessableContent.', () => {
+    const response = {};
+    strictEqual(isHttpResponseUnprocessableContent(response), false);
+    strictEqual(isHttpResponseUnprocessableContent(undefined), false);
+    strictEqual(isHttpResponseUnprocessableContent(null), false);
   });
 
 });

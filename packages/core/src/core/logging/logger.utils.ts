@@ -77,7 +77,8 @@ function formatMessageToDevText(
   level: Level,
   message: string,
   params: { error?: Error, [name: string]: any },
-  now: Date
+  now: Date,
+  verbose = false,
 ): string {
   const levelColorCodes: Record<Level, number> = {
     debug: 35,
@@ -88,17 +89,31 @@ function formatMessageToDevText(
   const timestamp = `\u001b[90m[${now.toLocaleTimeString()}]\u001b[39m`;
   const logLevel = `\u001b[${levelColorCodes[level]}m${level.toUpperCase()}\u001b[39m`;
 
+  const consumedKeys: string[] = [];
+
   if (message.startsWith(httpRequestMessagePrefix)) {
     message = message.slice(httpRequestMessagePrefix.length);
     message += ` ${getColoredStatusCode(params.statusCode)} - ${params.responseTime} ms`;
+    consumedKeys.push('method', 'url', 'statusCode', 'responseTime');
   }
 
   const socketioMessagePrefix = 'Socket.io message received - ';
   if (message.startsWith(socketioMessagePrefix)) {
     message = `Socket.io ${message.slice(socketioMessagePrefix.length)} ${getColoredStatus(params.status)}`;
+    consumedKeys.push('eventName', 'status');
   }
 
-  return `${timestamp} ${logLevel} ${message}` + formatParamsToText({ error: params.error });
+  let displayedParams: { error?: Error, [name: string]: any } = { error: params.error };
+  if (verbose) {
+    displayedParams = {};
+    for (const key in params) {
+      if (!consumedKeys.includes(key)) {
+        displayedParams[key] = params[key];
+      }
+    }
+  }
+
+  return `${timestamp} ${logLevel} ${message}` + formatParamsToText(displayedParams);
 }
 
 function formatMessageToJson(
@@ -137,6 +152,8 @@ export function formatMessage(
       return formatMessageToRawText(level, message, params, now);
     case 'dev':
       return formatMessageToDevText(level, message, params, now);
+    case 'dev-verbose':
+      return formatMessageToDevText(level, message, params, now, true);
     case 'json':
       return formatMessageToJson(level, message, params, now);
     default:

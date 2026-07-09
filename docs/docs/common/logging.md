@@ -91,7 +91,7 @@ By default, only the `info`, `warn` and `error` messages are logged in the conso
 
 ## Log Ouput Formats
 
-Foal's logger lets you log your messages in three different ways: `raw` (default), `dev` and `json`.
+Foal's logger lets you log your messages in several different ways: `raw` (default), `dev`, `dev-verbose` and `json`.
 
 *Example of configuration*
 ```json
@@ -111,6 +111,12 @@ With this format, the logged output contains a small timestamp, beautiful colors
 This format is adapted to a development environment and focuses on reducing noise.
 
 ![dev format](./images/dev-format.png)
+
+### The `dev-verbose` format
+
+This format keeps the colors and the concise messages of the `dev` format (small timestamp, colored levels, prettified HTTP and Socket.io logs) but also displays all the parameters passed to the logger, like the `raw` format does.
+
+It is useful in a development environment when you need to inspect the full log context (request ID, user ID, etc.) without losing the readability of the `dev` format.
 
 ### The `raw` format
 
