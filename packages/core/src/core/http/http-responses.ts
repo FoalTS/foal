@@ -2243,6 +2243,51 @@ export function isHttpResponseUnprocessableContent(obj: any): obj is HttpRespons
 }
 
 /**
+ * Represent an HTTP response with the status 423 - LOCKED.
+ *
+ * @export
+ * @class HttpResponseLocked
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseLocked<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseLocked.
+   *
+   * @memberof HttpResponseLocked
+   */
+  readonly isHttpResponseLocked = true;
+  readonly statusCode = 423;
+  readonly statusMessage = 'LOCKED';
+
+  /**
+   * Create an instance of HttpResponseLocked.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseLocked
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseLocked.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseLocked} - True if the error is an instance of HttpResponseLocked. False otherwise.
+ */
+export function isHttpResponseLocked(obj: any): obj is HttpResponseLocked {
+  return obj instanceof HttpResponseLocked ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseLocked === true);
+}
+
+/**
  * Represent an HTTP response with the status 429 - TOO MANY REQUESTS.
  *
  * @export

@@ -323,6 +323,7 @@ Here are subclasses that you can use:
 | 418 | `HttpResponseImATeapot` | no |
 | 421 | `HttpResponseMisdirectedRequest` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
+| 423 | `HttpResponseLocked` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |
 | 5XX | `HttpResponseServerError` | yes |

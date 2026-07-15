@@ -21,6 +21,7 @@ import {
   HttpResponseInformational,
   HttpResponseInternalServerError,
   HttpResponseLengthRequired,
+  HttpResponseLocked,
   HttpResponseMethodNotAllowed,
   HttpResponseMisdirectedRequest,
   HttpResponseMovedPermanently,
@@ -71,6 +72,7 @@ import {
   isHttpResponseInformational,
   isHttpResponseInternalServerError,
   isHttpResponseLengthRequired,
+  isHttpResponseLocked,
   isHttpResponseMethodNotAllowed,
   isHttpResponseMisdirectedRequest,
   isHttpResponseMovedPermanently,
@@ -2674,6 +2676,68 @@ describe('isHttpResponseMisdirectedRequest', () => {
     strictEqual(isHttpResponseMisdirectedRequest(response), false);
     strictEqual(isHttpResponseMisdirectedRequest(undefined), false);
     strictEqual(isHttpResponseMisdirectedRequest(null), false);
+  });
+
+});
+
+describe('HttpResponseLocked', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseLocked();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseLocked();
+    strictEqual(httpResponse.statusCode, 423);
+    strictEqual(httpResponse.statusMessage, 'LOCKED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseLocked();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseLocked(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseLocked();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseLocked({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseLocked<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseLocked', () => {
+
+  it('should return true if the given object is an instance of HttpResponseLocked.', () => {
+    const response = new HttpResponseLocked();
+    strictEqual(isHttpResponseLocked(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseLocked property equal to true.', () => {
+    const response = { isHttpResponseLocked: true };
+    strictEqual(isHttpResponseLocked(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseLocked and if it '
+      + 'has no property isHttpResponseLocked.', () => {
+    const response = {};
+    strictEqual(isHttpResponseLocked(response), false);
+    strictEqual(isHttpResponseLocked(undefined), false);
+    strictEqual(isHttpResponseLocked(null), false);
   });
 
 });
