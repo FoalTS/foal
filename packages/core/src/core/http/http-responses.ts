@@ -1045,6 +1045,53 @@ export function isHttpResponseRedirect(obj: any): obj is HttpResponseRedirect {
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseRedirect === true);
 }
 
+/**
+ * Represent an HTTP response with the status 303 - SEE OTHER.
+ *
+ * @export
+ * @class HttpResponseSeeOther
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponseSeeOther<T = any> extends HttpResponseRedirection<T> {
+  /**
+   * Property used internally by isHttpResponseSeeOther.
+   *
+   * @memberof HttpResponseSeeOther
+   */
+  readonly isHttpResponseSeeOther = true;
+  readonly statusCode = 303;
+  readonly statusMessage = 'SEE OTHER';
+
+  /**
+   * Create an instance of HttpResponseSeeOther.
+   * @param {string} path - The redirection path.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseSeeOther
+   */
+  constructor(public path: string, body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseSeeOther.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseSeeOther} - True if the error is an instance of HttpResponseSeeOther.
+ * False otherwise.
+ */
+export function isHttpResponseSeeOther(obj: any): obj is HttpResponseSeeOther {
+  return obj instanceof HttpResponseSeeOther ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseSeeOther === true);
+}
+
 /* 4xx Client Error */
 
 /**

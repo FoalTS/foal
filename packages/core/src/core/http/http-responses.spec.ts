@@ -30,6 +30,7 @@ import {
   HttpResponseRedirect,
   HttpResponseRedirection,
   HttpResponseResetContent,
+  HttpResponseSeeOther,
   HttpResponseServerError,
   HttpResponseSuccess,
   HttpResponseSwitchingProtocols,
@@ -62,6 +63,7 @@ import {
   isHttpResponseRedirect,
   isHttpResponseRedirection,
   isHttpResponseResetContent,
+  isHttpResponseSeeOther,
   isHttpResponseServerError,
   isHttpResponseSuccess,
   isHttpResponseSwitchingProtocols,
@@ -1081,6 +1083,69 @@ describe('isHttpResponseRedirect', () => {
     strictEqual(isHttpResponseRedirect(response), false);
     strictEqual(isHttpResponseRedirect(undefined), false);
     strictEqual(isHttpResponseRedirect(null), false);
+  });
+
+});
+
+describe('HttpResponseSeeOther', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponseSeeOther('/foo');
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseSeeOther('/foo');
+    strictEqual(httpResponse.statusCode, 303);
+    strictEqual(httpResponse.statusMessage, 'SEE OTHER');
+  });
+
+  it('should accept a mandatory path and an optional body.', () => {
+    let httpResponse = new HttpResponseSeeOther('/foo');
+    strictEqual(httpResponse.path, '/foo');
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseSeeOther('/foo', body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseSeeOther('/foo');
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseSeeOther('/foo', {}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseSeeOther<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseSeeOther', () => {
+
+  it('should return true if the given object is an instance of HttpResponseSeeOther.', () => {
+    const response = new HttpResponseSeeOther('/foo');
+    strictEqual(isHttpResponseSeeOther(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseSeeOther property equal to true.', () => {
+    const response = { isHttpResponseSeeOther: true };
+    strictEqual(isHttpResponseSeeOther(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseSeeOther and if it '
+      + 'has no property isHttpResponseSeeOther.', () => {
+    const response = {};
+    strictEqual(isHttpResponseSeeOther(response), false);
+    strictEqual(isHttpResponseSeeOther(undefined), false);
+    strictEqual(isHttpResponseSeeOther(null), false);
   });
 
 });
