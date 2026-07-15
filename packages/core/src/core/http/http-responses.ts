@@ -721,6 +721,52 @@ export function isHttpResponsePartialContent(obj: any): obj is HttpResponseParti
     (typeof obj === 'object' && obj !== null && obj.isHttpResponsePartialContent === true);
 }
 
+/**
+ * Represent an HTTP response with the status 207 - MULTI-STATUS.
+ *
+ * @export
+ * @class HttpResponseMultiStatus
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseMultiStatus<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponseMultiStatus.
+   *
+   * @memberof HttpResponseMultiStatus
+   */
+  readonly isHttpResponseMultiStatus = true;
+  readonly statusCode = 207;
+  readonly statusMessage = 'MULTI-STATUS';
+
+  /**
+   * Create an instance of HttpResponseMultiStatus.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseMultiStatus
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseMultiStatus.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseMultiStatus} - True if the error is an instance of HttpResponseMultiStatus.
+ * False otherwise.
+ */
+export function isHttpResponseMultiStatus(obj: any): obj is HttpResponseMultiStatus {
+  return obj instanceof HttpResponseMultiStatus ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseMultiStatus === true);
+}
+
 /* 3xx Redirection */
 
 /**

@@ -16,6 +16,7 @@ import {
   HttpResponseInternalServerError,
   HttpResponseMethodNotAllowed,
   HttpResponseMovedPermanently,
+  HttpResponseMultiStatus,
   HttpResponseNoContent,
   HttpResponseNonAuthoritativeInformation,
   HttpResponseNotFound,
@@ -44,6 +45,7 @@ import {
   isHttpResponseInternalServerError,
   isHttpResponseMethodNotAllowed,
   isHttpResponseMovedPermanently,
+  isHttpResponseMultiStatus,
   isHttpResponseNoContent,
   isHttpResponseNonAuthoritativeInformation,
   isHttpResponseNotFound,
@@ -695,6 +697,68 @@ describe('isHttpResponsePartialContent', () => {
     strictEqual(isHttpResponsePartialContent(response), false);
     strictEqual(isHttpResponsePartialContent(undefined), false);
     strictEqual(isHttpResponsePartialContent(null), false);
+  });
+
+});
+
+describe('HttpResponseMultiStatus', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseMultiStatus();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseMultiStatus();
+    strictEqual(httpResponse.statusCode, 207);
+    strictEqual(httpResponse.statusMessage, 'MULTI-STATUS');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseMultiStatus();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseMultiStatus(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseMultiStatus();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseMultiStatus({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseMultiStatus<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseMultiStatus', () => {
+
+  it('should return true if the given object is an instance of HttpResponseMultiStatus.', () => {
+    const response = new HttpResponseMultiStatus();
+    strictEqual(isHttpResponseMultiStatus(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseMultiStatus property equal to true.', () => {
+    const response = { isHttpResponseMultiStatus: true };
+    strictEqual(isHttpResponseMultiStatus(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseMultiStatus and if it '
+      + 'has no property isHttpResponseMultiStatus.', () => {
+    const response = {};
+    strictEqual(isHttpResponseMultiStatus(response), false);
+    strictEqual(isHttpResponseMultiStatus(undefined), false);
+    strictEqual(isHttpResponseMultiStatus(null), false);
   });
 
 });
