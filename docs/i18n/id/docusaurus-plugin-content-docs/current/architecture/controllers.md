@@ -314,6 +314,7 @@ Here are subclasses that you can use:
 | 409 | `HttpResponseConflict` | no |
 | 410 | `HttpResponseGone` | no |
 | 411 | `HttpResponseLengthRequired` | no |
+| 412 | `HttpResponsePreconditionFailed` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |

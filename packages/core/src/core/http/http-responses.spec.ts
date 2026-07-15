@@ -32,6 +32,7 @@ import {
   HttpResponsePartialContent,
   HttpResponsePaymentRequired,
   HttpResponsePermanentRedirect,
+  HttpResponsePreconditionFailed,
   HttpResponseProcessing,
   HttpResponseProxyAuthenticationRequired,
   HttpResponseRedirect,
@@ -74,6 +75,7 @@ import {
   isHttpResponsePartialContent,
   isHttpResponsePaymentRequired,
   isHttpResponsePermanentRedirect,
+  isHttpResponsePreconditionFailed,
   isHttpResponseProcessing,
   isHttpResponseProxyAuthenticationRequired,
   isHttpResponseRedirect,
@@ -2038,6 +2040,68 @@ describe('isHttpResponseLengthRequired', () => {
     strictEqual(isHttpResponseLengthRequired(response), false);
     strictEqual(isHttpResponseLengthRequired(undefined), false);
     strictEqual(isHttpResponseLengthRequired(null), false);
+  });
+
+});
+
+describe('HttpResponsePreconditionFailed', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponsePreconditionFailed();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponsePreconditionFailed();
+    strictEqual(httpResponse.statusCode, 412);
+    strictEqual(httpResponse.statusMessage, 'PRECONDITION FAILED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponsePreconditionFailed();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponsePreconditionFailed(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponsePreconditionFailed();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponsePreconditionFailed({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponsePreconditionFailed<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponsePreconditionFailed', () => {
+
+  it('should return true if the given object is an instance of HttpResponsePreconditionFailed.', () => {
+    const response = new HttpResponsePreconditionFailed();
+    strictEqual(isHttpResponsePreconditionFailed(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponsePreconditionFailed property equal to true.', () => {
+    const response = { isHttpResponsePreconditionFailed: true };
+    strictEqual(isHttpResponsePreconditionFailed(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponsePreconditionFailed and if it '
+      + 'has no property isHttpResponsePreconditionFailed.', () => {
+    const response = {};
+    strictEqual(isHttpResponsePreconditionFailed(response), false);
+    strictEqual(isHttpResponsePreconditionFailed(undefined), false);
+    strictEqual(isHttpResponsePreconditionFailed(null), false);
   });
 
 });

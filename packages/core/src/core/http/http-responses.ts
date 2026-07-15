@@ -1829,6 +1829,52 @@ export function isHttpResponseLengthRequired(obj: any): obj is HttpResponseLengt
 }
 
 /**
+ * Represent an HTTP response with the status 412 - PRECONDITION FAILED.
+ *
+ * @export
+ * @class HttpResponsePreconditionFailed
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponsePreconditionFailed<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponsePreconditionFailed.
+   *
+   * @memberof HttpResponsePreconditionFailed
+   */
+  readonly isHttpResponsePreconditionFailed = true;
+  readonly statusCode = 412;
+  readonly statusMessage = 'PRECONDITION FAILED';
+
+  /**
+   * Create an instance of HttpResponsePreconditionFailed.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponsePreconditionFailed
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponsePreconditionFailed.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponsePreconditionFailed} - True if the error is an instance of
+ * HttpResponsePreconditionFailed. False otherwise.
+ */
+export function isHttpResponsePreconditionFailed(obj: any): obj is HttpResponsePreconditionFailed {
+  return obj instanceof HttpResponsePreconditionFailed ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponsePreconditionFailed === true);
+}
+
+/**
  * Represent an HTTP response with the status 422 - UNPROCESSABLE CONTENT.
  *
  * @export
