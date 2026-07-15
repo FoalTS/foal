@@ -1783,6 +1783,52 @@ export function isHttpResponseGone(obj: any): obj is HttpResponseGone {
 }
 
 /**
+ * Represent an HTTP response with the status 411 - LENGTH REQUIRED.
+ *
+ * @export
+ * @class HttpResponseLengthRequired
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseLengthRequired<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseLengthRequired.
+   *
+   * @memberof HttpResponseLengthRequired
+   */
+  readonly isHttpResponseLengthRequired = true;
+  readonly statusCode = 411;
+  readonly statusMessage = 'LENGTH REQUIRED';
+
+  /**
+   * Create an instance of HttpResponseLengthRequired.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseLengthRequired
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseLengthRequired.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseLengthRequired} - True if the error is an instance of HttpResponseLengthRequired.
+ * False otherwise.
+ */
+export function isHttpResponseLengthRequired(obj: any): obj is HttpResponseLengthRequired {
+  return obj instanceof HttpResponseLengthRequired ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseLengthRequired === true);
+}
+
+/**
  * Represent an HTTP response with the status 422 - UNPROCESSABLE CONTENT.
  *
  * @export

@@ -318,6 +318,7 @@ Here are subclasses that you can use:
 | 408 | `HttpResponseRequestTimeout` | no |
 | 409 | `HttpResponseConflict` | no |
 | 410 | `HttpResponseGone` | no |
+| 411 | `HttpResponseLengthRequired` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |

@@ -17,6 +17,7 @@ import {
   HttpResponseIMUsed,
   HttpResponseInformational,
   HttpResponseInternalServerError,
+  HttpResponseLengthRequired,
   HttpResponseMethodNotAllowed,
   HttpResponseMovedPermanently,
   HttpResponseMultipleChoices,
@@ -58,6 +59,7 @@ import {
   isHttpResponseIMUsed,
   isHttpResponseInformational,
   isHttpResponseInternalServerError,
+  isHttpResponseLengthRequired,
   isHttpResponseMethodNotAllowed,
   isHttpResponseMovedPermanently,
   isHttpResponseMultipleChoices,
@@ -1974,6 +1976,68 @@ describe('isHttpResponseGone', () => {
     strictEqual(isHttpResponseGone(response), false);
     strictEqual(isHttpResponseGone(undefined), false);
     strictEqual(isHttpResponseGone(null), false);
+  });
+
+});
+
+describe('HttpResponseLengthRequired', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseLengthRequired();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseLengthRequired();
+    strictEqual(httpResponse.statusCode, 411);
+    strictEqual(httpResponse.statusMessage, 'LENGTH REQUIRED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseLengthRequired();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseLengthRequired(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseLengthRequired();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseLengthRequired({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseLengthRequired<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseLengthRequired', () => {
+
+  it('should return true if the given object is an instance of HttpResponseLengthRequired.', () => {
+    const response = new HttpResponseLengthRequired();
+    strictEqual(isHttpResponseLengthRequired(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseLengthRequired property equal to true.', () => {
+    const response = { isHttpResponseLengthRequired: true };
+    strictEqual(isHttpResponseLengthRequired(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseLengthRequired and if it '
+      + 'has no property isHttpResponseLengthRequired.', () => {
+    const response = {};
+    strictEqual(isHttpResponseLengthRequired(response), false);
+    strictEqual(isHttpResponseLengthRequired(undefined), false);
+    strictEqual(isHttpResponseLengthRequired(null), false);
   });
 
 });
