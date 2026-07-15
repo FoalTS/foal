@@ -5,6 +5,7 @@ import { Context } from './context';
 // FoalTS
 import {
   HttpResponse,
+  HttpResponseAlreadyReported,
   HttpResponseBadRequest,
   HttpResponseClientError,
   HttpResponseConflict,
@@ -34,6 +35,7 @@ import {
   HttpResponseUnauthorized,
   HttpResponseUnprocessableContent,
   isHttpResponse,
+  isHttpResponseAlreadyReported,
   isHttpResponseBadRequest,
   isHttpResponseClientError,
   isHttpResponseConflict,
@@ -759,6 +761,68 @@ describe('isHttpResponseMultiStatus', () => {
     strictEqual(isHttpResponseMultiStatus(response), false);
     strictEqual(isHttpResponseMultiStatus(undefined), false);
     strictEqual(isHttpResponseMultiStatus(null), false);
+  });
+
+});
+
+describe('HttpResponseAlreadyReported', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseAlreadyReported();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseAlreadyReported();
+    strictEqual(httpResponse.statusCode, 208);
+    strictEqual(httpResponse.statusMessage, 'ALREADY REPORTED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseAlreadyReported();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseAlreadyReported(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseAlreadyReported();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseAlreadyReported({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseAlreadyReported<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseAlreadyReported', () => {
+
+  it('should return true if the given object is an instance of HttpResponseAlreadyReported.', () => {
+    const response = new HttpResponseAlreadyReported();
+    strictEqual(isHttpResponseAlreadyReported(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseAlreadyReported property equal to true.', () => {
+    const response = { isHttpResponseAlreadyReported: true };
+    strictEqual(isHttpResponseAlreadyReported(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseAlreadyReported and if it '
+      + 'has no property isHttpResponseAlreadyReported.', () => {
+    const response = {};
+    strictEqual(isHttpResponseAlreadyReported(response), false);
+    strictEqual(isHttpResponseAlreadyReported(undefined), false);
+    strictEqual(isHttpResponseAlreadyReported(null), false);
   });
 
 });

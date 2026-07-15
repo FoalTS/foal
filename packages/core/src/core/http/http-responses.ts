@@ -767,6 +767,52 @@ export function isHttpResponseMultiStatus(obj: any): obj is HttpResponseMultiSta
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseMultiStatus === true);
 }
 
+/**
+ * Represent an HTTP response with the status 208 - ALREADY REPORTED.
+ *
+ * @export
+ * @class HttpResponseAlreadyReported
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseAlreadyReported<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponseAlreadyReported.
+   *
+   * @memberof HttpResponseAlreadyReported
+   */
+  readonly isHttpResponseAlreadyReported = true;
+  readonly statusCode = 208;
+  readonly statusMessage = 'ALREADY REPORTED';
+
+  /**
+   * Create an instance of HttpResponseAlreadyReported.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseAlreadyReported
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseAlreadyReported.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseAlreadyReported} - True if the error is an instance of HttpResponseAlreadyReported.
+ * False otherwise.
+ */
+export function isHttpResponseAlreadyReported(obj: any): obj is HttpResponseAlreadyReported {
+  return obj instanceof HttpResponseAlreadyReported ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseAlreadyReported === true);
+}
+
 /* 3xx Redirection */
 
 /**

@@ -289,6 +289,7 @@ Here are subclasses that you can use:
 | 205 | `HttpResponseResetContent` | no |
 | 206 | `HttpResponsePartialContent` | no |
 | 207 | `HttpResponseMultiStatus` | no |
+| 208 | `HttpResponseAlreadyReported` | no |
 |  | **3XX Redirection** | |
 | 3XX | `HttpResponseRedirection` | yes |
 | 301 | `HttpResponseMovedPermanently` | no |

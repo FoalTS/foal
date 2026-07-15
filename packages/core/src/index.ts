@@ -89,6 +89,7 @@ export {
   HttpMethod,
 
   HttpResponse,
+  HttpResponseAlreadyReported,
   HttpResponseBadRequest,
   HttpResponseClientError,
   HttpResponseConflict,
@@ -204,6 +205,7 @@ export {
   getPath,
 
   isHttpResponse,
+  isHttpResponseAlreadyReported,
   isHttpResponseBadRequest,
   isHttpResponseClientError,
   isHttpResponseConflict,
