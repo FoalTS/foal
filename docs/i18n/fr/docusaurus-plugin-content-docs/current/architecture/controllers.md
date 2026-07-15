@@ -313,6 +313,7 @@ Here are subclasses that you can use:
 | 403 | `HttpResponseForbidden` | no |
 | 404 | `HttpResponseNotFound` | no |
 | 405 | `HttpResponseMethodNotAllowed` | no |
+| 406 | `HttpResponseNotAcceptable` | no |
 | 409 | `HttpResponseConflict` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 429 | `HttpResponseTooManyRequests` | no |

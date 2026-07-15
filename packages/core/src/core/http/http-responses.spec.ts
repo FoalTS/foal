@@ -22,6 +22,7 @@ import {
   HttpResponseMultiStatus,
   HttpResponseNoContent,
   HttpResponseNonAuthoritativeInformation,
+  HttpResponseNotAcceptable,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseNotModified,
@@ -59,6 +60,7 @@ import {
   isHttpResponseMultiStatus,
   isHttpResponseNoContent,
   isHttpResponseNonAuthoritativeInformation,
+  isHttpResponseNotAcceptable,
   isHttpResponseNotFound,
   isHttpResponseNotImplemented,
   isHttpResponseNotModified,
@@ -1712,6 +1714,68 @@ describe('isHttpResponseMethodNotAllowed', () => {
     strictEqual(isHttpResponseMethodNotAllowed(response), false);
     strictEqual(isHttpResponseMethodNotAllowed(undefined), false);
     strictEqual(isHttpResponseMethodNotAllowed(null), false);
+  });
+
+});
+
+describe('HttpResponseNotAcceptable', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseNotAcceptable();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseNotAcceptable();
+    strictEqual(httpResponse.statusCode, 406);
+    strictEqual(httpResponse.statusMessage, 'NOT ACCEPTABLE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseNotAcceptable();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseNotAcceptable(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseNotAcceptable();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseNotAcceptable({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseNotAcceptable<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseNotAcceptable', () => {
+
+  it('should return true if the given object is an instance of HttpResponseNotAcceptable.', () => {
+    const response = new HttpResponseNotAcceptable();
+    strictEqual(isHttpResponseNotAcceptable(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseNotAcceptable property equal to true.', () => {
+    const response = { isHttpResponseNotAcceptable: true };
+    strictEqual(isHttpResponseNotAcceptable(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseNotAcceptable and if it '
+      + 'has no property isHttpResponseNotAcceptable.', () => {
+    const response = {};
+    strictEqual(isHttpResponseNotAcceptable(response), false);
+    strictEqual(isHttpResponseNotAcceptable(undefined), false);
+    strictEqual(isHttpResponseNotAcceptable(null), false);
   });
 
 });

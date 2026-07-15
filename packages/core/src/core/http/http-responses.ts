@@ -1554,6 +1554,52 @@ export function isHttpResponseMethodNotAllowed(obj: any): obj is HttpResponseMet
 }
 
 /**
+ * Represent an HTTP response with the status 406 - NOT ACCEPTABLE.
+ *
+ * @export
+ * @class HttpResponseNotAcceptable
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseNotAcceptable<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseNotAcceptable.
+   *
+   * @memberof HttpResponseNotAcceptable
+   */
+  readonly isHttpResponseNotAcceptable = true;
+  readonly statusCode = 406;
+  readonly statusMessage = 'NOT ACCEPTABLE';
+
+  /**
+   * Create an instance of HttpResponseNotAcceptable.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseNotAcceptable
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseNotAcceptable.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseNotAcceptable} - True if the error is an instance of HttpResponseNotAcceptable.
+ * False otherwise.
+ */
+export function isHttpResponseNotAcceptable(obj: any): obj is HttpResponseNotAcceptable {
+  return obj instanceof HttpResponseNotAcceptable ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseNotAcceptable === true);
+}
+
+/**
  * Represent an HTTP response with the status 409 - CONFLICT.
  *
  * @export
