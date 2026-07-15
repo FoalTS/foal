@@ -2013,6 +2013,52 @@ export function isHttpResponseUnsupportedMediaType(obj: any): obj is HttpRespons
 }
 
 /**
+ * Represent an HTTP response with the status 416 - RANGE NOT SATISFIABLE.
+ *
+ * @export
+ * @class HttpResponseRangeNotSatisfiable
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseRangeNotSatisfiable<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseRangeNotSatisfiable.
+   *
+   * @memberof HttpResponseRangeNotSatisfiable
+   */
+  readonly isHttpResponseRangeNotSatisfiable = true;
+  readonly statusCode = 416;
+  readonly statusMessage = 'RANGE NOT SATISFIABLE';
+
+  /**
+   * Create an instance of HttpResponseRangeNotSatisfiable.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseRangeNotSatisfiable
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseRangeNotSatisfiable.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseRangeNotSatisfiable} - True if the error is an instance of
+ * HttpResponseRangeNotSatisfiable. False otherwise.
+ */
+export function isHttpResponseRangeNotSatisfiable(obj: any): obj is HttpResponseRangeNotSatisfiable {
+  return obj instanceof HttpResponseRangeNotSatisfiable ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseRangeNotSatisfiable === true);
+}
+
+/**
  * Represent an HTTP response with the status 422 - UNPROCESSABLE CONTENT.
  *
  * @export

@@ -36,6 +36,7 @@ import {
   HttpResponsePreconditionFailed,
   HttpResponseProcessing,
   HttpResponseProxyAuthenticationRequired,
+  HttpResponseRangeNotSatisfiable,
   HttpResponseRedirect,
   HttpResponseRedirection,
   HttpResponseRequestTimeout,
@@ -82,6 +83,7 @@ import {
   isHttpResponsePreconditionFailed,
   isHttpResponseProcessing,
   isHttpResponseProxyAuthenticationRequired,
+  isHttpResponseRangeNotSatisfiable,
   isHttpResponseRedirect,
   isHttpResponseRedirection,
   isHttpResponseRequestTimeout,
@@ -2418,6 +2420,68 @@ describe('isHttpResponseUnsupportedMediaType', () => {
     strictEqual(isHttpResponseUnsupportedMediaType(response), false);
     strictEqual(isHttpResponseUnsupportedMediaType(undefined), false);
     strictEqual(isHttpResponseUnsupportedMediaType(null), false);
+  });
+
+});
+
+describe('HttpResponseRangeNotSatisfiable', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseRangeNotSatisfiable();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseRangeNotSatisfiable();
+    strictEqual(httpResponse.statusCode, 416);
+    strictEqual(httpResponse.statusMessage, 'RANGE NOT SATISFIABLE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseRangeNotSatisfiable();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseRangeNotSatisfiable(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseRangeNotSatisfiable();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseRangeNotSatisfiable({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseRangeNotSatisfiable<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseRangeNotSatisfiable', () => {
+
+  it('should return true if the given object is an instance of HttpResponseRangeNotSatisfiable.', () => {
+    const response = new HttpResponseRangeNotSatisfiable();
+    strictEqual(isHttpResponseRangeNotSatisfiable(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseRangeNotSatisfiable property equal to true.', () => {
+    const response = { isHttpResponseRangeNotSatisfiable: true };
+    strictEqual(isHttpResponseRangeNotSatisfiable(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseRangeNotSatisfiable and if it '
+      + 'has no property isHttpResponseRangeNotSatisfiable.', () => {
+    const response = {};
+    strictEqual(isHttpResponseRangeNotSatisfiable(response), false);
+    strictEqual(isHttpResponseRangeNotSatisfiable(undefined), false);
+    strictEqual(isHttpResponseRangeNotSatisfiable(null), false);
   });
 
 });

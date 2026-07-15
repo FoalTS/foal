@@ -323,6 +323,7 @@ Here are subclasses that you can use:
 | 413 | `HttpResponseContentTooLarge` | no |
 | 414 | `HttpResponseURITooLong` | no |
 | 415 | `HttpResponseUnsupportedMediaType` | no |
+| 416 | `HttpResponseRangeNotSatisfiable` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |
