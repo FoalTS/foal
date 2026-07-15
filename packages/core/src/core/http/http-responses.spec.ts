@@ -44,6 +44,7 @@ import {
   HttpResponseRangeNotSatisfiable,
   HttpResponseRedirect,
   HttpResponseRedirection,
+  HttpResponseRequestHeaderFieldsTooLarge,
   HttpResponseRequestTimeout,
   HttpResponseResetContent,
   HttpResponseSeeOther,
@@ -98,6 +99,7 @@ import {
   isHttpResponseRangeNotSatisfiable,
   isHttpResponseRedirect,
   isHttpResponseRedirection,
+  isHttpResponseRequestHeaderFieldsTooLarge,
   isHttpResponseRequestTimeout,
   isHttpResponseResetContent,
   isHttpResponseSeeOther,
@@ -2992,6 +2994,69 @@ describe('isHttpResponseTooManyRequests', () => {
     strictEqual(isHttpResponseTooManyRequests(response), false);
     strictEqual(isHttpResponseTooManyRequests(undefined), false);
     strictEqual(isHttpResponseTooManyRequests(null), false);
+  });
+
+});
+
+describe('HttpResponseRequestHeaderFieldsTooLarge', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseRequestHeaderFieldsTooLarge();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseRequestHeaderFieldsTooLarge();
+    strictEqual(httpResponse.statusCode, 431);
+    strictEqual(httpResponse.statusMessage, 'REQUEST HEADER FIELDS TOO LARGE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseRequestHeaderFieldsTooLarge();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseRequestHeaderFieldsTooLarge(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseRequestHeaderFieldsTooLarge();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseRequestHeaderFieldsTooLarge({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseRequestHeaderFieldsTooLarge<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseRequestHeaderFieldsTooLarge', () => {
+
+  it('should return true if the given object is an instance of HttpResponseRequestHeaderFieldsTooLarge.', () => {
+    const response = new HttpResponseRequestHeaderFieldsTooLarge();
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseRequestHeaderFieldsTooLarge property equal '
+      + 'to true.', () => {
+    const response = { isHttpResponseRequestHeaderFieldsTooLarge: true };
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseRequestHeaderFieldsTooLarge and '
+      + 'if it has no property isHttpResponseRequestHeaderFieldsTooLarge.', () => {
+    const response = {};
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(response), false);
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(undefined), false);
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(null), false);
   });
 
 });

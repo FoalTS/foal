@@ -2470,6 +2470,52 @@ export function isHttpResponseTooManyRequests(obj: any): obj is HttpResponseTooM
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseTooManyRequests === true);
 }
 
+/**
+ * Represent an HTTP response with the status 431 - REQUEST HEADER FIELDS TOO LARGE.
+ *
+ * @export
+ * @class HttpResponseRequestHeaderFieldsTooLarge
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseRequestHeaderFieldsTooLarge<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseRequestHeaderFieldsTooLarge.
+   *
+   * @memberof HttpResponseRequestHeaderFieldsTooLarge
+   */
+  readonly isHttpResponseRequestHeaderFieldsTooLarge = true;
+  readonly statusCode = 431;
+  readonly statusMessage = 'REQUEST HEADER FIELDS TOO LARGE';
+
+  /**
+   * Create an instance of HttpResponseRequestHeaderFieldsTooLarge.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseRequestHeaderFieldsTooLarge
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseRequestHeaderFieldsTooLarge.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseRequestHeaderFieldsTooLarge} - True if the error is an instance of
+ * HttpResponseRequestHeaderFieldsTooLarge. False otherwise.
+ */
+export function isHttpResponseRequestHeaderFieldsTooLarge(obj: any): obj is HttpResponseRequestHeaderFieldsTooLarge {
+  return obj instanceof HttpResponseRequestHeaderFieldsTooLarge ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseRequestHeaderFieldsTooLarge === true);
+}
+
 /* 5xx Server Error */
 
 /**

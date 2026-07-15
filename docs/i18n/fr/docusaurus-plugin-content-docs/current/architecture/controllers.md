@@ -333,6 +333,7 @@ Here are subclasses that you can use:
 | 425 | `HttpResponseTooEarly` | no |
 | 426 | `HttpResponseUpgradeRequired` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
+| 431 | `HttpResponseRequestHeaderFieldsTooLarge` | no |
 |  | **5XX Server errors** | |
 | 5XX | `HttpResponseServerError` | yes |
 | 500 | `HttpResponseInternalServerError` | no |
