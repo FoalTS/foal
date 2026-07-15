@@ -304,6 +304,7 @@ Here are subclasses that you can use:
 | 303 | `HttpResponseSeeOther` | no |
 | 304 | `HttpResponseNotModified` | no |
 | 307 | `HttpResponseTemporaryRedirect` | no |
+| 308 | `HttpResponsePermanentRedirect` | no |
 |  | **4XX Client errors** | |
 | 4XX | `HttpResponseClientError` | yes |
 | 400 | `HttpResponseBadRequest` | no |
