@@ -2105,6 +2105,52 @@ export function isHttpResponseExpectationFailed(obj: any): obj is HttpResponseEx
 }
 
 /**
+ * Represent an HTTP response with the status 418 - I'M A TEAPOT.
+ *
+ * @export
+ * @class HttpResponseImATeapot
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseImATeapot<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseImATeapot.
+   *
+   * @memberof HttpResponseImATeapot
+   */
+  readonly isHttpResponseImATeapot = true;
+  readonly statusCode = 418;
+  readonly statusMessage = "I'M A TEAPOT";
+
+  /**
+   * Create an instance of HttpResponseImATeapot.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseImATeapot
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseImATeapot.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseImATeapot} - True if the error is an instance of HttpResponseImATeapot.
+ * False otherwise.
+ */
+export function isHttpResponseImATeapot(obj: any): obj is HttpResponseImATeapot {
+  return obj instanceof HttpResponseImATeapot ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseImATeapot === true);
+}
+
+/**
  * Represent an HTTP response with the status 422 - UNPROCESSABLE CONTENT.
  *
  * @export

@@ -325,6 +325,7 @@ Here are subclasses that you can use:
 | 415 | `HttpResponseUnsupportedMediaType` | no |
 | 416 | `HttpResponseRangeNotSatisfiable` | no |
 | 417 | `HttpResponseExpectationFailed` | no |
+| 418 | `HttpResponseImATeapot` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |

@@ -17,6 +17,7 @@ import {
   HttpResponseForbidden,
   HttpResponseGone,
   HttpResponseIMUsed,
+  HttpResponseImATeapot,
   HttpResponseInformational,
   HttpResponseInternalServerError,
   HttpResponseLengthRequired,
@@ -65,6 +66,7 @@ import {
   isHttpResponseForbidden,
   isHttpResponseGone,
   isHttpResponseIMUsed,
+  isHttpResponseImATeapot,
   isHttpResponseInformational,
   isHttpResponseInternalServerError,
   isHttpResponseLengthRequired,
@@ -2546,6 +2548,68 @@ describe('isHttpResponseExpectationFailed', () => {
     strictEqual(isHttpResponseExpectationFailed(response), false);
     strictEqual(isHttpResponseExpectationFailed(undefined), false);
     strictEqual(isHttpResponseExpectationFailed(null), false);
+  });
+
+});
+
+describe('HttpResponseImATeapot', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseImATeapot();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseImATeapot();
+    strictEqual(httpResponse.statusCode, 418);
+    strictEqual(httpResponse.statusMessage, "I'M A TEAPOT");
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseImATeapot();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseImATeapot(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseImATeapot();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseImATeapot({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseImATeapot<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseImATeapot', () => {
+
+  it('should return true if the given object is an instance of HttpResponseImATeapot.', () => {
+    const response = new HttpResponseImATeapot();
+    strictEqual(isHttpResponseImATeapot(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseImATeapot property equal to true.', () => {
+    const response = { isHttpResponseImATeapot: true };
+    strictEqual(isHttpResponseImATeapot(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseImATeapot and if it '
+      + 'has no property isHttpResponseImATeapot.', () => {
+    const response = {};
+    strictEqual(isHttpResponseImATeapot(response), false);
+    strictEqual(isHttpResponseImATeapot(undefined), false);
+    strictEqual(isHttpResponseImATeapot(null), false);
   });
 
 });
