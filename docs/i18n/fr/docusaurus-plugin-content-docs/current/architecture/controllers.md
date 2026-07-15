@@ -314,6 +314,7 @@ Here are subclasses that you can use:
 | 404 | `HttpResponseNotFound` | no |
 | 405 | `HttpResponseMethodNotAllowed` | no |
 | 406 | `HttpResponseNotAcceptable` | no |
+| 407 | `HttpResponseProxyAuthenticationRequired` | no |
 | 409 | `HttpResponseConflict` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 429 | `HttpResponseTooManyRequests` | no |

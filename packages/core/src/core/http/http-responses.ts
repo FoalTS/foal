@@ -1600,6 +1600,53 @@ export function isHttpResponseNotAcceptable(obj: any): obj is HttpResponseNotAcc
 }
 
 /**
+ * Represent an HTTP response with the status 407 - PROXY AUTHENTICATION REQUIRED.
+ *
+ * @export
+ * @class HttpResponseProxyAuthenticationRequired
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseProxyAuthenticationRequired<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseProxyAuthenticationRequired.
+   *
+   * @memberof HttpResponseProxyAuthenticationRequired
+   */
+  readonly isHttpResponseProxyAuthenticationRequired = true;
+  readonly statusCode = 407;
+  readonly statusMessage = 'PROXY AUTHENTICATION REQUIRED';
+
+  /**
+   * Create an instance of HttpResponseProxyAuthenticationRequired.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseProxyAuthenticationRequired
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+    this.setHeader('Proxy-Authenticate', '');
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseProxyAuthenticationRequired.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseProxyAuthenticationRequired} - True if the error is an instance of
+ * HttpResponseProxyAuthenticationRequired. False otherwise.
+ */
+export function isHttpResponseProxyAuthenticationRequired(obj: any): obj is HttpResponseProxyAuthenticationRequired {
+  return obj instanceof HttpResponseProxyAuthenticationRequired ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseProxyAuthenticationRequired === true);
+}
+
+/**
  * Represent an HTTP response with the status 409 - CONFLICT.
  *
  * @export

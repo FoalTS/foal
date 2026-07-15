@@ -31,6 +31,7 @@ import {
   HttpResponsePaymentRequired,
   HttpResponsePermanentRedirect,
   HttpResponseProcessing,
+  HttpResponseProxyAuthenticationRequired,
   HttpResponseRedirect,
   HttpResponseRedirection,
   HttpResponseResetContent,
@@ -69,6 +70,7 @@ import {
   isHttpResponsePaymentRequired,
   isHttpResponsePermanentRedirect,
   isHttpResponseProcessing,
+  isHttpResponseProxyAuthenticationRequired,
   isHttpResponseRedirect,
   isHttpResponseRedirection,
   isHttpResponseResetContent,
@@ -1776,6 +1778,74 @@ describe('isHttpResponseNotAcceptable', () => {
     strictEqual(isHttpResponseNotAcceptable(response), false);
     strictEqual(isHttpResponseNotAcceptable(undefined), false);
     strictEqual(isHttpResponseNotAcceptable(null), false);
+  });
+
+});
+
+describe('HttpResponseProxyAuthenticationRequired', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseProxyAuthenticationRequired();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(httpResponse.statusCode, 407);
+    strictEqual(httpResponse.statusMessage, 'PROXY AUTHENTICATION REQUIRED');
+  });
+
+  it('should set the header Proxy-Authenticate.', () => {
+    const httpResponse = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(httpResponse.getHeader('Proxy-Authenticate'), '');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseProxyAuthenticationRequired(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseProxyAuthenticationRequired({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseProxyAuthenticationRequired<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseProxyAuthenticationRequired', () => {
+
+  it('should return true if the given object is an instance of HttpResponseProxyAuthenticationRequired.', () => {
+    const response = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(isHttpResponseProxyAuthenticationRequired(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseProxyAuthenticationRequired property equal '
+      + 'to true.', () => {
+    const response = { isHttpResponseProxyAuthenticationRequired: true };
+    strictEqual(isHttpResponseProxyAuthenticationRequired(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseProxyAuthenticationRequired and '
+      + 'if it has no property isHttpResponseProxyAuthenticationRequired.', () => {
+    const response = {};
+    strictEqual(isHttpResponseProxyAuthenticationRequired(response), false);
+    strictEqual(isHttpResponseProxyAuthenticationRequired(undefined), false);
+    strictEqual(isHttpResponseProxyAuthenticationRequired(null), false);
   });
 
 });
