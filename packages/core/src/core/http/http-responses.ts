@@ -1137,6 +1137,53 @@ export function isHttpResponseNotModified(obj: any): obj is HttpResponseNotModif
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseNotModified === true);
 }
 
+/**
+ * Represent an HTTP response with the status 307 - TEMPORARY REDIRECT.
+ *
+ * @export
+ * @class HttpResponseTemporaryRedirect
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponseTemporaryRedirect<T = any> extends HttpResponseRedirection<T> {
+  /**
+   * Property used internally by isHttpResponseTemporaryRedirect.
+   *
+   * @memberof HttpResponseTemporaryRedirect
+   */
+  readonly isHttpResponseTemporaryRedirect = true;
+  readonly statusCode = 307;
+  readonly statusMessage = 'TEMPORARY REDIRECT';
+
+  /**
+   * Create an instance of HttpResponseTemporaryRedirect.
+   * @param {string} path - The redirection path.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseTemporaryRedirect
+   */
+  constructor(public path: string, body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseTemporaryRedirect.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseTemporaryRedirect} - True if the error is an instance of
+ * HttpResponseTemporaryRedirect. False otherwise.
+ */
+export function isHttpResponseTemporaryRedirect(obj: any): obj is HttpResponseTemporaryRedirect {
+  return obj instanceof HttpResponseTemporaryRedirect ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseTemporaryRedirect === true);
+}
+
 /* 4xx Client Error */
 
 /**

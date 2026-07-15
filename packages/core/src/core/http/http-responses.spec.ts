@@ -35,6 +35,7 @@ import {
   HttpResponseServerError,
   HttpResponseSuccess,
   HttpResponseSwitchingProtocols,
+  HttpResponseTemporaryRedirect,
   HttpResponseTooManyRequests,
   HttpResponseUnauthorized,
   HttpResponseUnprocessableContent,
@@ -69,6 +70,7 @@ import {
   isHttpResponseServerError,
   isHttpResponseSuccess,
   isHttpResponseSwitchingProtocols,
+  isHttpResponseTemporaryRedirect,
   isHttpResponseTooManyRequests,
   isHttpResponseUnauthorized,
   isHttpResponseUnprocessableContent
@@ -1186,6 +1188,69 @@ describe('isHttpResponseNotModified', () => {
     strictEqual(isHttpResponseNotModified(response), false);
     strictEqual(isHttpResponseNotModified(undefined), false);
     strictEqual(isHttpResponseNotModified(null), false);
+  });
+
+});
+
+describe('HttpResponseTemporaryRedirect', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponseTemporaryRedirect('/foo');
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseTemporaryRedirect('/foo');
+    strictEqual(httpResponse.statusCode, 307);
+    strictEqual(httpResponse.statusMessage, 'TEMPORARY REDIRECT');
+  });
+
+  it('should accept a mandatory path and an optional body.', () => {
+    let httpResponse = new HttpResponseTemporaryRedirect('/foo');
+    strictEqual(httpResponse.path, '/foo');
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseTemporaryRedirect('/foo', body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseTemporaryRedirect('/foo');
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseTemporaryRedirect('/foo', {}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseTemporaryRedirect<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseTemporaryRedirect', () => {
+
+  it('should return true if the given object is an instance of HttpResponseTemporaryRedirect.', () => {
+    const response = new HttpResponseTemporaryRedirect('/foo');
+    strictEqual(isHttpResponseTemporaryRedirect(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseTemporaryRedirect property equal to true.', () => {
+    const response = { isHttpResponseTemporaryRedirect: true };
+    strictEqual(isHttpResponseTemporaryRedirect(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseTemporaryRedirect and if it '
+      + 'has no property isHttpResponseTemporaryRedirect.', () => {
+    const response = {};
+    strictEqual(isHttpResponseTemporaryRedirect(response), false);
+    strictEqual(isHttpResponseTemporaryRedirect(undefined), false);
+    strictEqual(isHttpResponseTemporaryRedirect(null), false);
   });
 
 });
