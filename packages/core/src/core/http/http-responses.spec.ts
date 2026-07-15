@@ -27,6 +27,7 @@ import {
   HttpResponseNotModified,
   HttpResponseOK,
   HttpResponsePartialContent,
+  HttpResponsePaymentRequired,
   HttpResponsePermanentRedirect,
   HttpResponseProcessing,
   HttpResponseRedirect,
@@ -63,6 +64,7 @@ import {
   isHttpResponseNotModified,
   isHttpResponseOK,
   isHttpResponsePartialContent,
+  isHttpResponsePaymentRequired,
   isHttpResponsePermanentRedirect,
   isHttpResponseProcessing,
   isHttpResponseRedirect,
@@ -1462,6 +1464,68 @@ describe('isHttpResponseUnauthorized', () => {
     strictEqual(isHttpResponseUnauthorized(response), false);
     strictEqual(isHttpResponseUnauthorized(undefined), false);
     strictEqual(isHttpResponseUnauthorized(null), false);
+  });
+
+});
+
+describe('HttpResponsePaymentRequired', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponsePaymentRequired();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponsePaymentRequired();
+    strictEqual(httpResponse.statusCode, 402);
+    strictEqual(httpResponse.statusMessage, 'PAYMENT REQUIRED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponsePaymentRequired();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponsePaymentRequired(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponsePaymentRequired();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponsePaymentRequired({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponsePaymentRequired<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponsePaymentRequired', () => {
+
+  it('should return true if the given object is an instance of HttpResponsePaymentRequired.', () => {
+    const response = new HttpResponsePaymentRequired();
+    strictEqual(isHttpResponsePaymentRequired(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponsePaymentRequired property equal to true.', () => {
+    const response = { isHttpResponsePaymentRequired: true };
+    strictEqual(isHttpResponsePaymentRequired(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponsePaymentRequired and if it '
+      + 'has no property isHttpResponsePaymentRequired.', () => {
+    const response = {};
+    strictEqual(isHttpResponsePaymentRequired(response), false);
+    strictEqual(isHttpResponsePaymentRequired(undefined), false);
+    strictEqual(isHttpResponsePaymentRequired(null), false);
   });
 
 });

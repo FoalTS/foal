@@ -309,6 +309,7 @@ Here are subclasses that you can use:
 | 4XX | `HttpResponseClientError` | yes |
 | 400 | `HttpResponseBadRequest` | no |
 | 401 | `HttpResponseUnauthorized` | no |
+| 402 | `HttpResponsePaymentRequired` | no |
 | 403 | `HttpResponseForbidden` | no |
 | 404 | `HttpResponseNotFound` | no |
 | 405 | `HttpResponseMethodNotAllowed` | no |
