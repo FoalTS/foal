@@ -280,6 +280,8 @@ Here are subclasses that you can use:
 
 | HTTP method | Response class | Is abstract? |
 |---|---|---|
+|  | **1XX Informational** | |
+| 1XX | `HttpResponseInformational` | yes |
 |  | **2XX Success** | |
 | 2XX | `HttpResponseSuccess` | yes |
 | 200 | `HttpResponseOK` | no |

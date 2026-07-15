@@ -10,6 +10,7 @@ import {
   HttpResponseConflict,
   HttpResponseCreated,
   HttpResponseForbidden,
+  HttpResponseInformational,
   HttpResponseInternalServerError,
   HttpResponseMethodNotAllowed,
   HttpResponseMovedPermanently,
@@ -30,6 +31,7 @@ import {
   isHttpResponseConflict,
   isHttpResponseCreated,
   isHttpResponseForbidden,
+  isHttpResponseInformational,
   isHttpResponseInternalServerError,
   isHttpResponseMethodNotAllowed,
   isHttpResponseMovedPermanently,
@@ -144,6 +146,40 @@ describe('isHttpResponse', () => {
     strictEqual(isHttpResponse(response), false);
     strictEqual(isHttpResponse(undefined), false);
     strictEqual(isHttpResponse(null), false);
+  });
+
+});
+
+describe('isHttpResponseInformational', () => {
+
+  class ConcreteClass extends HttpResponseInformational {
+    statusMessage = 'foo';
+    statusCode = 0;
+  }
+
+  it('should return true if the given object is an instance of HttpResponseInformational.', () => {
+    const response = new ConcreteClass();
+    strictEqual(isHttpResponseInformational(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseInformational property equal to true.', () => {
+    const response = { isHttpResponseInformational: true };
+    strictEqual(isHttpResponseInformational(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseInformational and if it '
+      + 'has no property isHttpResponseInformational.', () => {
+    const response = {};
+    strictEqual(isHttpResponseInformational(response), false);
+    strictEqual(isHttpResponseInformational(undefined), false);
+    strictEqual(isHttpResponseInformational(null), false);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseInformational<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
   });
 
 });
