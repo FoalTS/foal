@@ -2119,7 +2119,7 @@ export class HttpResponseImATeapot<T = any> extends HttpResponseClientError<T> {
    */
   readonly isHttpResponseImATeapot = true;
   readonly statusCode = 418;
-  readonly statusMessage = "I'M A TEAPOT";
+  readonly statusMessage = 'I\'M A TEAPOT';
 
   /**
    * Create an instance of HttpResponseImATeapot.

@@ -2577,7 +2577,7 @@ describe('HttpResponseImATeapot', () => {
   it('should have the correct status.', () => {
     const httpResponse = new HttpResponseImATeapot();
     strictEqual(httpResponse.statusCode, 418);
-    strictEqual(httpResponse.statusMessage, "I'M A TEAPOT");
+    strictEqual(httpResponse.statusMessage, 'I\'M A TEAPOT');
   });
 
   it('should accept an optional body.', () => {
