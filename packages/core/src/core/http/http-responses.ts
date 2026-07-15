@@ -541,6 +541,52 @@ export function isHttpResponseCreated(obj: any): obj is HttpResponseCreated {
 }
 
 /**
+ * Represent an HTTP response with the status 203 - NON-AUTHORITATIVE INFORMATION.
+ *
+ * @export
+ * @class HttpResponseNonAuthoritativeInformation
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseNonAuthoritativeInformation<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponseNonAuthoritativeInformation.
+   *
+   * @memberof HttpResponseNonAuthoritativeInformation
+   */
+  readonly isHttpResponseNonAuthoritativeInformation = true;
+  readonly statusCode = 203;
+  readonly statusMessage = 'NON-AUTHORITATIVE INFORMATION';
+
+  /**
+   * Create an instance of HttpResponseNonAuthoritativeInformation.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseNonAuthoritativeInformation
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseNonAuthoritativeInformation.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseNonAuthoritativeInformation} - True if the error is an instance of
+ * HttpResponseNonAuthoritativeInformation. False otherwise.
+ */
+export function isHttpResponseNonAuthoritativeInformation(obj: any): obj is HttpResponseNonAuthoritativeInformation {
+  return obj instanceof HttpResponseNonAuthoritativeInformation ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseNonAuthoritativeInformation === true);
+}
+
+/**
  * Represent an HTTP response with the status 204 - NO CONTENT.
  *
  * @export

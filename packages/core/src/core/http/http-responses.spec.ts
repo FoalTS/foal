@@ -17,6 +17,7 @@ import {
   HttpResponseMethodNotAllowed,
   HttpResponseMovedPermanently,
   HttpResponseNoContent,
+  HttpResponseNonAuthoritativeInformation,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
@@ -42,6 +43,7 @@ import {
   isHttpResponseMethodNotAllowed,
   isHttpResponseMovedPermanently,
   isHttpResponseNoContent,
+  isHttpResponseNonAuthoritativeInformation,
   isHttpResponseNotFound,
   isHttpResponseNotImplemented,
   isHttpResponseOK,
@@ -488,6 +490,69 @@ describe('isHttpResponseCreated', () => {
     strictEqual(isHttpResponseCreated(response), false);
     strictEqual(isHttpResponseCreated(undefined), false);
     strictEqual(isHttpResponseCreated(null), false);
+  });
+
+});
+
+describe('HttpResponseNonAuthoritativeInformation', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseNonAuthoritativeInformation();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseNonAuthoritativeInformation();
+    strictEqual(httpResponse.statusCode, 203);
+    strictEqual(httpResponse.statusMessage, 'NON-AUTHORITATIVE INFORMATION');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseNonAuthoritativeInformation();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseNonAuthoritativeInformation(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseNonAuthoritativeInformation();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseNonAuthoritativeInformation({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseNonAuthoritativeInformation<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseNonAuthoritativeInformation', () => {
+
+  it('should return true if the given object is an instance of HttpResponseNonAuthoritativeInformation.', () => {
+    const response = new HttpResponseNonAuthoritativeInformation();
+    strictEqual(isHttpResponseNonAuthoritativeInformation(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseNonAuthoritativeInformation property equal '
+      + 'to true.', () => {
+    const response = { isHttpResponseNonAuthoritativeInformation: true };
+    strictEqual(isHttpResponseNonAuthoritativeInformation(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseNonAuthoritativeInformation and '
+      + 'if it has no property isHttpResponseNonAuthoritativeInformation.', () => {
+    const response = {};
+    strictEqual(isHttpResponseNonAuthoritativeInformation(response), false);
+    strictEqual(isHttpResponseNonAuthoritativeInformation(undefined), false);
+    strictEqual(isHttpResponseNonAuthoritativeInformation(null), false);
   });
 
 });
