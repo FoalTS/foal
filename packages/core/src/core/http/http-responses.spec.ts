@@ -13,6 +13,7 @@ import {
   HttpResponseCreated,
   HttpResponseEarlyHints,
   HttpResponseForbidden,
+  HttpResponseGone,
   HttpResponseIMUsed,
   HttpResponseInformational,
   HttpResponseInternalServerError,
@@ -53,6 +54,7 @@ import {
   isHttpResponseCreated,
   isHttpResponseEarlyHints,
   isHttpResponseForbidden,
+  isHttpResponseGone,
   isHttpResponseIMUsed,
   isHttpResponseInformational,
   isHttpResponseInternalServerError,
@@ -1910,6 +1912,68 @@ describe('isHttpResponseRequestTimeout', () => {
     strictEqual(isHttpResponseRequestTimeout(response), false);
     strictEqual(isHttpResponseRequestTimeout(undefined), false);
     strictEqual(isHttpResponseRequestTimeout(null), false);
+  });
+
+});
+
+describe('HttpResponseGone', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseGone();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseGone();
+    strictEqual(httpResponse.statusCode, 410);
+    strictEqual(httpResponse.statusMessage, 'GONE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseGone();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseGone(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseGone();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseGone({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseGone<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseGone', () => {
+
+  it('should return true if the given object is an instance of HttpResponseGone.', () => {
+    const response = new HttpResponseGone();
+    strictEqual(isHttpResponseGone(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseGone property equal to true.', () => {
+    const response = { isHttpResponseGone: true };
+    strictEqual(isHttpResponseGone(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseGone and if it '
+      + 'has no property isHttpResponseGone.', () => {
+    const response = {};
+    strictEqual(isHttpResponseGone(response), false);
+    strictEqual(isHttpResponseGone(undefined), false);
+    strictEqual(isHttpResponseGone(null), false);
   });
 
 });

@@ -312,6 +312,7 @@ Here are subclasses that you can use:
 | 407 | `HttpResponseProxyAuthenticationRequired` | no |
 | 408 | `HttpResponseRequestTimeout` | no |
 | 409 | `HttpResponseConflict` | no |
+| 410 | `HttpResponseGone` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |

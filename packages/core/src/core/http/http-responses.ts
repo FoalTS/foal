@@ -1738,6 +1738,51 @@ export function isHttpResponseConflict(obj: any): obj is HttpResponseConflict {
 }
 
 /**
+ * Represent an HTTP response with the status 410 - GONE.
+ *
+ * @export
+ * @class HttpResponseGone
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseGone<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseGone.
+   *
+   * @memberof HttpResponseGone
+   */
+  readonly isHttpResponseGone = true;
+  readonly statusCode = 410;
+  readonly statusMessage = 'GONE';
+
+  /**
+   * Create an instance of HttpResponseGone.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseGone
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseGone.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseGone} - True if the error is an instance of HttpResponseGone. False otherwise.
+ */
+export function isHttpResponseGone(obj: any): obj is HttpResponseGone {
+  return obj instanceof HttpResponseGone ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseGone === true);
+}
+
+/**
  * Represent an HTTP response with the status 422 - UNPROCESSABLE CONTENT.
  *
  * @export
