@@ -56,6 +56,7 @@ import {
   HttpResponseTooManyRequests,
   HttpResponseURITooLong,
   HttpResponseUnauthorized,
+  HttpResponseUnavailableForLegalReasons,
   HttpResponseUnprocessableContent,
   HttpResponseUnsupportedMediaType,
   HttpResponseUpgradeRequired,
@@ -111,6 +112,7 @@ import {
   isHttpResponseTooManyRequests,
   isHttpResponseURITooLong,
   isHttpResponseUnauthorized,
+  isHttpResponseUnavailableForLegalReasons,
   isHttpResponseUnprocessableContent,
   isHttpResponseUnsupportedMediaType,
   isHttpResponseUpgradeRequired
@@ -3057,6 +3059,69 @@ describe('isHttpResponseRequestHeaderFieldsTooLarge', () => {
     strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(response), false);
     strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(undefined), false);
     strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(null), false);
+  });
+
+});
+
+describe('HttpResponseUnavailableForLegalReasons', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseUnavailableForLegalReasons();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseUnavailableForLegalReasons();
+    strictEqual(httpResponse.statusCode, 451);
+    strictEqual(httpResponse.statusMessage, 'UNAVAILABLE FOR LEGAL REASONS');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseUnavailableForLegalReasons();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseUnavailableForLegalReasons(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseUnavailableForLegalReasons();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseUnavailableForLegalReasons({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseUnavailableForLegalReasons<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseUnavailableForLegalReasons', () => {
+
+  it('should return true if the given object is an instance of HttpResponseUnavailableForLegalReasons.', () => {
+    const response = new HttpResponseUnavailableForLegalReasons();
+    strictEqual(isHttpResponseUnavailableForLegalReasons(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseUnavailableForLegalReasons property equal '
+      + 'to true.', () => {
+    const response = { isHttpResponseUnavailableForLegalReasons: true };
+    strictEqual(isHttpResponseUnavailableForLegalReasons(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseUnavailableForLegalReasons and '
+      + 'if it has no property isHttpResponseUnavailableForLegalReasons.', () => {
+    const response = {};
+    strictEqual(isHttpResponseUnavailableForLegalReasons(response), false);
+    strictEqual(isHttpResponseUnavailableForLegalReasons(undefined), false);
+    strictEqual(isHttpResponseUnavailableForLegalReasons(null), false);
   });
 
 });

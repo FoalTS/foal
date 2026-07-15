@@ -2516,6 +2516,52 @@ export function isHttpResponseRequestHeaderFieldsTooLarge(obj: any): obj is Http
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseRequestHeaderFieldsTooLarge === true);
 }
 
+/**
+ * Represent an HTTP response with the status 451 - UNAVAILABLE FOR LEGAL REASONS.
+ *
+ * @export
+ * @class HttpResponseUnavailableForLegalReasons
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseUnavailableForLegalReasons<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseUnavailableForLegalReasons.
+   *
+   * @memberof HttpResponseUnavailableForLegalReasons
+   */
+  readonly isHttpResponseUnavailableForLegalReasons = true;
+  readonly statusCode = 451;
+  readonly statusMessage = 'UNAVAILABLE FOR LEGAL REASONS';
+
+  /**
+   * Create an instance of HttpResponseUnavailableForLegalReasons.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseUnavailableForLegalReasons
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseUnavailableForLegalReasons.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseUnavailableForLegalReasons} - True if the error is an instance of
+ * HttpResponseUnavailableForLegalReasons. False otherwise.
+ */
+export function isHttpResponseUnavailableForLegalReasons(obj: any): obj is HttpResponseUnavailableForLegalReasons {
+  return obj instanceof HttpResponseUnavailableForLegalReasons ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseUnavailableForLegalReasons === true);
+}
+
 /* 5xx Server Error */
 
 /**
