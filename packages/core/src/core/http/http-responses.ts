@@ -813,6 +813,52 @@ export function isHttpResponseAlreadyReported(obj: any): obj is HttpResponseAlre
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseAlreadyReported === true);
 }
 
+/**
+ * Represent an HTTP response with the status 226 - IM USED.
+ *
+ * @export
+ * @class HttpResponseIMUsed
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseIMUsed<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponseIMUsed.
+   *
+   * @memberof HttpResponseIMUsed
+   */
+  readonly isHttpResponseIMUsed = true;
+  readonly statusCode = 226;
+  readonly statusMessage = 'IM USED';
+
+  /**
+   * Create an instance of HttpResponseIMUsed.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseIMUsed
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseIMUsed.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseIMUsed} - True if the error is an instance of HttpResponseIMUsed.
+ * False otherwise.
+ */
+export function isHttpResponseIMUsed(obj: any): obj is HttpResponseIMUsed {
+  return obj instanceof HttpResponseIMUsed ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseIMUsed === true);
+}
+
 /* 3xx Redirection */
 
 /**

@@ -13,6 +13,7 @@ import {
   HttpResponseCreated,
   HttpResponseEarlyHints,
   HttpResponseForbidden,
+  HttpResponseIMUsed,
   HttpResponseInformational,
   HttpResponseInternalServerError,
   HttpResponseMethodNotAllowed,
@@ -43,6 +44,7 @@ import {
   isHttpResponseCreated,
   isHttpResponseEarlyHints,
   isHttpResponseForbidden,
+  isHttpResponseIMUsed,
   isHttpResponseInformational,
   isHttpResponseInternalServerError,
   isHttpResponseMethodNotAllowed,
@@ -823,6 +825,68 @@ describe('isHttpResponseAlreadyReported', () => {
     strictEqual(isHttpResponseAlreadyReported(response), false);
     strictEqual(isHttpResponseAlreadyReported(undefined), false);
     strictEqual(isHttpResponseAlreadyReported(null), false);
+  });
+
+});
+
+describe('HttpResponseIMUsed', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseIMUsed();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseIMUsed();
+    strictEqual(httpResponse.statusCode, 226);
+    strictEqual(httpResponse.statusMessage, 'IM USED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseIMUsed();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseIMUsed(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseIMUsed();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseIMUsed({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseIMUsed<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseIMUsed', () => {
+
+  it('should return true if the given object is an instance of HttpResponseIMUsed.', () => {
+    const response = new HttpResponseIMUsed();
+    strictEqual(isHttpResponseIMUsed(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseIMUsed property equal to true.', () => {
+    const response = { isHttpResponseIMUsed: true };
+    strictEqual(isHttpResponseIMUsed(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseIMUsed and if it '
+      + 'has no property isHttpResponseIMUsed.', () => {
+    const response = {};
+    strictEqual(isHttpResponseIMUsed(response), false);
+    strictEqual(isHttpResponseIMUsed(undefined), false);
+    strictEqual(isHttpResponseIMUsed(null), false);
   });
 
 });
