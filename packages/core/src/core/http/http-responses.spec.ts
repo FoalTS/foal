@@ -24,6 +24,7 @@ import {
   HttpResponseNonAuthoritativeInformation,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
+  HttpResponseNotModified,
   HttpResponseOK,
   HttpResponsePartialContent,
   HttpResponseProcessing,
@@ -57,6 +58,7 @@ import {
   isHttpResponseNonAuthoritativeInformation,
   isHttpResponseNotFound,
   isHttpResponseNotImplemented,
+  isHttpResponseNotModified,
   isHttpResponseOK,
   isHttpResponsePartialContent,
   isHttpResponseProcessing,
@@ -1146,6 +1148,44 @@ describe('isHttpResponseSeeOther', () => {
     strictEqual(isHttpResponseSeeOther(response), false);
     strictEqual(isHttpResponseSeeOther(undefined), false);
     strictEqual(isHttpResponseSeeOther(null), false);
+  });
+
+});
+
+describe('HttpResponseNotModified', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponseNotModified();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseNotModified();
+    strictEqual(httpResponse.statusCode, 304);
+    strictEqual(httpResponse.statusMessage, 'NOT MODIFIED');
+  });
+
+});
+
+describe('isHttpResponseNotModified', () => {
+
+  it('should return true if the given object is an instance of HttpResponseNotModified.', () => {
+    const response = new HttpResponseNotModified();
+    strictEqual(isHttpResponseNotModified(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseNotModified property equal to true.', () => {
+    const response = { isHttpResponseNotModified: true };
+    strictEqual(isHttpResponseNotModified(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseNotModified and if it '
+      + 'has no property isHttpResponseNotModified.', () => {
+    const response = {};
+    strictEqual(isHttpResponseNotModified(response), false);
+    strictEqual(isHttpResponseNotModified(undefined), false);
+    strictEqual(isHttpResponseNotModified(null), false);
   });
 
 });

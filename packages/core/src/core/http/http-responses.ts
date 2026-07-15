@@ -1092,6 +1092,51 @@ export function isHttpResponseSeeOther(obj: any): obj is HttpResponseSeeOther {
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseSeeOther === true);
 }
 
+/**
+ * Represent an HTTP response with the status 304 - NOT MODIFIED.
+ *
+ * @export
+ * @class HttpResponseNotModified
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponseNotModified extends HttpResponseRedirection {
+  /**
+   * Property used internally by isHttpResponseNotModified.
+   *
+   * @memberof HttpResponseNotModified
+   */
+  readonly isHttpResponseNotModified = true;
+  readonly statusCode = 304;
+  readonly statusMessage = 'NOT MODIFIED';
+
+  /**
+   * Create an instance of HttpResponseNotModified.
+   * @memberof HttpResponseNotModified
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseNotModified.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseNotModified} - True if the error is an instance of HttpResponseNotModified.
+ * False otherwise.
+ */
+export function isHttpResponseNotModified(obj: any): obj is HttpResponseNotModified {
+  return obj instanceof HttpResponseNotModified ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseNotModified === true);
+}
+
 /* 4xx Client Error */
 
 /**

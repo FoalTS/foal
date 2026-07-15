@@ -297,6 +297,7 @@ Here are subclasses that you can use:
 | 301 | `HttpResponseMovedPermanently` | no |
 | 302 | `HttpResponseRedirect` | no |
 | 303 | `HttpResponseSeeOther` | no |
+| 304 | `HttpResponseNotModified` | no |
 |  | **4XX Client errors** | |
 | 4XX | `HttpResponseClientError` | yes |
 | 400 | `HttpResponseBadRequest` | no |
