@@ -1647,6 +1647,52 @@ export function isHttpResponseProxyAuthenticationRequired(obj: any): obj is Http
 }
 
 /**
+ * Represent an HTTP response with the status 408 - REQUEST TIMEOUT.
+ *
+ * @export
+ * @class HttpResponseRequestTimeout
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseRequestTimeout<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseRequestTimeout.
+   *
+   * @memberof HttpResponseRequestTimeout
+   */
+  readonly isHttpResponseRequestTimeout = true;
+  readonly statusCode = 408;
+  readonly statusMessage = 'REQUEST TIMEOUT';
+
+  /**
+   * Create an instance of HttpResponseRequestTimeout.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseRequestTimeout
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseRequestTimeout.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseRequestTimeout} - True if the error is an instance of HttpResponseRequestTimeout.
+ * False otherwise.
+ */
+export function isHttpResponseRequestTimeout(obj: any): obj is HttpResponseRequestTimeout {
+  return obj instanceof HttpResponseRequestTimeout ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseRequestTimeout === true);
+}
+
+/**
  * Represent an HTTP response with the status 409 - CONFLICT.
  *
  * @export

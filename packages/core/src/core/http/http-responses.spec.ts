@@ -34,6 +34,7 @@ import {
   HttpResponseProxyAuthenticationRequired,
   HttpResponseRedirect,
   HttpResponseRedirection,
+  HttpResponseRequestTimeout,
   HttpResponseResetContent,
   HttpResponseSeeOther,
   HttpResponseServerError,
@@ -73,6 +74,7 @@ import {
   isHttpResponseProxyAuthenticationRequired,
   isHttpResponseRedirect,
   isHttpResponseRedirection,
+  isHttpResponseRequestTimeout,
   isHttpResponseResetContent,
   isHttpResponseSeeOther,
   isHttpResponseServerError,
@@ -1846,6 +1848,68 @@ describe('isHttpResponseProxyAuthenticationRequired', () => {
     strictEqual(isHttpResponseProxyAuthenticationRequired(response), false);
     strictEqual(isHttpResponseProxyAuthenticationRequired(undefined), false);
     strictEqual(isHttpResponseProxyAuthenticationRequired(null), false);
+  });
+
+});
+
+describe('HttpResponseRequestTimeout', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseRequestTimeout();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseRequestTimeout();
+    strictEqual(httpResponse.statusCode, 408);
+    strictEqual(httpResponse.statusMessage, 'REQUEST TIMEOUT');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseRequestTimeout();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseRequestTimeout(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseRequestTimeout();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseRequestTimeout({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseRequestTimeout<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseRequestTimeout', () => {
+
+  it('should return true if the given object is an instance of HttpResponseRequestTimeout.', () => {
+    const response = new HttpResponseRequestTimeout();
+    strictEqual(isHttpResponseRequestTimeout(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseRequestTimeout property equal to true.', () => {
+    const response = { isHttpResponseRequestTimeout: true };
+    strictEqual(isHttpResponseRequestTimeout(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseRequestTimeout and if it '
+      + 'has no property isHttpResponseRequestTimeout.', () => {
+    const response = {};
+    strictEqual(isHttpResponseRequestTimeout(response), false);
+    strictEqual(isHttpResponseRequestTimeout(undefined), false);
+    strictEqual(isHttpResponseRequestTimeout(null), false);
   });
 
 });

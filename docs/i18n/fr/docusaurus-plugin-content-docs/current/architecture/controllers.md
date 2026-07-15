@@ -315,6 +315,7 @@ Here are subclasses that you can use:
 | 405 | `HttpResponseMethodNotAllowed` | no |
 | 406 | `HttpResponseNotAcceptable` | no |
 | 407 | `HttpResponseProxyAuthenticationRequired` | no |
+| 408 | `HttpResponseRequestTimeout` | no |
 | 409 | `HttpResponseConflict` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
