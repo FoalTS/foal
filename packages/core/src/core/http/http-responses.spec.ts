@@ -8,6 +8,7 @@ import {
   HttpResponseBadRequest,
   HttpResponseClientError,
   HttpResponseConflict,
+  HttpResponseContinue,
   HttpResponseCreated,
   HttpResponseForbidden,
   HttpResponseInformational,
@@ -29,6 +30,7 @@ import {
   isHttpResponseBadRequest,
   isHttpResponseClientError,
   isHttpResponseConflict,
+  isHttpResponseContinue,
   isHttpResponseCreated,
   isHttpResponseForbidden,
   isHttpResponseInformational,
@@ -152,13 +154,8 @@ describe('isHttpResponse', () => {
 
 describe('isHttpResponseInformational', () => {
 
-  class ConcreteClass extends HttpResponseInformational {
-    statusMessage = 'foo';
-    statusCode = 0;
-  }
-
   it('should return true if the given object is an instance of HttpResponseInformational.', () => {
-    const response = new ConcreteClass();
+    const response = new HttpResponseContinue();
     strictEqual(isHttpResponseInformational(response), true);
   });
 
@@ -180,6 +177,44 @@ describe('isHttpResponseInformational', () => {
     type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
     const isTrue: BodyOnlyAcceptsNumbers = true
     strictEqual(isTrue, true)
+  });
+
+});
+
+describe('HttpResponseContinue', () => {
+
+  it('should inherit from HttpResponseInformational and HttpResponse', () => {
+    const httpResponse = new HttpResponseContinue();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseInformational);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseContinue();
+    strictEqual(httpResponse.statusCode, 100);
+    strictEqual(httpResponse.statusMessage, 'CONTINUE');
+  });
+
+});
+
+describe('isHttpResponseContinue', () => {
+
+  it('should return true if the given object is an instance of HttpResponseContinue.', () => {
+    const response = new HttpResponseContinue();
+    strictEqual(isHttpResponseContinue(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseContinue property equal to true.', () => {
+    const response = { isHttpResponseContinue: true };
+    strictEqual(isHttpResponseContinue(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseContinue and if it '
+      + 'has no property isHttpResponseContinue.', () => {
+    const response = {};
+    strictEqual(isHttpResponseContinue(response), false);
+    strictEqual(isHttpResponseContinue(undefined), false);
+    strictEqual(isHttpResponseContinue(null), false);
   });
 
 });

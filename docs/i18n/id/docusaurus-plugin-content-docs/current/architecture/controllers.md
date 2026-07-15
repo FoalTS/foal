@@ -277,6 +277,7 @@ Here are subclasses that you can use:
 |---|---|---|
 |  | **1XX Informational** | |
 | 1XX | `HttpResponseInformational` | yes |
+| 100 | `HttpResponseContinue` | no |
 |  | **2XX Success** | |
 | 2XX | `HttpResponseSuccess` | yes |
 | 200 | `HttpResponseOK` | no |

@@ -225,6 +225,50 @@ export function isHttpResponseInformational(obj: any): obj is HttpResponseInform
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseInformational === true);
 }
 
+/**
+ * Represent an HTTP response with the status 100 - CONTINUE.
+ *
+ * @export
+ * @class HttpResponseContinue
+ * @extends {HttpResponseInformational}
+ */
+export class HttpResponseContinue extends HttpResponseInformational {
+  /**
+   * Property used internally by isHttpResponseContinue.
+   *
+   * @memberof HttpResponseContinue
+   */
+  readonly isHttpResponseContinue = true;
+  readonly statusCode = 100;
+  readonly statusMessage = 'CONTINUE';
+
+  /**
+   * Create an instance of HttpResponseContinue.
+   * @memberof HttpResponseContinue
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseContinue.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseContinue} - True if the error is an instance of HttpResponseContinue. False otherwise.
+ */
+export function isHttpResponseContinue(obj: any): obj is HttpResponseContinue {
+  return obj instanceof HttpResponseContinue ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseContinue === true);
+}
+
 /* 2xx Success */
 
 /**
