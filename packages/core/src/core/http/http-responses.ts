@@ -314,6 +314,51 @@ export function isHttpResponseSwitchingProtocols(obj: any): obj is HttpResponseS
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseSwitchingProtocols === true);
 }
 
+/**
+ * Represent an HTTP response with the status 102 - PROCESSING.
+ *
+ * @export
+ * @class HttpResponseProcessing
+ * @extends {HttpResponseInformational}
+ */
+export class HttpResponseProcessing extends HttpResponseInformational {
+  /**
+   * Property used internally by isHttpResponseProcessing.
+   *
+   * @memberof HttpResponseProcessing
+   */
+  readonly isHttpResponseProcessing = true;
+  readonly statusCode = 102;
+  readonly statusMessage = 'PROCESSING';
+
+  /**
+   * Create an instance of HttpResponseProcessing.
+   * @memberof HttpResponseProcessing
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseProcessing.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseProcessing} - True if the error is an instance of HttpResponseProcessing.
+ * False otherwise.
+ */
+export function isHttpResponseProcessing(obj: any): obj is HttpResponseProcessing {
+  return obj instanceof HttpResponseProcessing ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseProcessing === true);
+}
+
 /* 2xx Success */
 
 /**

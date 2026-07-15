@@ -19,6 +19,7 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
+  HttpResponseProcessing,
   HttpResponseRedirect,
   HttpResponseRedirection,
   HttpResponseServerError,
@@ -42,6 +43,7 @@ import {
   isHttpResponseNotFound,
   isHttpResponseNotImplemented,
   isHttpResponseOK,
+  isHttpResponseProcessing,
   isHttpResponseRedirect,
   isHttpResponseRedirection,
   isHttpResponseServerError,
@@ -255,6 +257,44 @@ describe('isHttpResponseSwitchingProtocols', () => {
     strictEqual(isHttpResponseSwitchingProtocols(response), false);
     strictEqual(isHttpResponseSwitchingProtocols(undefined), false);
     strictEqual(isHttpResponseSwitchingProtocols(null), false);
+  });
+
+});
+
+describe('HttpResponseProcessing', () => {
+
+  it('should inherit from HttpResponseInformational and HttpResponse', () => {
+    const httpResponse = new HttpResponseProcessing();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseInformational);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseProcessing();
+    strictEqual(httpResponse.statusCode, 102);
+    strictEqual(httpResponse.statusMessage, 'PROCESSING');
+  });
+
+});
+
+describe('isHttpResponseProcessing', () => {
+
+  it('should return true if the given object is an instance of HttpResponseProcessing.', () => {
+    const response = new HttpResponseProcessing();
+    strictEqual(isHttpResponseProcessing(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseProcessing property equal to true.', () => {
+    const response = { isHttpResponseProcessing: true };
+    strictEqual(isHttpResponseProcessing(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseProcessing and if it '
+      + 'has no property isHttpResponseProcessing.', () => {
+    const response = {};
+    strictEqual(isHttpResponseProcessing(response), false);
+    strictEqual(isHttpResponseProcessing(undefined), false);
+    strictEqual(isHttpResponseProcessing(null), false);
   });
 
 });
