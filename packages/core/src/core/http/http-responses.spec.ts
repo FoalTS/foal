@@ -51,6 +51,7 @@ import {
   HttpResponseSuccess,
   HttpResponseSwitchingProtocols,
   HttpResponseTemporaryRedirect,
+  HttpResponseTooEarly,
   HttpResponseTooManyRequests,
   HttpResponseURITooLong,
   HttpResponseUnauthorized,
@@ -103,6 +104,7 @@ import {
   isHttpResponseSuccess,
   isHttpResponseSwitchingProtocols,
   isHttpResponseTemporaryRedirect,
+  isHttpResponseTooEarly,
   isHttpResponseTooManyRequests,
   isHttpResponseURITooLong,
   isHttpResponseUnauthorized,
@@ -2802,6 +2804,68 @@ describe('isHttpResponseFailedDependency', () => {
     strictEqual(isHttpResponseFailedDependency(response), false);
     strictEqual(isHttpResponseFailedDependency(undefined), false);
     strictEqual(isHttpResponseFailedDependency(null), false);
+  });
+
+});
+
+describe('HttpResponseTooEarly', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseTooEarly();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseTooEarly();
+    strictEqual(httpResponse.statusCode, 425);
+    strictEqual(httpResponse.statusMessage, 'TOO EARLY');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseTooEarly();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseTooEarly(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseTooEarly();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseTooEarly({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseTooEarly<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseTooEarly', () => {
+
+  it('should return true if the given object is an instance of HttpResponseTooEarly.', () => {
+    const response = new HttpResponseTooEarly();
+    strictEqual(isHttpResponseTooEarly(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseTooEarly property equal to true.', () => {
+    const response = { isHttpResponseTooEarly: true };
+    strictEqual(isHttpResponseTooEarly(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseTooEarly and if it '
+      + 'has no property isHttpResponseTooEarly.', () => {
+    const response = {};
+    strictEqual(isHttpResponseTooEarly(response), false);
+    strictEqual(isHttpResponseTooEarly(undefined), false);
+    strictEqual(isHttpResponseTooEarly(null), false);
   });
 
 });

@@ -330,6 +330,7 @@ Here are subclasses that you can use:
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 423 | `HttpResponseLocked` | no |
 | 424 | `HttpResponseFailedDependency` | no |
+| 425 | `HttpResponseTooEarly` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |
 | 5XX | `HttpResponseServerError` | yes |

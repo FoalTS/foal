@@ -2334,6 +2334,51 @@ export function isHttpResponseFailedDependency(obj: any): obj is HttpResponseFai
 }
 
 /**
+ * Represent an HTTP response with the status 425 - TOO EARLY.
+ *
+ * @export
+ * @class HttpResponseTooEarly
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseTooEarly<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseTooEarly.
+   *
+   * @memberof HttpResponseTooEarly
+   */
+  readonly isHttpResponseTooEarly = true;
+  readonly statusCode = 425;
+  readonly statusMessage = 'TOO EARLY';
+
+  /**
+   * Create an instance of HttpResponseTooEarly.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseTooEarly
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseTooEarly.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseTooEarly} - True if the error is an instance of HttpResponseTooEarly. False otherwise.
+ */
+export function isHttpResponseTooEarly(obj: any): obj is HttpResponseTooEarly {
+  return obj instanceof HttpResponseTooEarly ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseTooEarly === true);
+}
+
+/**
  * Represent an HTTP response with the status 429 - TOO MANY REQUESTS.
  *
  * @export
