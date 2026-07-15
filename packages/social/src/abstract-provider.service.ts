@@ -90,10 +90,31 @@ export class AuthorizationError extends Error {
 export class TokenError extends Error {
   readonly name = 'TokenError';
 
-  constructor(readonly error: any) {
+  static async fromResponse(response: Response): Promise<TokenError> {
+    let body: string;
+
+    try {
+      body = await response.text();
+    } catch {
+      return new TokenError(undefined, response.status);
+    }
+
+    if (body.length === 0) {
+      return new TokenError(undefined, response.status);
+    }
+
+    try {
+      return new TokenError(JSON.parse(body), response.status);
+    } catch {
+      return new TokenError(body, response.status);
+    }
+  }
+
+  constructor(readonly error: any, readonly status?: number) {
     super(
-      'The authorization server returned an error. Impossible to get an access token.\n'
-      + JSON.stringify(error, null, 2)
+      'The authorization server returned an error. Impossible to get an access token.'
+      + (status !== undefined && error === undefined ? '' : '\n' + JSON.stringify(error, null, 2))
+      + (status === undefined ? '' : `\nStatus: ${status}`)
     );
   }
 }
@@ -364,13 +385,12 @@ export abstract class AbstractProvider<AuthParameters extends ObjectType, UserIn
       headers,
       method: 'POST',
     });
-    const body = await response.json();
 
     if (!response.ok) {
-      throw new TokenError(body);
+      throw await TokenError.fromResponse(response);
     }
 
-    return body;
+    return response.json();
   }
 
   /**

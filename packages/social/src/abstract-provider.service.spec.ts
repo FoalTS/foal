@@ -13,6 +13,7 @@ import {
   createService,
   HttpResponseBadRequest,
   HttpResponseOK,
+  HttpResponseTooManyRequests,
   isHttpResponseOK,
   isHttpResponseRedirect,
   Post
@@ -137,6 +138,80 @@ describe('TokenError', () => {
     const error = new TokenError(err);
 
     strictEqual(error.error, err);
+  });
+
+  it('should preserve its one-argument message format.', () => {
+    const error = new TokenError('bad request');
+
+    strictEqual(
+      error.message,
+      `The authorization server returned an error. Impossible to get an access token.
+"bad request"`
+    );
+  });
+
+  describe('has a "fromResponse" method that', () => {
+
+    it('should retain a JSON error body and the HTTP status.', async () => {
+      const error = await TokenError.fromResponse(new Response(
+        JSON.stringify({ error: 'bad request' }),
+        { status: 400 }
+      ));
+
+      deepStrictEqual(error.error, { error: 'bad request' });
+      strictEqual(error.status, 400);
+      strictEqual(
+        error.message,
+        `The authorization server returned an error. Impossible to get an access token.
+{
+  "error": "bad request"
+}
+Status: 400`
+      );
+    });
+
+    it('should retain a text error body and the HTTP status.', async () => {
+      const error = await TokenError.fromResponse(new Response('rate limited', { status: 429 }));
+
+      strictEqual(error.error, 'rate limited');
+      strictEqual(error.status, 429);
+      strictEqual(
+        error.message,
+        `The authorization server returned an error. Impossible to get an access token.
+"rate limited"
+Status: 429`
+      );
+    });
+
+    it('should retain only the HTTP status if the error body is empty.', async () => {
+      const error = await TokenError.fromResponse(new Response(null, { status: 429 }));
+
+      strictEqual(error.error, undefined);
+      strictEqual(error.status, 429);
+      strictEqual(
+        error.message,
+        `The authorization server returned an error. Impossible to get an access token.
+Status: 429`
+      );
+    });
+
+    it('should retain only the HTTP status if the error body cannot be read.', async () => {
+      const response = {
+        status: 429,
+        text: async () => { throw new Error('unreadable'); }
+      } as unknown as Response;
+
+      const error = await TokenError.fromResponse(response);
+
+      strictEqual(error.error, undefined);
+      strictEqual(error.status, 429);
+      strictEqual(
+        error.message,
+        `The authorization server returned an error. Impossible to get an access token.
+Status: 429`
+      );
+    });
+
   });
 
 });
@@ -544,6 +619,39 @@ describe('AbstractProvider', () => {
         deepStrictEqual(error.error, {
           error: 'bad request'
         });
+        strictEqual(error.status, 400);
+      }
+    });
+
+    it('should throw a TokenError if the token endpoint returns a non-JSON error.', async () => {
+      class AppController {
+        @Post('/token')
+        token() {
+          return new HttpResponseTooManyRequests('rate limited');
+        }
+      }
+
+      server = (await createApp(AppController)).listen(3000);
+
+      const ctx = new Context({
+        cookies: {
+          [STATE_COOKIE_NAME]: 'xxx'
+        },
+        query: {
+          code: 'an_authorization_code',
+          state: 'xxx',
+        },
+      });
+
+      try {
+        await provider.getTokens(ctx);
+        throw new Error('getTokens should have thrown a TokenError.');
+      } catch (error: any) {
+        if (!(error instanceof TokenError)) {
+          throw error;
+        }
+        strictEqual(error.error, 'rate limited');
+        strictEqual(error.status, 429);
       }
     });
 
