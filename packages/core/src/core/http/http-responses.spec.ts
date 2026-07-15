@@ -23,6 +23,7 @@ import {
   HttpResponseRedirection,
   HttpResponseServerError,
   HttpResponseSuccess,
+  HttpResponseSwitchingProtocols,
   HttpResponseTooManyRequests,
   HttpResponseUnauthorized,
   HttpResponseUnprocessableContent,
@@ -45,6 +46,7 @@ import {
   isHttpResponseRedirection,
   isHttpResponseServerError,
   isHttpResponseSuccess,
+  isHttpResponseSwitchingProtocols,
   isHttpResponseTooManyRequests,
   isHttpResponseUnauthorized,
   isHttpResponseUnprocessableContent
@@ -215,6 +217,44 @@ describe('isHttpResponseContinue', () => {
     strictEqual(isHttpResponseContinue(response), false);
     strictEqual(isHttpResponseContinue(undefined), false);
     strictEqual(isHttpResponseContinue(null), false);
+  });
+
+});
+
+describe('HttpResponseSwitchingProtocols', () => {
+
+  it('should inherit from HttpResponseInformational and HttpResponse', () => {
+    const httpResponse = new HttpResponseSwitchingProtocols();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseInformational);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseSwitchingProtocols();
+    strictEqual(httpResponse.statusCode, 101);
+    strictEqual(httpResponse.statusMessage, 'SWITCHING PROTOCOLS');
+  });
+
+});
+
+describe('isHttpResponseSwitchingProtocols', () => {
+
+  it('should return true if the given object is an instance of HttpResponseSwitchingProtocols.', () => {
+    const response = new HttpResponseSwitchingProtocols();
+    strictEqual(isHttpResponseSwitchingProtocols(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseSwitchingProtocols property equal to true.', () => {
+    const response = { isHttpResponseSwitchingProtocols: true };
+    strictEqual(isHttpResponseSwitchingProtocols(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseSwitchingProtocols and if it '
+      + 'has no property isHttpResponseSwitchingProtocols.', () => {
+    const response = {};
+    strictEqual(isHttpResponseSwitchingProtocols(response), false);
+    strictEqual(isHttpResponseSwitchingProtocols(undefined), false);
+    strictEqual(isHttpResponseSwitchingProtocols(null), false);
   });
 
 });
