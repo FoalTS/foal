@@ -133,6 +133,7 @@ export {
   HttpResponseURITooLong,
   HttpResponseUnauthorized,
   HttpResponseUnprocessableContent,
+  HttpResponseUnsupportedMediaType,
 
   IApiAbstractParameter,
   IApiAbstractSecurityScheme,
@@ -264,6 +265,7 @@ export {
   isHttpResponseURITooLong,
   isHttpResponseUnauthorized,
   isHttpResponseUnprocessableContent,
+  isHttpResponseUnsupportedMediaType,
 
   Logger,
   render,

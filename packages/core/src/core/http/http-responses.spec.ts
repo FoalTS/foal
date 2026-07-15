@@ -49,6 +49,7 @@ import {
   HttpResponseURITooLong,
   HttpResponseUnauthorized,
   HttpResponseUnprocessableContent,
+  HttpResponseUnsupportedMediaType,
   isHttpResponse,
   isHttpResponseAlreadyReported,
   isHttpResponseBadRequest,
@@ -93,7 +94,8 @@ import {
   isHttpResponseTooManyRequests,
   isHttpResponseURITooLong,
   isHttpResponseUnauthorized,
-  isHttpResponseUnprocessableContent
+  isHttpResponseUnprocessableContent,
+  isHttpResponseUnsupportedMediaType
 } from './http-responses';
 
 describe('HttpResponse', () => {
@@ -2354,6 +2356,68 @@ describe('isHttpResponseConflict', () => {
     strictEqual(isHttpResponseConflict(response), false);
     strictEqual(isHttpResponseConflict(undefined), false);
     strictEqual(isHttpResponseConflict(null), false);
+  });
+
+});
+
+describe('HttpResponseUnsupportedMediaType', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseUnsupportedMediaType();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseUnsupportedMediaType();
+    strictEqual(httpResponse.statusCode, 415);
+    strictEqual(httpResponse.statusMessage, 'UNSUPPORTED MEDIA TYPE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseUnsupportedMediaType();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseUnsupportedMediaType(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseUnsupportedMediaType();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseUnsupportedMediaType({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseUnsupportedMediaType<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseUnsupportedMediaType', () => {
+
+  it('should return true if the given object is an instance of HttpResponseUnsupportedMediaType.', () => {
+    const response = new HttpResponseUnsupportedMediaType();
+    strictEqual(isHttpResponseUnsupportedMediaType(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseUnsupportedMediaType property equal to true.', () => {
+    const response = { isHttpResponseUnsupportedMediaType: true };
+    strictEqual(isHttpResponseUnsupportedMediaType(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseUnsupportedMediaType and if it '
+      + 'has no property isHttpResponseUnsupportedMediaType.', () => {
+    const response = {};
+    strictEqual(isHttpResponseUnsupportedMediaType(response), false);
+    strictEqual(isHttpResponseUnsupportedMediaType(undefined), false);
+    strictEqual(isHttpResponseUnsupportedMediaType(null), false);
   });
 
 });

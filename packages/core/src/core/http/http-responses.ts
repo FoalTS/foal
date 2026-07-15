@@ -1967,6 +1967,52 @@ export function isHttpResponseURITooLong(obj: any): obj is HttpResponseURITooLon
 }
 
 /**
+ * Represent an HTTP response with the status 415 - UNSUPPORTED MEDIA TYPE.
+ *
+ * @export
+ * @class HttpResponseUnsupportedMediaType
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseUnsupportedMediaType<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseUnsupportedMediaType.
+   *
+   * @memberof HttpResponseUnsupportedMediaType
+   */
+  readonly isHttpResponseUnsupportedMediaType = true;
+  readonly statusCode = 415;
+  readonly statusMessage = 'UNSUPPORTED MEDIA TYPE';
+
+  /**
+   * Create an instance of HttpResponseUnsupportedMediaType.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseUnsupportedMediaType
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseUnsupportedMediaType.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseUnsupportedMediaType} - True if the error is an instance of
+ * HttpResponseUnsupportedMediaType. False otherwise.
+ */
+export function isHttpResponseUnsupportedMediaType(obj: any): obj is HttpResponseUnsupportedMediaType {
+  return obj instanceof HttpResponseUnsupportedMediaType ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseUnsupportedMediaType === true);
+}
+
+/**
  * Represent an HTTP response with the status 422 - UNPROCESSABLE CONTENT.
  *
  * @export
