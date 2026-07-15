@@ -280,24 +280,61 @@ Here are subclasses that you can use:
 
 | HTTP method | Response class | Is abstract? |
 |---|---|---|
+|  | **1XX Informational** | |
+| 1XX | `HttpResponseInformational` | yes |
+| 100 | `HttpResponseContinue` | no |
+| 101 | `HttpResponseSwitchingProtocols` | no |
+| 102 | `HttpResponseProcessing` | no |
+| 103 | `HttpResponseEarlyHints` | no |
 |  | **2XX Success** | |
 | 2XX | `HttpResponseSuccess` | yes |
 | 200 | `HttpResponseOK` | no |
 | 201 | `HttpResponseCreated` | no |
+| 203 | `HttpResponseNonAuthoritativeInformation` | no |
+| 205 | `HttpResponseResetContent` | no |
+| 206 | `HttpResponsePartialContent` | no |
+| 207 | `HttpResponseMultiStatus` | no |
+| 208 | `HttpResponseAlreadyReported` | no |
+| 226 | `HttpResponseIMUsed` | no |
 |  | **3XX Redirection** | |
 | 3XX | `HttpResponseRedirection` | yes |
+| 300 | `HttpResponseMultipleChoices` | no |
 | 301 | `HttpResponseMovedPermanently` | no |
 | 302 | `HttpResponseRedirect` | no |
+| 303 | `HttpResponseSeeOther` | no |
+| 304 | `HttpResponseNotModified` | no |
+| 307 | `HttpResponseTemporaryRedirect` | no |
+| 308 | `HttpResponsePermanentRedirect` | no |
 |  | **4XX Client errors** | |
 | 4XX | `HttpResponseClientError` | yes |
 | 400 | `HttpResponseBadRequest` | no |
 | 401 | `HttpResponseUnauthorized` | no |
+| 402 | `HttpResponsePaymentRequired` | no |
 | 403 | `HttpResponseForbidden` | no |
 | 404 | `HttpResponseNotFound` | no |
 | 405 | `HttpResponseMethodNotAllowed` | no |
+| 406 | `HttpResponseNotAcceptable` | no |
+| 407 | `HttpResponseProxyAuthenticationRequired` | no |
+| 408 | `HttpResponseRequestTimeout` | no |
 | 409 | `HttpResponseConflict` | no |
+| 410 | `HttpResponseGone` | no |
+| 411 | `HttpResponseLengthRequired` | no |
+| 412 | `HttpResponsePreconditionFailed` | no |
+| 413 | `HttpResponseContentTooLarge` | no |
+| 414 | `HttpResponseURITooLong` | no |
+| 415 | `HttpResponseUnsupportedMediaType` | no |
+| 416 | `HttpResponseRangeNotSatisfiable` | no |
+| 417 | `HttpResponseExpectationFailed` | no |
+| 418 | `HttpResponseImATeapot` | no |
+| 421 | `HttpResponseMisdirectedRequest` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
+| 423 | `HttpResponseLocked` | no |
+| 424 | `HttpResponseFailedDependency` | no |
+| 425 | `HttpResponseTooEarly` | no |
+| 426 | `HttpResponseUpgradeRequired` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
+| 431 | `HttpResponseRequestHeaderFieldsTooLarge` | no |
+| 451 | `HttpResponseUnavailableForLegalReasons` | no |
 |  | **5XX Server errors** | |
 | 5XX | `HttpResponseServerError` | yes |
 | 500 | `HttpResponseInternalServerError` | no |

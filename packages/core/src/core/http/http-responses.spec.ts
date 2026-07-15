@@ -5,45 +5,117 @@ import { Context } from './context';
 // FoalTS
 import {
   HttpResponse,
+  HttpResponseAlreadyReported,
   HttpResponseBadRequest,
   HttpResponseClientError,
   HttpResponseConflict,
+  HttpResponseContentTooLarge,
+  HttpResponseContinue,
   HttpResponseCreated,
+  HttpResponseEarlyHints,
+  HttpResponseExpectationFailed,
+  HttpResponseFailedDependency,
   HttpResponseForbidden,
+  HttpResponseGone,
+  HttpResponseIMUsed,
+  HttpResponseImATeapot,
+  HttpResponseInformational,
   HttpResponseInternalServerError,
+  HttpResponseLengthRequired,
+  HttpResponseLocked,
   HttpResponseMethodNotAllowed,
+  HttpResponseMisdirectedRequest,
   HttpResponseMovedPermanently,
+  HttpResponseMultipleChoices,
+  HttpResponseMultiStatus,
   HttpResponseNoContent,
+  HttpResponseNonAuthoritativeInformation,
+  HttpResponseNotAcceptable,
   HttpResponseNotFound,
   HttpResponseNotImplemented,
+  HttpResponseNotModified,
   HttpResponseOK,
+  HttpResponsePartialContent,
+  HttpResponsePaymentRequired,
+  HttpResponsePermanentRedirect,
+  HttpResponsePreconditionFailed,
+  HttpResponseProcessing,
+  HttpResponseProxyAuthenticationRequired,
+  HttpResponseRangeNotSatisfiable,
   HttpResponseRedirect,
   HttpResponseRedirection,
+  HttpResponseRequestHeaderFieldsTooLarge,
+  HttpResponseRequestTimeout,
+  HttpResponseResetContent,
+  HttpResponseSeeOther,
   HttpResponseServerError,
   HttpResponseSuccess,
+  HttpResponseSwitchingProtocols,
+  HttpResponseTemporaryRedirect,
+  HttpResponseTooEarly,
   HttpResponseTooManyRequests,
+  HttpResponseURITooLong,
   HttpResponseUnauthorized,
+  HttpResponseUnavailableForLegalReasons,
   HttpResponseUnprocessableContent,
+  HttpResponseUnsupportedMediaType,
+  HttpResponseUpgradeRequired,
   isHttpResponse,
+  isHttpResponseAlreadyReported,
   isHttpResponseBadRequest,
   isHttpResponseClientError,
   isHttpResponseConflict,
+  isHttpResponseContentTooLarge,
+  isHttpResponseContinue,
   isHttpResponseCreated,
+  isHttpResponseEarlyHints,
+  isHttpResponseExpectationFailed,
+  isHttpResponseFailedDependency,
   isHttpResponseForbidden,
+  isHttpResponseGone,
+  isHttpResponseIMUsed,
+  isHttpResponseImATeapot,
+  isHttpResponseInformational,
   isHttpResponseInternalServerError,
+  isHttpResponseLengthRequired,
+  isHttpResponseLocked,
   isHttpResponseMethodNotAllowed,
+  isHttpResponseMisdirectedRequest,
   isHttpResponseMovedPermanently,
+  isHttpResponseMultipleChoices,
+  isHttpResponseMultiStatus,
   isHttpResponseNoContent,
+  isHttpResponseNonAuthoritativeInformation,
+  isHttpResponseNotAcceptable,
   isHttpResponseNotFound,
   isHttpResponseNotImplemented,
+  isHttpResponseNotModified,
   isHttpResponseOK,
+  isHttpResponsePartialContent,
+  isHttpResponsePaymentRequired,
+  isHttpResponsePermanentRedirect,
+  isHttpResponsePreconditionFailed,
+  isHttpResponseProcessing,
+  isHttpResponseProxyAuthenticationRequired,
+  isHttpResponseRangeNotSatisfiable,
   isHttpResponseRedirect,
   isHttpResponseRedirection,
+  isHttpResponseRequestHeaderFieldsTooLarge,
+  isHttpResponseRequestTimeout,
+  isHttpResponseResetContent,
+  isHttpResponseSeeOther,
   isHttpResponseServerError,
   isHttpResponseSuccess,
+  isHttpResponseSwitchingProtocols,
+  isHttpResponseTemporaryRedirect,
+  isHttpResponseTooEarly,
   isHttpResponseTooManyRequests,
+  isHttpResponseURITooLong,
   isHttpResponseUnauthorized,
-  isHttpResponseUnprocessableContent
+  isHttpResponseUnavailableForLegalReasons,
+  isHttpResponseUnprocessableContent,
+  isHttpResponseUnsupportedMediaType,
+  isHttpResponseUpgradeRequired
 } from './http-responses';
 
 describe('HttpResponse', () => {
@@ -144,6 +216,187 @@ describe('isHttpResponse', () => {
     strictEqual(isHttpResponse(response), false);
     strictEqual(isHttpResponse(undefined), false);
     strictEqual(isHttpResponse(null), false);
+  });
+
+});
+
+describe('isHttpResponseInformational', () => {
+
+  it('should return true if the given object is an instance of HttpResponseInformational.', () => {
+    const response = new HttpResponseContinue();
+    strictEqual(isHttpResponseInformational(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseInformational property equal to true.', () => {
+    const response = { isHttpResponseInformational: true };
+    strictEqual(isHttpResponseInformational(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseInformational and if it '
+      + 'has no property isHttpResponseInformational.', () => {
+    const response = {};
+    strictEqual(isHttpResponseInformational(response), false);
+    strictEqual(isHttpResponseInformational(undefined), false);
+    strictEqual(isHttpResponseInformational(null), false);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseInformational<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('HttpResponseContinue', () => {
+
+  it('should inherit from HttpResponseInformational and HttpResponse', () => {
+    const httpResponse = new HttpResponseContinue();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseInformational);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseContinue();
+    strictEqual(httpResponse.statusCode, 100);
+    strictEqual(httpResponse.statusMessage, 'CONTINUE');
+  });
+
+});
+
+describe('isHttpResponseContinue', () => {
+
+  it('should return true if the given object is an instance of HttpResponseContinue.', () => {
+    const response = new HttpResponseContinue();
+    strictEqual(isHttpResponseContinue(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseContinue property equal to true.', () => {
+    const response = { isHttpResponseContinue: true };
+    strictEqual(isHttpResponseContinue(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseContinue and if it '
+      + 'has no property isHttpResponseContinue.', () => {
+    const response = {};
+    strictEqual(isHttpResponseContinue(response), false);
+    strictEqual(isHttpResponseContinue(undefined), false);
+    strictEqual(isHttpResponseContinue(null), false);
+  });
+
+});
+
+describe('HttpResponseSwitchingProtocols', () => {
+
+  it('should inherit from HttpResponseInformational and HttpResponse', () => {
+    const httpResponse = new HttpResponseSwitchingProtocols();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseInformational);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseSwitchingProtocols();
+    strictEqual(httpResponse.statusCode, 101);
+    strictEqual(httpResponse.statusMessage, 'SWITCHING PROTOCOLS');
+  });
+
+});
+
+describe('isHttpResponseSwitchingProtocols', () => {
+
+  it('should return true if the given object is an instance of HttpResponseSwitchingProtocols.', () => {
+    const response = new HttpResponseSwitchingProtocols();
+    strictEqual(isHttpResponseSwitchingProtocols(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseSwitchingProtocols property equal to true.', () => {
+    const response = { isHttpResponseSwitchingProtocols: true };
+    strictEqual(isHttpResponseSwitchingProtocols(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseSwitchingProtocols and if it '
+      + 'has no property isHttpResponseSwitchingProtocols.', () => {
+    const response = {};
+    strictEqual(isHttpResponseSwitchingProtocols(response), false);
+    strictEqual(isHttpResponseSwitchingProtocols(undefined), false);
+    strictEqual(isHttpResponseSwitchingProtocols(null), false);
+  });
+
+});
+
+describe('HttpResponseProcessing', () => {
+
+  it('should inherit from HttpResponseInformational and HttpResponse', () => {
+    const httpResponse = new HttpResponseProcessing();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseInformational);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseProcessing();
+    strictEqual(httpResponse.statusCode, 102);
+    strictEqual(httpResponse.statusMessage, 'PROCESSING');
+  });
+
+});
+
+describe('isHttpResponseProcessing', () => {
+
+  it('should return true if the given object is an instance of HttpResponseProcessing.', () => {
+    const response = new HttpResponseProcessing();
+    strictEqual(isHttpResponseProcessing(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseProcessing property equal to true.', () => {
+    const response = { isHttpResponseProcessing: true };
+    strictEqual(isHttpResponseProcessing(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseProcessing and if it '
+      + 'has no property isHttpResponseProcessing.', () => {
+    const response = {};
+    strictEqual(isHttpResponseProcessing(response), false);
+    strictEqual(isHttpResponseProcessing(undefined), false);
+    strictEqual(isHttpResponseProcessing(null), false);
+  });
+
+});
+
+describe('HttpResponseEarlyHints', () => {
+
+  it('should inherit from HttpResponseInformational and HttpResponse', () => {
+    const httpResponse = new HttpResponseEarlyHints();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseInformational);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseEarlyHints();
+    strictEqual(httpResponse.statusCode, 103);
+    strictEqual(httpResponse.statusMessage, 'EARLY HINTS');
+  });
+
+});
+
+describe('isHttpResponseEarlyHints', () => {
+
+  it('should return true if the given object is an instance of HttpResponseEarlyHints.', () => {
+    const response = new HttpResponseEarlyHints();
+    strictEqual(isHttpResponseEarlyHints(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseEarlyHints property equal to true.', () => {
+    const response = { isHttpResponseEarlyHints: true };
+    strictEqual(isHttpResponseEarlyHints(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseEarlyHints and if it '
+      + 'has no property isHttpResponseEarlyHints.', () => {
+    const response = {};
+    strictEqual(isHttpResponseEarlyHints(response), false);
+    strictEqual(isHttpResponseEarlyHints(undefined), false);
+    strictEqual(isHttpResponseEarlyHints(null), false);
   });
 
 });
@@ -301,6 +554,69 @@ describe('isHttpResponseCreated', () => {
 
 });
 
+describe('HttpResponseNonAuthoritativeInformation', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseNonAuthoritativeInformation();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseNonAuthoritativeInformation();
+    strictEqual(httpResponse.statusCode, 203);
+    strictEqual(httpResponse.statusMessage, 'NON-AUTHORITATIVE INFORMATION');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseNonAuthoritativeInformation();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseNonAuthoritativeInformation(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseNonAuthoritativeInformation();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseNonAuthoritativeInformation({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseNonAuthoritativeInformation<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseNonAuthoritativeInformation', () => {
+
+  it('should return true if the given object is an instance of HttpResponseNonAuthoritativeInformation.', () => {
+    const response = new HttpResponseNonAuthoritativeInformation();
+    strictEqual(isHttpResponseNonAuthoritativeInformation(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseNonAuthoritativeInformation property equal '
+      + 'to true.', () => {
+    const response = { isHttpResponseNonAuthoritativeInformation: true };
+    strictEqual(isHttpResponseNonAuthoritativeInformation(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseNonAuthoritativeInformation and '
+      + 'if it has no property isHttpResponseNonAuthoritativeInformation.', () => {
+    const response = {};
+    strictEqual(isHttpResponseNonAuthoritativeInformation(response), false);
+    strictEqual(isHttpResponseNonAuthoritativeInformation(undefined), false);
+    strictEqual(isHttpResponseNonAuthoritativeInformation(null), false);
+  });
+
+});
+
 describe('HttpResponseNoContent', () => {
 
   it('should inherit from HttpResponseSuccess and HttpResponse', () => {
@@ -339,6 +655,292 @@ describe('isHttpResponseNoContent', () => {
 
 });
 
+describe('HttpResponseResetContent', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseResetContent();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseResetContent();
+    strictEqual(httpResponse.statusCode, 205);
+    strictEqual(httpResponse.statusMessage, 'RESET CONTENT');
+  });
+
+});
+
+describe('isHttpResponseResetContent', () => {
+
+  it('should return true if the given object is an instance of HttpResponseResetContent.', () => {
+    const response = new HttpResponseResetContent();
+    strictEqual(isHttpResponseResetContent(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseResetContent property equal to true.', () => {
+    const response = { isHttpResponseResetContent: true };
+    strictEqual(isHttpResponseResetContent(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseResetContent and if it '
+      + 'has no property isHttpResponseResetContent.', () => {
+    const response = {};
+    strictEqual(isHttpResponseResetContent(response), false);
+    strictEqual(isHttpResponseResetContent(undefined), false);
+    strictEqual(isHttpResponseResetContent(null), false);
+  });
+
+});
+
+describe('HttpResponsePartialContent', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponsePartialContent();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponsePartialContent();
+    strictEqual(httpResponse.statusCode, 206);
+    strictEqual(httpResponse.statusMessage, 'PARTIAL CONTENT');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponsePartialContent();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponsePartialContent(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponsePartialContent();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponsePartialContent({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponsePartialContent<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponsePartialContent', () => {
+
+  it('should return true if the given object is an instance of HttpResponsePartialContent.', () => {
+    const response = new HttpResponsePartialContent();
+    strictEqual(isHttpResponsePartialContent(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponsePartialContent property equal to true.', () => {
+    const response = { isHttpResponsePartialContent: true };
+    strictEqual(isHttpResponsePartialContent(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponsePartialContent and if it '
+      + 'has no property isHttpResponsePartialContent.', () => {
+    const response = {};
+    strictEqual(isHttpResponsePartialContent(response), false);
+    strictEqual(isHttpResponsePartialContent(undefined), false);
+    strictEqual(isHttpResponsePartialContent(null), false);
+  });
+
+});
+
+describe('HttpResponseMultiStatus', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseMultiStatus();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseMultiStatus();
+    strictEqual(httpResponse.statusCode, 207);
+    strictEqual(httpResponse.statusMessage, 'MULTI-STATUS');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseMultiStatus();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseMultiStatus(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseMultiStatus();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseMultiStatus({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseMultiStatus<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseMultiStatus', () => {
+
+  it('should return true if the given object is an instance of HttpResponseMultiStatus.', () => {
+    const response = new HttpResponseMultiStatus();
+    strictEqual(isHttpResponseMultiStatus(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseMultiStatus property equal to true.', () => {
+    const response = { isHttpResponseMultiStatus: true };
+    strictEqual(isHttpResponseMultiStatus(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseMultiStatus and if it '
+      + 'has no property isHttpResponseMultiStatus.', () => {
+    const response = {};
+    strictEqual(isHttpResponseMultiStatus(response), false);
+    strictEqual(isHttpResponseMultiStatus(undefined), false);
+    strictEqual(isHttpResponseMultiStatus(null), false);
+  });
+
+});
+
+describe('HttpResponseAlreadyReported', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseAlreadyReported();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseAlreadyReported();
+    strictEqual(httpResponse.statusCode, 208);
+    strictEqual(httpResponse.statusMessage, 'ALREADY REPORTED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseAlreadyReported();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseAlreadyReported(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseAlreadyReported();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseAlreadyReported({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseAlreadyReported<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseAlreadyReported', () => {
+
+  it('should return true if the given object is an instance of HttpResponseAlreadyReported.', () => {
+    const response = new HttpResponseAlreadyReported();
+    strictEqual(isHttpResponseAlreadyReported(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseAlreadyReported property equal to true.', () => {
+    const response = { isHttpResponseAlreadyReported: true };
+    strictEqual(isHttpResponseAlreadyReported(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseAlreadyReported and if it '
+      + 'has no property isHttpResponseAlreadyReported.', () => {
+    const response = {};
+    strictEqual(isHttpResponseAlreadyReported(response), false);
+    strictEqual(isHttpResponseAlreadyReported(undefined), false);
+    strictEqual(isHttpResponseAlreadyReported(null), false);
+  });
+
+});
+
+describe('HttpResponseIMUsed', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseIMUsed();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseIMUsed();
+    strictEqual(httpResponse.statusCode, 226);
+    strictEqual(httpResponse.statusMessage, 'IM USED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseIMUsed();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseIMUsed(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseIMUsed();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseIMUsed({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseIMUsed<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseIMUsed', () => {
+
+  it('should return true if the given object is an instance of HttpResponseIMUsed.', () => {
+    const response = new HttpResponseIMUsed();
+    strictEqual(isHttpResponseIMUsed(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseIMUsed property equal to true.', () => {
+    const response = { isHttpResponseIMUsed: true };
+    strictEqual(isHttpResponseIMUsed(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseIMUsed and if it '
+      + 'has no property isHttpResponseIMUsed.', () => {
+    const response = {};
+    strictEqual(isHttpResponseIMUsed(response), false);
+    strictEqual(isHttpResponseIMUsed(undefined), false);
+    strictEqual(isHttpResponseIMUsed(null), false);
+  });
+
+});
+
 describe('isHttpResponseRedirection', () => {
 
   it('should return true if the given object is an instance of HttpResponseRedirection.', () => {
@@ -357,6 +959,69 @@ describe('isHttpResponseRedirection', () => {
     strictEqual(isHttpResponseRedirection(response), false);
     strictEqual(isHttpResponseRedirection(undefined), false);
     strictEqual(isHttpResponseRedirection(null), false);
+  });
+
+});
+
+describe('HttpResponseMultipleChoices', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponseMultipleChoices('/foo');
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseMultipleChoices('/foo');
+    strictEqual(httpResponse.statusCode, 300);
+    strictEqual(httpResponse.statusMessage, 'MULTIPLE CHOICES');
+  });
+
+  it('should accept a mandatory path and an optional body.', () => {
+    let httpResponse = new HttpResponseMultipleChoices('/foo');
+    strictEqual(httpResponse.path, '/foo');
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseMultipleChoices('/foo', body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseMultipleChoices('/foo');
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseMultipleChoices('/foo', {}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseMultipleChoices<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseMultipleChoices', () => {
+
+  it('should return true if the given object is an instance of HttpResponseMultipleChoices.', () => {
+    const response = new HttpResponseMultipleChoices('/foo');
+    strictEqual(isHttpResponseMultipleChoices(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseMultipleChoices property equal to true.', () => {
+    const response = { isHttpResponseMultipleChoices: true };
+    strictEqual(isHttpResponseMultipleChoices(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseMultipleChoices and if it '
+      + 'has no property isHttpResponseMultipleChoices.', () => {
+    const response = {};
+    strictEqual(isHttpResponseMultipleChoices(response), false);
+    strictEqual(isHttpResponseMultipleChoices(undefined), false);
+    strictEqual(isHttpResponseMultipleChoices(null), false);
   });
 
 });
@@ -464,6 +1129,233 @@ describe('isHttpResponseRedirect', () => {
     strictEqual(isHttpResponseRedirect(response), false);
     strictEqual(isHttpResponseRedirect(undefined), false);
     strictEqual(isHttpResponseRedirect(null), false);
+  });
+
+});
+
+describe('HttpResponseSeeOther', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponseSeeOther('/foo');
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseSeeOther('/foo');
+    strictEqual(httpResponse.statusCode, 303);
+    strictEqual(httpResponse.statusMessage, 'SEE OTHER');
+  });
+
+  it('should accept a mandatory path and an optional body.', () => {
+    let httpResponse = new HttpResponseSeeOther('/foo');
+    strictEqual(httpResponse.path, '/foo');
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseSeeOther('/foo', body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseSeeOther('/foo');
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseSeeOther('/foo', {}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseSeeOther<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseSeeOther', () => {
+
+  it('should return true if the given object is an instance of HttpResponseSeeOther.', () => {
+    const response = new HttpResponseSeeOther('/foo');
+    strictEqual(isHttpResponseSeeOther(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseSeeOther property equal to true.', () => {
+    const response = { isHttpResponseSeeOther: true };
+    strictEqual(isHttpResponseSeeOther(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseSeeOther and if it '
+      + 'has no property isHttpResponseSeeOther.', () => {
+    const response = {};
+    strictEqual(isHttpResponseSeeOther(response), false);
+    strictEqual(isHttpResponseSeeOther(undefined), false);
+    strictEqual(isHttpResponseSeeOther(null), false);
+  });
+
+});
+
+describe('HttpResponseNotModified', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponseNotModified();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseNotModified();
+    strictEqual(httpResponse.statusCode, 304);
+    strictEqual(httpResponse.statusMessage, 'NOT MODIFIED');
+  });
+
+});
+
+describe('isHttpResponseNotModified', () => {
+
+  it('should return true if the given object is an instance of HttpResponseNotModified.', () => {
+    const response = new HttpResponseNotModified();
+    strictEqual(isHttpResponseNotModified(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseNotModified property equal to true.', () => {
+    const response = { isHttpResponseNotModified: true };
+    strictEqual(isHttpResponseNotModified(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseNotModified and if it '
+      + 'has no property isHttpResponseNotModified.', () => {
+    const response = {};
+    strictEqual(isHttpResponseNotModified(response), false);
+    strictEqual(isHttpResponseNotModified(undefined), false);
+    strictEqual(isHttpResponseNotModified(null), false);
+  });
+
+});
+
+describe('HttpResponseTemporaryRedirect', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponseTemporaryRedirect('/foo');
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseTemporaryRedirect('/foo');
+    strictEqual(httpResponse.statusCode, 307);
+    strictEqual(httpResponse.statusMessage, 'TEMPORARY REDIRECT');
+  });
+
+  it('should accept a mandatory path and an optional body.', () => {
+    let httpResponse = new HttpResponseTemporaryRedirect('/foo');
+    strictEqual(httpResponse.path, '/foo');
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseTemporaryRedirect('/foo', body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseTemporaryRedirect('/foo');
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseTemporaryRedirect('/foo', {}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseTemporaryRedirect<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseTemporaryRedirect', () => {
+
+  it('should return true if the given object is an instance of HttpResponseTemporaryRedirect.', () => {
+    const response = new HttpResponseTemporaryRedirect('/foo');
+    strictEqual(isHttpResponseTemporaryRedirect(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseTemporaryRedirect property equal to true.', () => {
+    const response = { isHttpResponseTemporaryRedirect: true };
+    strictEqual(isHttpResponseTemporaryRedirect(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseTemporaryRedirect and if it '
+      + 'has no property isHttpResponseTemporaryRedirect.', () => {
+    const response = {};
+    strictEqual(isHttpResponseTemporaryRedirect(response), false);
+    strictEqual(isHttpResponseTemporaryRedirect(undefined), false);
+    strictEqual(isHttpResponseTemporaryRedirect(null), false);
+  });
+
+});
+
+describe('HttpResponsePermanentRedirect', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponsePermanentRedirect('/foo');
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponsePermanentRedirect('/foo');
+    strictEqual(httpResponse.statusCode, 308);
+    strictEqual(httpResponse.statusMessage, 'PERMANENT REDIRECT');
+  });
+
+  it('should accept a mandatory path and an optional body.', () => {
+    let httpResponse = new HttpResponsePermanentRedirect('/foo');
+    strictEqual(httpResponse.path, '/foo');
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponsePermanentRedirect('/foo', body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponsePermanentRedirect('/foo');
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponsePermanentRedirect('/foo', {}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponsePermanentRedirect<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponsePermanentRedirect', () => {
+
+  it('should return true if the given object is an instance of HttpResponsePermanentRedirect.', () => {
+    const response = new HttpResponsePermanentRedirect('/foo');
+    strictEqual(isHttpResponsePermanentRedirect(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponsePermanentRedirect property equal to true.', () => {
+    const response = { isHttpResponsePermanentRedirect: true };
+    strictEqual(isHttpResponsePermanentRedirect(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponsePermanentRedirect and if it '
+      + 'has no property isHttpResponsePermanentRedirect.', () => {
+    const response = {};
+    strictEqual(isHttpResponsePermanentRedirect(response), false);
+    strictEqual(isHttpResponsePermanentRedirect(undefined), false);
+    strictEqual(isHttpResponsePermanentRedirect(null), false);
   });
 
 });
@@ -610,6 +1502,68 @@ describe('isHttpResponseUnauthorized', () => {
     strictEqual(isHttpResponseUnauthorized(response), false);
     strictEqual(isHttpResponseUnauthorized(undefined), false);
     strictEqual(isHttpResponseUnauthorized(null), false);
+  });
+
+});
+
+describe('HttpResponsePaymentRequired', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponsePaymentRequired();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponsePaymentRequired();
+    strictEqual(httpResponse.statusCode, 402);
+    strictEqual(httpResponse.statusMessage, 'PAYMENT REQUIRED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponsePaymentRequired();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponsePaymentRequired(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponsePaymentRequired();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponsePaymentRequired({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponsePaymentRequired<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponsePaymentRequired', () => {
+
+  it('should return true if the given object is an instance of HttpResponsePaymentRequired.', () => {
+    const response = new HttpResponsePaymentRequired();
+    strictEqual(isHttpResponsePaymentRequired(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponsePaymentRequired property equal to true.', () => {
+    const response = { isHttpResponsePaymentRequired: true };
+    strictEqual(isHttpResponsePaymentRequired(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponsePaymentRequired and if it '
+      + 'has no property isHttpResponsePaymentRequired.', () => {
+    const response = {};
+    strictEqual(isHttpResponsePaymentRequired(response), false);
+    strictEqual(isHttpResponsePaymentRequired(undefined), false);
+    strictEqual(isHttpResponsePaymentRequired(null), false);
   });
 
 });
@@ -800,6 +1754,508 @@ describe('isHttpResponseMethodNotAllowed', () => {
 
 });
 
+describe('HttpResponseNotAcceptable', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseNotAcceptable();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseNotAcceptable();
+    strictEqual(httpResponse.statusCode, 406);
+    strictEqual(httpResponse.statusMessage, 'NOT ACCEPTABLE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseNotAcceptable();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseNotAcceptable(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseNotAcceptable();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseNotAcceptable({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseNotAcceptable<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseNotAcceptable', () => {
+
+  it('should return true if the given object is an instance of HttpResponseNotAcceptable.', () => {
+    const response = new HttpResponseNotAcceptable();
+    strictEqual(isHttpResponseNotAcceptable(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseNotAcceptable property equal to true.', () => {
+    const response = { isHttpResponseNotAcceptable: true };
+    strictEqual(isHttpResponseNotAcceptable(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseNotAcceptable and if it '
+      + 'has no property isHttpResponseNotAcceptable.', () => {
+    const response = {};
+    strictEqual(isHttpResponseNotAcceptable(response), false);
+    strictEqual(isHttpResponseNotAcceptable(undefined), false);
+    strictEqual(isHttpResponseNotAcceptable(null), false);
+  });
+
+});
+
+describe('HttpResponseProxyAuthenticationRequired', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseProxyAuthenticationRequired();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(httpResponse.statusCode, 407);
+    strictEqual(httpResponse.statusMessage, 'PROXY AUTHENTICATION REQUIRED');
+  });
+
+  it('should set the header Proxy-Authenticate.', () => {
+    const httpResponse = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(httpResponse.getHeader('Proxy-Authenticate'), '');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseProxyAuthenticationRequired(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseProxyAuthenticationRequired({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseProxyAuthenticationRequired<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseProxyAuthenticationRequired', () => {
+
+  it('should return true if the given object is an instance of HttpResponseProxyAuthenticationRequired.', () => {
+    const response = new HttpResponseProxyAuthenticationRequired();
+    strictEqual(isHttpResponseProxyAuthenticationRequired(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseProxyAuthenticationRequired property equal '
+      + 'to true.', () => {
+    const response = { isHttpResponseProxyAuthenticationRequired: true };
+    strictEqual(isHttpResponseProxyAuthenticationRequired(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseProxyAuthenticationRequired and '
+      + 'if it has no property isHttpResponseProxyAuthenticationRequired.', () => {
+    const response = {};
+    strictEqual(isHttpResponseProxyAuthenticationRequired(response), false);
+    strictEqual(isHttpResponseProxyAuthenticationRequired(undefined), false);
+    strictEqual(isHttpResponseProxyAuthenticationRequired(null), false);
+  });
+
+});
+
+describe('HttpResponseRequestTimeout', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseRequestTimeout();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseRequestTimeout();
+    strictEqual(httpResponse.statusCode, 408);
+    strictEqual(httpResponse.statusMessage, 'REQUEST TIMEOUT');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseRequestTimeout();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseRequestTimeout(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseRequestTimeout();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseRequestTimeout({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseRequestTimeout<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseRequestTimeout', () => {
+
+  it('should return true if the given object is an instance of HttpResponseRequestTimeout.', () => {
+    const response = new HttpResponseRequestTimeout();
+    strictEqual(isHttpResponseRequestTimeout(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseRequestTimeout property equal to true.', () => {
+    const response = { isHttpResponseRequestTimeout: true };
+    strictEqual(isHttpResponseRequestTimeout(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseRequestTimeout and if it '
+      + 'has no property isHttpResponseRequestTimeout.', () => {
+    const response = {};
+    strictEqual(isHttpResponseRequestTimeout(response), false);
+    strictEqual(isHttpResponseRequestTimeout(undefined), false);
+    strictEqual(isHttpResponseRequestTimeout(null), false);
+  });
+
+});
+
+describe('HttpResponseGone', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseGone();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseGone();
+    strictEqual(httpResponse.statusCode, 410);
+    strictEqual(httpResponse.statusMessage, 'GONE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseGone();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseGone(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseGone();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseGone({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseGone<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseGone', () => {
+
+  it('should return true if the given object is an instance of HttpResponseGone.', () => {
+    const response = new HttpResponseGone();
+    strictEqual(isHttpResponseGone(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseGone property equal to true.', () => {
+    const response = { isHttpResponseGone: true };
+    strictEqual(isHttpResponseGone(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseGone and if it '
+      + 'has no property isHttpResponseGone.', () => {
+    const response = {};
+    strictEqual(isHttpResponseGone(response), false);
+    strictEqual(isHttpResponseGone(undefined), false);
+    strictEqual(isHttpResponseGone(null), false);
+  });
+
+});
+
+describe('HttpResponseLengthRequired', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseLengthRequired();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseLengthRequired();
+    strictEqual(httpResponse.statusCode, 411);
+    strictEqual(httpResponse.statusMessage, 'LENGTH REQUIRED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseLengthRequired();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseLengthRequired(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseLengthRequired();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseLengthRequired({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseLengthRequired<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseLengthRequired', () => {
+
+  it('should return true if the given object is an instance of HttpResponseLengthRequired.', () => {
+    const response = new HttpResponseLengthRequired();
+    strictEqual(isHttpResponseLengthRequired(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseLengthRequired property equal to true.', () => {
+    const response = { isHttpResponseLengthRequired: true };
+    strictEqual(isHttpResponseLengthRequired(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseLengthRequired and if it '
+      + 'has no property isHttpResponseLengthRequired.', () => {
+    const response = {};
+    strictEqual(isHttpResponseLengthRequired(response), false);
+    strictEqual(isHttpResponseLengthRequired(undefined), false);
+    strictEqual(isHttpResponseLengthRequired(null), false);
+  });
+
+});
+
+describe('HttpResponsePreconditionFailed', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponsePreconditionFailed();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponsePreconditionFailed();
+    strictEqual(httpResponse.statusCode, 412);
+    strictEqual(httpResponse.statusMessage, 'PRECONDITION FAILED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponsePreconditionFailed();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponsePreconditionFailed(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponsePreconditionFailed();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponsePreconditionFailed({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponsePreconditionFailed<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponsePreconditionFailed', () => {
+
+  it('should return true if the given object is an instance of HttpResponsePreconditionFailed.', () => {
+    const response = new HttpResponsePreconditionFailed();
+    strictEqual(isHttpResponsePreconditionFailed(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponsePreconditionFailed property equal to true.', () => {
+    const response = { isHttpResponsePreconditionFailed: true };
+    strictEqual(isHttpResponsePreconditionFailed(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponsePreconditionFailed and if it '
+      + 'has no property isHttpResponsePreconditionFailed.', () => {
+    const response = {};
+    strictEqual(isHttpResponsePreconditionFailed(response), false);
+    strictEqual(isHttpResponsePreconditionFailed(undefined), false);
+    strictEqual(isHttpResponsePreconditionFailed(null), false);
+  });
+
+});
+
+describe('HttpResponseContentTooLarge', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseContentTooLarge();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseContentTooLarge();
+    strictEqual(httpResponse.statusCode, 413);
+    strictEqual(httpResponse.statusMessage, 'CONTENT TOO LARGE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseContentTooLarge();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseContentTooLarge(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseContentTooLarge();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseContentTooLarge({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseContentTooLarge<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseContentTooLarge', () => {
+
+  it('should return true if the given object is an instance of HttpResponseContentTooLarge.', () => {
+    const response = new HttpResponseContentTooLarge();
+    strictEqual(isHttpResponseContentTooLarge(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseContentTooLarge property equal to true.', () => {
+    const response = { isHttpResponseContentTooLarge: true };
+    strictEqual(isHttpResponseContentTooLarge(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseContentTooLarge and if it '
+      + 'has no property isHttpResponseContentTooLarge.', () => {
+    const response = {};
+    strictEqual(isHttpResponseContentTooLarge(response), false);
+    strictEqual(isHttpResponseContentTooLarge(undefined), false);
+    strictEqual(isHttpResponseContentTooLarge(null), false);
+  });
+
+});
+
+describe('HttpResponseURITooLong', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseURITooLong();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseURITooLong();
+    strictEqual(httpResponse.statusCode, 414);
+    strictEqual(httpResponse.statusMessage, 'URI TOO LONG');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseURITooLong();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseURITooLong(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseURITooLong();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseURITooLong({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseURITooLong<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseURITooLong', () => {
+
+  it('should return true if the given object is an instance of HttpResponseURITooLong.', () => {
+    const response = new HttpResponseURITooLong();
+    strictEqual(isHttpResponseURITooLong(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseURITooLong property equal to true.', () => {
+    const response = { isHttpResponseURITooLong: true };
+    strictEqual(isHttpResponseURITooLong(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseURITooLong and if it '
+      + 'has no property isHttpResponseURITooLong.', () => {
+    const response = {};
+    strictEqual(isHttpResponseURITooLong(response), false);
+    strictEqual(isHttpResponseURITooLong(undefined), false);
+    strictEqual(isHttpResponseURITooLong(null), false);
+  });
+
+});
+
 describe('HttpResponseUnprocessableContent', () => {
 
   it('should inherit from HttpResponseClientError and HttpResponse', () => {
@@ -924,6 +2380,564 @@ describe('isHttpResponseConflict', () => {
 
 });
 
+describe('HttpResponseUnsupportedMediaType', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseUnsupportedMediaType();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseUnsupportedMediaType();
+    strictEqual(httpResponse.statusCode, 415);
+    strictEqual(httpResponse.statusMessage, 'UNSUPPORTED MEDIA TYPE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseUnsupportedMediaType();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseUnsupportedMediaType(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseUnsupportedMediaType();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseUnsupportedMediaType({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseUnsupportedMediaType<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseUnsupportedMediaType', () => {
+
+  it('should return true if the given object is an instance of HttpResponseUnsupportedMediaType.', () => {
+    const response = new HttpResponseUnsupportedMediaType();
+    strictEqual(isHttpResponseUnsupportedMediaType(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseUnsupportedMediaType property equal to true.', () => {
+    const response = { isHttpResponseUnsupportedMediaType: true };
+    strictEqual(isHttpResponseUnsupportedMediaType(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseUnsupportedMediaType and if it '
+      + 'has no property isHttpResponseUnsupportedMediaType.', () => {
+    const response = {};
+    strictEqual(isHttpResponseUnsupportedMediaType(response), false);
+    strictEqual(isHttpResponseUnsupportedMediaType(undefined), false);
+    strictEqual(isHttpResponseUnsupportedMediaType(null), false);
+  });
+
+});
+
+describe('HttpResponseRangeNotSatisfiable', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseRangeNotSatisfiable();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseRangeNotSatisfiable();
+    strictEqual(httpResponse.statusCode, 416);
+    strictEqual(httpResponse.statusMessage, 'RANGE NOT SATISFIABLE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseRangeNotSatisfiable();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseRangeNotSatisfiable(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseRangeNotSatisfiable();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseRangeNotSatisfiable({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseRangeNotSatisfiable<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseRangeNotSatisfiable', () => {
+
+  it('should return true if the given object is an instance of HttpResponseRangeNotSatisfiable.', () => {
+    const response = new HttpResponseRangeNotSatisfiable();
+    strictEqual(isHttpResponseRangeNotSatisfiable(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseRangeNotSatisfiable property equal to true.', () => {
+    const response = { isHttpResponseRangeNotSatisfiable: true };
+    strictEqual(isHttpResponseRangeNotSatisfiable(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseRangeNotSatisfiable and if it '
+      + 'has no property isHttpResponseRangeNotSatisfiable.', () => {
+    const response = {};
+    strictEqual(isHttpResponseRangeNotSatisfiable(response), false);
+    strictEqual(isHttpResponseRangeNotSatisfiable(undefined), false);
+    strictEqual(isHttpResponseRangeNotSatisfiable(null), false);
+  });
+
+});
+
+describe('HttpResponseExpectationFailed', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseExpectationFailed();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseExpectationFailed();
+    strictEqual(httpResponse.statusCode, 417);
+    strictEqual(httpResponse.statusMessage, 'EXPECTATION FAILED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseExpectationFailed();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseExpectationFailed(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseExpectationFailed();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseExpectationFailed({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseExpectationFailed<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseExpectationFailed', () => {
+
+  it('should return true if the given object is an instance of HttpResponseExpectationFailed.', () => {
+    const response = new HttpResponseExpectationFailed();
+    strictEqual(isHttpResponseExpectationFailed(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseExpectationFailed property equal to true.', () => {
+    const response = { isHttpResponseExpectationFailed: true };
+    strictEqual(isHttpResponseExpectationFailed(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseExpectationFailed and if it '
+      + 'has no property isHttpResponseExpectationFailed.', () => {
+    const response = {};
+    strictEqual(isHttpResponseExpectationFailed(response), false);
+    strictEqual(isHttpResponseExpectationFailed(undefined), false);
+    strictEqual(isHttpResponseExpectationFailed(null), false);
+  });
+
+});
+
+describe('HttpResponseImATeapot', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseImATeapot();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseImATeapot();
+    strictEqual(httpResponse.statusCode, 418);
+    strictEqual(httpResponse.statusMessage, 'I\'M A TEAPOT');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseImATeapot();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseImATeapot(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseImATeapot();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseImATeapot({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseImATeapot<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseImATeapot', () => {
+
+  it('should return true if the given object is an instance of HttpResponseImATeapot.', () => {
+    const response = new HttpResponseImATeapot();
+    strictEqual(isHttpResponseImATeapot(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseImATeapot property equal to true.', () => {
+    const response = { isHttpResponseImATeapot: true };
+    strictEqual(isHttpResponseImATeapot(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseImATeapot and if it '
+      + 'has no property isHttpResponseImATeapot.', () => {
+    const response = {};
+    strictEqual(isHttpResponseImATeapot(response), false);
+    strictEqual(isHttpResponseImATeapot(undefined), false);
+    strictEqual(isHttpResponseImATeapot(null), false);
+  });
+
+});
+
+describe('HttpResponseMisdirectedRequest', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseMisdirectedRequest();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseMisdirectedRequest();
+    strictEqual(httpResponse.statusCode, 421);
+    strictEqual(httpResponse.statusMessage, 'MISDIRECTED REQUEST');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseMisdirectedRequest();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseMisdirectedRequest(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseMisdirectedRequest();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseMisdirectedRequest({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseMisdirectedRequest<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseMisdirectedRequest', () => {
+
+  it('should return true if the given object is an instance of HttpResponseMisdirectedRequest.', () => {
+    const response = new HttpResponseMisdirectedRequest();
+    strictEqual(isHttpResponseMisdirectedRequest(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseMisdirectedRequest property equal to true.', () => {
+    const response = { isHttpResponseMisdirectedRequest: true };
+    strictEqual(isHttpResponseMisdirectedRequest(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseMisdirectedRequest and if it '
+      + 'has no property isHttpResponseMisdirectedRequest.', () => {
+    const response = {};
+    strictEqual(isHttpResponseMisdirectedRequest(response), false);
+    strictEqual(isHttpResponseMisdirectedRequest(undefined), false);
+    strictEqual(isHttpResponseMisdirectedRequest(null), false);
+  });
+
+});
+
+describe('HttpResponseLocked', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseLocked();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseLocked();
+    strictEqual(httpResponse.statusCode, 423);
+    strictEqual(httpResponse.statusMessage, 'LOCKED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseLocked();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseLocked(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseLocked();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseLocked({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseLocked<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseLocked', () => {
+
+  it('should return true if the given object is an instance of HttpResponseLocked.', () => {
+    const response = new HttpResponseLocked();
+    strictEqual(isHttpResponseLocked(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseLocked property equal to true.', () => {
+    const response = { isHttpResponseLocked: true };
+    strictEqual(isHttpResponseLocked(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseLocked and if it '
+      + 'has no property isHttpResponseLocked.', () => {
+    const response = {};
+    strictEqual(isHttpResponseLocked(response), false);
+    strictEqual(isHttpResponseLocked(undefined), false);
+    strictEqual(isHttpResponseLocked(null), false);
+  });
+
+});
+
+describe('HttpResponseFailedDependency', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseFailedDependency();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseFailedDependency();
+    strictEqual(httpResponse.statusCode, 424);
+    strictEqual(httpResponse.statusMessage, 'FAILED DEPENDENCY');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseFailedDependency();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseFailedDependency(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseFailedDependency();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseFailedDependency({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseFailedDependency<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseFailedDependency', () => {
+
+  it('should return true if the given object is an instance of HttpResponseFailedDependency.', () => {
+    const response = new HttpResponseFailedDependency();
+    strictEqual(isHttpResponseFailedDependency(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseFailedDependency property equal to true.', () => {
+    const response = { isHttpResponseFailedDependency: true };
+    strictEqual(isHttpResponseFailedDependency(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseFailedDependency and if it '
+      + 'has no property isHttpResponseFailedDependency.', () => {
+    const response = {};
+    strictEqual(isHttpResponseFailedDependency(response), false);
+    strictEqual(isHttpResponseFailedDependency(undefined), false);
+    strictEqual(isHttpResponseFailedDependency(null), false);
+  });
+
+});
+
+describe('HttpResponseTooEarly', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseTooEarly();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseTooEarly();
+    strictEqual(httpResponse.statusCode, 425);
+    strictEqual(httpResponse.statusMessage, 'TOO EARLY');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseTooEarly();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseTooEarly(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseTooEarly();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseTooEarly({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseTooEarly<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseTooEarly', () => {
+
+  it('should return true if the given object is an instance of HttpResponseTooEarly.', () => {
+    const response = new HttpResponseTooEarly();
+    strictEqual(isHttpResponseTooEarly(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseTooEarly property equal to true.', () => {
+    const response = { isHttpResponseTooEarly: true };
+    strictEqual(isHttpResponseTooEarly(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseTooEarly and if it '
+      + 'has no property isHttpResponseTooEarly.', () => {
+    const response = {};
+    strictEqual(isHttpResponseTooEarly(response), false);
+    strictEqual(isHttpResponseTooEarly(undefined), false);
+    strictEqual(isHttpResponseTooEarly(null), false);
+  });
+
+});
+
+describe('HttpResponseUpgradeRequired', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseUpgradeRequired();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseUpgradeRequired();
+    strictEqual(httpResponse.statusCode, 426);
+    strictEqual(httpResponse.statusMessage, 'UPGRADE REQUIRED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseUpgradeRequired();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseUpgradeRequired(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseUpgradeRequired();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseUpgradeRequired({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseUpgradeRequired<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseUpgradeRequired', () => {
+
+  it('should return true if the given object is an instance of HttpResponseUpgradeRequired.', () => {
+    const response = new HttpResponseUpgradeRequired();
+    strictEqual(isHttpResponseUpgradeRequired(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseUpgradeRequired property equal to true.', () => {
+    const response = { isHttpResponseUpgradeRequired: true };
+    strictEqual(isHttpResponseUpgradeRequired(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseUpgradeRequired and if it '
+      + 'has no property isHttpResponseUpgradeRequired.', () => {
+    const response = {};
+    strictEqual(isHttpResponseUpgradeRequired(response), false);
+    strictEqual(isHttpResponseUpgradeRequired(undefined), false);
+    strictEqual(isHttpResponseUpgradeRequired(null), false);
+  });
+
+});
+
 describe('HttpResponseTooManyRequests', () => {
 
   it('should inherit from HttpResponseClientError and HttpResponse', () => {
@@ -982,6 +2996,132 @@ describe('isHttpResponseTooManyRequests', () => {
     strictEqual(isHttpResponseTooManyRequests(response), false);
     strictEqual(isHttpResponseTooManyRequests(undefined), false);
     strictEqual(isHttpResponseTooManyRequests(null), false);
+  });
+
+});
+
+describe('HttpResponseRequestHeaderFieldsTooLarge', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseRequestHeaderFieldsTooLarge();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseRequestHeaderFieldsTooLarge();
+    strictEqual(httpResponse.statusCode, 431);
+    strictEqual(httpResponse.statusMessage, 'REQUEST HEADER FIELDS TOO LARGE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseRequestHeaderFieldsTooLarge();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseRequestHeaderFieldsTooLarge(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseRequestHeaderFieldsTooLarge();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseRequestHeaderFieldsTooLarge({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseRequestHeaderFieldsTooLarge<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseRequestHeaderFieldsTooLarge', () => {
+
+  it('should return true if the given object is an instance of HttpResponseRequestHeaderFieldsTooLarge.', () => {
+    const response = new HttpResponseRequestHeaderFieldsTooLarge();
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseRequestHeaderFieldsTooLarge property equal '
+      + 'to true.', () => {
+    const response = { isHttpResponseRequestHeaderFieldsTooLarge: true };
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseRequestHeaderFieldsTooLarge and '
+      + 'if it has no property isHttpResponseRequestHeaderFieldsTooLarge.', () => {
+    const response = {};
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(response), false);
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(undefined), false);
+    strictEqual(isHttpResponseRequestHeaderFieldsTooLarge(null), false);
+  });
+
+});
+
+describe('HttpResponseUnavailableForLegalReasons', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseUnavailableForLegalReasons();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseUnavailableForLegalReasons();
+    strictEqual(httpResponse.statusCode, 451);
+    strictEqual(httpResponse.statusMessage, 'UNAVAILABLE FOR LEGAL REASONS');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseUnavailableForLegalReasons();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseUnavailableForLegalReasons(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseUnavailableForLegalReasons();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseUnavailableForLegalReasons({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseUnavailableForLegalReasons<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseUnavailableForLegalReasons', () => {
+
+  it('should return true if the given object is an instance of HttpResponseUnavailableForLegalReasons.', () => {
+    const response = new HttpResponseUnavailableForLegalReasons();
+    strictEqual(isHttpResponseUnavailableForLegalReasons(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseUnavailableForLegalReasons property equal '
+      + 'to true.', () => {
+    const response = { isHttpResponseUnavailableForLegalReasons: true };
+    strictEqual(isHttpResponseUnavailableForLegalReasons(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseUnavailableForLegalReasons and '
+      + 'if it has no property isHttpResponseUnavailableForLegalReasons.', () => {
+    const response = {};
+    strictEqual(isHttpResponseUnavailableForLegalReasons(response), false);
+    strictEqual(isHttpResponseUnavailableForLegalReasons(undefined), false);
+    strictEqual(isHttpResponseUnavailableForLegalReasons(null), false);
   });
 
 });

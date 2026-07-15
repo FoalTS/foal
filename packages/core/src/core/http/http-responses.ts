@@ -178,6 +178,232 @@ export function isHttpResponse(obj: any): obj is HttpResponse {
     (typeof obj === 'object' && obj !== null && obj.isHttpResponse === true);
 }
 
+/* 1xx Informational */
+
+/**
+ * Represent an HTTP response with an informational status 1xx.
+ *
+ * @export
+ * @abstract
+ * @class HttpResponseInformational
+ * @extends {HttpResponse}
+ */
+export abstract class HttpResponseInformational<T = any> extends HttpResponse<T> {
+  /**
+   * Property used internally by isHttpResponseInformational.
+   *
+   * @memberof HttpResponseInformational
+   */
+  readonly isHttpResponseInformational = true;
+
+  /**
+   * Create an instance of HttpResponseInformational.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseInformational
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseInformational.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseInformational} - True if the error is an instance of HttpResponseInformational.
+ * False otherwise.
+ */
+export function isHttpResponseInformational(obj: any): obj is HttpResponseInformational {
+  return obj instanceof HttpResponseInformational ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseInformational === true);
+}
+
+/**
+ * Represent an HTTP response with the status 100 - CONTINUE.
+ *
+ * @export
+ * @class HttpResponseContinue
+ * @extends {HttpResponseInformational}
+ */
+export class HttpResponseContinue extends HttpResponseInformational {
+  /**
+   * Property used internally by isHttpResponseContinue.
+   *
+   * @memberof HttpResponseContinue
+   */
+  readonly isHttpResponseContinue = true;
+  readonly statusCode = 100;
+  readonly statusMessage = 'CONTINUE';
+
+  /**
+   * Create an instance of HttpResponseContinue.
+   * @memberof HttpResponseContinue
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseContinue.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseContinue} - True if the error is an instance of HttpResponseContinue. False otherwise.
+ */
+export function isHttpResponseContinue(obj: any): obj is HttpResponseContinue {
+  return obj instanceof HttpResponseContinue ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseContinue === true);
+}
+
+/**
+ * Represent an HTTP response with the status 101 - SWITCHING PROTOCOLS.
+ *
+ * @export
+ * @class HttpResponseSwitchingProtocols
+ * @extends {HttpResponseInformational}
+ */
+export class HttpResponseSwitchingProtocols extends HttpResponseInformational {
+  /**
+   * Property used internally by isHttpResponseSwitchingProtocols.
+   *
+   * @memberof HttpResponseSwitchingProtocols
+   */
+  readonly isHttpResponseSwitchingProtocols = true;
+  readonly statusCode = 101;
+  readonly statusMessage = 'SWITCHING PROTOCOLS';
+
+  /**
+   * Create an instance of HttpResponseSwitchingProtocols.
+   * @memberof HttpResponseSwitchingProtocols
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseSwitchingProtocols.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseSwitchingProtocols} - True if the error is an instance of
+ * HttpResponseSwitchingProtocols. False otherwise.
+ */
+export function isHttpResponseSwitchingProtocols(obj: any): obj is HttpResponseSwitchingProtocols {
+  return obj instanceof HttpResponseSwitchingProtocols ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseSwitchingProtocols === true);
+}
+
+/**
+ * Represent an HTTP response with the status 102 - PROCESSING.
+ *
+ * @export
+ * @class HttpResponseProcessing
+ * @extends {HttpResponseInformational}
+ */
+export class HttpResponseProcessing extends HttpResponseInformational {
+  /**
+   * Property used internally by isHttpResponseProcessing.
+   *
+   * @memberof HttpResponseProcessing
+   */
+  readonly isHttpResponseProcessing = true;
+  readonly statusCode = 102;
+  readonly statusMessage = 'PROCESSING';
+
+  /**
+   * Create an instance of HttpResponseProcessing.
+   * @memberof HttpResponseProcessing
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseProcessing.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseProcessing} - True if the error is an instance of HttpResponseProcessing.
+ * False otherwise.
+ */
+export function isHttpResponseProcessing(obj: any): obj is HttpResponseProcessing {
+  return obj instanceof HttpResponseProcessing ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseProcessing === true);
+}
+
+/**
+ * Represent an HTTP response with the status 103 - EARLY HINTS.
+ *
+ * @export
+ * @class HttpResponseEarlyHints
+ * @extends {HttpResponseInformational}
+ */
+export class HttpResponseEarlyHints extends HttpResponseInformational {
+  /**
+   * Property used internally by isHttpResponseEarlyHints.
+   *
+   * @memberof HttpResponseEarlyHints
+   */
+  readonly isHttpResponseEarlyHints = true;
+  readonly statusCode = 103;
+  readonly statusMessage = 'EARLY HINTS';
+
+  /**
+   * Create an instance of HttpResponseEarlyHints.
+   * @memberof HttpResponseEarlyHints
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseEarlyHints.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseEarlyHints} - True if the error is an instance of HttpResponseEarlyHints.
+ * False otherwise.
+ */
+export function isHttpResponseEarlyHints(obj: any): obj is HttpResponseEarlyHints {
+  return obj instanceof HttpResponseEarlyHints ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseEarlyHints === true);
+}
+
 /* 2xx Success */
 
 /**
@@ -315,6 +541,52 @@ export function isHttpResponseCreated(obj: any): obj is HttpResponseCreated {
 }
 
 /**
+ * Represent an HTTP response with the status 203 - NON-AUTHORITATIVE INFORMATION.
+ *
+ * @export
+ * @class HttpResponseNonAuthoritativeInformation
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseNonAuthoritativeInformation<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponseNonAuthoritativeInformation.
+   *
+   * @memberof HttpResponseNonAuthoritativeInformation
+   */
+  readonly isHttpResponseNonAuthoritativeInformation = true;
+  readonly statusCode = 203;
+  readonly statusMessage = 'NON-AUTHORITATIVE INFORMATION';
+
+  /**
+   * Create an instance of HttpResponseNonAuthoritativeInformation.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseNonAuthoritativeInformation
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseNonAuthoritativeInformation.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseNonAuthoritativeInformation} - True if the error is an instance of
+ * HttpResponseNonAuthoritativeInformation. False otherwise.
+ */
+export function isHttpResponseNonAuthoritativeInformation(obj: any): obj is HttpResponseNonAuthoritativeInformation {
+  return obj instanceof HttpResponseNonAuthoritativeInformation ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseNonAuthoritativeInformation === true);
+}
+
+/**
  * Represent an HTTP response with the status 204 - NO CONTENT.
  *
  * @export
@@ -356,6 +628,235 @@ export class HttpResponseNoContent extends HttpResponseSuccess {
 export function isHttpResponseNoContent(obj: any): obj is HttpResponseNoContent {
   return obj instanceof HttpResponseNoContent ||
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseNoContent === true);
+}
+
+/**
+ * Represent an HTTP response with the status 205 - RESET CONTENT.
+ *
+ * @export
+ * @class HttpResponseResetContent
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseResetContent extends HttpResponseSuccess {
+  /**
+   * Property used internally by isHttpResponseResetContent.
+   *
+   * @memberof HttpResponseResetContent
+   */
+  readonly isHttpResponseResetContent = true;
+  readonly statusCode = 205;
+  readonly statusMessage = 'RESET CONTENT';
+
+  /**
+   * Create an instance of HttpResponseResetContent.
+   * @memberof HttpResponseResetContent
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseResetContent.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseResetContent} - True if the error is an instance of HttpResponseResetContent.
+ * False otherwise.
+ */
+export function isHttpResponseResetContent(obj: any): obj is HttpResponseResetContent {
+  return obj instanceof HttpResponseResetContent ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseResetContent === true);
+}
+
+/**
+ * Represent an HTTP response with the status 206 - PARTIAL CONTENT.
+ *
+ * @export
+ * @class HttpResponsePartialContent
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponsePartialContent<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponsePartialContent.
+   *
+   * @memberof HttpResponsePartialContent
+   */
+  readonly isHttpResponsePartialContent = true;
+  readonly statusCode = 206;
+  readonly statusMessage = 'PARTIAL CONTENT';
+
+  /**
+   * Create an instance of HttpResponsePartialContent.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponsePartialContent
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponsePartialContent.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponsePartialContent} - True if the error is an instance of HttpResponsePartialContent.
+ * False otherwise.
+ */
+export function isHttpResponsePartialContent(obj: any): obj is HttpResponsePartialContent {
+  return obj instanceof HttpResponsePartialContent ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponsePartialContent === true);
+}
+
+/**
+ * Represent an HTTP response with the status 207 - MULTI-STATUS.
+ *
+ * @export
+ * @class HttpResponseMultiStatus
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseMultiStatus<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponseMultiStatus.
+   *
+   * @memberof HttpResponseMultiStatus
+   */
+  readonly isHttpResponseMultiStatus = true;
+  readonly statusCode = 207;
+  readonly statusMessage = 'MULTI-STATUS';
+
+  /**
+   * Create an instance of HttpResponseMultiStatus.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseMultiStatus
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseMultiStatus.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseMultiStatus} - True if the error is an instance of HttpResponseMultiStatus.
+ * False otherwise.
+ */
+export function isHttpResponseMultiStatus(obj: any): obj is HttpResponseMultiStatus {
+  return obj instanceof HttpResponseMultiStatus ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseMultiStatus === true);
+}
+
+/**
+ * Represent an HTTP response with the status 208 - ALREADY REPORTED.
+ *
+ * @export
+ * @class HttpResponseAlreadyReported
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseAlreadyReported<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponseAlreadyReported.
+   *
+   * @memberof HttpResponseAlreadyReported
+   */
+  readonly isHttpResponseAlreadyReported = true;
+  readonly statusCode = 208;
+  readonly statusMessage = 'ALREADY REPORTED';
+
+  /**
+   * Create an instance of HttpResponseAlreadyReported.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseAlreadyReported
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseAlreadyReported.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseAlreadyReported} - True if the error is an instance of HttpResponseAlreadyReported.
+ * False otherwise.
+ */
+export function isHttpResponseAlreadyReported(obj: any): obj is HttpResponseAlreadyReported {
+  return obj instanceof HttpResponseAlreadyReported ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseAlreadyReported === true);
+}
+
+/**
+ * Represent an HTTP response with the status 226 - IM USED.
+ *
+ * @export
+ * @class HttpResponseIMUsed
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseIMUsed<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponseIMUsed.
+   *
+   * @memberof HttpResponseIMUsed
+   */
+  readonly isHttpResponseIMUsed = true;
+  readonly statusCode = 226;
+  readonly statusMessage = 'IM USED';
+
+  /**
+   * Create an instance of HttpResponseIMUsed.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseIMUsed
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseIMUsed.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseIMUsed} - True if the error is an instance of HttpResponseIMUsed.
+ * False otherwise.
+ */
+export function isHttpResponseIMUsed(obj: any): obj is HttpResponseIMUsed {
+  return obj instanceof HttpResponseIMUsed ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseIMUsed === true);
 }
 
 /* 3xx Redirection */
@@ -403,6 +904,53 @@ export abstract class HttpResponseRedirection<T = any> extends HttpResponse<T> {
 export function isHttpResponseRedirection(obj: any): obj is HttpResponseRedirection {
   return obj instanceof HttpResponseRedirection ||
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseRedirection === true);
+}
+
+/**
+ * Represent an HTTP response with the status 300 - MULTIPLE CHOICES.
+ *
+ * @export
+ * @class HttpResponseMultipleChoices
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponseMultipleChoices<T = any> extends HttpResponseRedirection<T> {
+  /**
+   * Property used internally by isHttpResponseMultipleChoices.
+   *
+   * @memberof HttpResponseMultipleChoices
+   */
+  readonly isHttpResponseMultipleChoices = true;
+  readonly statusCode = 300;
+  readonly statusMessage = 'MULTIPLE CHOICES';
+
+  /**
+   * Create an instance of HttpResponseMultipleChoices.
+   * @param {string} path - The redirection path.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseMultipleChoices
+   */
+  constructor(public path: string, body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseMultipleChoices.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseMultipleChoices} - True if the error is an
+ * instance of HttpResponseMultipleChoices. False otherwise.
+ */
+export function isHttpResponseMultipleChoices(obj: any): obj is HttpResponseMultipleChoices {
+  return obj instanceof HttpResponseMultipleChoices ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseMultipleChoices === true);
 }
 
 /**
@@ -495,6 +1043,192 @@ export class HttpResponseRedirect<T = any> extends HttpResponseRedirection<T> {
 export function isHttpResponseRedirect(obj: any): obj is HttpResponseRedirect {
   return obj instanceof HttpResponseRedirect ||
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseRedirect === true);
+}
+
+/**
+ * Represent an HTTP response with the status 303 - SEE OTHER.
+ *
+ * @export
+ * @class HttpResponseSeeOther
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponseSeeOther<T = any> extends HttpResponseRedirection<T> {
+  /**
+   * Property used internally by isHttpResponseSeeOther.
+   *
+   * @memberof HttpResponseSeeOther
+   */
+  readonly isHttpResponseSeeOther = true;
+  readonly statusCode = 303;
+  readonly statusMessage = 'SEE OTHER';
+
+  /**
+   * Create an instance of HttpResponseSeeOther.
+   * @param {string} path - The redirection path.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseSeeOther
+   */
+  constructor(public path: string, body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseSeeOther.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseSeeOther} - True if the error is an instance of HttpResponseSeeOther.
+ * False otherwise.
+ */
+export function isHttpResponseSeeOther(obj: any): obj is HttpResponseSeeOther {
+  return obj instanceof HttpResponseSeeOther ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseSeeOther === true);
+}
+
+/**
+ * Represent an HTTP response with the status 304 - NOT MODIFIED.
+ *
+ * @export
+ * @class HttpResponseNotModified
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponseNotModified extends HttpResponseRedirection {
+  /**
+   * Property used internally by isHttpResponseNotModified.
+   *
+   * @memberof HttpResponseNotModified
+   */
+  readonly isHttpResponseNotModified = true;
+  readonly statusCode = 304;
+  readonly statusMessage = 'NOT MODIFIED';
+
+  /**
+   * Create an instance of HttpResponseNotModified.
+   * @memberof HttpResponseNotModified
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseNotModified.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseNotModified} - True if the error is an instance of HttpResponseNotModified.
+ * False otherwise.
+ */
+export function isHttpResponseNotModified(obj: any): obj is HttpResponseNotModified {
+  return obj instanceof HttpResponseNotModified ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseNotModified === true);
+}
+
+/**
+ * Represent an HTTP response with the status 307 - TEMPORARY REDIRECT.
+ *
+ * @export
+ * @class HttpResponseTemporaryRedirect
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponseTemporaryRedirect<T = any> extends HttpResponseRedirection<T> {
+  /**
+   * Property used internally by isHttpResponseTemporaryRedirect.
+   *
+   * @memberof HttpResponseTemporaryRedirect
+   */
+  readonly isHttpResponseTemporaryRedirect = true;
+  readonly statusCode = 307;
+  readonly statusMessage = 'TEMPORARY REDIRECT';
+
+  /**
+   * Create an instance of HttpResponseTemporaryRedirect.
+   * @param {string} path - The redirection path.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseTemporaryRedirect
+   */
+  constructor(public path: string, body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseTemporaryRedirect.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseTemporaryRedirect} - True if the error is an instance of
+ * HttpResponseTemporaryRedirect. False otherwise.
+ */
+export function isHttpResponseTemporaryRedirect(obj: any): obj is HttpResponseTemporaryRedirect {
+  return obj instanceof HttpResponseTemporaryRedirect ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseTemporaryRedirect === true);
+}
+
+/**
+ * Represent an HTTP response with the status 308 - PERMANENT REDIRECT.
+ *
+ * @export
+ * @class HttpResponsePermanentRedirect
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponsePermanentRedirect<T = any> extends HttpResponseRedirection<T> {
+  /**
+   * Property used internally by isHttpResponsePermanentRedirect.
+   *
+   * @memberof HttpResponsePermanentRedirect
+   */
+  readonly isHttpResponsePermanentRedirect = true;
+  readonly statusCode = 308;
+  readonly statusMessage = 'PERMANENT REDIRECT';
+
+  /**
+   * Create an instance of HttpResponsePermanentRedirect.
+   * @param {string} path - The redirection path.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponsePermanentRedirect
+   */
+  constructor(public path: string, body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponsePermanentRedirect.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponsePermanentRedirect} - True if the error is an instance of
+ * HttpResponsePermanentRedirect. False otherwise.
+ */
+export function isHttpResponsePermanentRedirect(obj: any): obj is HttpResponsePermanentRedirect {
+  return obj instanceof HttpResponsePermanentRedirect ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponsePermanentRedirect === true);
 }
 
 /* 4xx Client Error */
@@ -638,6 +1372,52 @@ export function isHttpResponseUnauthorized(obj: any): obj is HttpResponseUnautho
 }
 
 /**
+ * Represent an HTTP response with the status 402 - PAYMENT REQUIRED.
+ *
+ * @export
+ * @class HttpResponsePaymentRequired
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponsePaymentRequired<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponsePaymentRequired.
+   *
+   * @memberof HttpResponsePaymentRequired
+   */
+  readonly isHttpResponsePaymentRequired = true;
+  readonly statusCode = 402;
+  readonly statusMessage = 'PAYMENT REQUIRED';
+
+  /**
+   * Create an instance of HttpResponsePaymentRequired.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponsePaymentRequired
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponsePaymentRequired.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponsePaymentRequired} - True if the error is an instance of HttpResponsePaymentRequired.
+ * False otherwise.
+ */
+export function isHttpResponsePaymentRequired(obj: any): obj is HttpResponsePaymentRequired {
+  return obj instanceof HttpResponsePaymentRequired ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponsePaymentRequired === true);
+}
+
+/**
  * Represent an HTTP response with the status 403 - FORBIDDEN.
  *
  * @export
@@ -774,6 +1554,145 @@ export function isHttpResponseMethodNotAllowed(obj: any): obj is HttpResponseMet
 }
 
 /**
+ * Represent an HTTP response with the status 406 - NOT ACCEPTABLE.
+ *
+ * @export
+ * @class HttpResponseNotAcceptable
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseNotAcceptable<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseNotAcceptable.
+   *
+   * @memberof HttpResponseNotAcceptable
+   */
+  readonly isHttpResponseNotAcceptable = true;
+  readonly statusCode = 406;
+  readonly statusMessage = 'NOT ACCEPTABLE';
+
+  /**
+   * Create an instance of HttpResponseNotAcceptable.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseNotAcceptable
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseNotAcceptable.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseNotAcceptable} - True if the error is an instance of HttpResponseNotAcceptable.
+ * False otherwise.
+ */
+export function isHttpResponseNotAcceptable(obj: any): obj is HttpResponseNotAcceptable {
+  return obj instanceof HttpResponseNotAcceptable ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseNotAcceptable === true);
+}
+
+/**
+ * Represent an HTTP response with the status 407 - PROXY AUTHENTICATION REQUIRED.
+ *
+ * @export
+ * @class HttpResponseProxyAuthenticationRequired
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseProxyAuthenticationRequired<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseProxyAuthenticationRequired.
+   *
+   * @memberof HttpResponseProxyAuthenticationRequired
+   */
+  readonly isHttpResponseProxyAuthenticationRequired = true;
+  readonly statusCode = 407;
+  readonly statusMessage = 'PROXY AUTHENTICATION REQUIRED';
+
+  /**
+   * Create an instance of HttpResponseProxyAuthenticationRequired.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseProxyAuthenticationRequired
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+    this.setHeader('Proxy-Authenticate', '');
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseProxyAuthenticationRequired.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseProxyAuthenticationRequired} - True if the error is an instance of
+ * HttpResponseProxyAuthenticationRequired. False otherwise.
+ */
+export function isHttpResponseProxyAuthenticationRequired(obj: any): obj is HttpResponseProxyAuthenticationRequired {
+  return obj instanceof HttpResponseProxyAuthenticationRequired ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseProxyAuthenticationRequired === true);
+}
+
+/**
+ * Represent an HTTP response with the status 408 - REQUEST TIMEOUT.
+ *
+ * @export
+ * @class HttpResponseRequestTimeout
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseRequestTimeout<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseRequestTimeout.
+   *
+   * @memberof HttpResponseRequestTimeout
+   */
+  readonly isHttpResponseRequestTimeout = true;
+  readonly statusCode = 408;
+  readonly statusMessage = 'REQUEST TIMEOUT';
+
+  /**
+   * Create an instance of HttpResponseRequestTimeout.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseRequestTimeout
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseRequestTimeout.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseRequestTimeout} - True if the error is an instance of HttpResponseRequestTimeout.
+ * False otherwise.
+ */
+export function isHttpResponseRequestTimeout(obj: any): obj is HttpResponseRequestTimeout {
+  return obj instanceof HttpResponseRequestTimeout ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseRequestTimeout === true);
+}
+
+/**
  * Represent an HTTP response with the status 409 - CONFLICT.
  *
  * @export
@@ -816,6 +1735,465 @@ export class HttpResponseConflict<T = any> extends HttpResponseClientError<T> {
 export function isHttpResponseConflict(obj: any): obj is HttpResponseConflict {
   return obj instanceof HttpResponseConflict ||
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseConflict === true);
+}
+
+/**
+ * Represent an HTTP response with the status 410 - GONE.
+ *
+ * @export
+ * @class HttpResponseGone
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseGone<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseGone.
+   *
+   * @memberof HttpResponseGone
+   */
+  readonly isHttpResponseGone = true;
+  readonly statusCode = 410;
+  readonly statusMessage = 'GONE';
+
+  /**
+   * Create an instance of HttpResponseGone.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseGone
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseGone.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseGone} - True if the error is an instance of HttpResponseGone. False otherwise.
+ */
+export function isHttpResponseGone(obj: any): obj is HttpResponseGone {
+  return obj instanceof HttpResponseGone ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseGone === true);
+}
+
+/**
+ * Represent an HTTP response with the status 411 - LENGTH REQUIRED.
+ *
+ * @export
+ * @class HttpResponseLengthRequired
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseLengthRequired<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseLengthRequired.
+   *
+   * @memberof HttpResponseLengthRequired
+   */
+  readonly isHttpResponseLengthRequired = true;
+  readonly statusCode = 411;
+  readonly statusMessage = 'LENGTH REQUIRED';
+
+  /**
+   * Create an instance of HttpResponseLengthRequired.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseLengthRequired
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseLengthRequired.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseLengthRequired} - True if the error is an instance of HttpResponseLengthRequired.
+ * False otherwise.
+ */
+export function isHttpResponseLengthRequired(obj: any): obj is HttpResponseLengthRequired {
+  return obj instanceof HttpResponseLengthRequired ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseLengthRequired === true);
+}
+
+/**
+ * Represent an HTTP response with the status 412 - PRECONDITION FAILED.
+ *
+ * @export
+ * @class HttpResponsePreconditionFailed
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponsePreconditionFailed<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponsePreconditionFailed.
+   *
+   * @memberof HttpResponsePreconditionFailed
+   */
+  readonly isHttpResponsePreconditionFailed = true;
+  readonly statusCode = 412;
+  readonly statusMessage = 'PRECONDITION FAILED';
+
+  /**
+   * Create an instance of HttpResponsePreconditionFailed.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponsePreconditionFailed
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponsePreconditionFailed.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponsePreconditionFailed} - True if the error is an instance of
+ * HttpResponsePreconditionFailed. False otherwise.
+ */
+export function isHttpResponsePreconditionFailed(obj: any): obj is HttpResponsePreconditionFailed {
+  return obj instanceof HttpResponsePreconditionFailed ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponsePreconditionFailed === true);
+}
+
+/**
+ * Represent an HTTP response with the status 413 - CONTENT TOO LARGE.
+ *
+ * @export
+ * @class HttpResponseContentTooLarge
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseContentTooLarge<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseContentTooLarge.
+   *
+   * @memberof HttpResponseContentTooLarge
+   */
+  readonly isHttpResponseContentTooLarge = true;
+  readonly statusCode = 413;
+  readonly statusMessage = 'CONTENT TOO LARGE';
+
+  /**
+   * Create an instance of HttpResponseContentTooLarge.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseContentTooLarge
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseContentTooLarge.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseContentTooLarge} - True if the error is an instance of HttpResponseContentTooLarge.
+ * False otherwise.
+ */
+export function isHttpResponseContentTooLarge(obj: any): obj is HttpResponseContentTooLarge {
+  return obj instanceof HttpResponseContentTooLarge ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseContentTooLarge === true);
+}
+
+/**
+ * Represent an HTTP response with the status 414 - URI TOO LONG.
+ *
+ * @export
+ * @class HttpResponseURITooLong
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseURITooLong<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseURITooLong.
+   *
+   * @memberof HttpResponseURITooLong
+   */
+  readonly isHttpResponseURITooLong = true;
+  readonly statusCode = 414;
+  readonly statusMessage = 'URI TOO LONG';
+
+  /**
+   * Create an instance of HttpResponseURITooLong.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseURITooLong
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseURITooLong.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseURITooLong} - True if the error is an instance of HttpResponseURITooLong.
+ * False otherwise.
+ */
+export function isHttpResponseURITooLong(obj: any): obj is HttpResponseURITooLong {
+  return obj instanceof HttpResponseURITooLong ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseURITooLong === true);
+}
+
+/**
+ * Represent an HTTP response with the status 415 - UNSUPPORTED MEDIA TYPE.
+ *
+ * @export
+ * @class HttpResponseUnsupportedMediaType
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseUnsupportedMediaType<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseUnsupportedMediaType.
+   *
+   * @memberof HttpResponseUnsupportedMediaType
+   */
+  readonly isHttpResponseUnsupportedMediaType = true;
+  readonly statusCode = 415;
+  readonly statusMessage = 'UNSUPPORTED MEDIA TYPE';
+
+  /**
+   * Create an instance of HttpResponseUnsupportedMediaType.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseUnsupportedMediaType
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseUnsupportedMediaType.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseUnsupportedMediaType} - True if the error is an instance of
+ * HttpResponseUnsupportedMediaType. False otherwise.
+ */
+export function isHttpResponseUnsupportedMediaType(obj: any): obj is HttpResponseUnsupportedMediaType {
+  return obj instanceof HttpResponseUnsupportedMediaType ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseUnsupportedMediaType === true);
+}
+
+/**
+ * Represent an HTTP response with the status 416 - RANGE NOT SATISFIABLE.
+ *
+ * @export
+ * @class HttpResponseRangeNotSatisfiable
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseRangeNotSatisfiable<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseRangeNotSatisfiable.
+   *
+   * @memberof HttpResponseRangeNotSatisfiable
+   */
+  readonly isHttpResponseRangeNotSatisfiable = true;
+  readonly statusCode = 416;
+  readonly statusMessage = 'RANGE NOT SATISFIABLE';
+
+  /**
+   * Create an instance of HttpResponseRangeNotSatisfiable.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseRangeNotSatisfiable
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseRangeNotSatisfiable.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseRangeNotSatisfiable} - True if the error is an instance of
+ * HttpResponseRangeNotSatisfiable. False otherwise.
+ */
+export function isHttpResponseRangeNotSatisfiable(obj: any): obj is HttpResponseRangeNotSatisfiable {
+  return obj instanceof HttpResponseRangeNotSatisfiable ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseRangeNotSatisfiable === true);
+}
+
+/**
+ * Represent an HTTP response with the status 417 - EXPECTATION FAILED.
+ *
+ * @export
+ * @class HttpResponseExpectationFailed
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseExpectationFailed<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseExpectationFailed.
+   *
+   * @memberof HttpResponseExpectationFailed
+   */
+  readonly isHttpResponseExpectationFailed = true;
+  readonly statusCode = 417;
+  readonly statusMessage = 'EXPECTATION FAILED';
+
+  /**
+   * Create an instance of HttpResponseExpectationFailed.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseExpectationFailed
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseExpectationFailed.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseExpectationFailed} - True if the error is an instance of
+ * HttpResponseExpectationFailed. False otherwise.
+ */
+export function isHttpResponseExpectationFailed(obj: any): obj is HttpResponseExpectationFailed {
+  return obj instanceof HttpResponseExpectationFailed ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseExpectationFailed === true);
+}
+
+/**
+ * Represent an HTTP response with the status 418 - I'M A TEAPOT.
+ *
+ * @export
+ * @class HttpResponseImATeapot
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseImATeapot<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseImATeapot.
+   *
+   * @memberof HttpResponseImATeapot
+   */
+  readonly isHttpResponseImATeapot = true;
+  readonly statusCode = 418;
+  readonly statusMessage = 'I\'M A TEAPOT';
+
+  /**
+   * Create an instance of HttpResponseImATeapot.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseImATeapot
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseImATeapot.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseImATeapot} - True if the error is an instance of HttpResponseImATeapot.
+ * False otherwise.
+ */
+export function isHttpResponseImATeapot(obj: any): obj is HttpResponseImATeapot {
+  return obj instanceof HttpResponseImATeapot ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseImATeapot === true);
+}
+
+/**
+ * Represent an HTTP response with the status 421 - MISDIRECTED REQUEST.
+ *
+ * @export
+ * @class HttpResponseMisdirectedRequest
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseMisdirectedRequest<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseMisdirectedRequest.
+   *
+   * @memberof HttpResponseMisdirectedRequest
+   */
+  readonly isHttpResponseMisdirectedRequest = true;
+  readonly statusCode = 421;
+  readonly statusMessage = 'MISDIRECTED REQUEST';
+
+  /**
+   * Create an instance of HttpResponseMisdirectedRequest.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseMisdirectedRequest
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseMisdirectedRequest.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseMisdirectedRequest} - True if the error is an instance of
+ * HttpResponseMisdirectedRequest. False otherwise.
+ */
+export function isHttpResponseMisdirectedRequest(obj: any): obj is HttpResponseMisdirectedRequest {
+  return obj instanceof HttpResponseMisdirectedRequest ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseMisdirectedRequest === true);
 }
 
 /**
@@ -865,6 +2243,188 @@ export function isHttpResponseUnprocessableContent(obj: any): obj is HttpRespons
 }
 
 /**
+ * Represent an HTTP response with the status 423 - LOCKED.
+ *
+ * @export
+ * @class HttpResponseLocked
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseLocked<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseLocked.
+   *
+   * @memberof HttpResponseLocked
+   */
+  readonly isHttpResponseLocked = true;
+  readonly statusCode = 423;
+  readonly statusMessage = 'LOCKED';
+
+  /**
+   * Create an instance of HttpResponseLocked.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseLocked
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseLocked.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseLocked} - True if the error is an instance of HttpResponseLocked. False otherwise.
+ */
+export function isHttpResponseLocked(obj: any): obj is HttpResponseLocked {
+  return obj instanceof HttpResponseLocked ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseLocked === true);
+}
+
+/**
+ * Represent an HTTP response with the status 424 - FAILED DEPENDENCY.
+ *
+ * @export
+ * @class HttpResponseFailedDependency
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseFailedDependency<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseFailedDependency.
+   *
+   * @memberof HttpResponseFailedDependency
+   */
+  readonly isHttpResponseFailedDependency = true;
+  readonly statusCode = 424;
+  readonly statusMessage = 'FAILED DEPENDENCY';
+
+  /**
+   * Create an instance of HttpResponseFailedDependency.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseFailedDependency
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseFailedDependency.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseFailedDependency} - True if the error is an instance of HttpResponseFailedDependency.
+ * False otherwise.
+ */
+export function isHttpResponseFailedDependency(obj: any): obj is HttpResponseFailedDependency {
+  return obj instanceof HttpResponseFailedDependency ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseFailedDependency === true);
+}
+
+/**
+ * Represent an HTTP response with the status 425 - TOO EARLY.
+ *
+ * @export
+ * @class HttpResponseTooEarly
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseTooEarly<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseTooEarly.
+   *
+   * @memberof HttpResponseTooEarly
+   */
+  readonly isHttpResponseTooEarly = true;
+  readonly statusCode = 425;
+  readonly statusMessage = 'TOO EARLY';
+
+  /**
+   * Create an instance of HttpResponseTooEarly.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseTooEarly
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseTooEarly.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseTooEarly} - True if the error is an instance of HttpResponseTooEarly. False otherwise.
+ */
+export function isHttpResponseTooEarly(obj: any): obj is HttpResponseTooEarly {
+  return obj instanceof HttpResponseTooEarly ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseTooEarly === true);
+}
+
+/**
+ * Represent an HTTP response with the status 426 - UPGRADE REQUIRED.
+ *
+ * @export
+ * @class HttpResponseUpgradeRequired
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseUpgradeRequired<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseUpgradeRequired.
+   *
+   * @memberof HttpResponseUpgradeRequired
+   */
+  readonly isHttpResponseUpgradeRequired = true;
+  readonly statusCode = 426;
+  readonly statusMessage = 'UPGRADE REQUIRED';
+
+  /**
+   * Create an instance of HttpResponseUpgradeRequired.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseUpgradeRequired
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseUpgradeRequired.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseUpgradeRequired} - True if the error is an instance of HttpResponseUpgradeRequired.
+ * False otherwise.
+ */
+export function isHttpResponseUpgradeRequired(obj: any): obj is HttpResponseUpgradeRequired {
+  return obj instanceof HttpResponseUpgradeRequired ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseUpgradeRequired === true);
+}
+
+/**
  * Represent an HTTP response with the status 429 - TOO MANY REQUESTS.
  *
  * @export
@@ -908,6 +2468,98 @@ export class HttpResponseTooManyRequests<T = any> extends HttpResponseClientErro
 export function isHttpResponseTooManyRequests(obj: any): obj is HttpResponseTooManyRequests {
   return obj instanceof HttpResponseTooManyRequests ||
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseTooManyRequests === true);
+}
+
+/**
+ * Represent an HTTP response with the status 431 - REQUEST HEADER FIELDS TOO LARGE.
+ *
+ * @export
+ * @class HttpResponseRequestHeaderFieldsTooLarge
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseRequestHeaderFieldsTooLarge<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseRequestHeaderFieldsTooLarge.
+   *
+   * @memberof HttpResponseRequestHeaderFieldsTooLarge
+   */
+  readonly isHttpResponseRequestHeaderFieldsTooLarge = true;
+  readonly statusCode = 431;
+  readonly statusMessage = 'REQUEST HEADER FIELDS TOO LARGE';
+
+  /**
+   * Create an instance of HttpResponseRequestHeaderFieldsTooLarge.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseRequestHeaderFieldsTooLarge
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseRequestHeaderFieldsTooLarge.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseRequestHeaderFieldsTooLarge} - True if the error is an instance of
+ * HttpResponseRequestHeaderFieldsTooLarge. False otherwise.
+ */
+export function isHttpResponseRequestHeaderFieldsTooLarge(obj: any): obj is HttpResponseRequestHeaderFieldsTooLarge {
+  return obj instanceof HttpResponseRequestHeaderFieldsTooLarge ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseRequestHeaderFieldsTooLarge === true);
+}
+
+/**
+ * Represent an HTTP response with the status 451 - UNAVAILABLE FOR LEGAL REASONS.
+ *
+ * @export
+ * @class HttpResponseUnavailableForLegalReasons
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseUnavailableForLegalReasons<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseUnavailableForLegalReasons.
+   *
+   * @memberof HttpResponseUnavailableForLegalReasons
+   */
+  readonly isHttpResponseUnavailableForLegalReasons = true;
+  readonly statusCode = 451;
+  readonly statusMessage = 'UNAVAILABLE FOR LEGAL REASONS';
+
+  /**
+   * Create an instance of HttpResponseUnavailableForLegalReasons.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseUnavailableForLegalReasons
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseUnavailableForLegalReasons.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseUnavailableForLegalReasons} - True if the error is an instance of
+ * HttpResponseUnavailableForLegalReasons. False otherwise.
+ */
+export function isHttpResponseUnavailableForLegalReasons(obj: any): obj is HttpResponseUnavailableForLegalReasons {
+  return obj instanceof HttpResponseUnavailableForLegalReasons ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseUnavailableForLegalReasons === true);
 }
 
 /* 5xx Server Error */
