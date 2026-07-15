@@ -13,6 +13,7 @@ import {
   HttpResponseContinue,
   HttpResponseCreated,
   HttpResponseEarlyHints,
+  HttpResponseExpectationFailed,
   HttpResponseForbidden,
   HttpResponseGone,
   HttpResponseIMUsed,
@@ -60,6 +61,7 @@ import {
   isHttpResponseContinue,
   isHttpResponseCreated,
   isHttpResponseEarlyHints,
+  isHttpResponseExpectationFailed,
   isHttpResponseForbidden,
   isHttpResponseGone,
   isHttpResponseIMUsed,
@@ -2482,6 +2484,68 @@ describe('isHttpResponseRangeNotSatisfiable', () => {
     strictEqual(isHttpResponseRangeNotSatisfiable(response), false);
     strictEqual(isHttpResponseRangeNotSatisfiable(undefined), false);
     strictEqual(isHttpResponseRangeNotSatisfiable(null), false);
+  });
+
+});
+
+describe('HttpResponseExpectationFailed', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseExpectationFailed();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseExpectationFailed();
+    strictEqual(httpResponse.statusCode, 417);
+    strictEqual(httpResponse.statusMessage, 'EXPECTATION FAILED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseExpectationFailed();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseExpectationFailed(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseExpectationFailed();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseExpectationFailed({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseExpectationFailed<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseExpectationFailed', () => {
+
+  it('should return true if the given object is an instance of HttpResponseExpectationFailed.', () => {
+    const response = new HttpResponseExpectationFailed();
+    strictEqual(isHttpResponseExpectationFailed(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseExpectationFailed property equal to true.', () => {
+    const response = { isHttpResponseExpectationFailed: true };
+    strictEqual(isHttpResponseExpectationFailed(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseExpectationFailed and if it '
+      + 'has no property isHttpResponseExpectationFailed.', () => {
+    const response = {};
+    strictEqual(isHttpResponseExpectationFailed(response), false);
+    strictEqual(isHttpResponseExpectationFailed(undefined), false);
+    strictEqual(isHttpResponseExpectationFailed(null), false);
   });
 
 });
