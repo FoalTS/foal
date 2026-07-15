@@ -321,6 +321,7 @@ Here are subclasses that you can use:
 | 416 | `HttpResponseRangeNotSatisfiable` | no |
 | 417 | `HttpResponseExpectationFailed` | no |
 | 418 | `HttpResponseImATeapot` | no |
+| 421 | `HttpResponseMisdirectedRequest` | no |
 | 422 | `HttpResponseUnprocessableContent` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |

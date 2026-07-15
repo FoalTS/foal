@@ -2151,6 +2151,52 @@ export function isHttpResponseImATeapot(obj: any): obj is HttpResponseImATeapot 
 }
 
 /**
+ * Represent an HTTP response with the status 421 - MISDIRECTED REQUEST.
+ *
+ * @export
+ * @class HttpResponseMisdirectedRequest
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseMisdirectedRequest<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseMisdirectedRequest.
+   *
+   * @memberof HttpResponseMisdirectedRequest
+   */
+  readonly isHttpResponseMisdirectedRequest = true;
+  readonly statusCode = 421;
+  readonly statusMessage = 'MISDIRECTED REQUEST';
+
+  /**
+   * Create an instance of HttpResponseMisdirectedRequest.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseMisdirectedRequest
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseMisdirectedRequest.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseMisdirectedRequest} - True if the error is an instance of
+ * HttpResponseMisdirectedRequest. False otherwise.
+ */
+export function isHttpResponseMisdirectedRequest(obj: any): obj is HttpResponseMisdirectedRequest {
+  return obj instanceof HttpResponseMisdirectedRequest ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseMisdirectedRequest === true);
+}
+
+/**
  * Represent an HTTP response with the status 422 - UNPROCESSABLE CONTENT.
  *
  * @export

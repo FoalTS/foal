@@ -22,6 +22,7 @@ import {
   HttpResponseInternalServerError,
   HttpResponseLengthRequired,
   HttpResponseMethodNotAllowed,
+  HttpResponseMisdirectedRequest,
   HttpResponseMovedPermanently,
   HttpResponseMultipleChoices,
   HttpResponseMultiStatus,
@@ -71,6 +72,7 @@ import {
   isHttpResponseInternalServerError,
   isHttpResponseLengthRequired,
   isHttpResponseMethodNotAllowed,
+  isHttpResponseMisdirectedRequest,
   isHttpResponseMovedPermanently,
   isHttpResponseMultipleChoices,
   isHttpResponseMultiStatus,
@@ -2610,6 +2612,68 @@ describe('isHttpResponseImATeapot', () => {
     strictEqual(isHttpResponseImATeapot(response), false);
     strictEqual(isHttpResponseImATeapot(undefined), false);
     strictEqual(isHttpResponseImATeapot(null), false);
+  });
+
+});
+
+describe('HttpResponseMisdirectedRequest', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseMisdirectedRequest();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseMisdirectedRequest();
+    strictEqual(httpResponse.statusCode, 421);
+    strictEqual(httpResponse.statusMessage, 'MISDIRECTED REQUEST');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseMisdirectedRequest();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseMisdirectedRequest(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseMisdirectedRequest();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseMisdirectedRequest({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseMisdirectedRequest<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseMisdirectedRequest', () => {
+
+  it('should return true if the given object is an instance of HttpResponseMisdirectedRequest.', () => {
+    const response = new HttpResponseMisdirectedRequest();
+    strictEqual(isHttpResponseMisdirectedRequest(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseMisdirectedRequest property equal to true.', () => {
+    const response = { isHttpResponseMisdirectedRequest: true };
+    strictEqual(isHttpResponseMisdirectedRequest(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseMisdirectedRequest and if it '
+      + 'has no property isHttpResponseMisdirectedRequest.', () => {
+    const response = {};
+    strictEqual(isHttpResponseMisdirectedRequest(response), false);
+    strictEqual(isHttpResponseMisdirectedRequest(undefined), false);
+    strictEqual(isHttpResponseMisdirectedRequest(null), false);
   });
 
 });
