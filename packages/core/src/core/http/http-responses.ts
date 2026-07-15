@@ -359,6 +359,51 @@ export function isHttpResponseProcessing(obj: any): obj is HttpResponseProcessin
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseProcessing === true);
 }
 
+/**
+ * Represent an HTTP response with the status 103 - EARLY HINTS.
+ *
+ * @export
+ * @class HttpResponseEarlyHints
+ * @extends {HttpResponseInformational}
+ */
+export class HttpResponseEarlyHints extends HttpResponseInformational {
+  /**
+   * Property used internally by isHttpResponseEarlyHints.
+   *
+   * @memberof HttpResponseEarlyHints
+   */
+  readonly isHttpResponseEarlyHints = true;
+  readonly statusCode = 103;
+  readonly statusMessage = 'EARLY HINTS';
+
+  /**
+   * Create an instance of HttpResponseEarlyHints.
+   * @memberof HttpResponseEarlyHints
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseEarlyHints.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseEarlyHints} - True if the error is an instance of HttpResponseEarlyHints.
+ * False otherwise.
+ */
+export function isHttpResponseEarlyHints(obj: any): obj is HttpResponseEarlyHints {
+  return obj instanceof HttpResponseEarlyHints ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseEarlyHints === true);
+}
+
 /* 2xx Success */
 
 /**

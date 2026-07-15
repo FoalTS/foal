@@ -10,6 +10,7 @@ import {
   HttpResponseConflict,
   HttpResponseContinue,
   HttpResponseCreated,
+  HttpResponseEarlyHints,
   HttpResponseForbidden,
   HttpResponseInformational,
   HttpResponseInternalServerError,
@@ -34,6 +35,7 @@ import {
   isHttpResponseConflict,
   isHttpResponseContinue,
   isHttpResponseCreated,
+  isHttpResponseEarlyHints,
   isHttpResponseForbidden,
   isHttpResponseInformational,
   isHttpResponseInternalServerError,
@@ -295,6 +297,44 @@ describe('isHttpResponseProcessing', () => {
     strictEqual(isHttpResponseProcessing(response), false);
     strictEqual(isHttpResponseProcessing(undefined), false);
     strictEqual(isHttpResponseProcessing(null), false);
+  });
+
+});
+
+describe('HttpResponseEarlyHints', () => {
+
+  it('should inherit from HttpResponseInformational and HttpResponse', () => {
+    const httpResponse = new HttpResponseEarlyHints();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseInformational);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseEarlyHints();
+    strictEqual(httpResponse.statusCode, 103);
+    strictEqual(httpResponse.statusMessage, 'EARLY HINTS');
+  });
+
+});
+
+describe('isHttpResponseEarlyHints', () => {
+
+  it('should return true if the given object is an instance of HttpResponseEarlyHints.', () => {
+    const response = new HttpResponseEarlyHints();
+    strictEqual(isHttpResponseEarlyHints(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseEarlyHints property equal to true.', () => {
+    const response = { isHttpResponseEarlyHints: true };
+    strictEqual(isHttpResponseEarlyHints(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseEarlyHints and if it '
+      + 'has no property isHttpResponseEarlyHints.', () => {
+    const response = {};
+    strictEqual(isHttpResponseEarlyHints(response), false);
+    strictEqual(isHttpResponseEarlyHints(undefined), false);
+    strictEqual(isHttpResponseEarlyHints(null), false);
   });
 
 });

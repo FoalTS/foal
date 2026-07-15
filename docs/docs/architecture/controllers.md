@@ -280,6 +280,7 @@ Here are subclasses that you can use:
 | 100 | `HttpResponseContinue` | no |
 | 101 | `HttpResponseSwitchingProtocols` | no |
 | 102 | `HttpResponseProcessing` | no |
+| 103 | `HttpResponseEarlyHints` | no |
 |  | **2XX Success** | |
 | 2XX | `HttpResponseSuccess` | yes |
 | 200 | `HttpResponseOK` | no |
