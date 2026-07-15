@@ -141,6 +141,7 @@ export {
   HttpResponseUnauthorized,
   HttpResponseUnprocessableContent,
   HttpResponseUnsupportedMediaType,
+  HttpResponseUpgradeRequired,
 
   IApiAbstractParameter,
   IApiAbstractSecurityScheme,
@@ -280,6 +281,7 @@ export {
   isHttpResponseUnauthorized,
   isHttpResponseUnprocessableContent,
   isHttpResponseUnsupportedMediaType,
+  isHttpResponseUpgradeRequired,
 
   Logger,
   render,

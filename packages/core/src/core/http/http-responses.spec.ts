@@ -57,6 +57,7 @@ import {
   HttpResponseUnauthorized,
   HttpResponseUnprocessableContent,
   HttpResponseUnsupportedMediaType,
+  HttpResponseUpgradeRequired,
   isHttpResponse,
   isHttpResponseAlreadyReported,
   isHttpResponseBadRequest,
@@ -109,7 +110,8 @@ import {
   isHttpResponseURITooLong,
   isHttpResponseUnauthorized,
   isHttpResponseUnprocessableContent,
-  isHttpResponseUnsupportedMediaType
+  isHttpResponseUnsupportedMediaType,
+  isHttpResponseUpgradeRequired
 } from './http-responses';
 
 describe('HttpResponse', () => {
@@ -2866,6 +2868,68 @@ describe('isHttpResponseTooEarly', () => {
     strictEqual(isHttpResponseTooEarly(response), false);
     strictEqual(isHttpResponseTooEarly(undefined), false);
     strictEqual(isHttpResponseTooEarly(null), false);
+  });
+
+});
+
+describe('HttpResponseUpgradeRequired', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseUpgradeRequired();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseUpgradeRequired();
+    strictEqual(httpResponse.statusCode, 426);
+    strictEqual(httpResponse.statusMessage, 'UPGRADE REQUIRED');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseUpgradeRequired();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseUpgradeRequired(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseUpgradeRequired();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseUpgradeRequired({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseUpgradeRequired<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseUpgradeRequired', () => {
+
+  it('should return true if the given object is an instance of HttpResponseUpgradeRequired.', () => {
+    const response = new HttpResponseUpgradeRequired();
+    strictEqual(isHttpResponseUpgradeRequired(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseUpgradeRequired property equal to true.', () => {
+    const response = { isHttpResponseUpgradeRequired: true };
+    strictEqual(isHttpResponseUpgradeRequired(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseUpgradeRequired and if it '
+      + 'has no property isHttpResponseUpgradeRequired.', () => {
+    const response = {};
+    strictEqual(isHttpResponseUpgradeRequired(response), false);
+    strictEqual(isHttpResponseUpgradeRequired(undefined), false);
+    strictEqual(isHttpResponseUpgradeRequired(null), false);
   });
 
 });

@@ -2379,6 +2379,52 @@ export function isHttpResponseTooEarly(obj: any): obj is HttpResponseTooEarly {
 }
 
 /**
+ * Represent an HTTP response with the status 426 - UPGRADE REQUIRED.
+ *
+ * @export
+ * @class HttpResponseUpgradeRequired
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseUpgradeRequired<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseUpgradeRequired.
+   *
+   * @memberof HttpResponseUpgradeRequired
+   */
+  readonly isHttpResponseUpgradeRequired = true;
+  readonly statusCode = 426;
+  readonly statusMessage = 'UPGRADE REQUIRED';
+
+  /**
+   * Create an instance of HttpResponseUpgradeRequired.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseUpgradeRequired
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseUpgradeRequired.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseUpgradeRequired} - True if the error is an instance of HttpResponseUpgradeRequired.
+ * False otherwise.
+ */
+export function isHttpResponseUpgradeRequired(obj: any): obj is HttpResponseUpgradeRequired {
+  return obj instanceof HttpResponseUpgradeRequired ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseUpgradeRequired === true);
+}
+
+/**
  * Represent an HTTP response with the status 429 - TOO MANY REQUESTS.
  *
  * @export

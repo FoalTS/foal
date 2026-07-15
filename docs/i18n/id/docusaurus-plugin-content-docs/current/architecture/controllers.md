@@ -326,6 +326,7 @@ Here are subclasses that you can use:
 | 423 | `HttpResponseLocked` | no |
 | 424 | `HttpResponseFailedDependency` | no |
 | 425 | `HttpResponseTooEarly` | no |
+| 426 | `HttpResponseUpgradeRequired` | no |
 | 429 | `HttpResponseTooManyRequests` | no |
 |  | **5XX Server errors** | |
 | 5XX | `HttpResponseServerError` | yes |
