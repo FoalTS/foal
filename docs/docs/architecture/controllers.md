@@ -286,6 +286,7 @@ Here are subclasses that you can use:
 | 200 | `HttpResponseOK` | no |
 | 201 | `HttpResponseCreated` | no |
 | 203 | `HttpResponseNonAuthoritativeInformation` | no |
+| 205 | `HttpResponseResetContent` | no |
 |  | **3XX Redirection** | |
 | 3XX | `HttpResponseRedirection` | yes |
 | 301 | `HttpResponseMovedPermanently` | no |

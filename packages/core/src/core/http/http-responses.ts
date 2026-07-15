@@ -630,6 +630,51 @@ export function isHttpResponseNoContent(obj: any): obj is HttpResponseNoContent 
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseNoContent === true);
 }
 
+/**
+ * Represent an HTTP response with the status 205 - RESET CONTENT.
+ *
+ * @export
+ * @class HttpResponseResetContent
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponseResetContent extends HttpResponseSuccess {
+  /**
+   * Property used internally by isHttpResponseResetContent.
+   *
+   * @memberof HttpResponseResetContent
+   */
+  readonly isHttpResponseResetContent = true;
+  readonly statusCode = 205;
+  readonly statusMessage = 'RESET CONTENT';
+
+  /**
+   * Create an instance of HttpResponseResetContent.
+   * @memberof HttpResponseResetContent
+   */
+  constructor() {
+    super();
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseResetContent.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseResetContent} - True if the error is an instance of HttpResponseResetContent.
+ * False otherwise.
+ */
+export function isHttpResponseResetContent(obj: any): obj is HttpResponseResetContent {
+  return obj instanceof HttpResponseResetContent ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseResetContent === true);
+}
+
 /* 3xx Redirection */
 
 /**

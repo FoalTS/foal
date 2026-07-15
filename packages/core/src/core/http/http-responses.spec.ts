@@ -24,6 +24,7 @@ import {
   HttpResponseProcessing,
   HttpResponseRedirect,
   HttpResponseRedirection,
+  HttpResponseResetContent,
   HttpResponseServerError,
   HttpResponseSuccess,
   HttpResponseSwitchingProtocols,
@@ -50,6 +51,7 @@ import {
   isHttpResponseProcessing,
   isHttpResponseRedirect,
   isHttpResponseRedirection,
+  isHttpResponseResetContent,
   isHttpResponseServerError,
   isHttpResponseSuccess,
   isHttpResponseSwitchingProtocols,
@@ -591,6 +593,44 @@ describe('isHttpResponseNoContent', () => {
     strictEqual(isHttpResponseNoContent(response), false);
     strictEqual(isHttpResponseNoContent(undefined), false);
     strictEqual(isHttpResponseNoContent(null), false);
+  });
+
+});
+
+describe('HttpResponseResetContent', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponseResetContent();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseResetContent();
+    strictEqual(httpResponse.statusCode, 205);
+    strictEqual(httpResponse.statusMessage, 'RESET CONTENT');
+  });
+
+});
+
+describe('isHttpResponseResetContent', () => {
+
+  it('should return true if the given object is an instance of HttpResponseResetContent.', () => {
+    const response = new HttpResponseResetContent();
+    strictEqual(isHttpResponseResetContent(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseResetContent property equal to true.', () => {
+    const response = { isHttpResponseResetContent: true };
+    strictEqual(isHttpResponseResetContent(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseResetContent and if it '
+      + 'has no property isHttpResponseResetContent.', () => {
+    const response = {};
+    strictEqual(isHttpResponseResetContent(response), false);
+    strictEqual(isHttpResponseResetContent(undefined), false);
+    strictEqual(isHttpResponseResetContent(null), false);
   });
 
 });
