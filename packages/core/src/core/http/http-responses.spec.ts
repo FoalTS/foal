@@ -21,6 +21,7 @@ import {
   HttpResponseNotFound,
   HttpResponseNotImplemented,
   HttpResponseOK,
+  HttpResponsePartialContent,
   HttpResponseProcessing,
   HttpResponseRedirect,
   HttpResponseRedirection,
@@ -48,6 +49,7 @@ import {
   isHttpResponseNotFound,
   isHttpResponseNotImplemented,
   isHttpResponseOK,
+  isHttpResponsePartialContent,
   isHttpResponseProcessing,
   isHttpResponseRedirect,
   isHttpResponseRedirection,
@@ -631,6 +633,68 @@ describe('isHttpResponseResetContent', () => {
     strictEqual(isHttpResponseResetContent(response), false);
     strictEqual(isHttpResponseResetContent(undefined), false);
     strictEqual(isHttpResponseResetContent(null), false);
+  });
+
+});
+
+describe('HttpResponsePartialContent', () => {
+
+  it('should inherit from HttpResponseSuccess and HttpResponse', () => {
+    const httpResponse = new HttpResponsePartialContent();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseSuccess);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponsePartialContent();
+    strictEqual(httpResponse.statusCode, 206);
+    strictEqual(httpResponse.statusMessage, 'PARTIAL CONTENT');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponsePartialContent();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponsePartialContent(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponsePartialContent();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponsePartialContent({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponsePartialContent<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponsePartialContent', () => {
+
+  it('should return true if the given object is an instance of HttpResponsePartialContent.', () => {
+    const response = new HttpResponsePartialContent();
+    strictEqual(isHttpResponsePartialContent(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponsePartialContent property equal to true.', () => {
+    const response = { isHttpResponsePartialContent: true };
+    strictEqual(isHttpResponsePartialContent(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponsePartialContent and if it '
+      + 'has no property isHttpResponsePartialContent.', () => {
+    const response = {};
+    strictEqual(isHttpResponsePartialContent(response), false);
+    strictEqual(isHttpResponsePartialContent(undefined), false);
+    strictEqual(isHttpResponsePartialContent(null), false);
   });
 
 });

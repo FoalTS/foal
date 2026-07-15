@@ -675,6 +675,52 @@ export function isHttpResponseResetContent(obj: any): obj is HttpResponseResetCo
     (typeof obj === 'object' && obj !== null && obj.isHttpResponseResetContent === true);
 }
 
+/**
+ * Represent an HTTP response with the status 206 - PARTIAL CONTENT.
+ *
+ * @export
+ * @class HttpResponsePartialContent
+ * @extends {HttpResponseSuccess}
+ */
+export class HttpResponsePartialContent<T = any> extends HttpResponseSuccess<T> {
+  /**
+   * Property used internally by isHttpResponsePartialContent.
+   *
+   * @memberof HttpResponsePartialContent
+   */
+  readonly isHttpResponsePartialContent = true;
+  readonly statusCode = 206;
+  readonly statusMessage = 'PARTIAL CONTENT';
+
+  /**
+   * Create an instance of HttpResponsePartialContent.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponsePartialContent
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponsePartialContent.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponsePartialContent} - True if the error is an instance of HttpResponsePartialContent.
+ * False otherwise.
+ */
+export function isHttpResponsePartialContent(obj: any): obj is HttpResponsePartialContent {
+  return obj instanceof HttpResponsePartialContent ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponsePartialContent === true);
+}
+
 /* 3xx Redirection */
 
 /**
