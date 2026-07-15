@@ -18,6 +18,7 @@ import {
   HttpResponseInternalServerError,
   HttpResponseMethodNotAllowed,
   HttpResponseMovedPermanently,
+  HttpResponseMultipleChoices,
   HttpResponseMultiStatus,
   HttpResponseNoContent,
   HttpResponseNonAuthoritativeInformation,
@@ -49,6 +50,7 @@ import {
   isHttpResponseInternalServerError,
   isHttpResponseMethodNotAllowed,
   isHttpResponseMovedPermanently,
+  isHttpResponseMultipleChoices,
   isHttpResponseMultiStatus,
   isHttpResponseNoContent,
   isHttpResponseNonAuthoritativeInformation,
@@ -909,6 +911,69 @@ describe('isHttpResponseRedirection', () => {
     strictEqual(isHttpResponseRedirection(response), false);
     strictEqual(isHttpResponseRedirection(undefined), false);
     strictEqual(isHttpResponseRedirection(null), false);
+  });
+
+});
+
+describe('HttpResponseMultipleChoices', () => {
+
+  it('should inherit from HttpResponseRedirection and HttpResponse', () => {
+    const httpResponse = new HttpResponseMultipleChoices('/foo');
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseRedirection);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseMultipleChoices('/foo');
+    strictEqual(httpResponse.statusCode, 300);
+    strictEqual(httpResponse.statusMessage, 'MULTIPLE CHOICES');
+  });
+
+  it('should accept a mandatory path and an optional body.', () => {
+    let httpResponse = new HttpResponseMultipleChoices('/foo');
+    strictEqual(httpResponse.path, '/foo');
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseMultipleChoices('/foo', body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseMultipleChoices('/foo');
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseMultipleChoices('/foo', {}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseMultipleChoices<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseMultipleChoices', () => {
+
+  it('should return true if the given object is an instance of HttpResponseMultipleChoices.', () => {
+    const response = new HttpResponseMultipleChoices('/foo');
+    strictEqual(isHttpResponseMultipleChoices(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseMultipleChoices property equal to true.', () => {
+    const response = { isHttpResponseMultipleChoices: true };
+    strictEqual(isHttpResponseMultipleChoices(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseMultipleChoices and if it '
+      + 'has no property isHttpResponseMultipleChoices.', () => {
+    const response = {};
+    strictEqual(isHttpResponseMultipleChoices(response), false);
+    strictEqual(isHttpResponseMultipleChoices(undefined), false);
+    strictEqual(isHttpResponseMultipleChoices(null), false);
   });
 
 });

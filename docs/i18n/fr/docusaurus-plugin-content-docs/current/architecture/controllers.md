@@ -298,6 +298,7 @@ Here are subclasses that you can use:
 | 226 | `HttpResponseIMUsed` | no |
 |  | **3XX Redirection** | |
 | 3XX | `HttpResponseRedirection` | yes |
+| 300 | `HttpResponseMultipleChoices` | no |
 | 301 | `HttpResponseMovedPermanently` | no |
 | 302 | `HttpResponseRedirect` | no |
 |  | **4XX Client errors** | |

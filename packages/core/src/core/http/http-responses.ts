@@ -907,6 +907,53 @@ export function isHttpResponseRedirection(obj: any): obj is HttpResponseRedirect
 }
 
 /**
+ * Represent an HTTP response with the status 300 - MULTIPLE CHOICES.
+ *
+ * @export
+ * @class HttpResponseMultipleChoices
+ * @extends {HttpResponseRedirection}
+ */
+export class HttpResponseMultipleChoices<T = any> extends HttpResponseRedirection<T> {
+  /**
+   * Property used internally by isHttpResponseMultipleChoices.
+   *
+   * @memberof HttpResponseMultipleChoices
+   */
+  readonly isHttpResponseMultipleChoices = true;
+  readonly statusCode = 300;
+  readonly statusMessage = 'MULTIPLE CHOICES';
+
+  /**
+   * Create an instance of HttpResponseMultipleChoices.
+   * @param {string} path - The redirection path.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseMultipleChoices
+   */
+  constructor(public path: string, body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseMultipleChoices.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseMultipleChoices} - True if the error is an
+ * instance of HttpResponseMultipleChoices. False otherwise.
+ */
+export function isHttpResponseMultipleChoices(obj: any): obj is HttpResponseMultipleChoices {
+  return obj instanceof HttpResponseMultipleChoices ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseMultipleChoices === true);
+}
+
+/**
  * Represent an HTTP response with the status 301 - MOVED PERMANENTLY.
  *
  * @export
