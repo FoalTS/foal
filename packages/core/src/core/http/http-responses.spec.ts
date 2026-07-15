@@ -9,6 +9,7 @@ import {
   HttpResponseBadRequest,
   HttpResponseClientError,
   HttpResponseConflict,
+  HttpResponseContentTooLarge,
   HttpResponseContinue,
   HttpResponseCreated,
   HttpResponseEarlyHints,
@@ -52,6 +53,7 @@ import {
   isHttpResponseBadRequest,
   isHttpResponseClientError,
   isHttpResponseConflict,
+  isHttpResponseContentTooLarge,
   isHttpResponseContinue,
   isHttpResponseCreated,
   isHttpResponseEarlyHints,
@@ -2102,6 +2104,68 @@ describe('isHttpResponsePreconditionFailed', () => {
     strictEqual(isHttpResponsePreconditionFailed(response), false);
     strictEqual(isHttpResponsePreconditionFailed(undefined), false);
     strictEqual(isHttpResponsePreconditionFailed(null), false);
+  });
+
+});
+
+describe('HttpResponseContentTooLarge', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseContentTooLarge();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseContentTooLarge();
+    strictEqual(httpResponse.statusCode, 413);
+    strictEqual(httpResponse.statusMessage, 'CONTENT TOO LARGE');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseContentTooLarge();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseContentTooLarge(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseContentTooLarge();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseContentTooLarge({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseContentTooLarge<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseContentTooLarge', () => {
+
+  it('should return true if the given object is an instance of HttpResponseContentTooLarge.', () => {
+    const response = new HttpResponseContentTooLarge();
+    strictEqual(isHttpResponseContentTooLarge(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseContentTooLarge property equal to true.', () => {
+    const response = { isHttpResponseContentTooLarge: true };
+    strictEqual(isHttpResponseContentTooLarge(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseContentTooLarge and if it '
+      + 'has no property isHttpResponseContentTooLarge.', () => {
+    const response = {};
+    strictEqual(isHttpResponseContentTooLarge(response), false);
+    strictEqual(isHttpResponseContentTooLarge(undefined), false);
+    strictEqual(isHttpResponseContentTooLarge(null), false);
   });
 
 });
