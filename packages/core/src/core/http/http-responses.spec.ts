@@ -46,6 +46,7 @@ import {
   HttpResponseSwitchingProtocols,
   HttpResponseTemporaryRedirect,
   HttpResponseTooManyRequests,
+  HttpResponseURITooLong,
   HttpResponseUnauthorized,
   HttpResponseUnprocessableContent,
   isHttpResponse,
@@ -90,6 +91,7 @@ import {
   isHttpResponseSwitchingProtocols,
   isHttpResponseTemporaryRedirect,
   isHttpResponseTooManyRequests,
+  isHttpResponseURITooLong,
   isHttpResponseUnauthorized,
   isHttpResponseUnprocessableContent
 } from './http-responses';
@@ -2166,6 +2168,68 @@ describe('isHttpResponseContentTooLarge', () => {
     strictEqual(isHttpResponseContentTooLarge(response), false);
     strictEqual(isHttpResponseContentTooLarge(undefined), false);
     strictEqual(isHttpResponseContentTooLarge(null), false);
+  });
+
+});
+
+describe('HttpResponseURITooLong', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseURITooLong();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseURITooLong();
+    strictEqual(httpResponse.statusCode, 414);
+    strictEqual(httpResponse.statusMessage, 'URI TOO LONG');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseURITooLong();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseURITooLong(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseURITooLong();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseURITooLong({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseURITooLong<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseURITooLong', () => {
+
+  it('should return true if the given object is an instance of HttpResponseURITooLong.', () => {
+    const response = new HttpResponseURITooLong();
+    strictEqual(isHttpResponseURITooLong(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseURITooLong property equal to true.', () => {
+    const response = { isHttpResponseURITooLong: true };
+    strictEqual(isHttpResponseURITooLong(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseURITooLong and if it '
+      + 'has no property isHttpResponseURITooLong.', () => {
+    const response = {};
+    strictEqual(isHttpResponseURITooLong(response), false);
+    strictEqual(isHttpResponseURITooLong(undefined), false);
+    strictEqual(isHttpResponseURITooLong(null), false);
   });
 
 });

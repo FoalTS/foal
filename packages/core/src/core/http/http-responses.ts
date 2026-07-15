@@ -1921,6 +1921,52 @@ export function isHttpResponseContentTooLarge(obj: any): obj is HttpResponseCont
 }
 
 /**
+ * Represent an HTTP response with the status 414 - URI TOO LONG.
+ *
+ * @export
+ * @class HttpResponseURITooLong
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseURITooLong<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseURITooLong.
+   *
+   * @memberof HttpResponseURITooLong
+   */
+  readonly isHttpResponseURITooLong = true;
+  readonly statusCode = 414;
+  readonly statusMessage = 'URI TOO LONG';
+
+  /**
+   * Create an instance of HttpResponseURITooLong.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseURITooLong
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseURITooLong.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseURITooLong} - True if the error is an instance of HttpResponseURITooLong.
+ * False otherwise.
+ */
+export function isHttpResponseURITooLong(obj: any): obj is HttpResponseURITooLong {
+  return obj instanceof HttpResponseURITooLong ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseURITooLong === true);
+}
+
+/**
  * Represent an HTTP response with the status 422 - UNPROCESSABLE CONTENT.
  *
  * @export

@@ -130,6 +130,7 @@ export {
   HttpResponseSwitchingProtocols,
   HttpResponseTemporaryRedirect,
   HttpResponseTooManyRequests,
+  HttpResponseURITooLong,
   HttpResponseUnauthorized,
   HttpResponseUnprocessableContent,
 
@@ -260,6 +261,7 @@ export {
   isHttpResponseSwitchingProtocols,
   isHttpResponseTemporaryRedirect,
   isHttpResponseTooManyRequests,
+  isHttpResponseURITooLong,
   isHttpResponseUnauthorized,
   isHttpResponseUnprocessableContent,
 
