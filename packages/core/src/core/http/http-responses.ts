@@ -2288,6 +2288,52 @@ export function isHttpResponseLocked(obj: any): obj is HttpResponseLocked {
 }
 
 /**
+ * Represent an HTTP response with the status 424 - FAILED DEPENDENCY.
+ *
+ * @export
+ * @class HttpResponseFailedDependency
+ * @extends {HttpResponseClientError}
+ */
+export class HttpResponseFailedDependency<T = any> extends HttpResponseClientError<T> {
+  /**
+   * Property used internally by isHttpResponseFailedDependency.
+   *
+   * @memberof HttpResponseFailedDependency
+   */
+  readonly isHttpResponseFailedDependency = true;
+  readonly statusCode = 424;
+  readonly statusMessage = 'FAILED DEPENDENCY';
+
+  /**
+   * Create an instance of HttpResponseFailedDependency.
+   * @param {*} [body] - Optional body of the response.
+   * @memberof HttpResponseFailedDependency
+   */
+  constructor(body?: T, options: { stream?: boolean } = {}) {
+    super(body, options);
+  }
+}
+
+/**
+ * Check if an object is an instance of HttpResponseFailedDependency.
+ *
+ * This function is a help when you have several packages using @foal/core.
+ * Npm can install the package several times, which leads to duplicate class
+ * definitions. If this is the case, the keyword `instanceof` may return false
+ * while the object is an instance of the class. This function fixes this
+ * problem.
+ *
+ * @export
+ * @param {*} obj - The object to check.
+ * @returns {obj is HttpResponseFailedDependency} - True if the error is an instance of HttpResponseFailedDependency.
+ * False otherwise.
+ */
+export function isHttpResponseFailedDependency(obj: any): obj is HttpResponseFailedDependency {
+  return obj instanceof HttpResponseFailedDependency ||
+    (typeof obj === 'object' && obj !== null && obj.isHttpResponseFailedDependency === true);
+}
+
+/**
  * Represent an HTTP response with the status 429 - TOO MANY REQUESTS.
  *
  * @export

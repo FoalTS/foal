@@ -14,6 +14,7 @@ import {
   HttpResponseCreated,
   HttpResponseEarlyHints,
   HttpResponseExpectationFailed,
+  HttpResponseFailedDependency,
   HttpResponseForbidden,
   HttpResponseGone,
   HttpResponseIMUsed,
@@ -65,6 +66,7 @@ import {
   isHttpResponseCreated,
   isHttpResponseEarlyHints,
   isHttpResponseExpectationFailed,
+  isHttpResponseFailedDependency,
   isHttpResponseForbidden,
   isHttpResponseGone,
   isHttpResponseIMUsed,
@@ -2738,6 +2740,68 @@ describe('isHttpResponseLocked', () => {
     strictEqual(isHttpResponseLocked(response), false);
     strictEqual(isHttpResponseLocked(undefined), false);
     strictEqual(isHttpResponseLocked(null), false);
+  });
+
+});
+
+describe('HttpResponseFailedDependency', () => {
+
+  it('should inherit from HttpResponseClientError and HttpResponse', () => {
+    const httpResponse = new HttpResponseFailedDependency();
+    ok(httpResponse instanceof HttpResponse);
+    ok(httpResponse instanceof HttpResponseClientError);
+  });
+
+  it('should have the correct status.', () => {
+    const httpResponse = new HttpResponseFailedDependency();
+    strictEqual(httpResponse.statusCode, 424);
+    strictEqual(httpResponse.statusMessage, 'FAILED DEPENDENCY');
+  });
+
+  it('should accept an optional body.', () => {
+    let httpResponse = new HttpResponseFailedDependency();
+    strictEqual(httpResponse.body, undefined);
+
+    const body = { foo: 'bar' };
+    httpResponse = new HttpResponseFailedDependency(body);
+    strictEqual(httpResponse.body, body);
+  });
+
+  it('should accept optional options.', () => {
+    let httpResponse = new HttpResponseFailedDependency();
+    strictEqual(httpResponse.stream, false);
+
+    httpResponse = new HttpResponseFailedDependency({}, { stream: true });
+    strictEqual(httpResponse.stream, true);
+  });
+
+  it('should allow specifying the required type for the body', () => {
+    type NumberResponse = HttpResponseFailedDependency<number>
+    type BodyOnlyAcceptsNumbers = NumberResponse['body'] extends number ? true : never
+    const isTrue: BodyOnlyAcceptsNumbers = true
+    strictEqual(isTrue, true)
+  });
+
+});
+
+describe('isHttpResponseFailedDependency', () => {
+
+  it('should return true if the given object is an instance of HttpResponseFailedDependency.', () => {
+    const response = new HttpResponseFailedDependency();
+    strictEqual(isHttpResponseFailedDependency(response), true);
+  });
+
+  it('should return true if the given object has an isHttpResponseFailedDependency property equal to true.', () => {
+    const response = { isHttpResponseFailedDependency: true };
+    strictEqual(isHttpResponseFailedDependency(response), true);
+  });
+
+  it('should return false if the given object is not an instance of HttpResponseFailedDependency and if it '
+      + 'has no property isHttpResponseFailedDependency.', () => {
+    const response = {};
+    strictEqual(isHttpResponseFailedDependency(response), false);
+    strictEqual(isHttpResponseFailedDependency(undefined), false);
+    strictEqual(isHttpResponseFailedDependency(null), false);
   });
 
 });
