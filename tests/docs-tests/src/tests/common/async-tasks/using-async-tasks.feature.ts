@@ -13,7 +13,7 @@ describe('Feature: Using async tasks', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    // tslint:disable-next-line:no-unused-variable
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     class SubscriptionService {
       @dependency
       asyncService: AsyncService;

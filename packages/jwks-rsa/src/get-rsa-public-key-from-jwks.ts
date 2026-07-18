@@ -4,7 +4,7 @@ import { Agent as HttpsAgent } from 'https';
 
 // 3p
 import { InvalidTokenError } from '@foal/jwt';
-// tslint:disable-next-line:no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const jwksClient = require('jwks-rsa');
 
 // The below interfaces comes from here: https://github.com/auth0/node-jwks-rsa/blob/master/index.d.ts

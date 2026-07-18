@@ -22,7 +22,7 @@ interface IncomingMessage extends Readable {
   trailers: any;
   url?: string;
   destroy(err?: any): void;
-  // tslint:disable-next-line:ban-types
+  // eslint-disable-next-line @typescript-eslint/no-restricted-types
   setTimeout(msecs: number, callback: Function): this;
 }
 

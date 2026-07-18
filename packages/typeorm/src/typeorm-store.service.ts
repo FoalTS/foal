@@ -11,12 +11,10 @@ export class DatabaseSession extends BaseEntity {
 
   @Column({ nullable: true, type: 'int' })
   // Use snake case because camelCase does not work well with PostgreSQL.
-  // tslint:disable-next-line: variable-name
   user_id: number | null;
 
   @Column({ nullable: true, type: 'varchar', length: 64 })
   // Use snake case because camelCase does not work well with PostgreSQL.
-  // tslint:disable-next-line: variable-name
   user_id_str: string | null;
 
   @Column({ type: 'text' })
@@ -27,12 +25,10 @@ export class DatabaseSession extends BaseEntity {
 
   @Column()
   // Use snake case because camelCase does not work well with PostgreSQL.
-  // tslint:disable-next-line: variable-name
   updated_at: number;
 
   @Column()
   // Use snake case because camelCase does not work well with PostgreSQL.
-  // tslint:disable-next-line: variable-name
   created_at: number;
 }
 

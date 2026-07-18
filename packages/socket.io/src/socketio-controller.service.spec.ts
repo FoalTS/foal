@@ -2,7 +2,6 @@
 import { deepStrictEqual, notDeepStrictEqual, notStrictEqual, strictEqual } from 'assert';
 import { createServer, Server } from 'http';
 import { AddressInfo } from 'net';
-// tslint:disable-next-line: no-duplicate-imports
 import * as http from 'http';
 import { mock } from 'node:test';
 

@@ -44,7 +44,6 @@ describe('Feature: Executing logic after the controller method.', () => {
         const time = process.hrtime();
 
         return () => {
-          // tslint:disable-next-line
           const seconds = process.hrtime(time)[0];
           // console.log(`Executed in ${seconds} seconds`);
         };
