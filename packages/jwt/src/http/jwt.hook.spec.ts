@@ -73,7 +73,6 @@ function toBase64Url(headerOrPayload: string): string {
   return convertBase64ToBase64url(Buffer.from(headerOrPayload, 'binary').toString('base64'));
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function fromBase64Url(str: string): string {
   return Buffer.from(convertBase64urlToBase64(str), 'base64').toString('binary');
 }

@@ -19,7 +19,6 @@ function displayError(...lines: string[]): void {
   process.exitCode = 1;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const pkg = require('../package.json');
 
 program

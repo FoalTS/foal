@@ -22,7 +22,6 @@ describe('EventName', () => {
   it('should throw an error if the event name is empty.', () => {
     throws(
       () => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         class Foobar {
           @EventName('')
           barfoo() {}
