@@ -299,7 +299,6 @@ describe('makeControllerRoutes', () => {
 
   it('should bind the controller instance to the controller and method hooks.', () => {
     let firstThis: FoobarController|undefined;
-    // tslint:disable-next-line:prefer-const
     let secondThis: FoobarController|undefined;
 
     @Hook(function(this: FoobarController) {

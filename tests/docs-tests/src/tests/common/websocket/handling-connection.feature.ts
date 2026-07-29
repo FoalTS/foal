@@ -7,7 +7,6 @@ describe('Feature: Handling connection', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    // tslint:disable-next-line
     class WebsocketController extends SocketIOController {
 
       onConnection(ctx: WebsocketContext) {

@@ -12,7 +12,6 @@ describe('Feature: Grouping several hooks into one.', () => {
 
     // Before
 
-    // tslint:disable-next-line
     class MyController {
       @Get('/products')
       @ValidateHeader('Authorization')

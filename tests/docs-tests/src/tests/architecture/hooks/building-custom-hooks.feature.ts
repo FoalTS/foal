@@ -55,7 +55,6 @@ describe('Feature: Building custom hooks', () => {
 
       @Get('/')
       @Hook((ctx, services) => {
-        // tslint:disable-next-line
         const logger = services.get(Logger);
         // logger.log('IP: ' + ctx.request.ip);
       })

@@ -4,7 +4,6 @@ import { Config } from '../../core';
 import addFormats from 'ajv-formats';
 
 // This is a little hack to test the customized configuration of `getAjvInstance`.
-// tslint:disable-next-line:variable-name
 export const _instanceWrapper: { instance: undefined|Ajv } = {
   instance: undefined
 };

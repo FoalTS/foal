@@ -7,7 +7,6 @@ describe('Feature: Passing custom server options', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    // tslint:disable-next-line
     class WebsocketController extends SocketIOController {
 
       options = {

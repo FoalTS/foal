@@ -695,7 +695,6 @@ describe('UseSessions', () => {
             await hook(ctx, services);
 
             strictEqual(ctx.user, null);
-            // tslint:disable-next-line
             strictEqual(ctx.session?.isDestroyed, true);
           });
 
@@ -865,7 +864,6 @@ describe('UseSessions', () => {
 
           await postHookFunction(new HttpResponseInternalServerError());
 
-          // tslint:disable-next-line
           strictEqual(services.get(Store).updateCalledWith?.state.id, undefined);
         });
 
@@ -1079,7 +1077,6 @@ describe('UseSessions', () => {
 
           await postHookFunction(new HttpResponseOK());
 
-          // tslint:disable-next-line
           strictEqual(services.get(Store).updateCalledWith?.state.id, ctx.session.getToken());
         });
 

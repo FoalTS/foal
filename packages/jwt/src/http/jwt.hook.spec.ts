@@ -73,14 +73,12 @@ function toBase64Url(headerOrPayload: string): string {
   return convertBase64ToBase64url(Buffer.from(headerOrPayload, 'binary').toString('base64'));
 }
 
-/* tslint:disable-next-line:no-unused-variable */
 function fromBase64Url(str: string): string {
   return Buffer.from(convertBase64urlToBase64(str), 'base64').toString('binary');
 }
 
 const payload1 = {
   sub: '1234567890',
-  // tslint:disable-next-line:object-literal-sort-keys
   name: 'John Doe',
   iat: 1516239022
 };
