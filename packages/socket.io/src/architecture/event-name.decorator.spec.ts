@@ -22,7 +22,6 @@ describe('EventName', () => {
   it('should throw an error if the event name is empty.', () => {
     throws(
       () => {
-        // tslint:disable-next-line:no-unused-variable
         class Foobar {
           @EventName('')
           barfoo() {}

@@ -7,7 +7,6 @@ it('[Docs] Cookbook > Limit Repeated Requests', () => {
   class AppController {}
 
   // Only test compilation
-  // tslint:disable-next-line
   async function main() {
     const expressApp = express();
     expressApp.use(rateLimit({

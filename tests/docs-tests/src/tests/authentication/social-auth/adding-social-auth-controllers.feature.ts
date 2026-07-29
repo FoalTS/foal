@@ -10,7 +10,7 @@ describe('Feature: Adding social auth controllers', () => {
 
     /* ======================= DOCUMENTATION BEGIN ======================= */
 
-    // tslint:disable-next-line:no-unused-variable
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     class AuthController {
       @dependency
       google: GoogleProvider;
@@ -26,7 +26,7 @@ describe('Feature: Adding social auth controllers', () => {
       async handleGoogleRedirection(ctx: Context) {
         // Once the user gives their permission to log in with Google, the OAuth server
         // will redirect the user to this route. This route must match the redirect URI.
-        // tslint:disable-next-line:no-unused-variable
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { userInfo, tokens } = await this.google.getUserInfo(ctx);
 
         // Do something with the user information AND/OR the access token.
