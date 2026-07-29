@@ -28,7 +28,7 @@ npx foal g rest-api product --register
 npx foal g script bar-script
 
 # Test linting
-ESLINT_USE_FLAT_CONFIG=false npm run lint
+npm run lint
 
 # Build and run the unit tests
 npm run build:test
@@ -142,7 +142,7 @@ if grep -Ril "../../Users/loicp" .; then
 fi
 
 # Test linting
-ESLINT_USE_FLAT_CONFIG=false npm run lint
+npm run lint
 
 # Build and run the unit tests
 npm run build:test
