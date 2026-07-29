@@ -198,7 +198,8 @@ describe('CreateAppCommandService', () => {
       .assertEqual('tsconfig.e2e.json', 'app/tsconfig.e2e.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.test.json', 'app/tsconfig.test.json')
-      .assertEqual('.eslintrc.js', 'app/.eslintrc.js');
+      .assertEqual('.prettierrc', 'app/.prettierrc')
+      .assertEqual('eslint.config.mjs', 'app/eslint.config.mjs');
   });
   it('should render the root templates (YAML option).', async () => {
     await service.run({ name: 'test-fooBar', yaml: true });
@@ -212,7 +213,8 @@ describe('CreateAppCommandService', () => {
       .assertEqual('tsconfig.e2e.json', 'app/tsconfig.e2e.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.test.json', 'app/tsconfig.test.json')
-      .assertEqual('.eslintrc.js', 'app/.eslintrc.js');
+      .assertEqual('.prettierrc', 'app/.prettierrc')
+      .assertEqual('eslint.config.mjs', 'app/eslint.config.mjs');
   });
 
   it('should render the root templates (MongoDB option).', async () => {
@@ -227,7 +229,8 @@ describe('CreateAppCommandService', () => {
       .assertEqual('tsconfig.e2e.json', 'app/tsconfig.e2e.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.test.json', 'app/tsconfig.test.json')
-      .assertEqual('.eslintrc.js', 'app/.eslintrc.js');
+      .assertEqual('.prettierrc', 'app/.prettierrc')
+      .assertEqual('eslint.config.mjs', 'app/eslint.config.mjs');
   });
 
   it('should render the root templates (MongoDB & YAML options).', async () => {
@@ -242,7 +245,8 @@ describe('CreateAppCommandService', () => {
       .assertEqual('tsconfig.e2e.json', 'app/tsconfig.e2e.json')
       .assertEqual('tsconfig.json', 'app/tsconfig.json')
       .assertEqual('tsconfig.test.json', 'app/tsconfig.test.json')
-      .assertEqual('.eslintrc.js', 'app/.eslintrc.js');
+      .assertEqual('.prettierrc', 'app/.prettierrc')
+      .assertEqual('eslint.config.mjs', 'app/eslint.config.mjs');
   });
 
 });

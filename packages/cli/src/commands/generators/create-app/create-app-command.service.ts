@@ -67,7 +67,8 @@ export class CreateAppCommandService {
       .copyTemplate('app/tsconfig.e2e.json', 'tsconfig.e2e.json')
       .copyTemplate('app/tsconfig.json', 'tsconfig.json')
       .copyTemplate('app/tsconfig.test.json', 'tsconfig.test.json')
-      .copyTemplate('app/.eslintrc.js', '.eslintrc.js')
+      .copyTemplate('app/.prettierrc', '.prettierrc')
+      .copyTemplate('app/eslint.config.mjs', 'eslint.config.mjs')
         // Config
         .ensureDir('config')
         .cd('config')
