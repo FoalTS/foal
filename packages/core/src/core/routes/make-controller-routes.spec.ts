@@ -10,6 +10,7 @@ import {
   ApiDefineCallback,
   ApiDefineTag,
   ApiDeprecated,
+  ApiDisinheritTags,
   ApiExternalDoc,
   ApiInfo,
   ApiOperation,
@@ -51,7 +52,7 @@ describe('makeControllerRoutes', () => {
   it('should return the routes from a controller with a method.', () => {
     class FoobarController {
       @Get()
-      bar() {}
+      bar() { }
     }
 
     const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
@@ -71,7 +72,7 @@ describe('makeControllerRoutes', () => {
     @Reflect.metadata('path', '/foo/')
     class FoobarController {
       @Get('/bar')
-      bar() {}
+      bar() { }
     }
 
     const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
@@ -90,7 +91,7 @@ describe('makeControllerRoutes', () => {
       @Get()
       @Hook(hook5)
       @Hook(hook6)
-      bar() {}
+      bar() { }
     }
 
     const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
@@ -101,19 +102,19 @@ describe('makeControllerRoutes', () => {
     // bar() {}
     deepStrictEqual(
       routes[0].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
-      [ 'hook3', 'hook4', 'hook5', 'hook6' ]
+      ['hook3', 'hook4', 'hook5', 'hook6']
     );
   });
 
   it('should return the routes from the controller methods that have a http-method decorator.', () => {
     class FoobarController {
       @Get()
-      bar() {}
+      bar() { }
 
-      foo() {}
+      foo() { }
 
       @Post()
-      barfoo() {}
+      barfoo() { }
     }
 
     const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
@@ -131,9 +132,9 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should properly instantiate a controller that has dependencies.', () => {
-    class Service1 {}
+    class Service1 { }
 
-    class Service2 {}
+    class Service2 { }
 
     class FoobarController {
       @dependency
@@ -143,7 +144,7 @@ describe('makeControllerRoutes', () => {
       service2: Service2;
 
       @Get()
-      bar() {}
+      bar() { }
     }
 
     const services = new ServiceManager();
@@ -161,7 +162,7 @@ describe('makeControllerRoutes', () => {
   it('should register the controller instance in the ServiceManager.', () => {
     class FoobarController {
       @Get()
-      bar() {}
+      bar() { }
     }
 
     const services = new ServiceManager();
@@ -179,7 +180,7 @@ describe('makeControllerRoutes', () => {
 
       @Get('/bar')
       @Hook(hook1)
-      bar() {}
+      bar() { }
 
     }
 
@@ -189,7 +190,7 @@ describe('makeControllerRoutes', () => {
 
       @Post('/barfoo')
       @Hook(hook3)
-      barfoo() {}
+      barfoo() { }
 
     }
 
@@ -202,7 +203,7 @@ describe('makeControllerRoutes', () => {
     ok(routes[0].controller instanceof FoobarController2);
     deepStrictEqual(
       routes[0].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
-      [ 'hook2', 'hook3' ]
+      ['hook2', 'hook3']
     );
     strictEqual(routes[0].httpMethod, 'POST');
     strictEqual(routes[0].path, '/foo/barfoo');
@@ -212,7 +213,7 @@ describe('makeControllerRoutes', () => {
     ok(routes[1].controller instanceof FoobarController2);
     deepStrictEqual(
       routes[1].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
-      [ 'hook2', 'hook1' ]
+      ['hook2', 'hook1']
     );
     strictEqual(routes[1].httpMethod, 'GET');
     strictEqual(routes[1].path, '/foo/bar');
@@ -226,7 +227,7 @@ describe('makeControllerRoutes', () => {
     class ApiController {
       @Get('/flights')
       @Hook(hook3)
-      flights() {}
+      flights() { }
     }
 
     @Reflect.metadata('path', '/auth')
@@ -234,7 +235,7 @@ describe('makeControllerRoutes', () => {
     class AuthController {
       @Get('/')
       @Hook(hook5)
-      index() {}
+      index() { }
     }
 
     @Reflect.metadata('path', '/foo')
@@ -255,7 +256,7 @@ describe('makeControllerRoutes', () => {
     ok(routes[0].controller instanceof ApiController);
     deepStrictEqual(
       routes[0].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
-      [ 'hook1', 'hook2', 'hook3' ]
+      ['hook1', 'hook2', 'hook3']
     );
     strictEqual(routes[0].httpMethod, 'GET');
     strictEqual(routes[0].path, '/foo/api/flights');
@@ -265,7 +266,7 @@ describe('makeControllerRoutes', () => {
     ok(routes[1].controller instanceof AuthController);
     deepStrictEqual(
       routes[1].hooks.map(hook => (hook(ctx, services) as HttpResponseOK).body),
-      [ 'hook1', 'hook4', 'hook5' ]
+      ['hook1', 'hook4', 'hook5']
     );
     strictEqual(routes[1].httpMethod, 'GET');
     strictEqual(routes[1].path, '/foo/auth/');
@@ -275,14 +276,14 @@ describe('makeControllerRoutes', () => {
   it('should return the sub-controllers and controller routes in the right order.', () => {
     class SubController {
       @Get('/bar')
-      bar() {}
+      bar() { }
     }
 
     class AppController {
-      subControllers = [ SubController ];
+      subControllers = [SubController];
 
       @Get('/foo')
-      foo() {}
+      foo() { }
     }
 
     const routes = Array.from(makeControllerRoutes(AppController, new ServiceManager()))
@@ -298,19 +299,19 @@ describe('makeControllerRoutes', () => {
   });
 
   it('should bind the controller instance to the controller and method hooks.', () => {
-    let firstThis: FoobarController|undefined;
+    let firstThis: FoobarController | undefined;
     // tslint:disable-next-line:prefer-const
-    let secondThis: FoobarController|undefined;
+    let secondThis: FoobarController | undefined;
 
-    @Hook(function(this: FoobarController) {
+    @Hook(function (this: FoobarController) {
       firstThis = this;
     })
     class FoobarController {
       @Get()
-      @Hook(function(this: FoobarController) {
+      @Hook(function (this: FoobarController) {
         secondThis = this;
       })
-      bar() {}
+      bar() { }
     }
 
     const routes = Array.from(makeControllerRoutes(FoobarController, new ServiceManager()))
@@ -346,7 +347,7 @@ describe('makeControllerRoutes', () => {
 
     it('but not the other controllers.', () => {
       @ApiInfo(infoMetadata)
-      class ApiController {}
+      class ApiController { }
 
       class AppController {
         subControllers = [
@@ -360,14 +361,14 @@ describe('makeControllerRoutes', () => {
         () => openApi.getDocument(AppController),
         {
           message: 'No OpenAPI document found associated with the controller AppController. '
-          + 'Are you sure you added the @ApiInfo decorator on the controller?'
+            + 'Are you sure you added the @ApiInfo decorator on the controller?'
         }
       );
     });
 
     it('with the proper OpenAPI version.', () => {
       @ApiInfo(infoMetadata)
-      class ApiController {}
+      class ApiController { }
 
       class AppController {
         subControllers = [
@@ -386,7 +387,7 @@ describe('makeControllerRoutes', () => {
         version: '0.0.0'
       };
       @ApiInfo(metadata)
-      class ApiController {}
+      class ApiController { }
 
       class AppController {
         subControllers = [
@@ -422,7 +423,7 @@ describe('makeControllerRoutes', () => {
 
     it('with the servers if they exist.', () => {
       @ApiInfo(infoMetadata)
-      class ApiController {}
+      class ApiController { }
 
       class AppController {
         subControllers = [
@@ -439,7 +440,7 @@ describe('makeControllerRoutes', () => {
 
       @ApiInfo(infoMetadata)
       @ApiServer(server)
-      class ApiController2 {}
+      class ApiController2 { }
 
       class AppController2 {
         subControllers = [
@@ -448,14 +449,14 @@ describe('makeControllerRoutes', () => {
       }
 
       Array.from(makeControllerRoutes(AppController2, services));
-      deepStrictEqual(openApi.getDocument(ApiController2).servers, [ server ]);
+      deepStrictEqual(openApi.getDocument(ApiController2).servers, [server]);
     });
 
     it('with the components if they exist.', () => {
       @ApiInfo(infoMetadata)
       class ApiController {
         @Get('/foo')
-        foo() {}
+        foo() { }
       }
 
       class AppController {
@@ -471,7 +472,7 @@ describe('makeControllerRoutes', () => {
 
       @ApiInfo(infoMetadata)
       @ApiDefineCallback('callback', callback)
-      class ApiController2 {}
+      class ApiController2 { }
 
       class AppController2 {
         subControllers = [
@@ -487,7 +488,7 @@ describe('makeControllerRoutes', () => {
 
     it('with the security requirements if they exist.', () => {
       @ApiInfo(infoMetadata)
-      class ApiController {}
+      class ApiController { }
 
       class AppController {
         subControllers = [
@@ -502,7 +503,7 @@ describe('makeControllerRoutes', () => {
 
       @ApiInfo(infoMetadata)
       @ApiSecurityRequirement(securityRequirement)
-      class ApiController2 {}
+      class ApiController2 { }
 
       class AppController2 {
         subControllers = [
@@ -511,14 +512,14 @@ describe('makeControllerRoutes', () => {
       }
 
       Array.from(makeControllerRoutes(AppController2, services));
-      deepStrictEqual(openApi.getDocument(ApiController2).security, [ securityRequirement ]);
+      deepStrictEqual(openApi.getDocument(ApiController2).security, [securityRequirement]);
     });
 
     it('with the tags if they exist.', () => {
       @ApiInfo(infoMetadata)
       class ApiController {
         @Get('/foo')
-        foo() {}
+        foo() { }
       }
 
       class AppController {
@@ -536,7 +537,7 @@ describe('makeControllerRoutes', () => {
 
       @ApiInfo(infoMetadata)
       @ApiDefineTag(tag)
-      class ApiController2 {}
+      class ApiController2 { }
 
       class AppController2 {
         subControllers = [
@@ -545,12 +546,12 @@ describe('makeControllerRoutes', () => {
       }
 
       Array.from(makeControllerRoutes(AppController2, services));
-      deepStrictEqual(openApi.getDocument(ApiController2).tags, [ tag ]);
+      deepStrictEqual(openApi.getDocument(ApiController2).tags, [tag]);
     });
 
     it('with the external documentation if it exists.', () => {
       @ApiInfo(infoMetadata)
-      class ApiController {}
+      class ApiController { }
 
       class AppController {
         subControllers = [
@@ -567,7 +568,7 @@ describe('makeControllerRoutes', () => {
 
       @ApiInfo(infoMetadata)
       @ApiExternalDoc(externalDocs)
-      class ApiController2 {}
+      class ApiController2 { }
 
       class AppController2 {
         subControllers = [
@@ -593,13 +594,13 @@ describe('makeControllerRoutes', () => {
       class ApiController {
         @Post('/bar')
         @ApiOperation(operation1)
-        bar() {}
+        bar() { }
 
         @Get('/foo')
         @ApiOperation(operation2)
-        foo() {}
+        foo() { }
 
-        barfoo() {}
+        barfoo() { }
       }
 
       class AppController {
@@ -636,7 +637,7 @@ describe('makeControllerRoutes', () => {
       class ProductController {
         @Get()
         @ApiOperation(operation3)
-        index() {}
+        index() { }
       }
 
       class UserController {
@@ -646,7 +647,7 @@ describe('makeControllerRoutes', () => {
 
         @Post('/foo')
         @ApiOperation(operation2)
-        foo() {}
+        foo() { }
       }
 
       @ApiInfo(infoMetadata)
@@ -657,7 +658,7 @@ describe('makeControllerRoutes', () => {
 
         @Post('/bar')
         @ApiOperation(operation1)
-        bar() {}
+        bar() { }
       }
 
       class AppController {
@@ -701,7 +702,7 @@ describe('makeControllerRoutes', () => {
       class BoxController {
         @Get('/:boxId')
         @ApiOperation(operation4)
-        readBox() {}
+        readBox() { }
       }
 
       @ApiInfo(infoMetadata)
@@ -712,15 +713,15 @@ describe('makeControllerRoutes', () => {
 
         @Get()
         @ApiOperation(operation1)
-        index() {}
+        index() { }
 
         @Get('foo')
         @ApiOperation(operation2)
-        foo() {}
+        foo() { }
 
         @Get('/users/:userId/products/:productId')
         @ApiOperation(operation3)
-        bar() {}
+        bar() { }
       }
 
       class AppController {
@@ -772,23 +773,23 @@ describe('makeControllerRoutes', () => {
 
         @Get('/foo')
         @ApiOperation(operation1)
-        foo() {}
+        foo() { }
 
         @Post('/foo')
         @ApiOperation(operation2)
-        foo2() {}
+        foo2() { }
       }
 
       class SubController1 {
         @Get('/bar')
         @ApiOperation(operation3)
-        foobar() {}
+        foobar() { }
       }
 
       class SubController2 {
         @Post('/bar')
         @ApiOperation(operation4)
-        foobar() {}
+        foobar() { }
       }
 
       class AppController {
@@ -823,7 +824,7 @@ describe('makeControllerRoutes', () => {
 
         @Post('/barfoo')
         @ApiUseTag('tag3')
-        barfoo() {}
+        barfoo() { }
       }
 
       @ApiParameter(parameter)
@@ -839,11 +840,11 @@ describe('makeControllerRoutes', () => {
       class SubSubController {
         @Get('/foo')
         @ApiUseTag('tag2')
-        foo() {}
+        foo() { }
 
         @Post('/bar')
         @ApiDeprecated(false)
-        bar() {}
+        bar() { }
       }
 
       class AppController {
@@ -863,7 +864,7 @@ describe('makeControllerRoutes', () => {
             responses: {
               401: response
             },
-            tags: [ 'tag1', 'tag3' ]
+            tags: ['tag1', 'tag3']
           }
         },
         '/barfoo': {
@@ -871,7 +872,7 @@ describe('makeControllerRoutes', () => {
             responses: {
               401: response
             },
-            tags: [ 'tag3' ]
+            tags: ['tag3']
           }
         },
         '/foo': {
@@ -883,8 +884,76 @@ describe('makeControllerRoutes', () => {
             responses: {
               401: response
             },
-            tags: [ 'tag1', 'tag3', 'tag2' ]
+            tags: ['tag1', 'tag3', 'tag2']
           },
+        }
+      } as IApiPaths);
+    });
+
+
+    it('do not inherit tags if disinheritTags is true.', () => {
+      const response: IApiResponse = { description: 'Unauthorized' };
+
+      @ApiInfo(infoMetadata)
+      @ApiResponse(401, response)
+      @ApiUseTag('parent_tag')
+      class ApiController {
+        subControllers = [
+          controller('/sub1', SubController1),
+          controller('/sub2', SubController2),
+        ];
+      }
+
+      @ApiUseTag('sub_tag_1')
+      class SubController1 {
+        @Post('/foo')
+        foo() { }
+
+        @Post('/bar')
+        @ApiDisinheritTags()
+        @ApiUseTag('prop_tag')
+        bar() { }
+      }
+
+      @ApiDisinheritTags()
+      @ApiUseTag('sub_tag_2')
+      class SubController2 {
+        @Post('/foo')
+        foo() { }
+      }
+
+
+      class AppController {
+        subControllers = [
+          controller('/api', ApiController)
+        ];
+      }
+
+      Array.from(makeControllerRoutes(AppController, services));
+      deepStrictEqual(openApi.getDocument(ApiController).paths, {
+        '/sub1/foo': {
+          post: {
+            responses: {
+              401: response
+            },
+            tags: ['parent_tag', 'sub_tag_1']
+          }
+        },
+        '/sub1/bar': {
+          post: {
+            responses: {
+              401: response
+            },
+            tags: ['prop_tag']
+          }
+        },
+        '/sub2/foo': {
+          post: {
+            responses: {
+              401: response
+            },
+            tags: ['sub_tag_2']
+          }
         }
       } as IApiPaths);
     });
@@ -892,14 +961,14 @@ describe('makeControllerRoutes', () => {
     it('with the sub-controllers\' servers, security requirements and externalDocs in the paths.', () => {
       const server: IApiServer = { url: 'http://example.com' };
       const externalDocs: IApiExternalDocumentation = { url: 'http://example.com/docs' };
-      const securityRequirement: IApiSecurityRequirement = { a: [ 'b' ] };
+      const securityRequirement: IApiSecurityRequirement = { a: ['b'] };
 
       @ApiServer(server)
       @ApiExternalDoc(externalDocs)
       @ApiSecurityRequirement(securityRequirement)
       class UserController {
         @Get('/foo')
-        foo(){}
+        foo() { }
       }
 
       @ApiInfo(infoMetadata)
@@ -926,8 +995,8 @@ describe('makeControllerRoutes', () => {
           get: {
             externalDocs,
             responses: {},
-            security: [ securityRequirement ],
-            servers: [ server ],
+            security: [securityRequirement],
+            servers: [server],
           }
         }
       });
@@ -936,7 +1005,7 @@ describe('makeControllerRoutes', () => {
     it('but without the root servers, security requirements and externalDocs in the paths.', () => {
       const server: IApiServer = { url: 'http://example.com' };
       const externalDocs: IApiExternalDocumentation = { url: 'http://example.com/docs' };
-      const securityRequirement: IApiSecurityRequirement = { a: [ 'b' ] };
+      const securityRequirement: IApiSecurityRequirement = { a: ['b'] };
 
       @ApiInfo(infoMetadata)
       @ApiServer(server)
@@ -944,7 +1013,7 @@ describe('makeControllerRoutes', () => {
       @ApiSecurityRequirement(securityRequirement)
       class ApiController {
         @Get('/foo')
-        foo() {}
+        foo() { }
       }
 
       class AppController {
@@ -955,9 +1024,9 @@ describe('makeControllerRoutes', () => {
 
       Array.from(makeControllerRoutes(AppController, services));
       const document = openApi.getDocument(ApiController);
-      deepStrictEqual(document.servers, [ server ]);
+      deepStrictEqual(document.servers, [server]);
       deepStrictEqual(document.externalDocs, externalDocs);
-      deepStrictEqual(document.security, [ securityRequirement ]);
+      deepStrictEqual(document.security, [securityRequirement]);
       deepStrictEqual(document.paths, {
         '/foo': {
           get: {
@@ -986,11 +1055,11 @@ describe('makeControllerRoutes', () => {
 
         @Get('/bar')
         @ApiDefineCallback('callback2', callback2)
-        bar() {}
+        bar() { }
 
         @Get('/bar2')
         @ApiDefineCallback('callback2bis', callback2bis)
-        bar2() {}
+        bar2() { }
       }
 
       @ApiDefineCallback('callback3', callback3)
@@ -1005,11 +1074,11 @@ describe('makeControllerRoutes', () => {
       class SubSubController {
         @Get('/foo')
         @ApiDefineCallback('callback6', callback6)
-        foo() {}
+        foo() { }
 
         @Get('/foo2')
         @ApiDefineCallback('callback7', callback7)
-        foo2() {}
+        foo2() { }
       }
 
       class AppController {
@@ -1052,11 +1121,11 @@ describe('makeControllerRoutes', () => {
 
         @Get('/bar')
         @ApiDefineTag(tag2)
-        bar() {}
+        bar() { }
 
         @Get('/bar2')
         @ApiDefineTag(tag2bis)
-        bar2() {}
+        bar2() { }
       }
 
       @ApiDefineTag(tag3)
@@ -1071,11 +1140,11 @@ describe('makeControllerRoutes', () => {
       class SubSubController {
         @Get('/foo')
         @ApiDefineTag(tag6)
-        foo() {}
+        foo() { }
 
         @Get('/foo2')
         @ApiDefineTag(tag7)
-        foo2() {}
+        foo2() { }
       }
 
       class AppController {
@@ -1094,11 +1163,11 @@ describe('makeControllerRoutes', () => {
       @ApiInfo(infoMetadata)
       class ApiController {
         @Get('/api/users/:userId/products/:productId')
-        something() {}
+        something() { }
 
         // Note that there is no beginning slash for the test.
         @Get('api/users/:userId2/products/:productId2')
-        something2() {}
+        something2() { }
       }
 
       class AppController {
@@ -1126,10 +1195,10 @@ describe('makeControllerRoutes', () => {
       @ApiInfo(infoMetadata)
       class ApiController {
         @Get('/api/users/:userId')
-        something() {}
+        something() { }
 
         @Get('/api/users/:userId/products/:productId2')
-        something2() {}
+        something2() { }
       }
 
       class AppController {
@@ -1155,14 +1224,14 @@ describe('makeControllerRoutes', () => {
         };
 
         @Post('/bar')
-        bar() {}
+        bar() { }
       }
 
       @ApiInfo(infoMetadata)
       @ApiRequestBody(controller => controller.requestBody2)
       @ApiDefineCallback('callback2', controller => controller.callback2)
       class ApiController {
-        subControllers = [ SubController ];
+        subControllers = [SubController];
 
         requestBody: IApiRequestBody = {
           content: {
@@ -1187,10 +1256,10 @@ describe('makeControllerRoutes', () => {
         @Get('/foo')
         @ApiRequestBody(controller => controller.requestBody)
         @ApiDefineCallback('callback3', controller => controller.callback3)
-        foo() {}
+        foo() { }
 
         @Get('/barfoo')
-        barfoo() {}
+        barfoo() { }
       }
 
       class AppController {
@@ -1252,7 +1321,7 @@ describe('makeControllerRoutes', () => {
       @ApiDefineCallback('callback2', { $ref: '$ref2' })
       class UserController {
         @Get('/foobar')
-        foobar() {}
+        foobar() { }
       }
 
       // This controller does not have its own routes but
@@ -1299,7 +1368,7 @@ describe('makeControllerRoutes', () => {
     @ApiOperationDescription('description1')
     class UserController {
       @Get('/something')
-      something() {}
+      something() { }
     }
 
     @ApiInfo({
@@ -1315,7 +1384,7 @@ describe('makeControllerRoutes', () => {
       @ApiDefineTag({ name: 'bartag' })
       @ApiDefineCallback('barcallback', { $ref: 'barref' })
       @ApiOperationDescription('bardescription')
-      bar() {}
+      bar() { }
     }
 
     class AppController {
@@ -1327,7 +1396,7 @@ describe('makeControllerRoutes', () => {
       @ApiDefineTag({ name: 'footag' })
       @ApiDefineCallback('foocallback', { $ref: 'fooref' })
       @ApiOperationDescription('foodescription')
-      foo() {}
+      foo() { }
     }
 
     for (const { tags, components, operation } of makeControllerRoutes(AppController, new ServiceManager())) {

@@ -12,21 +12,21 @@ describe('mergeOperations', () => {
       };
       const operation2: IApiOperation = {
         responses: {},
-        tags: [ 'tag1' ]
+        tags: ['tag1']
       };
 
       const operation = mergeOperations(operation1, operation2);
 
       deepStrictEqual(operation, {
         responses: {},
-        tags: [ 'tag1' ]
+        tags: ['tag1']
       });
     });
 
     it('when operation2.tags is undefined and operation1.tags is not.', () => {
       const operation1: IApiOperation = {
         responses: {},
-        tags: [ 'tag1' ]
+        tags: ['tag1']
       };
       const operation2: IApiOperation = {
         responses: {}
@@ -36,7 +36,7 @@ describe('mergeOperations', () => {
 
       deepStrictEqual(operation, {
         responses: {},
-        tags: [ 'tag1' ]
+        tags: ['tag1']
       });
     });
 
@@ -58,21 +58,38 @@ describe('mergeOperations', () => {
     it('when both operation1.tags and operation2.tags are defined.', () => {
       const operation1: IApiOperation = {
         responses: {},
-        tags: [ 'tag1' ]
+        tags: ['tag1']
       };
       const operation2: IApiOperation = {
         responses: {},
-        tags: [ 'tag2' ]
+        tags: ['tag2']
       };
 
       const operation = mergeOperations(operation1, operation2);
 
       deepStrictEqual(operation, {
         responses: {},
-        tags: [ 'tag1', 'tag2' ]
+        tags: ['tag1', 'tag2']
       });
     });
 
+    it('when both operation1.tags and operation2.tags are defined but disinheritTags is true.', () => {
+      const operation1: IApiOperation = {
+        responses: {},
+        tags: ['tag1']
+      };
+      const operation2: IApiOperation = {
+        responses: {},
+        tags: ['tag2']
+      };
+
+      const operation = mergeOperations(operation1, operation2, true);
+
+      deepStrictEqual(operation, {
+        responses: {},
+        tags: ['tag2']
+      });
+    });
   });
 
   describe('should merge the summary', () => {
@@ -776,7 +793,7 @@ describe('mergeOperations', () => {
         responses: {},
         security: [
           {
-            a: [ 'a1' ]
+            a: ['a1']
           }
         ],
       };
@@ -787,7 +804,7 @@ describe('mergeOperations', () => {
         responses: {},
         security: [
           {
-            a: [ 'a1' ]
+            a: ['a1']
           }
         ],
       });
@@ -798,7 +815,7 @@ describe('mergeOperations', () => {
         responses: {},
         security: [
           {
-            a: [ 'a1' ]
+            a: ['a1']
           }
         ],
       };
@@ -812,7 +829,7 @@ describe('mergeOperations', () => {
         responses: {},
         security: [
           {
-            a: [ 'a1' ]
+            a: ['a1']
           }
         ],
       });
@@ -838,7 +855,7 @@ describe('mergeOperations', () => {
         responses: {},
         security: [
           {
-            a: [ 'a1' ]
+            a: ['a1']
           }
         ],
       };
@@ -846,7 +863,7 @@ describe('mergeOperations', () => {
         responses: {},
         security: [
           {
-            b: [ 'b1' ]
+            b: ['b1']
           }
         ],
       };
@@ -857,10 +874,10 @@ describe('mergeOperations', () => {
         responses: {},
         security: [
           {
-            a: [ 'a1' ]
+            a: ['a1']
           },
           {
-            b: [ 'b1' ]
+            b: ['b1']
           }
         ],
       });
