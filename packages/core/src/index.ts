@@ -22,6 +22,7 @@ export {
   ValidateCookie,
   ValidateHeader,
   ValidatePathParam,
+  ValidateQuery,
   ValidateQueryParam,
   PermissionRequired,
   IUserWithPermissions,
