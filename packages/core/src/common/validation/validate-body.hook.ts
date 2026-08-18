@@ -1,6 +1,3 @@
-// 3p
-import { ValidateFunction } from 'ajv';
-
 // FoalTS
 import {
   ApiRequestBody,
@@ -9,11 +6,9 @@ import {
   Hook,
   HookDecorator,
   HttpResponseBadRequest,
-  OpenApi,
   ServiceManager
 } from '../../core';
-import { getAjvInstance } from './get-ajv-instance';
-import { isFunction } from './helpers';
+import { createObjectValidator, isFunction } from './helpers';
 
 /**
  * Hook factory validating the body of the request against a AJV schema.
@@ -26,21 +21,12 @@ import { isFunction } from './helpers';
 export function ValidateBody(
   schema: object | ((controller: any) => object), options?: { openapi?: boolean }
 ): HookDecorator {
-  let validateSchema: ValidateFunction|undefined;
+  const validateObject = createObjectValidator(schema);
 
   function validate(this: any, ctx: Context, services: ServiceManager) {
-    if (!validateSchema) {
-      const ajvSchema = isFunction(schema) ? schema(this) : schema;
-      const components = services.get(OpenApi).getComponents(this);
-
-      validateSchema = getAjvInstance().compile({
-        ...ajvSchema,
-        components
-      });
-    }
-
-    if (!validateSchema(ctx.request.body)) {
-      return new HttpResponseBadRequest({ body: validateSchema.errors });
+    const errors = validateObject.call(this, ctx.request.body, services);
+    if (errors) {
+      return new HttpResponseBadRequest({ body: errors });
     }
   }
 

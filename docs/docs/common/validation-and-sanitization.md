@@ -413,6 +413,75 @@ export class AppController {
 }
 ```
 
+#### ValidateQuery
+
+It validates the whole request query (`Context.request.query`) against a schema.
+
+*HTTP request*
+
+```
+GET /products?price=hello
+```
+
+*Controller (first example)*
+```typescript
+import { Get, ValidateQuery } from '@foal/core';
+
+export class AppController {
+  @Get('/products')
+  @ValidateQuery({
+    additionalProperties: false,
+    properties: {
+      price: { type: 'integer' },
+    },
+    required: [ 'price' ],
+    type: 'object'
+  })
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*Controller (second example)*
+```typescript
+import { Get, ValidateQuery } from '@foal/core';
+
+export class AppController {
+  schema = {
+    additionalProperties: false,
+    properties: {
+      price: { type: 'integer' },
+    },
+    required: [ 'price' ],
+    type: 'object'
+  };
+
+  @Get('/products')
+  @ValidateQuery(controller => controller.schema)
+  readProducts() {
+    // ...
+  }
+}
+```
+
+*HTTP response (400 - BAD REQUEST)*
+```json
+{
+  "query": [
+    {
+      "instancePath": "/price",
+      "keyword": "type",
+      "message": "must be integer",
+      "params": {
+        "type": "integer"
+      },
+      "schemaPath": "#/properties/price/type"
+    }
+  ]
+}
+```
+
 ### Sanitization Example
 
 ```typescript

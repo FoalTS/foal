@@ -15,6 +15,7 @@ import {
   ValidateCookie,
   ValidateHeader,
   ValidatePathParam,
+  ValidateQuery,
   ValidateQueryParam
 } from '@foal/core';
 import { ValidateBody as ValidateBodyFromClass} from '@foal/typestack';
@@ -344,6 +345,74 @@ describe('[Docs] Input Validation & Sanitization', () => {
 
           return request(app)
             .get('/products?authorization=xxx&a-number=hello')
+            .expect(400)
+            .expect(errors);
+        });
+
+      });
+
+      describe('ValidateQuery', () => {
+
+        const errors = {
+          query: [
+            {
+              instancePath: '/price',
+              keyword: 'type',
+              message: 'must be integer',
+              params: {
+                type: 'integer'
+              },
+              schemaPath: '#/properties/price/type'
+            }
+          ]
+        };
+
+        it('(first example)', async () => {
+          class AppController {
+            @Get('/products')
+            @ValidateQuery({
+              additionalProperties: false,
+              properties: {
+                price: { type: 'integer' },
+              },
+              required: [ 'price' ],
+              type: 'object'
+            })
+            readProducts() {
+              // ...
+            }
+          }
+
+          const app = await createApp(AppController);
+
+          return request(app)
+            .get('/products?price=hello')
+            .expect(400)
+            .expect(errors);
+        });
+
+        it('(second example)', async () => {
+          class AppController {
+            schema = {
+              additionalProperties: false,
+              properties: {
+                price: { type: 'integer' },
+              },
+              required: [ 'price' ],
+              type: 'object'
+            };
+
+            @Get('/products')
+            @ValidateQuery(controller => controller.schema)
+            readProducts() {
+              // ...
+            }
+          }
+
+          const app = await createApp(AppController);
+
+          return request(app)
+            .get('/products?price=hello')
             .expect(400)
             .expect(errors);
         });
