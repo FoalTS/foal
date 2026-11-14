@@ -32,6 +32,28 @@ describe('renderToString', () => {
     strictEqual(actual, expected);
   });
 
+  it('should insert the locals as they are, even if they contain "$" replacement patterns.', () => {
+    const template = '<p>{{ price }}</p><p>{{ text }}</p><div>{{ content }}</div><footer/>';
+    const locals = {
+      content: '<code>\'$\'</code> $`',
+      price: 'only $$9',
+      text: 'escape with $& or $1 here',
+    };
+
+    const expected = '<p>only $$9</p><p>escape with $& or $1 here</p><div><code>\'$\'</code> $`</div><footer/>';
+    const actual = renderToString(template, locals);
+    strictEqual(actual, expected);
+  });
+
+  it('should convert non-string locals to strings.', () => {
+    const template = '{{ count }} {{ enabled }} {{ nothing }}';
+    const locals = { count: 3, enabled: false, nothing: null };
+
+    const expected = '3 false null';
+    const actual = renderToString(template, locals);
+    strictEqual(actual, expected);
+  });
+
 });
 
 describe('render', () => {

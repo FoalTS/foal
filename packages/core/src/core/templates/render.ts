@@ -18,7 +18,8 @@ import { Config } from '../config';
  */
 export function renderToString(template: string, locals: any): string {
   for (const key in locals) {
-    template = template.replace(new RegExp(`{{ ${key} }}`, 'g'), locals[key]);
+    // Use a function so that "$" patterns in the value ($&, $$, etc) are not expanded.
+    template = template.replace(new RegExp(`{{ ${key} }}`, 'g'), () => locals[key]);
   }
   return template;
 }
